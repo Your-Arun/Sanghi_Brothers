@@ -17,7 +17,7 @@ const updatesalemanagemnet = () => {
   useEffect(() => {
     const fetchPumpSheetData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5500/mastersheet/purchasemanagement/${id}`)
+        const response = await axios.get(`http://localhost:5500/mastersheet/bpcl&statutory/${id}`)
         setPurchasemagnmnet(response.data)
         setDate(response.data.date)
         setLoading(false)
@@ -54,7 +54,7 @@ const updatesalemanagemnet = () => {
     e.preventDefault()
     try {
       if (window.confirm("Are you sure you want to delete this purchase management sheet?")) {
-        const response = await axios.delete(`http://localhost:5500/mastersheet/purchasemanagement/${id}`)
+        const response = await axios.delete(`http://localhost:5500/mastersheet/bpcl&statutory/${id}`)
         navigate("/mastersheet")
         alert("Purchase management sheet deleted successfully!")
       }
@@ -68,7 +68,7 @@ const updatesalemanagemnet = () => {
       ...purchasemgnemt,
     }
     try {
-      const response = await axios.put(`http://localhost:5500/mastersheet/purchasemanagement/${id}`, data)
+      const response = await axios.put(`http://localhost:5500/mastersheet/bpcl&statutory/${id}`, data)
       alert("Purchase management sheet updated successfully!")
     } catch (error) {
       console.error(error)
@@ -119,7 +119,7 @@ const updatesalemanagemnet = () => {
   return (
     <>
       <div>
-        <h1 className="text-center mt-[-30px] text-2xl p-4 font-bold">PURCHASE MANAGEMENT</h1>
+        <h1 className="text-center mt-[-30px] text-2xl p-4 font-bold">BPCL & STATUTORY MANAGEMENT</h1>
         <form onSubmit={handleSave}>
           <div className="flex justify-evenly items-center p-4">
             <Link to={"/mastersheet"}>
@@ -174,7 +174,7 @@ const updatesalemanagemnet = () => {
                     />
                   </td>
                   <td>
-                    <input
+                  <input
                       type="checkbox"
                       name="ok"
                       checked={item.ok === true || item.ok === "Yes" || item.ok === "true"}

@@ -9,6 +9,9 @@ const ChekList = () => {
   const [purchasemangemnt, setPurchasemangemnt] = useState([]);
   const [lubricantmangemnt, setLubmangemnt] = useState([]);
   const[tanklorry,setTank]=useState([]);
+  const[bpclstatutory,setBpclstatutory]=useState([]);
+  const[stafff,setStaff]=useState([]);
+  const[finn,setfin]=useState([]);
 
   useEffect(() => {
     const fetchPumpSheetData = async () => {
@@ -49,6 +52,27 @@ const ChekList = () => {
           }
         );
         setTank(response5.data);
+        const response6 = await axios.get(
+          "http://localhost:5500/mastersheet/bpcl&statutory",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setBpclstatutory(response6.data);
+        const response7 = await axios.get(
+          "http://localhost:5500/mastersheet/staffmanagement",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setStaff(response7.data);
+        const response8 = await axios.get(
+          "http://localhost:5500/mastersheet/finance",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setfin(response8.data);
       } catch (err) {
         alert("fetch nhh hora");
       }
@@ -201,6 +225,99 @@ const ChekList = () => {
                 {tanklorry.map((sale) => (
                   <Link
                     to={`/mastersheet/tanklorry/${sale._id}`}
+                    key={sale._id} // Ensure you use a unique identifier
+                    className="p-4 border bg-slate-300 rounded-lg shadow-md hover:bg-blue-200 transition duration-300 text-center cursor-pointer"
+                  >
+                    <h4 className="text-lg font-bold">
+                      <p>Update Report</p>
+                      {new Date(sale.date).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })}
+                    </h4>
+                  </Link>
+                ))}
+              </div>
+            </div>
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold mb-4 text-center text-blue-600">
+              BPCL & Statutory Management 
+              </h2>
+              <div className="flex flex-col items-center">
+                <Link
+                  to="/mastersheet/bpcl&statutory"
+                  className="p-6 border bg-slate-400 rounded-lg shadow-lg hover:bg-blue-300 transition duration-300 text-center w-full"
+                >
+                  <h3 className="text-xl font-bold text-white ">Create</h3>
+                </Link>
+              </div>
+              <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {bpclstatutory.map((sale) => (
+                  <Link
+                    to={`/mastersheet/bpcl&statutory/${sale._id}`}
+                    key={sale._id} // Ensure you use a unique identifier
+                    className="p-4 border bg-slate-300 rounded-lg shadow-md hover:bg-blue-200 transition duration-300 text-center cursor-pointer"
+                  >
+                    <h4 className="text-lg font-bold">
+                      <p>Update Report</p>
+                      {new Date(sale.date).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })}
+                    </h4>
+                  </Link>
+                ))}
+              </div>
+            </div>
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold mb-4 text-center text-blue-600">
+              Staff Management 
+              </h2>
+              <div className="flex flex-col items-center">
+                <Link
+                  to="/mastersheet/staffmanagement"
+                  className="p-6 border bg-slate-400 rounded-lg shadow-lg hover:bg-blue-300 transition duration-300 text-center w-full"
+                >
+                  <h3 className="text-xl font-bold text-white ">Create</h3>
+                </Link>
+              </div>
+              <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {stafff.map((sale) => (
+                  <Link
+                    to={`/mastersheet/staffmanagement/${sale._id}`}
+                    key={sale._id} // Ensure you use a unique identifier
+                    className="p-4 border bg-slate-300 rounded-lg shadow-md hover:bg-blue-200 transition duration-300 text-center cursor-pointer"
+                  >
+                    <h4 className="text-lg font-bold">
+                      <p>Update Report</p>
+                      {new Date(sale.date).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })}
+                    </h4>
+                  </Link>
+                ))}
+              </div>
+            </div>
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold mb-4 text-center text-blue-600">
+              Finance Management 
+              </h2>
+              <div className="flex flex-col items-center">
+                <Link
+                  to="/mastersheet/finance"
+                  className="p-6 border bg-slate-400 rounded-lg shadow-lg hover:bg-blue-300 transition duration-300 text-center w-full"
+                >
+                  <h3 className="text-xl font-bold text-white ">Create</h3>
+                </Link>
+              </div>
+              <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {finn.map((sale) => (
+                  <Link
+                    to={`/mastersheet/finance/${sale._id}`}
                     key={sale._id} // Ensure you use a unique identifier
                     className="p-4 border bg-slate-300 rounded-lg shadow-md hover:bg-blue-200 transition duration-300 text-center cursor-pointer"
                   >

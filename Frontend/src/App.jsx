@@ -33,6 +33,12 @@ import LubricantMangement from "./components/Layouts/Lubricant";
 import LubricantUpdate from './components/updated_Report/Lubricantupdate'
 import TankLorry from './components/Layouts/TanklorryMngemnt'
 import LorryUpdate from './components/updated_Report/lorryupdate'
+import BPCLStatutory from './components/Layouts/Bpcl&Statuory'
+import Updatebpcl from './components/updated_Report/updatebpclstatutory'
+import Staffmngment from './components/Layouts/staffmngemnt'
+import StaffUpdate from './components/updated_Report/updatestaff'
+import Finance from './components/Layouts/financemgnemnt'
+
 
 
 
@@ -95,6 +101,11 @@ const AppContent = () => {
         <Route path="/mastersheet/lubricantmanagement/:id" element={<LubricantUpdate/>} />
         <Route path="/mastersheet/tanklorry" element={<TankLorry/>} />
         <Route path="/mastersheet/tanklorry/:id" element={<LorryUpdate/>} />
+        <Route path="/mastersheet/bpcl&statutory" element={<BPCLStatutory/>} />
+        <Route path="/mastersheet/bpcl&statutory/:id" element={<Updatebpcl/>} />
+        <Route path="/mastersheet/staffmanagement" element={<Staffmngment/>} />
+        <Route path="/mastersheet/staffmanagement/:id" element={<StaffUpdate/>} />
+        <Route path="/mastersheet/finance" element={<Finance/>} />
 
       </Routes>
     </>

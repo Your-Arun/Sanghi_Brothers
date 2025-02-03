@@ -19,6 +19,9 @@ const SalesManagementSheet = require("./routes/mastersheet/salemngemntroute");
 const PurchaseManagement= require("./routes/mastersheet/purchaseroute");
 const Lubricant= require("./routes/mastersheet/lubricantroute");
 const TankLorryManagement=require('./routes/mastersheet/tanklorryroute')
+const BPCLSTATUTORY= require('./routes/mastersheet/routebpclstatutory')
+const Staffmng =require('./routes/mastersheet/staffroute')
+const Financemng =require('./routes/mastersheet/financeroute')
 
 const app = express();
 app.use(bodyparser.json());
@@ -75,6 +78,9 @@ app.use('/mastersheet',TankLorryManagement);
 app.use('/mastersheet',TankLorryManagement);
 app.use('/mastersheet',TankLorryManagement);
 app.use('/mastersheet',TankLorryManagement);
+app.use('/mastersheet',BPCLSTATUTORY);
+app.use('/mastersheet',Staffmng);
+app.use('/mastersheet',Financemng);
 
 
 
