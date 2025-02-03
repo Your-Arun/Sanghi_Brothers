@@ -38,6 +38,7 @@ import Updatebpcl from './components/updated_Report/updatebpclstatutory'
 import Staffmngment from './components/Layouts/staffmngemnt'
 import StaffUpdate from './components/updated_Report/updatestaff'
 import Finance from './components/Layouts/financemgnemnt'
+import UpdateFin from './components/updated_Report/updatefinance'
 
 
 
@@ -106,6 +107,7 @@ const AppContent = () => {
         <Route path="/mastersheet/staffmanagement" element={<Staffmngment/>} />
         <Route path="/mastersheet/staffmanagement/:id" element={<StaffUpdate/>} />
         <Route path="/mastersheet/finance" element={<Finance/>} />
+        <Route path="/mastersheet/finance/:id" element={<UpdateFin/>} />
 
       </Routes>
     </>
