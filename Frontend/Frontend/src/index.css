@@ -1,0 +1,151 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* General body styles */
+body {
+  font-family: serif;
+  background-color: #f9f9f9; /* Light gray background */
+  color: #333; /* Dark gray text for readability */
+  margin: 0;
+  padding: 20px;
+}
+
+/* General table container styles */
+.table-container {
+  padding: 30px;
+  background-color: #ffffff; /* White background for a clean look */
+  border-radius: 16px; /* Smooth rounded corners */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  max-width: 1200px;
+  margin: 30px auto; /* Center the table container */
+  border: 1px solid #e0e0e0; /* Soft border for structure */
+  overflow: hidden; /* Clip content to rounded corners */
+}
+
+/* Table styles */
+table {
+  width: 100%;
+  border-collapse: collapse; /* Remove space between borders */
+  background-color: #ffffff; /* White background for the table */
+  border-radius: 12px;
+  overflow: hidden;
+  color: #333; /* Dark gray text */
+}
+
+/* Header styles */
+th {
+  background: linear-gradient(90deg, #4caf50, #3a9d3a); /* Vibrant green gradient for headers */
+  color: #ffffff; /* White text */
+  font-weight: bold;
+  font-size: 16px;
+  padding: 16px;
+  text-transform: uppercase; /* Convert text to uppercase */
+  letter-spacing: 1px; /* Add spacing between letters */
+}
+
+/* Cell styles */
+th, td {
+  padding: 10px;
+  text-align: center; /* Center-align text */
+  font-size: 13px;
+  border: 1px solid #e0e0e0; /* Light border for separation */
+}
+
+/* Row styles */
+tr:nth-child(even) {
+  background-color: #f2f2f2; /* Light gray for even rows */
+}
+
+tr:nth-child(odd) {
+  background-color: #ffffff; /* White background for odd rows */
+}
+
+/* Hover effect for rows */
+tr:hover {
+  background-color: #e8f5e9; /* Light green highlight */
+  color: #333; /* Dark text on hover */
+  transform: scale(1.01); /* Subtle zoom effect */
+  transition: all 0.3s ease-in-out;
+  
+}
+
+/* Add animation for table */
+table {
+  animation: fadeIn 0.8s ease-in-out; /* Smooth fade-in animation */
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Input styles */
+input[type="number"], input[type="text"] {
+  background-color: #f9f9f9; /* Light input background */
+  color: #333; /* Dark text for inputs */
+  border: 1px solid #ccc; /* Soft border */
+  padding: 8px;
+  border-radius: 4px;
+}
+
+input[type="number"]:focus, input[type="text"]:focus {
+  border-color: #4caf50; /* Highlight border on focus */
+  outline: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  table {
+    font-size: 14px; /* Adjust font size for smaller screens */
+  }
+
+  th, td {
+    padding: 10px;
+  }
+}
+
+/* Button styles */
+button {
+
+  color: #ffffff; /* White text */
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+
+
+/* Container styles for center alignment */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  .table {
+    font-size: 0.9em;
+  }
+
+  .button-container {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}

@@ -1,0 +1,1169 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import saveImage from "/public/save.png";
+import previousImage from "/public/previous.png";
+import { Link } from "react-router-dom";
+
+const Sb01 = () => {
+  const date = new Date().toLocaleDateString();
+  const [SelectedDepartment, setSelectedDepartment] = useState("");
+  const [departments, setDepartments] = useState("");
+  const [username, setUserName]= useState('');
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          alert("No valid token found. Please log in.");
+          return; // Exit early if no token
+        }
+        const departmentResponse = await axios.get(
+          "http://localhost:5500/departments",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        console.log("Departments data:", departmentResponse.data);
+        setDepartments(departmentResponse.data);
+
+        const userresp= await axios.get(
+          "http://localhost:5500/profile",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setUserName(userresp.data.username);
+        console.log(userresp.data.username);
+        
+      } catch (err) {
+        console.error("Error fetching data:");
+        alert("Failed to fetch data.");
+      }
+    };
+    fetchData();
+  }, []);
+
+  const [inputs, setInputs] = useState({
+    c6: 0,
+    c7: 0,
+    c8: 0,
+    c9: 0,
+    c10: 0,
+    c11: 0,
+    c12: 0,
+    c13: 0,
+    c14: 0,
+    c15: 0,
+    c16: 0,
+    c17: 0,
+    d6: 0,
+    d7: 0,
+    d8: 0,
+    d9: 0,
+    d10: 0,
+    d11: 0,
+    d12: 0,
+    d13: 0,
+    d14: 0,
+    d15: 0,
+    d16: 0,
+    d17: 0,
+    e6: 0,
+    e7: 0,
+    e8: 0,
+    e9: 0,
+    e10: 0,
+    e11: 0,
+    e12: 0,
+    e13: 0,
+    e14: 0,
+    e15: 0,
+    e16: 0,
+    e17: 0,
+    j: 10,
+    j11: 0,
+    f6: 0,
+    f7: 0,
+    f8: 0,
+    f9: 0,
+    f10: 0,
+    f11: 0,
+    f12: 0,
+    f13: 0,
+    f14: 0,
+    f15: 0,
+    f16: 0,
+    f17: 0,
+    i6: 0,
+    i7: 0,
+    i8: 0,
+    i9: 0,
+    i10: 0,
+    i11: 0,
+    i12: 0,
+    i13: 0,
+    i14: 0,
+    i15: 0,
+    i16: 0,
+    i17: 0,
+    c21: 0,
+    c22: 0,
+    c23: 0,
+    c24: 0,
+    c25: 0,
+    c26: 0,
+    c27: 0,
+    c28: 0,
+    c29: 0,
+    c30: 0,
+    c31: 0,
+    c32: 0,
+    c33: 0,
+    c34: 0,
+    c35: 0,
+    c37: 0,
+    c36: 0,
+    c38: 0,
+    c39: 0,
+    e24: 0,
+    e25: 0,
+    e26: 0,
+    e27: 0,
+  });
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setInputs({
+      ...inputs,
+      [id]: value === "" ? 0 : parseFloat(value) || 0, // Set to 0 if empty, otherwise parse
+    });
+  };
+  const totalsum =
+    inputs.c6 +
+    inputs.c7 +
+    inputs.c8 +
+    inputs.c9 +
+    inputs.c10 +
+    inputs.c11 +
+    inputs.c12 +
+    inputs.c13 +
+    inputs.c14 +
+    inputs.c15 +
+    inputs.c16 +
+    inputs.c17;
+
+  const j6result =
+    +inputs.c6 -
+    inputs.d6 -
+    inputs.c27 -
+    inputs.c26 -
+    inputs.c25 -
+    inputs.c24 +
+    inputs.c13 +
+    inputs.c14 +
+    inputs.e16;
+  const j7result =
+    +inputs.c7 +
+    inputs.d6 +
+    inputs.e17 -
+    inputs.c21 -
+    inputs.c22 -
+    inputs.c23 +
+    inputs.c11;
+  const j8result = +inputs.c8 - inputs.d8;
+  const j9result = +inputs.c9 - inputs.d9;
+  const j12result =
+    j6result + j7result + j8result + j9result + inputs.j10 + inputs.j11;
+  const e16result = +inputs.c16;
+  const balenv =
+    +totalsum -
+    inputs.c21 -
+    inputs.c22 -
+    inputs.c23 -
+    inputs.c25 -
+    inputs.c27 -
+    inputs.c26 -
+    inputs.c24;
+  const c34result =
+    inputs.c32 + inputs.c33 + balenv - inputs.c17 - inputs.c11 + inputs.c30;
+  const workingcap =
+    +c34result - inputs.c35 - inputs.c36 - inputs.c37 - inputs.c38 - inputs.c39;
+  const e39result =
+    +inputs.c35 + inputs.c36 + inputs.c37 + inputs.c38 + inputs.c39;
+  // handle save
+  const handleSave = async (e) => {
+    e.preventDefault();
+    const saveData = {
+      username: username,
+      Department: SelectedDepartment,
+      Balance_Evening: balenv,
+      Total_Fund_Stock: c34result,
+      Working_Cappital: workingcap,
+      CalculatedValue: {
+        totalsum,
+        j6result,
+        j7result,
+        j8result,
+        j9result,
+        j12result,
+        e16result,
+        balenv,
+        c34result,
+        workingcap,
+        e39result,
+      },
+      inputs: {
+        ...inputs,
+      },
+    };
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("No authentication token found. Please log in.");
+        return;
+      }
+      const response = await axios.post(
+        "http://localhost:5500/fundposition",
+        saveData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert("Data saved successfully");
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+      alert("Save nhh hora...");
+    }
+  };
+
+  return (
+    <>
+      <div className="text-center text-3xl p-4">
+        <h1>
+          Fund Position of <span className="text-red-600">Sanghi Brothers</span>{" "}
+        </h1>
+        <h1>Bank position as on {date} </h1>
+      </div>
+
+      <div>
+        <form onSubmit={handleSave}>
+          <div>
+            <div>
+              <div className="flex justify-evenly w-full p-4">
+              <Link to={"/dashboard"}>
+              <div>
+                <img src={previousImage} width={50} alt="Back" />
+              </div>
+            </Link>
+                <div>
+                  <select
+                    className="text-2xl bg-blue-400 p-4  rounded-[20px]   border-none outline-none"
+                    value={SelectedDepartment}
+                    onChange={(e) => setSelectedDepartment(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      -- Choose a Department --
+                    </option>
+                    {departments.length > 0 ? (
+                      departments.map((dept) => (
+                        <option key={dept} value={dept}>
+                          {dept}
+                        </option>
+                      ))
+                    ) : (
+                      <option value="" disabled>
+                        No departments available
+                      </option>
+                    )}
+                  </select>
+                </div>
+                  <div>
+                              <button type="submit">
+                                <img src={saveImage} width={50} alt="Save" />
+                              </button>
+                            </div>
+              </div>
+            </div>
+          </div>
+          <table className="sbitb text-center ">
+            <tbody>
+              <tr>
+                <th>
+                  <br />
+                </th>
+                <th>Name</th>
+                <th colSpan="2">Transfer</th>
+                <th colSpan="2">to a/c no.</th>
+                <th>Acc##</th>
+                <th>Closing Balance</th>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>SBI xxxx06421</td>
+                <td>
+                  <input
+                    id="c6"
+                    type="number"
+                    value={inputs.c6}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  {" "}
+                  <input
+                    id="d6"
+                    type="number"
+                    value={inputs.d6}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  {" "}
+                  <input
+                    type="number"
+                    id="e6"
+                    value={inputs.e6}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  {" "}
+                  <input
+                    type="number"
+                    id="f6"
+                    value={inputs.f6}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  {" "}
+                  <input
+                    type="number"
+                    id="i6"
+                    value={inputs.i6}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>{j6result}</td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>SBIN000068037</td>
+                <td>
+                  <input
+                    type="number"
+                    id="c7"
+                    value={inputs.c7}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="d7"
+                    value={inputs.d7}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="e7"
+                    value={inputs.e7}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="f7"
+                    value={inputs.f7}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="i7"
+                    value={inputs.i7}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>{j7result}</td>
+              </tr>
+                <tr>
+                  <td>
+                    <br />
+                  </td>
+                  <td>SbI xxxxx5358</td>
+                  <td>
+                    {" "}
+                    <input
+                      type="number"
+                      id="c8"
+                      value={inputs.c8}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td>
+                    {" "}
+                    <input
+                      type="number"
+                      id="d8"
+                      value={inputs.d8}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td>
+                    {" "}
+                    <input
+                      type="number"
+                      id="e8"
+                      value={inputs.e8}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td>
+                    {" "}
+                    <input
+                      type="number"
+                      id="f8"
+                      value={inputs.f8}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td>
+                    {" "}
+                    <input
+                      type="number"
+                      id="i8"
+                      value={inputs.i8}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td>{j8result}</td>
+                </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>
+                  <br />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="c9"
+                    value={inputs.c9}
+                    onChange={handleInputChange}
+                  />
+                </td>
+
+                <td>
+                  <input
+                    type="number"
+                    id="d9"
+                    value={inputs.d9}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <br />
+                </td>
+                <td>
+                  <br />
+                </td>
+                <td>
+                  <br />
+                </td>
+                <td>{j9result.toFixed(2)}</td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>Card payment not cr.by paytm/icici</td>
+                <td>
+                  <input
+                    type="number"
+                    id="c10"
+                    value={inputs.c10}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="d10"
+                    value={inputs.d10}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="e10"
+                    value={inputs.e10}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="f10"
+                    value={inputs.f10}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="i10"
+                    value={inputs.i10}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="j10"
+                    value={inputs.j10}
+                    onChange={handleInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>cash deposit in m/c from evening shift</td>
+                <td>
+                  <input
+                    type="number"
+                    id="c11"
+                    value={inputs.c11}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="d11"
+                    value={inputs.d11}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="e11"
+                    value={inputs.e11}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="f11"
+                    value={inputs.f11}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="i11"
+                    value={inputs.i11}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="j11"
+                    value={inputs.j11}
+                    onChange={handleInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>cash in hand of Yesterday for deposit </td>
+                <td>
+                  <input
+                    type="number"
+                    id="c12"
+                    value={inputs.c12}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="d12"
+                    value={inputs.d12}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="e12"
+                    value={inputs.e12}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="f12"
+                    value={inputs.f12}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="i12"
+                    value={inputs.i12}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>{j12result.toFixed(2)}</td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>Recd.from s.v</td>
+                <td>
+                  <input
+                    type="number"
+                    id="c13"
+                    value={inputs.c13}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="d13"
+                    value={inputs.d13}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="e13"
+                    value={inputs.e13}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="f13"
+                    value={inputs.f13}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="i13"
+                    value={inputs.i13}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="j13"
+                    value={inputs.j13}
+                    onChange={handleInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>Recd.from Mukund Sanghi </td>
+                <td>
+                  <input
+                    type="number"
+                    id="c14"
+                    value={inputs.c14}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="d14"
+                    value={inputs.d14}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="e14"
+                    value={inputs.e14}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="f14"
+                    value={inputs.f14}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="i14"
+                    value={inputs.i14}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="j14"
+                    value={inputs.j14}
+                    onChange={handleInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>other deposits</td>
+                <td>
+                  <input
+                    type="number"
+                    id="c15"
+                    value={inputs.c15}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <br />
+                </td>
+                <td>Deposit</td>
+                <td>to a/c no.</td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>cash of Yesterday for deposit in othe a/c </td>
+                <td>
+                  <input
+                    type="number"
+                    id="c16"
+                    value={inputs.c16}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <br />
+                </td>
+                <td>{e16result.toFixed(2)}</td>
+                <td>
+                  <input
+                    type="number"
+                    id="f16"
+                    value={inputs.f16}
+                    onChange={handleInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>Today 1 shift Amt.deposit in a/c</td>
+                <td>
+                  <input
+                    type="number"
+                    id="c17"
+                    value={inputs.c17}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <br />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="e17"
+                    value={inputs.e17}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="f17"
+                    value={inputs.f17}
+                    onChange={handleInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>Total</td>
+                <td>{totalsum.toFixed(2)}</td>
+              </tr>
+
+              <tr>
+                <br />
+              </tr>
+              <tr>
+                <br />
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td> payment to bpcl for invoice 21-12</td>
+                <td>
+                  <input
+                    type="number"
+                    id="c21"
+                    value={inputs.c21}
+                    onChange={handleInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td> payment to bpcl for invoice 00-12</td>
+                <td>
+                  <input
+                    type="number"
+                    id="c22"
+                    value={inputs.c22}
+                    onChange={handleInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td> payment to bpcl for invoice 00-12</td>
+                <td>
+                  <input
+                    type="number"
+                    id="c23"
+                    value={inputs.c23}
+                    onChange={handleInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>Pd to Hearing healthcare</td>
+                <td>
+                  <input
+                    type="number"
+                    id="c24"
+                    value={inputs.c24}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <br />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="e24"
+                    value={inputs.e24}
+                    onChange={handleInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>Pd to A.K.SANGHI</td>
+                <td>
+                  <input
+                    type="number"
+                    id="c25"
+                    value={inputs.c25}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <br />
+                </td>
+
+                <td>
+                  <input
+                    type="number"
+                    id="e25"
+                    value={inputs.e25}
+                    onChange={handleInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>Pd to GST OF PP</td>
+                <td>
+                  <input
+                    type="number"
+                    id="c26"
+                    value={inputs.c26}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <br />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="e26"
+                    value={inputs.e26}
+                    onChange={handleInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>Pd FOR AIR COPRESSOR</td>
+                <td>
+                  <input
+                    type="number"
+                    id="c27"
+                    value={inputs.c27}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <br />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="e27"
+                    value={inputs.e27}
+                    onChange={handleInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>Balance in evening</td>
+                <td>{balenv.toFixed(2)}</td>
+              </tr>
+
+              <tr>
+                <br />
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>
+                  <br />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="c30"
+                    value={inputs.c30}
+                    onChange={handleInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <br />
+              </tr>
+              <tr>
+                <td>
+                  <input
+                    type="number"
+                    id="a32"
+                    value={inputs.a32}
+                    onChange={handleInputChange}
+                  />
+                </td>
+
+                <td>Today morning stock value of petrol</td>
+                <td>
+                  {" "}
+                  <input
+                    type="number"
+                    id="c32"
+                    value={inputs.c32}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    id="d32"
+                    value={inputs.d32}
+                    onChange={handleInputChange}
+                  />{" "}
+                  per Ltr rate
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {" "}
+                  <input
+                    type="number"
+                    id="a33"
+                    value={inputs.a33}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>Petrol PUR for the Day</td>
+                <td>
+                  {" "}
+                  <input
+                    type="number"
+                    id="c33"
+                    value={inputs.c33}
+                    onChange={handleInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>Total Fund including stock</td>
+                <td> {c34result.toFixed(2)}</td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>Due payment to bpcl for invoice 00-12</td>
+                <td>
+                  {" "}
+                  <input
+                    type="number"
+                    id="c35"
+                    value={inputs.c35}
+                    onChange={handleInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>Due payment to bpcl for invoice 00-12</td>
+                <td>
+                  {" "}
+                  <input
+                    type="number"
+                    id="c36"
+                    value={inputs.c36}
+                    onChange={handleInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>Due payment to bpcl for invoice 00-12</td>
+                <td>
+                  {" "}
+                  <input
+                    type="number"
+                    id="c37"
+                    value={inputs.c37}
+                    onChange={handleInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>Due payment to bpcl for invoice 00-12</td>
+                <td>
+                  {" "}
+                  <input
+                    type="number"
+                    id="c38"
+                    value={inputs.c38}
+                    onChange={handleInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>Due payment to bpcl for OIL invoice </td>
+                <td>
+                  {" "}
+                  <input
+                    type="number"
+                    id="c39"
+                    value={inputs.c39}
+                    onChange={handleInputChange}
+                  />
+                </td>
+                <td>
+                  <input type="date" />
+                </td>
+                <td>
+                  {e39result.toFixed(2)} <br />
+                  TOTAL DUE as on AS PER BPCL <br />
+                  LEDGER CR.RECd.Nov.24
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+                <td>working capital</td>
+                <td>{workingcap.toFixed(2)}</td>
+              </tr>
+              <tr>
+                <td>
+                  <br />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </form>
+      </div>
+    </>
+  );
+};
+
+export default Sb01;

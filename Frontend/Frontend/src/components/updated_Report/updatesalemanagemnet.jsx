@@ -1,0 +1,240 @@
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import binImage from "/public/bin.png";
+import previousImage from "/public/previous.png";
+import saveImage from "/public/save.png";
+
+const updatesalemanagemnet = () => {
+    const { id } = useParams();
+    const [loading, setLoading] = useState(true);
+    const [salemgnemt, setSalemagnmnet] = useState({
+        date: '',
+        points: []
+    });
+    const navigate = useNavigate();
+    const [date, setDate] = useState('');
+    const [points, setPoints] = useState([]);
+    const [items, setItems] = useState([
+        "Yesterday's Sale Report Checked",
+        "Petrol  loss Reconciliation  +/-,tankwise",
+        "Sales Invoices Feed in computer",
+        "Paytm Amount check shiftwise",
+        "Credit Card check shiftwise",
+        "All Sales check nozzle wise with amount",
+        "MPD Rate Change done before 6AM (Automation)",
+        "Non Space Rate Change done before 6AM (Automation)",
+        "Opening time before 6AM?",
+        "Customer Complain received yesterday?",
+        "5 ltr  testing done  from all nozzles",
+        "All standys taken out 2 nos",
+        "Air facilities available",
+        "Check shiftwise sale for DSM/DSW",
+        "Bpcl register done",
+        "All 6 nozzle work propely",
+        "Any complain book to bpcl ",
+        "Proper debit note fill up",
+        "Morning density put in register both tank",
+        "Today decant density put in register both tank",
+        "Proper direction given to customer",
+        "Oil change Machine taken out",
+        "Camper for drinking water 2 nos taken out",
+        "Stock board update taken out morning",
+        "Both tank check with water paste",
+        "Air machine working",
+        "Paytm code for all staff",
+        "Pending slip check",
+        "Any Nozzle +/- Delilverd report",
+        "Cleaning of 4 wheeler glass taken out",
+        "Automation mismatch report",
+        "Peo cleaning",
+        "Fire extinguisher checked daily",
+        "Complain book in bpcl resolved",
+        "Any maintance work",
+    ]);
+
+    useEffect(() => {
+        const fetchPumpSheetData = async () => {
+            try {
+                const response = await axios.get(
+                    `http://localhost:5500/mastersheet/salesmanagementsheet/${id}`
+                );
+                setSalemagnmnet(response.data);
+                setDate(response.data.date);
+                setPoints(response.data.points);
+                setLoading(false);
+            } catch (err) {
+                alert("Fetch nhh hora");
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchPumpSheetData();
+    }, [id]);
+
+    const handleInputChnge = (e, index) => {
+        const { id, value, checked } = e.target;
+        setPoints((prevPoints) => {
+            return prevPoints.map((point, pointIndex) => {
+                if (pointIndex === index) {
+                    if (id === 'ok') {
+                        return { ...point, ok: checked ? 'Yes' : 'No' };
+                    } else {
+                        return { ...point, [id]: value };
+                    }
+                } else {
+                    return point;
+                }
+            });
+        });
+    };
+
+    const handleDelete = async (e)=>{
+        e.preventDefault();
+        try {
+            if (window.confirm("Are you sure you want to delete this sales management sheet?")) {
+                const response = await axios.delete(
+                    `http://localhost:5500/mastersheet/salesmanagementsheet/${id}`
+                );
+                navigate("/mastersheet");
+                alert("Sales management sheet deleted successfully!");
+            }
+        } catch (error) {
+            alert("Error deleting sales management sheet!");
+        }
+    }
+   const handleSave = async (e) => {
+        e.preventDefault();
+        const data = {
+            date: date,
+            points: points
+        };
+        try {
+            const response = await axios.put(
+                `http://localhost:5500/mastersheet/salesmanagementsheet/${id}`,
+                data
+            );
+            console.log(response.data);
+            alert("Sales management sheet updated successfully!");
+        } catch (error) {
+            console.error(error);
+            alert("Error updating sales management sheet!");
+        }
+    };
+
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <div
+                    className="animate-spin inline-block size-20 border-[6px] border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500"
+                    role="status"
+                    aria-label="loading"
+                >
+                    <span className="sr-only">Loading...</span>
+                </div>
+            </div>
+        );
+    }
+
+    if (!salemgnemt) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <p>No report found...</p>
+            </div>
+        );
+    }
+
+    return (
+        <>
+            <div>
+                <h1 className="text-center mt-[-30px] text-2xl p-4 font-bold">SALES MANAGEMENT SHEET</h1>
+                <form onSubmit={handleSave}>
+                    <div className="flex justify-evenly items-center  p-4">
+                        <Link to={"/mastersheet"}>
+                            <div className="">
+                                <img src={previousImage} width={50} alt="Back" />
+                            </div>
+                        </Link>
+                        <div className='col-span-2'>
+                            <input className='text-center' type="date" id="date" value={date} readOnly />
+
+                        </div>
+                        <div><img src={binImage} onClick={handleDelete} width={50} height={50} className=" " alt="Bin" /></div>
+
+                        <div>
+                            <button type="submit">
+                                <img src={saveImage} width={50} alt="Save" />
+                            </button>{" "}
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <th>Point</th>
+                            <th>Item to Check</th>
+                            <th>Ok</th>
+                            <th>Responsible</th>
+                            <th>Defect Person</th>
+                            <th>Defect Delays Days</th>
+                            <th>Deadline</th>
+                        </thead>
+                        <tbody>
+                            {points.map((point, index) => (
+                                <tr key={index}>
+                                    <td>
+                                        {index + 1}
+                                    </td>
+                                    <td>
+                                        {items[index]}
+                                    </td>
+                                    <td>
+                                        <input
+                                            type="checkbox"
+                                            id="ok"
+                                            checked={point.ok === 'Yes'}
+                                            onChange={(e) => handleInputChnge(e, index)}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input
+                                            type="text"
+                                            id="responsible"
+                                            value={point.responsible}
+                                            onChange={(e) => handleInputChnge(e, index)}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input
+                                            type="text"
+                                            id="defectPerson"
+                                            value={point.defectPerson}
+                                            onChange={(e) => handleInputChnge(e, index)}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input
+                                            type="text"
+                                            id="defectDelaysDays"
+                                            value={point.defectDelaysDays}
+                                            onChange={(e) => handleInputChnge(e, index)}
+                                        />
+                                    </td>
+                                    <td>
+                                        <input
+                                            type="text"
+                                            id="deadline"
+                                            value={point.deadline}
+                                            onChange={(e) => handleInputChnge(e, index)}
+                                        />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </>
+    )
+}
+
+export default updatesalemanagemnet
