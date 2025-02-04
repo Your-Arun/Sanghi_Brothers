@@ -10,6 +10,11 @@ const Lekhajokha = () => {
     const [sale, setSale] = useState('');
     const [paytm, setPaytm] = useState('');
     const [selectedShift, setSelectedShift] = useState('');
+    const [reading, setReading] = useState('');
+    const [testing, setTesting] = useState('');
+    const [pending, setPending] = useState('');
+
+
 
     const [item, setItem] = useState([
         '1 Ltr 2T oil Bottle',
@@ -39,6 +44,9 @@ const Lekhajokha = () => {
             closing: "",
         })),
     });
+   
+
+////table2 krna ha
 
     const handleInputChnge = (e, index) => {
         const { id, value } = e.target;
@@ -239,14 +247,23 @@ const Lekhajokha = () => {
                         <thead className="bg-gray-100">
                             <tr>
                                 <th className="p-3 text-left">S No.</th>
-                                <th className="p-3 text-left">Name</th>
-                                <th className="p-3 text-left">Opening</th>
-                                <th className="p-3 text-left">Sale</th>
-                                <th className="p-3 text-left">Leakage</th>
-                                <th className="p-3 text-left">Add</th>
-                                <th className="p-3 text-left">Closing</th>
+                                <th className="p-3 text-left">Nozzle</th>
+                                <th className="p-3 text-left">Reading</th>
+                                <th className="p-3 text-left">Testing</th>
+                                <th className="p-3 text-left">Pending</th>
                             </tr>
                         </thead>
+                        <tbody>
+                            {Array.from({ length: 6 }, (_, index) => (
+                                <tr key={index}>
+                                    <td className="p-3">{index + 1}</td>
+                                    <td className="p-3">Nozzle {index + 1}</td>
+                                    <td className="p-3"><input type="number" id="reading" value={reading} onChange={(e) => setReading(e.target.value)} /></td>
+                                    <td className="p-3"><input type="number" id="testing" value={testing} onChange={(e) => setTesting(e.target.value)} /></td>
+                                    <td className="p-3"><input type="number" id="pending" value={pending} onChange={(e) => setPending(e.target.value)} /></td>
+                                </tr>
+                            ))}
+                        </tbody>
                     </table>
                 </div>
 
