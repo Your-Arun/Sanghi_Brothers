@@ -20,7 +20,6 @@ const Dashboard = () => {
   const [reportfile, setReportFile] = useState([]);
   const [sb3update, setSb3Update] = useState([]);
 
-
   //reportfile ke lie
   useEffect(() => {
     const fetchrepoFile = async () => {
@@ -199,8 +198,8 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="relative p-6 dashboard bg-gray-100 min-h-screen">
-        <h1 className="text-4xl font-bold mt-[-20px] font-serif uppercase mb-6 text-center text-blue-600">
+      <div className="relative p-6 dashboard  min-h-screen">
+        <h1 className="text-4xl font-bold mt-[-20px] font-serif uppercase mb-6 text-center text-purple-600">
           Dashboard
         </h1>
 
@@ -238,17 +237,17 @@ const Dashboard = () => {
         <div>
           {/* Departments Section */}
           <div className="mb-6">
-            <h2 className="text-2xl font-semibold mb-4 text-center text-blue-600">
+            <h2 className="text-2xl font-semibold mb-4 text-center text-teal-600">
               Departments
             </h2>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
               {departments.map((dept) => (
                 <div
                   key={dept}
-                  className="p-6 border bg-slate-400 rounded-lg shadow-lg hover:bg-blue-300 transition duration-300 cursor-pointer text-center"
+                  className="p-6 border bg-yellow-300 rounded-lg shadow-lg hover:bg-yellow-400 cursor-pointer transition duration-300 text-center"
                   onClick={() => viewReports(dept)}
                 >
-                  <h3 className="text-xl font-bold text-white">
+                  <h3 className="text-xl font-bold text-orange-600">
                     {dept.toUpperCase()}
                   </h3>
                 </div>
@@ -257,7 +256,7 @@ const Dashboard = () => {
           </div>
         </div>
         {/* SB Section */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 p-6 bg-gray-100">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 p-6 bg-pink-100">
           <div className="mb-6">
             <h2 className="text-2xl font-semibold mb-4 text-center text-blue-600">
               SB Bank Report
@@ -265,23 +264,23 @@ const Dashboard = () => {
             <div className="flex flex-col items-center">
               <Link
                 to="/sbbank"
-                className="p-6 border bg-slate-400 rounded-lg shadow-lg hover:bg-blue-300 transition duration-300 text-center w-full"
+                className="p-6 border bg-green-300 rounded-lg shadow-lg hover:bg-green-400 transition duration-300 text-center w-full"
               >
-                <h3 className="text-xl font-bold text-white ">Bank Report</h3>
+                <h3 className="text-xl font-bold text-red-600 ">Bank Report</h3>
               </Link>
             </div>
           </div>
           {/* Monthly Flow Section */}
           <div className="mb-6">
-            <h2 className="text-2xl font-semibold mb-4 text-center text-blue-600">
+            <h2 className="text-2xl font-semibold mb-4 text-center text-indigo-600">
               Monthly Fund Flow
             </h2>
             <div className="flex flex-col items-center">
               <Link
                 to="/bank/monthlyfundflow/"
-                className="p-6 border bg-slate-400 rounded-lg shadow-lg hover:bg-blue-300 transition duration-300 text-center w-full"
+                className="p-6 border bg-purple-300 rounded-lg shadow-lg hover:bg-purple-400 transition duration-300 text-center w-full"
               >
-                <h3 className="text-xl font-bold text-white">
+                <h3 className="text-xl font-bold text-pink-600">
                   Monthly Fund Flow
                 </h3>
               </Link>
@@ -291,7 +290,7 @@ const Dashboard = () => {
                   <Link
                     to={`/bank/monthlyfundflow/${fund._id}`}
                     key={fund._id} // Ensure you use a unique identifier
-                    className="p-4 border bg-slate-300 rounded-lg shadow-md hover:bg-blue-200 transition duration-300 text-center cursor-pointer"
+                    className="p-4 border bg-gray-300 rounded-lg shadow-md hover:bg-gray-400 transition duration-300 text-center cursor-pointer"
                   >
                     <h4 className="text-lg font-bold">
                       {new Date(fund.Date)
@@ -308,15 +307,15 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="mb-6">
-            <h2 className="text-2xl font-semibold mb-4 text-center text-blue-600">
+            <h2 className="text-2xl font-semibold mb-4 text-center text-brown-600">
               SB Master CheckList
             </h2>
             <div className="flex flex-col items-center">
               <Link
                 to="/mastersheet"
-                className="p-6 border bg-slate-400 rounded-lg shadow-lg hover:bg-blue-300 transition duration-300 text-center w-full"
+                className="p-6 border bg-green-300 rounded-lg shadow-lg hover:bg-green-400 transition duration-300 text-center w-full"
               >
-                <h3 className="text-xl font-bold text-white">
+                <h3 className="text-xl font-bold text-red-600">
                   Master CheckList
                 </h3>
               </Link>
@@ -335,7 +334,7 @@ const Dashboard = () => {
                 <div
                   key={reportfile._id}
                   onClick={() => navigate(`/reportfile/${reportfile._id}`)}
-                  className="p-6 border rounded-lg shadow-lg bg-slate-300 hover:bg-blue-400 cursor-pointer transition duration-300"
+                  className="p-6 border rounded-lg shadow-lg bg-gray-300 hover:bg-gray-400 cursor-pointer transition duration-300"
                 >
                   <h1 className="text-xl text-brown-600 text-center font-bold">
                     {reportfile.department.toUpperCase()}
@@ -356,7 +355,7 @@ const Dashboard = () => {
 
         {/* Complaints Section */}
         <div className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4 mt-10 text-center text-blue-600">
+          <h2 className="text-2xl font-semibold mb-4 mt-10 text-center text-brown-600">
             Complaints
           </h2>
           {reports.length > 0 ? (
@@ -364,10 +363,10 @@ const Dashboard = () => {
               {reports.map((report) => (
                 <div
                   key={report._id}
-                  className="p-6 border bg-slate-300 rounded-lg shadow-lg hover:bg-blue-200 cursor-pointer transition duration-300"
+                  className="p-6 border bg-gray-300 rounded-lg shadow-lg hover:bg-gray-400 cursor-pointer transition duration-300"
                   onClick={() => handleReportClick(report)} // Open edit modal
                 >
-                  <h3 className="font-bold text-lg text-brown-600">
+                  <h3 className="font-bold text-lg text-blue-600">
                     {report.title}
                   </h3>
                   <p className="text-sm text-gray-600">{report.department}</p>
@@ -379,7 +378,66 @@ const Dashboard = () => {
             <p className="text-gray-600 text-center">No reports available.</p>
           )}
         </div>
-        
+
+        {/* Floating Buttons */}
+        <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4 mt-6">
+          {/* Create Complaint Button */}
+          <button
+            onClick={() => setShowModal2(true)}
+            className="bg-red-500 text-white rounded-lg p-4 shadow-lg hover:bg-red-600 transition duration-300 flex items-center"
+            aria-label="Create Report"
+          >
+            <span className="mr-2">📝</span>{" "}
+            {/* Optional icon for visual appeal */}
+            Create Complaint
+          </button>
+
+          {/* Report File Button */}
+          <button
+            onClick={handleSubmit}
+            className="bg-orange-500 text-white rounded-lg p-4 shadow-lg hover:bg-orange-600 transition duration-300 flex items-center"
+            aria-label="Report File"
+          >
+            <span className="mr-2">📄</span>{" "}
+            {/* Optional icon for visual appeal */}
+            Report File
+          </button>
+
+          {/* Upload File Section */}
+          <div className="flex items-center">
+            <input
+              type="file"
+              accept=".pdf,.jpg,.jpeg,.xls,.xlsx"
+              className="mr-2 w-full hidden"
+            />
+            <button
+              className="bg-blue-500 text-white rounded-lg p-4 shadow-lg hover:bg-blue-600 transition duration-300 flex items-center"
+              aria-label="Upload File" 
+              onClick={() => navigate("/exceluploader")}
+            >
+              <span className="mr-2">📤</span>{" "}
+              Upload File
+            </button>
+          </div>
+
+          <div className="flex justify-between">
+            <div>
+              <a href="/shifting">
+                <button className="bg-green-500 text-white rounded-lg p-4 shadow-lg hover:bg-green-600 transition duration-300 flex items-center ml-2">
+                  Shifting
+                </button>
+              </a>
+            </div>
+            <div>
+              <a href="/lekhajokha">
+                <button className="bg-green-500 text-white rounded-lg p-4 shadow-lg hover:bg-green-600 transition duration-300 flex items-center ml-2">
+                  Lekha Jokha
+                </button>
+              </a>
+            </div>
+          </div>
+        </div>
+
         {/* Profile Modal */}
         {showProfileModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
@@ -505,59 +563,6 @@ const Dashboard = () => {
           </div>
         )}
 
-        {/* Floating Buttons */}
-        <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4 mt-6">
-          {/* Create Complaint Button */}
-          <button
-            onClick={() => setShowModal2(true)}
-            className="bg-blue-500 text-white rounded-lg p-4 shadow-lg hover:bg-blue-600 transition duration-300 flex items-center"
-            aria-label="Create Report"
-          >
-            <span className="mr-2">📝</span>{" "}
-            {/* Optional icon for visual appeal */}
-            Create Complaint
-          </button>
-
-          {/* Report File Button */}
-          <button
-            onClick={handleSubmit}
-            className="bg-blue-500 text-white rounded-lg p-4 shadow-lg hover:bg-blue-600 transition duration-300 flex items-center"
-            aria-label="Report File"
-          >
-            <span className="mr-2">📄</span>{" "}
-            {/* Optional icon for visual appeal */}
-            Report File
-          </button>
-
-          {/* Upload File Section */}
-          <div className="flex items-center">
-            <input
-              type="file"
-              accept=".pdf,.jpg,.jpeg,.xls,.xlsx"
-              className="mr-2 w-full hidden"
-            />
-            <button
-              className="bg-blue-500 text-white rounded-lg p-4 shadow-lg hover:bg-blue-600 transition duration-300 flex items-center"
-              aria-label="Upload File"
-            >
-              <span className="mr-2">📤</span>{" "}
-              Upload File
-            </button>
-          </div>
-
-          <div className="flex justify-between">
-          <div>
-            <a href="/shifting"><button className="bg-green-500 text-white rounded-lg p-4 shadow-lg hover:bg-green-600 transition duration-300 flex items-center ml-2">
-              Shifting
-            </button></a>
-          </div>
-          <div>
-            <a href="/lekhajokha"><button className="bg-green-500 text-white rounded-lg p-4 shadow-lg hover:bg-green-600 transition duration-300 flex items-center ml-2">
-              Lekha Jokha
-            </button></a>
-          </div>
-          </div>
-        </div>
         {/* Modal for Selecting Department of complaint report */}
         {showModal2 && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">

@@ -42,7 +42,7 @@ import UpdateFin from './components/updated_Report/updatefinance'
 import Lekhajokha from './components/Layouts/lekhajokha'
 import LekhaBox from './components/Layouts/LekhaBox'
 import Lekhajokhaupdate from './components/updated_Report/lekhajokhaupdate'
-
+import ExcelUploader from './components/excelsheet/exceluploader'
 
 
 
@@ -113,6 +113,7 @@ const AppContent = () => {
         <Route path="/lekhajokha" element={<LekhaBox/>} />
         <Route path="/newlekhajokha" element={<Lekhajokha/>} />
         <Route path="/newlekhajokha/:id" element={<Lekhajokhaupdate/>} />
+        <Route path="/exceluploader" element={<ExcelUploader/>} />
       </Routes>
     </>
   );
