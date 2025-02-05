@@ -17,9 +17,23 @@ const lekha = new mongoose.Schema({
   shift: {
     type: String,
   },
+  nozzleReadings: [
+    {
+      reading: {
+        type: Number,
+      },
+      testing: {
+        type: Number,
+      },
+      pending: {
+        type: String,
+      },
+    },
+  ],
   points: [
     {
         sno: {
+
 
         type: String,
       },

@@ -10,11 +10,14 @@ const Lekhajokha = () => {
     const [sale, setSale] = useState('');
     const [paytm, setPaytm] = useState('');
     const [selectedShift, setSelectedShift] = useState('');
-    const [reading, setReading] = useState('');
-    const [testing, setTesting] = useState('');
-    const [pending, setPending] = useState('');
-
-
+    const [nozzleReadings, setNozzleReadings] = useState([
+        { reading: '', testing: '', pending: '' },
+        { reading: '', testing: '', pending: '' },
+        { reading: '', testing: '', pending: '' },
+        { reading: '', testing: '', pending: '' },
+        { reading: '', testing: '', pending: '' },
+        { reading: '', testing: '', pending: '' },
+    ]);
 
     const [item, setItem] = useState([
         '1 Ltr 2T oil Bottle',
@@ -44,9 +47,6 @@ const Lekhajokha = () => {
             closing: "",
         })),
     });
-   
-
-////table2 krna ha
 
     const handleInputChnge = (e, index) => {
         const { id, value } = e.target;
@@ -61,6 +61,9 @@ const Lekhajokha = () => {
         const updatedItems = [...item];
         updatedItems[index] = e.target.value;
         setItem(updatedItems);
+        const updatedPoints = [...inputs.points];
+        updatedPoints[index].name = e.target.value;
+        setInputs({ points: updatedPoints });
     };
     const handleDateChange = (e) => {
         setDate(e.target.value);
@@ -78,6 +81,7 @@ const Lekhajokha = () => {
                 ...point,
                 name: item[inputs.points.indexOf(point)],
             })),
+            nozzleReadings: nozzleReadings,
         };
         try {
             const response = await axios.post("http://localhost:5500/newlekhajokha", data);
@@ -90,6 +94,15 @@ const Lekhajokha = () => {
 
     const handleShiftChange = (e) => {
         setSelectedShift(e.target.value);
+    };
+
+    const handleNozzleReadingChange = (e, index) => {
+        const { id, value } = e.target;
+        setNozzleReadings((prevNozzleReadings) => {
+            const updatedNozzleReadings = [...prevNozzleReadings];
+            updatedNozzleReadings[index][id] = value;
+            return updatedNozzleReadings;
+        });
     };
 
     return (
@@ -109,6 +122,8 @@ const Lekhajokha = () => {
                     <div className="flex justify-between mb-4">
                         <div className="w-1/3">
                            <label htmlFor="rate">Petrol Rate:  <input
+
+
                                 type="number"
                                 id="rate"
                                 placeholder="Petrol Rate"
@@ -242,25 +257,28 @@ const Lekhajokha = () => {
                         </tbody>
                     </table>
                 </div>
-                <div className="bg-white p-6 rounded-lg shadow-md">
+                <div className="bg-white p-6 rounded-lg shadow-md mt-6">
                     <table className="w-full table-auto">
                         <thead className="bg-gray-100">
                             <tr>
-                                <th className="p-3 text-left">S No.</th>
-                                <th className="p-3 text-left">Nozzle</th>
-                                <th className="p-3 text-left">Reading</th>
-                                <th className="p-3 text-left">Testing</th>
-                                <th className="p-3 text-left">Pending</th>
+
+                                <th className="p-3 text-center">S No.</th>
+                                <th className="p-3 text-center">Nozzle</th>
+                                <th className="p-3 text-center">Reading</th>
+                                <th className="p-3 text-center">Testing (Ltr)</th>
+                                <th className="p-3 text-center">Pending (Ltr)</th>
+
+
                             </tr>
                         </thead>
                         <tbody>
-                            {Array.from({ length: 6 }, (_, index) => (
+                            {nozzleReadings.map((reading, index) => (
                                 <tr key={index}>
                                     <td className="p-3">{index + 1}</td>
                                     <td className="p-3">Nozzle {index + 1}</td>
-                                    <td className="p-3"><input type="number" id="reading" value={reading} onChange={(e) => setReading(e.target.value)} /></td>
-                                    <td className="p-3"><input type="number" id="testing" value={testing} onChange={(e) => setTesting(e.target.value)} /></td>
-                                    <td className="p-3"><input type="number" id="pending" value={pending} onChange={(e) => setPending(e.target.value)} /></td>
+                                    <td className="p-3"><input type="number" id="reading" value={reading.reading} onChange={(e) => handleNozzleReadingChange(e, index)} /></td>
+                                    <td className="p-3"><input type="number" id="testing" value={reading.testing} onChange={(e) => handleNozzleReadingChange(e, index)} /></td>
+                                    <td className="p-3"><input type="text" id="pending" value={reading.pending} onChange={(e) => handleNozzleReadingChange(e, index)} /></td>
                                 </tr>
                             ))}
                         </tbody>

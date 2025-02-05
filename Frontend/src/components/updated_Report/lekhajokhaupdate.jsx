@@ -18,6 +18,14 @@ const UpdateSaleManagement = () => {
     });
     const navigate = useNavigate();
     const [date, setDate] = useState("");
+    const [nozzleReadings, setNozzleReadings] = useState([
+        { reading: '', testing: '', pending: '' },
+        { reading: '', testing: '', pending: '' },
+        { reading: '', testing: '', pending: '' },
+        { reading: '', testing: '', pending: '' },
+        { reading: '', testing: '', pending: '' },
+        { reading: '', testing: '', pending: '' },
+    ]);
 
     useEffect(() => {
         const fetchPumpSheetData = async () => {
@@ -29,6 +37,7 @@ const UpdateSaleManagement = () => {
                 setPaytm(response.data.paytm);
                 setSale(response.data.sale);
                 setShift(response.data.shift);
+                setNozzleReadings(response.data.nozzleReadings);
                 setLoading(false);
             } catch (err) {
                 alert("Unable to fetch data");
@@ -78,6 +87,7 @@ const UpdateSaleManagement = () => {
             paytm,
             sale,
             date,
+            nozzleReadings,
         };
         try {
             const response = await axios.put(`http://localhost:5500/newlekhajokha/${id}`, data);
@@ -98,6 +108,12 @@ const UpdateSaleManagement = () => {
         }));
     };
 
+    const handleNozzleReadingChange = (e, index, field) => {
+        const updatedNozzleReadings = [...nozzleReadings];
+        updatedNozzleReadings[index][field] = e.target.value;
+        setNozzleReadings(updatedNozzleReadings);
+    };
+
     if (loading) {
         return (
             <div className="flex items-center justify-center h-screen">
@@ -112,7 +128,7 @@ const UpdateSaleManagement = () => {
         );
     }
 
-    if (!purchaseManagement) {
+    if (!purchaseManagement || !purchaseManagement.points) {
         return (
             <div className="flex items-center justify-center h-screen">
                 <p>No report found...</p>
@@ -193,10 +209,10 @@ const UpdateSaleManagement = () => {
                                     value={sale}
                                     onChange={(e) => setSale(e.target.value)}
 
-                                        className="p-3 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                    className="p-3 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                                 /></label>
                             </div>
-                           
+
                             <div className="w-1/3">
                                 <label htmlFor="shift">Shift:  <input
                                     type="text"
@@ -207,7 +223,7 @@ const UpdateSaleManagement = () => {
                                     className="p-3 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                                 /></label>
                             </div>
-                           
+
                         </div>
                     </div>
                 </div>
@@ -226,7 +242,7 @@ const UpdateSaleManagement = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {purchaseManagement.points.map((item, index) => (
+                            {purchaseManagement.points && purchaseManagement.points.map((item, index) => (
                                 <tr key={index}>
                                     <td className="p-3">{index + 1}</td>
                                     <td className="p-3">
@@ -283,6 +299,32 @@ const UpdateSaleManagement = () => {
                                             className="p-2 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                                         />
                                     </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div className="bg-white p-4 rounded-lg shadow-md">
+                    <table className="w-full table-auto">
+                        <thead className="bg-gray-100">
+                            <tr>
+                                <th className="p-3 text-left">S No.</th>
+                                <th className="p-3 text-left">Nozzle</th>
+                                <th className="p-3 text-left">Reading</th>
+                                <th className="p-3 text-left">Testing (Ltr)</th>
+                                <th className="p-3 text-left">Pending (Ltr)</th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            {nozzleReadings && nozzleReadings.map((reading, index) => (
+                                <tr key={index}>
+                                    <td className="p-3">{index + 1}</td>
+                                    <td className="p-3">Nozzle {index + 1}</td>
+                                    <td className="p-3"><input type="number" id="reading" value={reading.reading} onChange={(e) => handleNozzleReadingChange(e, index, 'reading')} /></td>
+                                    <td className="p-3"><input type="number" id="testing" value={reading.testing} onChange={(e) => handleNozzleReadingChange(e, index, 'testing')} /></td>
+                                    <td className="p-3"><input type="text" id="pending" value={reading.pending} onChange={(e) => handleNozzleReadingChange(e, index, 'pending')} /></td>
                                 </tr>
                             ))}
                         </tbody>

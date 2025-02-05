@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import previousImage from "/public/previous.png";
+import saveImage from "/public/save.png";
+import binImage from "/public/bin.png";
+
 
 function ReportFile() {
   const date = new Date();
@@ -218,69 +222,56 @@ function ReportFile() {
   return (
     <>
       {" "}
-      <div className="container">
+      <div>
         <form onSubmit={handleSubmit}>
-          <div className="justify-center text-center ">
-            <h1 className="text-4xl font-serif">Reports</h1>
-
-            <div className="w-full text-center justify-center place-items-center  ">
-              <div className="button-container flex gap-5 mt-5 text-center">
-                <button className="bg-blue-400 rounded-md p-2  ">
-                  <a href="/dashboard">Back</a>
-                </button>
-                <button type="submit" className="bg-blue-400 rounded-md p-2  ">
-                  Add Report
-                </button>
+          <div>
+            <h1 className="text-3xl mt-5  font-thin text-center  text-red-950  mb-4">
+              Report File
+            </h1>
+            <div className="flex justify-evenly items-center  p-4">
+              <Link to={"/dashboard"}>
+                <div className=" rounded-md p-2">
+                  <img src={previousImage} width={50} alt="Back" />
+                </div>
+              </Link>
+              <div className="flex flex-col justify-center items-center">
+                <label className="block mb-2 text-gray-700">Select Department:</label>
+                <select
+                  className="w-full p-2 border rounded mb-4"
+                  value={selectedDepartment}
+                  required
+                  onChange={(e) => setSelectedDepartment(e.target.value)}
+                >
+                  <option value="" disabled>
+                    -- Choose a Department --
+                  </option>
+                  {departments.map((dept) => (
+                    <option key={dept} value={dept}>
+                      {dept}
+                    </option>
+                  ))}
+                </select>
               </div>
-              <div className="bg-green-400 rounded-md p-2 ml-[900px] w-[100px] mt-3">
-                {cashsales}
+              <div className="flex flex-col justify-center items-center">
+                <label className="block mb-2 text-gray-700">Select Date:</label>
+                <input
+                  type="date"
+                  value={entryDate}
+                  onChange={(e) => setEntryDate(e.target.value)}
+                  className="border rounded p-2 w-full"
+                  required
+                />
               </div>
               <div>
-                <div>
-                  <div className="bg-white flex p-6 rounded-lg  w-[90%] gap-10 items-center max-w-md">
-                    <div>
-                      <h2 className="text-xl font-bold mb-4">
-                        Enter Entry Date
-                      </h2>
-                      {/* Date Input */}
-                      <label className="block mb-2 text-gray-700">
-                        Select Date:
-                      </label>
-                      <input
-                        type="date"
-                        value={entryDate}
-                        onChange={(e) => setEntryDate(e.target.value)}
-                        className="border rounded p-2 w-full"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <h2 className="text-lg font-bold mb-4">
-                        Select a Department
-                      </h2>
-                      <select
-                        className="w-full p-2 border rounded mb-4"
-                        value={selectedDepartment}
-                        required
-                        onChange={(e) => setSelectedDepartment(e.target.value)}
-                      >
-                        <option value="" disabled>
-                          -- Choose a Department --
-                        </option>
-                        {departments.map((dept) => (
-                          <option key={dept} value={dept}>
-                            {dept}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                </div>
+                <button type="submit" className=" rounded-md p-2">
+                  <img src={saveImage} width={50} alt="Save" />
+                </button>
               </div>
             </div>
-            <table className="table mx-auto">
+
+            <table className="font-serif text-center">
               <tbody>
-                <tr className="font-serif text-2xl">
+                <tr className=" text-xl">
                   <th>Name</th>
                   <th>Sales</th>
                   <th>Road</th>
@@ -951,7 +942,7 @@ function ReportFile() {
                   </tr>
                   <tr>
                     <td>
-                  
+
                     </td>
                     <td> </td>
                     <td></td>
@@ -1026,5 +1017,4 @@ function ReportFile() {
     </>
   );
 }
-
 export default ReportFile;

@@ -5,6 +5,7 @@ import axios from "axios";
 
 const ChekList = () => {
     const [pumpSheetData, setPumpSheetData] = useState([]);
+    const [shift, setShift] = useState([]);
 
     useEffect(() => {
         const fetchPumpSheetData = async () => {
@@ -17,12 +18,14 @@ const ChekList = () => {
                     }
                 );
                 setPumpSheetData(response.data);
+                setShift(response.data.map((item) => item.shift));
             } catch (error) {
                 console.error("Error fetching pump sheet data:", error);
             }
         };
         fetchPumpSheetData();
     }, []);
+
     return (
         <>
             <div className="container h-[80%]">
@@ -30,8 +33,6 @@ const ChekList = () => {
                 <div>
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 p-6 bg-gray-100 justify-center mt-[20px]">
                         <div className="mb-6">
-
-
                             <div className="flex flex-col items-center">
                                 <Link
                                     to="/newlekhajokha"
@@ -41,20 +42,20 @@ const ChekList = () => {
                                 </Link>
                             </div>
                             <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                                {pumpSheetData.map((pump) => (
+                                {pumpSheetData.map((pump, index) => (
                                     <Link
                                         to={`/newlekhajokha/${pump._id}`}
                                         key={pump._id} // Ensure you use a unique identifier
                                         className="p-4 border bg-slate-300 rounded-lg shadow-md hover:bg-blue-200 transition duration-300 text-center cursor-pointer"
                                     >
-
                                         <h4 className="text-lg font-bold">
                                             <p>Update Report</p>
-                                            {new Date(pump.date).toLocaleDateString("en-GB", {
+                                           <h2> {new Date(pump.date).toLocaleDateString("en-GB", {
                                                 day: "2-digit",
                                                 month: "2-digit",
                                                 year: "numeric",
-                                            })}
+                                            })}</h2>
+                                           Shift:  {shift[index]}
                                         </h4>
                                     </Link>
                                 ))}

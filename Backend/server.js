@@ -6,8 +6,6 @@ const nodemailer = require("nodemailer");
 const bodyparser = require("body-parser");
 const cors = require("cors");
 require("dotenv").config();
-const multer = require("multer");
-const path = require("path");
 // Models
 const ReportFile = require("./models/reportfile");
 const Reports = require("./models/report"); // Define this
@@ -23,14 +21,10 @@ const BPCLSTATUTORY= require('./routes/mastersheet/routebpclstatutory')
 const Staffmng =require('./routes/mastersheet/staffroute')
 const Financemng =require('./routes/mastersheet/financeroute')
 const Lekha= require('./routes/routelekhajokha')
-
-
-
 const app = express();
 app.use(bodyparser.json());
 app.use(express.json());
 app.use(cors());
-
 // MongoDB Connection
 mongoose
   .connect(process.env.MONGODB_URI, {
@@ -39,13 +33,11 @@ mongoose
   })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error(err));
-
 //save flow data
 app.use('/bank', FlowRoute);
 app.use('/bank',FlowRoute);
 app.use('/bank',FlowRoute);
 app.use('/bank',FlowRoute);
-
 //saving monthly flow fund data
 app.use('/bank',Monthlyfundflow);
 app.use('/bank',Monthlyfundflow);
@@ -54,7 +46,6 @@ app.use('/bank',Monthlyfundflow);
 app.use('/bank',Monthlyfundflow);
 app.use('/bank',Monthlyfundflow);
 app.use('/bank',Monthlyfundflow);
-
 //mastersheet calling
 app.use('/mastersheet',PumpReport);
 app.use('/mastersheet',SalesManagementSheet);
@@ -64,13 +55,7 @@ app.use('/mastersheet',TankLorryManagement);
 app.use('/mastersheet',BPCLSTATUTORY);
 app.use('/mastersheet',Staffmng);
 app.use('/mastersheet',Financemng);
-
 app.use('/newlekhajokha',Lekha)
-
-
-
-
-
 // Middleware to Verify JWT
 const authMiddleware = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
@@ -84,7 +69,6 @@ const authMiddleware = (req, res, next) => {
     return res.status(401).json({ message: "Invalid Token" });
   }
 };
-
 // User Registration
 app.post("/signup", async (req, res) => {
   try {
@@ -128,7 +112,6 @@ app.post("/signup", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
 // User Login
 app.post("/login", async (req, res) => {
   try {
@@ -158,7 +141,6 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
 // Route to handle forgot password and send OTP
 app.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
@@ -192,7 +174,6 @@ app.post("/forgot-password", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
 // Route to verify OTP and reset password
 app.post("/reset-password", async (req, res) => {
   const { email, otp, newPassword } = req.body;
@@ -217,7 +198,6 @@ app.post("/reset-password", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
 // Get Departments
 app.get("/departments", authMiddleware, async (req, res) => {
   try {
@@ -227,7 +207,6 @@ app.get("/departments", authMiddleware, async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
 //reportfile saving
 app.post("/reportfile", async (req, res) => {
   try {
@@ -247,7 +226,6 @@ app.get("/reportfile", async (req, res) => {
     res.status(500).send(error);
   }
 });
-
 // Get a report by ID
 app.get("/reportfile/:id", async (req, res) => {
   try {
@@ -260,7 +238,6 @@ app.get("/reportfile/:id", async (req, res) => {
     res.status(500).send(error);
   }
 });
-
 // Update a report by ID
 app.patch("/reportfile/:id", async (req, res) => {
   try {
@@ -288,7 +265,6 @@ app.delete("/reportfile/:id", async (req, res) => {
     res.status(500).send(error);
   }
 });
-
 //update report
 app.put("/reportfile/:id", async (req, res) => {
   const { id } = req.params;
@@ -308,7 +284,6 @@ app.put("/reportfile/:id", async (req, res) => {
     res.status(500).send("Error updating report");
   }
 });
-
 // Create a Report
 app.post("/report", authMiddleware, async (req, res) => {
   const { title, department, content } = req.body;
@@ -332,7 +307,6 @@ app.post("/report", authMiddleware, async (req, res) => {
     res.status(500).json({ error: "Failed to save the report." });
   }
 });
-
 // Fetch Reports for a Department
 app.get("/reports", authMiddleware, async (req, res) => {
   try {
@@ -366,7 +340,6 @@ app.put("/reports/:id", async (req, res) => {
     res.status(500).json({ error: "Failed to update report" });
   }
 });
-
 // Get Profile
 app.get("/profile", authMiddleware, async (req, res) => {
   try {
@@ -379,7 +352,6 @@ app.get("/profile", authMiddleware, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
 app.put("/profile", authMiddleware, async (req, res) => {
   try {
     const userId = req.user.id; // Extracted from the token
@@ -399,7 +371,6 @@ app.put("/profile", authMiddleware, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
 // User Schema
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true },
@@ -409,36 +380,6 @@ const userSchema = new mongoose.Schema({
   otp: { type: String }, // Store OTP temporarily
 });
 const User = mongoose.model("User", userSchema);
-// Define a schema for the uploaded files
-const fileSchema = new mongoose.Schema({
-  filename: String,
-  path: String,
-});
-const File = mongoose.model("File", fileSchema);
-// Set up multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/"); // Make sure this directory exists
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Append timestamp to filename
-  },
-});
-const upload = multer({ storage });
-// Create an endpoint for file uploads
-app.post("/api/upload", upload.single("file"), async (req, res) => {
-  try {
-    const newFile = new File({
-      filename: req.file.originalname,
-      path: req.file.path,
-    });
-    await newFile.save();
-    res.status(200).send("File uploaded successfully");
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error uploading file");
-  }
-});
 //sbi01 report file saving
 app.post("/fundposition", async (req, res) => {
   try {
@@ -515,6 +456,10 @@ app.delete("/fundposition/:id", async (req, res) => {
     res.status(500).send(error);
   }
 });
+
+
+
+
 
 
 

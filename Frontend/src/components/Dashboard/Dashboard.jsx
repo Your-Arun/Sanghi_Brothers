@@ -18,43 +18,8 @@ const Dashboard = () => {
   const [updatedProfile, setUpdatedProfile] = useState({});
   const navigate = useNavigate();
   const [reportfile, setReportFile] = useState([]);
-  const [file, setFile] = useState(null);
-  const fileInputRef = useRef(null);
   const [sb3update, setSb3Update] = useState([]);
 
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-  };
-  const handleUpload = () => {
-    if (!file) {
-      alert("Please select a file first!");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    // Simulate file upload (replace with your actual upload logic)
-    fetch("/api/upload", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => {
-        if (response.ok) {
-          alert("File uploaded successfully!");
-          setFile(null); // Reset the file input after successful upload
-        } else {
-          alert("File upload failed.");
-        }
-      })
-      .catch((error) => {
-        console.error("Error uploading file:", error);
-        alert("An error occurred while uploading the file.");
-      });
-  };
-  const openFileDialog = () => {
-    fileInputRef.current.click(); // Programmatically click the file input
-  };
 
   //reportfile ke lie
   useEffect(() => {
@@ -569,27 +534,14 @@ const Dashboard = () => {
             <input
               type="file"
               accept=".pdf,.jpg,.jpeg,.xls,.xlsx"
-              onChange={handleFileChange}
-              className="mr-2 w-full hidden" // Hide the input but keep it accessible
-              ref={fileInputRef} // Attach the ref to the input
+              className="mr-2 w-full hidden"
             />
             <button
               className="bg-blue-500 text-white rounded-lg p-4 shadow-lg hover:bg-blue-600 transition duration-300 flex items-center"
               aria-label="Upload File"
-              onClick={openFileDialog} // Open file dialog on button click
             >
               <span className="mr-2">📤</span>{" "}
-              {/* Optional icon for visual appeal */}
               Upload File
-            </button>
-            <button
-              className="bg-green-500 text-white rounded-lg p-4 shadow-lg hover:bg-green-600 transition duration-300 flex items-center ml-2"
-              aria-label="Submit File"
-              onClick={handleUpload} // Submit the file
-            >
-              <span className="mr-2">✅</span>{" "}
-              {/* Optional icon for visual appeal */}
-              Submit
             </button>
           </div>
 
