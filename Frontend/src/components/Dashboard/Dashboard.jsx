@@ -414,6 +414,7 @@ const Dashboard = () => {
             <p className="text-gray-600 text-center">No reports available.</p>
           )}
         </div>
+        
         {/* Profile Modal */}
         {showProfileModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
@@ -592,10 +593,17 @@ const Dashboard = () => {
             </button>
           </div>
 
+          <div className="flex justify-between">
           <div>
             <a href="/shifting"><button className="bg-green-500 text-white rounded-lg p-4 shadow-lg hover:bg-green-600 transition duration-300 flex items-center ml-2">
               Shifting
             </button></a>
+          </div>
+          <div>
+            <a href="/lekhajokha"><button className="bg-green-500 text-white rounded-lg p-4 shadow-lg hover:bg-green-600 transition duration-300 flex items-center ml-2">
+              Lekha Jokha
+            </button></a>
+          </div>
           </div>
         </div>
         {/* Modal for Selecting Department of complaint report */}

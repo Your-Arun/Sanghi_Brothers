@@ -22,6 +22,9 @@ const TankLorryManagement=require('./routes/mastersheet/tanklorryroute')
 const BPCLSTATUTORY= require('./routes/mastersheet/routebpclstatutory')
 const Staffmng =require('./routes/mastersheet/staffroute')
 const Financemng =require('./routes/mastersheet/financeroute')
+const Lekha= require('./routes/routelekhajokha')
+
+
 
 const app = express();
 app.use(bodyparser.json());
@@ -54,35 +57,15 @@ app.use('/bank',Monthlyfundflow);
 
 //mastersheet calling
 app.use('/mastersheet',PumpReport);
-app.use('/mastersheet',PumpReport);
-app.use('/mastersheet',PumpReport);
-app.use('/mastersheet',PumpReport);
-app.use('/mastersheet',PumpReport);
-app.use('/mastersheet',SalesManagementSheet);
-app.use('/mastersheet',SalesManagementSheet);
-app.use('/mastersheet',SalesManagementSheet);
-app.use('/mastersheet',SalesManagementSheet);
 app.use('/mastersheet',SalesManagementSheet);
 app.use('/mastersheet',PurchaseManagement);
-app.use('/mastersheet',PurchaseManagement);
-app.use('/mastersheet',PurchaseManagement);
-app.use('/mastersheet',PurchaseManagement);
-app.use('/mastersheet',PurchaseManagement);
 app.use('/mastersheet',Lubricant);
-app.use('/mastersheet',Lubricant);
-app.use('/mastersheet',Lubricant);
-app.use('/mastersheet',Lubricant);
-app.use('/mastersheet',Lubricant);
-app.use('/mastersheet',TankLorryManagement);
-app.use('/mastersheet',TankLorryManagement);
-app.use('/mastersheet',TankLorryManagement);
-app.use('/mastersheet',TankLorryManagement);
 app.use('/mastersheet',TankLorryManagement);
 app.use('/mastersheet',BPCLSTATUTORY);
 app.use('/mastersheet',Staffmng);
 app.use('/mastersheet',Financemng);
 
-
+app.use('/newlekhajokha',Lekha)
 
 
 

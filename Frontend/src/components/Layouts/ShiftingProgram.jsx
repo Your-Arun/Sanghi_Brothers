@@ -146,7 +146,7 @@ const ShiftManagementSystem = () => {
     ]);
 
   };
-
+////banned or autoupdat
   return (
     <div className="h-[90%] bg-gray-100 mt-[-30px] p-5">
       <div className="max-w-4xl mx-auto p-5 bg-white rounded-lg shadow-md">

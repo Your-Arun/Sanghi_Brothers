@@ -39,7 +39,9 @@ import Staffmngment from './components/Layouts/staffmngemnt'
 import StaffUpdate from './components/updated_Report/updatestaff'
 import Finance from './components/Layouts/financemgnemnt'
 import UpdateFin from './components/updated_Report/updatefinance'
-
+import Lekhajokha from './components/Layouts/lekhajokha'
+import LekhaBox from './components/Layouts/LekhaBox'
+import Lekhajokhaupdate from './components/updated_Report/lekhajokhaupdate'
 
 
 
@@ -108,7 +110,9 @@ const AppContent = () => {
         <Route path="/mastersheet/staffmanagement/:id" element={<StaffUpdate/>} />
         <Route path="/mastersheet/finance" element={<Finance/>} />
         <Route path="/mastersheet/finance/:id" element={<UpdateFin/>} />
-
+        <Route path="/lekhajokha" element={<LekhaBox/>} />
+        <Route path="/newlekhajokha" element={<Lekhajokha/>} />
+        <Route path="/newlekhajokha/:id" element={<Lekhajokhaupdate/>} />
       </Routes>
     </>
   );
