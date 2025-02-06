@@ -43,7 +43,8 @@ import Lekhajokha from './components/Layouts/lekhajokha'
 import LekhaBox from './components/Layouts/LekhaBox'
 import Lekhajokhaupdate from './components/updated_Report/lekhajokhaupdate'
 import ExcelUploader from './components/excelsheet/exceluploader'
-import MeterClose from './components/Petrol Related/MeterClose'
+import MeterClose from './components/Petrol Related/Meterclose'
+
 
 
 

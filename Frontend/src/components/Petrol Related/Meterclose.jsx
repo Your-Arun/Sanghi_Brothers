@@ -6,32 +6,40 @@ import axios from 'axios';
 
 const Meterclose = () => {
     const [date, setDate] = useState('');
-
-    const [item, setItem] = useState([
+    const [cashunknown, setCashunknown] = useState('');
+    const [cashms, setCashms] = useState('');
+    const [cashsp, setCashsp] = useState('');
+    const [crsalesms, setCrsalesms] = useState('');
+    const [u2, setU2] = useState('');
+    const [items, setItems] = useState([
         'Opening Meter',
         'Sales',
         'Total',
         'Oil',
         'Totals',
         'Testing',
-        'Close Meter',
-        '',
-        '',
-        ''
+        'Closing Meter',
     ]);
+
     const [inputs, setInputs] = useState({
-        points: item.map((item) => ({
+        points: items.map((item) => ({
             name: item,
             n1: '',
             n2: '',
             n3: '',
             n4: '',
             n5: '',
-            n6: ''
+            n6: '',
+            qnty: '',
+            amt: '',
+            oilqty: '',
+            oilamt: '',
+            total: '',
         }))
     });
 
-    const handleInputChnge = (e, index) => {
+
+    const handleInputChange = (e, index) => {
         const { id, value } = e.target;
         setInputs((prevInputs) => ({
             ...prevInputs,
@@ -40,14 +48,16 @@ const Meterclose = () => {
             )
         }));
     };
+
     const handleItemChange = (e, index) => {
-        const updatedItems = [...item];
+        const updatedItems = [...items];
         updatedItems[index] = e.target.value;
-        setItem(updatedItems);
+        setItems(updatedItems);
         const updatedPoints = [...inputs.points];
         updatedPoints[index].name = e.target.value;
         setInputs({ points: updatedPoints });
     };
+
     const handleDateChange = (e) => {
         setDate(e.target.value);
     };
@@ -58,7 +68,7 @@ const Meterclose = () => {
             date: new Date(date).toISOString().split('T')[0],
             points: inputs.points.map((point) => ({
                 ...point,
-                name: item[inputs.points.indexOf(point)]
+                name: items[inputs.points.indexOf(point)]
             }))
         };
         try {
@@ -69,14 +79,17 @@ const Meterclose = () => {
             alert('Error saving Meter Close!');
         }
     };
-    const openingMeterIndex = item.indexOf('Opening Meter');
-    const salesIndex = item.indexOf('Sales');
-    const totalsIndex = item.indexOf('Totals');
-    const testingIndex = item.indexOf('Testing');
-    const closingMeterIndex = item.indexOf('Close Meter');
+
+    const openingMeterIndex = items.indexOf('Opening Meter');
+    const salesIndex = items.indexOf('Sales');
+    const oilIndex = items.indexOf('Oil');
+    const totalsIndex = items.indexOf('Totals');
+    const testingIndex = items.indexOf('Testing');
     const openingMeterValues = inputs.points[openingMeterIndex];
     const salesValues = inputs.points[salesIndex];
-
+    const oilValues = inputs.points[oilIndex];
+    const totalsValues = inputs.points[totalsIndex];
+    const testingValues = inputs.points[testingIndex];
     const nozzleValues = {
         n1: salesValues.n1,
         n2: salesValues.n2,
@@ -92,47 +105,37 @@ const Meterclose = () => {
         n4: openingMeterValues.n4,
         n5: openingMeterValues.n5,
         n6: openingMeterValues.n6
-    }
-    const addnozzle =
-        parseInt(nozzleValues.n1) +
-        parseInt(nozzleValues.n2) +
-        parseInt(nozzleValues.n3) +
-        parseInt(nozzleValues.n4) +
-        parseInt(nozzleValues.n5) +
-        parseInt(nozzleValues.n6);
-
+    };
     const totaln1 = parseInt(totalOpeningMeter.n1) + parseInt(nozzleValues.n1) || 0;
     const totaln2 = parseInt(totalOpeningMeter.n2) + parseInt(nozzleValues.n2) || 0;
     const totaln3 = parseInt(totalOpeningMeter.n3) + parseInt(nozzleValues.n3) || 0;
     const totaln4 = parseInt(totalOpeningMeter.n4) + parseInt(nozzleValues.n4) || 0;
     const totaln5 = parseInt(totalOpeningMeter.n5) + parseInt(nozzleValues.n5) || 0;
     const totaln6 = parseInt(totalOpeningMeter.n6) + parseInt(nozzleValues.n6) || 0;
+    const totalNozzles = {
+        n1: totalsValues.n1,
+        n2: totalsValues.n2,
+        n3: totalsValues.n3,
+        n4: totalsValues.n4,
+        n5: totalsValues.n5,
+        n6: totalsValues.n6
+    };
+    const oilValuesCalculated = {
+        n1: oilValues.n1,
+        n2: oilValues.n2,
+        n3: oilValues.n3,
+        n4: oilValues.n4,
+        n5: oilValues.n5,
+        n6: oilValues.n6
+    };
+    const closingMetern1 = parseInt(oilValuesCalculated.n1) + parseInt(totalNozzles.n1) + parseInt(testingValues.n1) || 0;
+    const closingMetern2 = parseInt(oilValuesCalculated.n2) + parseInt(totalNozzles.n2) + parseInt(testingValues.n2) || 0;
+    const closingMetern3 = parseInt(oilValuesCalculated.n3) + parseInt(totalNozzles.n3) + parseInt(testingValues.n3) || 0;
+    const closingMetern4 = parseInt(oilValuesCalculated.n4) + parseInt(totalNozzles.n4) + parseInt(testingValues.n4) || 0;
+    const closingMetern5 = parseInt(oilValuesCalculated.n5) + parseInt(totalNozzles.n5) + parseInt(testingValues.n5) || 0;
+    const closingMetern6 = parseInt(oilValuesCalculated.n6) + parseInt(totalNozzles.n6) + parseInt(testingValues.n6) || 0;
 
-    const totalnozlles = {
-        n1: totalsIndex.n1,
-        n2: totalsIndex.n2,
-        n3: totalsIndex.n3,
-        n4: totalsIndex.n4,
-        n5: totalsIndex.n5,
-        n6: totalsIndex.n6
-    }
-    const testingValues = {
-        n1: testingIndex.n1,
-        n2: testingIndex.n2,
-        n3: testingIndex.n3,
-        n4: testingIndex.n4,
-        n5: testingIndex.n5,
-        n6: testingIndex.n6
-    }
-    const closingMetern1 = parseInt(totalsIndex.n1) + parseInt(testingIndex.n1) || 0;
-    const closingMetern2 = parseInt(totalsIndex.n2) + parseInt(testingIndex.n2) || 0;
-    const closingMetern3 = parseInt(totalsIndex.n3) + parseInt(testingIndex.n3) || 0;
-    const closingMetern4 = parseInt(totalsIndex.n4) + parseInt(testingIndex.n4) || 0;
-    const closingMetern5 = parseInt(totalsIndex.n5) + parseInt(testingIndex.n5) || 0;
-    const closingMetern6 = parseInt(totalsIndex.n6) + parseInt(testingIndex.n6) || 0;
-
-
-
+    const totalcredit =  parseInt(cashms) + parseInt(cashsp) + parseInt(crsalesms) + parseInt(u2) || 0;
 
     return (
         <div className="relative p-6 bg-gradient-to-r from-gray-200 to-white min-h-screen">
@@ -180,29 +183,25 @@ const Meterclose = () => {
                                             onChange={(e) => handleItemChange(e, index)}
                                             className="p-2 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                                         />
-                                    </td>
-                                    {(index === 2 || index === 6) ? (
-                                        <>
-                                            {index === 2 ? (
-                                                <>
 
-                                                    <td className="p-3">{totaln1}</td>
-                                                    <td className="p-3">{totaln2}</td>
-                                                    <td className="p-3">{totaln3}</td>
-                                                    <td className="p-3">{totaln4}</td>
-                                                    <td className="p-3">{totaln5}</td>
-                                                    <td className="p-3">{totaln6}</td>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <td className="p-3">{closingMetern1}</td>
-                                                    <td className="p-3">{closingMetern2}</td>
-                                                    <td className="p-3">{closingMetern3}</td>
-                                                    <td className="p-3">{closingMetern4}</td>
-                                                    <td className="p-3">{closingMetern5}</td>
-                                                    <td className="p-3">{closingMetern6}</td>
-                                                </>
-                                            )}
+                                    </td>
+                                    {(index === 2) ? (
+                                        <>
+                                            <td className="p-3">{totaln1}</td>
+                                            <td className="p-3">{totaln2}</td>
+                                            <td className="p-3">{totaln3}</td>
+                                            <td className="p-3">{totaln4}</td>
+                                            <td className="p-3">{totaln5}</td>
+                                            <td className="p-3">{totaln6}</td>
+                                        </>
+                                    ) : (index === 6) ? (
+                                        <>
+                                            <td className="p-3">{closingMetern1}</td>
+                                            <td className="p-3">{closingMetern2}</td>
+                                            <td className="p-3">{closingMetern3}</td>
+                                            <td className="p-3">{closingMetern4}</td>
+                                            <td className="p-3">{closingMetern5}</td>
+                                            <td className="p-3">{closingMetern6}</td>
                                         </>
                                     ) : (
                                         <>
@@ -211,7 +210,7 @@ const Meterclose = () => {
                                                     type="number"
                                                     id="n1"
                                                     value={point.n1}
-                                                    onChange={(e) => handleInputChnge(e, index)}
+                                                    onChange={(e) => handleInputChange(e, index)}
                                                     className="p-2 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                                                 />
                                             </td>
@@ -220,7 +219,7 @@ const Meterclose = () => {
                                                     type="number"
                                                     id="n2"
                                                     value={point.n2}
-                                                    onChange={(e) => handleInputChnge(e, index)}
+                                                    onChange={(e) => handleInputChange(e, index)}
                                                     className="p-2 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                                                 />
                                             </td>
@@ -229,7 +228,7 @@ const Meterclose = () => {
                                                     type="number"
                                                     id="n3"
                                                     value={point.n3}
-                                                    onChange={(e) => handleInputChnge(e, index)}
+                                                    onChange={(e) => handleInputChange(e, index)}
                                                     className="p-2 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                                                 />
                                             </td>
@@ -238,7 +237,7 @@ const Meterclose = () => {
                                                     type="number"
                                                     id="n4"
                                                     value={point.n4}
-                                                    onChange={(e) => handleInputChnge(e, index)}
+                                                    onChange={(e) => handleInputChange(e, index)}
                                                     className="p-2 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                                                 />
                                             </td>
@@ -247,7 +246,7 @@ const Meterclose = () => {
                                                     type="number"
                                                     id="n5"
                                                     value={point.n5}
-                                                    onChange={(e) => handleInputChnge(e, index)}
+                                                    onChange={(e) => handleInputChange(e, index)}
                                                     className="p-2 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                                                 />
                                             </td>
@@ -256,7 +255,7 @@ const Meterclose = () => {
                                                     type="number"
                                                     id="n6"
                                                     value={point.n6}
-                                                    onChange={(e) => handleInputChnge(e, index)}
+                                                    onChange={(e) => handleInputChange(e, index)}
                                                     className="p-2 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                                                 />
                                             </td>
@@ -276,49 +275,55 @@ const Meterclose = () => {
                                         <h2 />
                                     </td>
                                     <td>
-                                        <input type="number" name="cashunknown" id="cashunknown" />
+                                        <input type="number" name="cashunknown" value={cashunknown} onChange={(e) => setCashunknown(e.target.value)} id="cashunknown" />
                                     </td>
                                 </tr>
+
                                 <tr>
                                     <td>
                                         <h2>Cash MS</h2>
                                     </td>
                                     <td>
-                                        <input type="number" name="cashms" id="cashms" />
+                                        <input type="number" name="cashms" id="cashms" value={cashms} onChange={(e) => setCashms(e.target.value)}  />
                                     </td>
                                 </tr>
+
                                 <tr>
                                     <td>
                                         <h2>Cash SP</h2>
                                     </td>
                                     <td>
-                                        <input type="number" name="cashsp" id="cashsp" />
+                                        <input type="number" name="cashsp" id="cashsp" value={cashsp} onChange={(e) => setCashsp(e.target.value)} />
                                     </td>
                                 </tr>
                                 <tr>
+
                                     <td>
                                         <h2>CR. Sale M.S</h2>
                                     </td>
                                     <td>
-                                        <input type="number" name="crsalesms" id="crsalesms" />
+                                        <input type="number" name="crsalesms" id="crsalesms" value={crsalesms} onChange={(e) => setCrsalesms(e.target.value)} />
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td>
+                                        <h2 />
+                                    </td>
+                                    <td>
+                                        <input type="number" name="u2" id="u2" value={u2} onChange={(e) => setU2(e.target.value)} />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <h2 />
                                     </td>
-                                    <td>
-                                        <input type="number" name="u2" id="u2" />
-                                    </td>
+                                    <td>{totalcredit}</td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <h2 />
-                                    </td>
-                                    <td>{addnozzle}</td>
-                                </tr>
-                                <tr>
-                                    <td>
+
+
                                         <h2 />
                                     </td>
                                     <td>CREDIT</td>
@@ -328,6 +333,39 @@ const Meterclose = () => {
                             </tbody>
                         </table>
                     </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                    <div className="bg-white p-6">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>S No.</th>
+                                    <th>NAME</th>
+                                    <th>Qnty</th>
+                                    <th>Amt</th>
+                                    <th>Oil qty.</th>
+                                    <th>Oil Amt</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {inputs.points.map((point, index) => (
+                                    <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{point.name}</td>
+                                        <td>{point.qnty}</td>
+                                        <td>{point.amt}</td>
+                                        <td>{point.oilqty}</td>
+                                        <td>{point.oilamt}</td>
+                                        <td>{point.total}</td>
+                                    </tr>
+                                ))}
+
+                            </tbody>
+                        </table>
+                    </div>
+
+
                 </div>
             </form>
         </div>
