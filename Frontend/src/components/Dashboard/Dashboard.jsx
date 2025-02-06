@@ -424,18 +424,27 @@ const Dashboard = () => {
             <div>
               <a href="/shifting">
                 <button className="bg-green-500 text-white rounded-lg p-4 shadow-lg hover:bg-green-600 transition duration-300 flex items-center ml-2">
-                  Shifting
+                  SHIFTING
                 </button>
               </a>
             </div>
             <div>
               <a href="/lekhajokha">
                 <button className="bg-green-500 text-white rounded-lg p-4 shadow-lg hover:bg-green-600 transition duration-300 flex items-center ml-2">
-                  Lekha Jokha
+                  LEKHA JOKHA
+                </button>
+              </a>
+            </div>
+            <div>
+              <a href="/meterclose">
+                <button className="bg-green-500 text-white rounded-lg p-4 shadow-lg hover:bg-green-600 transition duration-300 flex items-center ml-2">
+                  METER CLOSE
                 </button>
               </a>
             </div>
           </div>
+
+          
         </div>
 
         {/* Profile Modal */}

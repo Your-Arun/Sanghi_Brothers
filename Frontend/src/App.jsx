@@ -43,6 +43,7 @@ import Lekhajokha from './components/Layouts/lekhajokha'
 import LekhaBox from './components/Layouts/LekhaBox'
 import Lekhajokhaupdate from './components/updated_Report/lekhajokhaupdate'
 import ExcelUploader from './components/excelsheet/exceluploader'
+import MeterClose from './components/Petrol Related/MeterClose'
 
 
 
@@ -114,6 +115,7 @@ const AppContent = () => {
         <Route path="/newlekhajokha" element={<Lekhajokha/>} />
         <Route path="/newlekhajokha/:id" element={<Lekhajokhaupdate/>} />
         <Route path="/exceluploader" element={<ExcelUploader/>} />
+        <Route path="/meterclose" element={<MeterClose/>} />
       </Routes>
     </>
   );
