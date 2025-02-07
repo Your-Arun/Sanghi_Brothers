@@ -30,6 +30,10 @@ const Meterclose = () => {
             n4: '',
             n5: '',
             n6: '',
+        })),
+        items1: Array.from({ length: 7 }, () => ({
+            sno: '',
+            name: '',
             qnty: '',
             amt: '',
             oilqty: '',
@@ -37,16 +41,18 @@ const Meterclose = () => {
             total: '',
         }))
     });
-
-
     const handleInputChange = (e, index) => {
         const { id, value } = e.target;
         setInputs((prevInputs) => ({
             ...prevInputs,
             points: prevInputs.points.map(
                 (point, pointIndex) => (pointIndex === index ? { ...point, [id]: value } : point)
+            ),
+            items1: prevInputs.items1.map(
+                (item, itemIndex) => (itemIndex === index ? { ...item, [id]: value } : item)
             )
         }));
+
     };
 
     const handleItemChange = (e, index) => {
@@ -135,7 +141,7 @@ const Meterclose = () => {
     const closingMetern5 = parseInt(oilValuesCalculated.n5) + parseInt(totalNozzles.n5) + parseInt(testingValues.n5) || 0;
     const closingMetern6 = parseInt(oilValuesCalculated.n6) + parseInt(totalNozzles.n6) + parseInt(testingValues.n6) || 0;
 
-    const totalcredit =  parseInt(cashms) + parseInt(cashsp) + parseInt(crsalesms) + parseInt(u2) || 0;
+    const totalcredit = parseInt(cashms) + parseInt(cashsp) + parseInt(crsalesms) + parseInt(u2) || 0;
 
     return (
         <div className="relative p-6 bg-gradient-to-r from-gray-200 to-white min-h-screen">
@@ -284,7 +290,7 @@ const Meterclose = () => {
                                         <h2>Cash MS</h2>
                                     </td>
                                     <td>
-                                        <input type="number" name="cashms" id="cashms" value={cashms} onChange={(e) => setCashms(e.target.value)}  />
+                                        <input type="number" name="cashms" id="cashms" value={cashms} onChange={(e) => setCashms(e.target.value)} />
                                     </td>
                                 </tr>
 
@@ -349,15 +355,25 @@ const Meterclose = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {inputs.points.map((point, index) => (
+                                {Array.from({ length: 7 }, (_, index) => (
                                     <tr key={index}>
-                                        <td>{index + 1}</td>
-                                        <td>{point.name}</td>
-                                        <td>{point.qnty}</td>
-                                        <td>{point.amt}</td>
-                                        <td>{point.oilqty}</td>
-                                        <td>{point.oilamt}</td>
-                                        <td>{point.total}</td>
+                                        <td><input type="number" className='w-[70px]' id="sno" value={inputs.items1[index].sno} onChange={(e) => handleInputChange(e, index)} /></td>
+                                        <td><input
+                                            type="text"
+                                            id="name"
+                                            value={inputs.items1[index].name}
+                                            onChange={(e) => handleInputChange(e, index)}
+                                            className="p-2 w-[180px] border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                        /></td>
+                                        <td><input type="number" id="qnty" className='w-[70px]' value={inputs.items1[index].qnty} onChange={(e) => handleInputChange(e, index)} /></td>
+                                        <td><input type="number" id="amt" className='w-[90px]' value={inputs.items1[index].amt} onChange={(e) => handleInputChange(e, index)} /></td>
+
+                                        <td><input type="number" id="oilqty" className='w-[70px]' value={inputs.items1[index].oilqty} onChange={(e) => handleInputChange(e, index)} /></td>
+                                        <td><input type="number" id="oilamt" className='w-[70px]' value={inputs.items1[index].oilamt} onChange={(e) => handleInputChange(e, index)} /></td>
+
+                                        <td><input type="number" id="total" className='w-[100px]' value={inputs.items1[index].total} onChange={(e) => handleInputChange(e, index)} /></td>
+
+
                                     </tr>
                                 ))}
 

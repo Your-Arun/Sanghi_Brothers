@@ -28,6 +28,7 @@ const BPCLSTATUTORY= require('./routes/mastersheet/routebpclstatutory')
 const Staffmng =require('./routes/mastersheet/staffroute')
 const Financemng =require('./routes/mastersheet/financeroute')
 const Lekha= require('./routes/routelekhajokha')
+const ShiftingRoutes = require('./models/shifting/routesss');
 const app = express();
 app.use(bodyparser.json());
 app.use(express.json());
@@ -512,7 +513,7 @@ app.get("/download", async (req, res) => {
 });
 
 
-
+app.use('/shifting', ShiftingRoutes);
 
 
 
