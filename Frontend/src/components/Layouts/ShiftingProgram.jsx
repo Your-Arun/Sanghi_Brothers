@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { FaTrash, FaPlus } from "react-icons/fa";
 import axios from 'axios';
+import previousImage from '/public/previous.png';
+import saveImage from '/public/save.png';
+import { Link } from "react-router-dom";
 
 const ShiftManagementSystem = () => {
   const [members, setMembers] = useState([]);
@@ -138,7 +141,21 @@ const ShiftManagementSystem = () => {
   return (
     <div className="h-[90%] bg-gray-100 mt-[-30px] p-5">
       <div className="max-w-4xl mx-auto p-5 bg-white rounded-lg shadow-md">
-        <h1 className="text-3xl font-bold text-center mb-5">SHIFT MANAGEMENT SYSTEM</h1>
+        <form>
+        <div className="flex justify-between items-center mb-6">
+                    <Link to={'/dashboard'}>
+                        <img src={previousImage} width={50} alt="Back" />
+                    </Link>
+                    <div className="grid grid-row-2 items-center gap-2">
+                        {' '}
+                        <h1 className="text-3xl font-bold text-center mb-5">SHIFT MANAGEMENT SYSTEM</h1>
+                    </div>
+                    <button>
+                        <img src={saveImage} width={50} alt="Save" />
+                    </button>
+                </div>
+        </form>
+       
 
         {/* Add Member Form */}
         <form onSubmit={handleAddMember} className="mb-5">
