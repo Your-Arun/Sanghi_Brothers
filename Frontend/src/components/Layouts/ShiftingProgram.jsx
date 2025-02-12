@@ -5,7 +5,8 @@ import axios from 'axios';
 const ShiftManagementSystem = () => {
   const [members, setMembers] = useState([]);
   const [absentees, setAbsentees] = useState([]);
-  const [overtimeMembers, setOvertimeMembers] = useState([]);
+  const [morningOvertimeMembers, setMorningOvertimeMembers] = useState([]);
+  const [eveningOvertimeMembers, setEveningOvertimeMembers] = useState([]);
   const [shifts, setShifts] = useState([
     {
       id: "1",
@@ -28,7 +29,6 @@ const ShiftManagementSystem = () => {
     name: "",
     role: "operator",
     shift: '',
-    overtime: '',
     available: '',
   });
   useEffect(() => {
@@ -49,7 +49,7 @@ const ShiftManagementSystem = () => {
         const response = await axios.post("http://localhost:5500/shifting", newMember);
         const savedMember = response.data;
         setMembers([...members, savedMember]);
-        setNewMember({ name: "", role: "", shift: "", available: "", overtime: "" });
+        setNewMember({ name: "", role: "", shift: "", available: "" });
       } catch (error) {
         console.error("Error saving member:", error);
         alert("Failed to save member. Please try again.");
@@ -70,20 +70,16 @@ const ShiftManagementSystem = () => {
       alert("Failed to delete member. Please try again.");
     }
   };
-  const handleToggleOvertime = (memberId) => {
-    if (overtimeMembers.includes(memberId)) {
-      setOvertimeMembers(overtimeMembers.filter((id) => id !== memberId));
-    } else {
-      setOvertimeMembers([...overtimeMembers, memberId]);
+
+  const handleUpdateAvailability = async (id, status) => {
+    try {
+      await axios.put(`http://localhost:5500/shifting/${id}`, { available: status });
+      setMembers(members.map((m) => (m._id === id ? { ...m, available: status } : m)));
+    } catch (error) {
+      console.error("Error updating availability:", error);
     }
   };
-  const handleToggleAvailability = (memberId) => {
-    if (absentees.includes(memberId)) {
-      setAbsentees(absentees.filter((id) => id !== memberId));
-    } else {
-      setAbsentees([...absentees, memberId]);
-    }
-  };
+
   const shuffleArray = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -91,7 +87,7 @@ const ShiftManagementSystem = () => {
     }
     return array;
   };
-  const handleAssignShifts = () => {
+  const handleAssignShiftsAndOvertime = () => {
     if (members.length === 0) {
       alert("Please add team members first");
       return;
@@ -105,35 +101,40 @@ const ShiftManagementSystem = () => {
     const eveningShift = shifts.find((shift) => shift.name === "Evening Shift");
 
     if (morningShift && eveningShift) {
-      const morningMembers = availableMembers.filter((m) => m.shift === "morning" && m.role !== "supervisor" && m.role !== "air boy");
-      const eveningMembers = availableMembers.filter((m) => m.shift === "evening" && m.role !== "supervisor" && m.role !== "air boy");
+      let morningMembers = availableMembers.filter((m) => m.shift === "morning" && m.role === "operator");
+      let eveningMembers = availableMembers.filter((m) => m.shift === "evening" && m.role === "operator");
 
-      const shuffledMorningMembers = shuffleArray([...morningMembers]);
-      const shuffledEveningMembers = shuffleArray([...eveningMembers]);
+      morningMembers = shuffleArray([...morningMembers]);
+      eveningMembers = shuffleArray([...eveningMembers]);
 
-      morningShift.members = shuffledMorningMembers;
-      eveningShift.members = shuffledEveningMembers;
+      morningShift.members = morningMembers;
+      eveningShift.members = eveningMembers;
 
-      // Assign overtime members
-      const overtimeCandidates = availableMembers.filter((m) => overtimeMembers.includes(m._id));
-      const unassignedMorningSlots = Math.max(0, morningShift.nozzles.length - morningShift.members.length);
-      const unassignedEveningSlots = Math.max(0, eveningShift.nozzles.length - eveningShift.members.length);
-      const morningOvertime = overtimeCandidates.slice(0, unassignedMorningSlots);
-      const eveningOvertime = overtimeCandidates.slice(unassignedMorningSlots, unassignedMorningSlots + unassignedEveningSlots);
+      const unassignedMorning = Math.max(0, morningShift.nozzles.length - morningMembers.length);
+      const unassignedEvening = Math.max(0, eveningShift.nozzles.length - eveningMembers.length);
+
+      let overtimeCandidatesMorning = eveningMembers.filter(m => !eveningOvertimeMembers.includes(m._id));
+      let overtimeCandidatesEvening = morningMembers.filter(m => !morningOvertimeMembers.includes(m._id));
+
+      const morningOvertime = overtimeCandidatesMorning.slice(0, unassignedMorning);
+      const eveningOvertime = overtimeCandidatesEvening.slice(0, unassignedEvening);
+
       morningShift.members = [...morningShift.members, ...morningOvertime];
       eveningShift.members = [...eveningShift.members, ...eveningOvertime];
-      // Assign supervisors and air boys
-      const morningSupervisors = availableMembers.filter((m) => m.role === "supervisor" && m.shift === "morning");
-      const eveningSupervisors = availableMembers.filter((m) => m.role === "supervisor" && m.shift === "evening");
-      const morningAirBoys = availableMembers.filter((m) => m.role === "air boy" && m.shift === "morning");
-      const eveningAirBoys = availableMembers.filter((m) => m.role === "air boy" && m.shift === "evening");
-      morningShift.supervisor = morningSupervisors[0];
-      eveningShift.supervisor = eveningSupervisors[0];
-      morningShift.airBoy = morningAirBoys[0];
-      eveningShift.airBoy = eveningAirBoys[0];
+
+      setMorningOvertimeMembers(morningOvertime.map(m => m._id));
+      setEveningOvertimeMembers(eveningOvertime.map(m => m._id));
+
+      morningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && m.shift === "morning");
+      eveningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && m.shift === "evening");
+
+      morningShift.airBoy = availableMembers.find(m => m.role === "air boy" && m.shift === "morning");
+      eveningShift.airBoy = availableMembers.find(m => m.role === "air boy" && m.shift === "evening");
+
       setShifts([morningShift, eveningShift]);
     }
   };
+
   return (
     <div className="h-[90%] bg-gray-100 mt-[-30px] p-5">
       <div className="max-w-4xl mx-auto p-5 bg-white rounded-lg shadow-md">
@@ -189,24 +190,18 @@ const ShiftManagementSystem = () => {
           <ul>
             {members.map((member, index) => (
               <li key={member._id} className="flex justify-between items-center mb-2">
-                <span>{index + 1}. {member.name}</span>
+                <span>{index + 1}. {member.name.toUpperCase()} - ({member.role.toUpperCase()})</span>
                 <div className="flex items-center gap-6">
                   <label className="flex items-center">
                     <input
                       type="checkbox"
-                      checked={!absentees.includes(member._id)}
-                      onChange={() => handleToggleAvailability(member._id)}
-                      className="mr-2"
+                      checked={member.available === "present"}
+                      onChange={() => handleUpdateAvailability(member._id, member.available === "present" ? "absent" : "present")}
+                      className="w-5 h-5 cursor-pointer"
                     />
-                    <span>{absentees.includes(member._id) ? "Absent" : "Present"}</span>
+                    <label className="ml-2">{member.available === "present" ? "Present" : "Absent"}</label>
                   </label>
                   <span>Shift: {member.shift.toUpperCase()}</span>
-                  <button
-                    onClick={() => handleToggleOvertime(member._id)}
-                    className={`px-2 py-1 rounded ml-2 ${overtimeMembers.includes(member._id) ? "bg-yellow-500 text-white" : "bg-gray-300"}`}
-                  >
-                    Overtime
-                  </button>
                   <button
                     onClick={() => handleRemoveMember(member._id)}
                     className="bg-red-500 text-white px-2 py-1 rounded ml-2"
@@ -220,7 +215,7 @@ const ShiftManagementSystem = () => {
         </div>
 
         {/* Shift Assignment */}
-        <button onClick={handleAssignShifts} className="block mx-auto bg-green-500 text-white px-4 py-2 rounded mb-5 ">
+        <button onClick={handleAssignShiftsAndOvertime} className="block mx-auto bg-green-500 text-white px-4 py-2 rounded mb-5 ">
           Assign Shifts
         </button>
 
@@ -247,7 +242,7 @@ const ShiftManagementSystem = () => {
                         {shift.members[index]?.name || "Unassigned"}
                       </td>
                       <td className="py-1">
-                        {shift.members[index] && overtimeMembers.includes(shift.members[index]._id)
+                        {shift.members[index] && (shift.name === "Morning Shift" ? morningOvertimeMembers.includes(shift.members[index]._id) : eveningOvertimeMembers.includes(shift.members[index]._id))
                           ? "🟢"
                           : "🔴"}
                       </td>
@@ -263,4 +258,4 @@ const ShiftManagementSystem = () => {
   );
 };
 
-export default ShiftManagementSystem;
+export default ShiftManagementSystem;  

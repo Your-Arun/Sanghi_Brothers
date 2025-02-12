@@ -464,8 +464,6 @@ app.delete("/fundposition/:id", async (req, res) => {
     res.status(500).send(error);
   }
 });
-
-
 // Define a Schema for Excel Data
 const excelSchema = new mongoose.Schema({}, { strict: false });
 const ExcelData = mongoose.model("ExcelData", excelSchema);

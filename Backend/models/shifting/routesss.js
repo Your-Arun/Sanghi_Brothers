@@ -48,4 +48,14 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+router.put("/:id", async (req, res) => {
+  try {
+    const { available } = req.body;
+    const updatedMember = await Member.findByIdAndUpdate(req.params.id, { available }, { new: true });
+    res.json(updatedMember);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating availability", error });
+  }
+});
+
 module.exports = router;
