@@ -34,6 +34,7 @@ const ShiftManagementSystem = () => {
     shift: '',
     available: '',
   });
+
   useEffect(() => {
     const fetchMembers = async () => {
       try {
@@ -45,6 +46,7 @@ const ShiftManagementSystem = () => {
     };
     fetchMembers();
   }, []);
+
   const handleAddMember = async (e) => {
     e.preventDefault();
     if (newMember.name.trim()) {
@@ -59,6 +61,7 @@ const ShiftManagementSystem = () => {
       }
     }
   };
+
   const handleRemoveMember = async (id) => {
     if (id === undefined) {
       console.error("Error: id is undefined");
@@ -90,6 +93,7 @@ const ShiftManagementSystem = () => {
     }
     return array;
   };
+
   const handleAssignShiftsAndOvertime = () => {
     if (members.length === 0) {
       alert("Please add team members first");
@@ -139,71 +143,69 @@ const ShiftManagementSystem = () => {
   };
 
   return (
-    <div className="h-[90%] bg-gray-100 mt-[-30px] p-5">
-      <div className="max-w-4xl mx-auto p-5 bg-white rounded-lg shadow-md">
-        <form>
-        <div className="flex justify-between items-center mb-6">
-                    <Link to={'/dashboard'}>
-                        <img src={previousImage} width={50} alt="Back" />
-                    </Link>
-                    <div className="grid grid-row-2 items-center gap-2">
-                        {' '}
-                        <h1 className="text-3xl font-bold text-center mb-5">SHIFT MANAGEMENT SYSTEM</h1>
-                    </div>
-                    <button>
-                        <img src={saveImage} width={50} alt="Save" />
-                    </button>
-                </div>
-        </form>
-       
+    <div className="h-screen w-full bg-gray-100 p-5">
+      <div className="flex justify-between items-center mb-6">
+        <Link to={'/dashboard'}>
+          <img src={previousImage} width={50} alt="Back" />
+        </Link>
+        <div className="grid grid-row-2 items-center gap-2">
+          {' '}
+          <h1 className="text-3xl font-bold text-center mb-5">SHIFT MANAGEMENT SYSTEM</h1>
+        </div>
+        <button>
+          <img src={saveImage} width={50} alt="Save" />
+        </button>
+      </div>
 
-        {/* Add Member Form */}
-        <form onSubmit={handleAddMember} className="mb-5">
-          <div className="flex gap-3">
-            <input
-              type="text"
-              placeholder="Enter member name"
-              value={newMember.name}
-              onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
-              className="border p-2 rounded w-full"
-            />
-            <select
-              value={newMember.role}
-              onChange={(e) => setNewMember({ ...newMember, role: e.target.value })}
-              className="border p-2 rounded w-full"
-            >
-              <option value="">Select Role</option>
-              <option value="operator">Operator</option>
-              <option value="supervisor">Supervisor</option>
-              <option value="air boy">Air Boy</option>
-            </select>
-            <select
-              value={newMember.shift}
-              onChange={(e) => setNewMember({ ...newMember, shift: e.target.value })}
-              className="border p-2 rounded w-full"
-            >
-              <option value="">Select Shift</option>
-              <option value="morning">Morning</option>
-              <option value="evening">Evening</option>
-            </select>
-            <select
-              value={newMember.available}
-              onChange={(e) => setNewMember({ ...newMember, available: e.target.value })}
-              className="border p-2 rounded w-full"
-            >
-              <option value="">Select Availability</option>
-              <option value="present">Present</option>
-              <option value="absent">Absent</option>
-            </select>
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-              <FaPlus /> Add
-            </button>
-          </div>
-        </form>
+      <div className=" md:grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg p-4">
+          <h2 className="text-2xl mb-2 font-semibold text-center">Add Member</h2>
+          <form onSubmit={handleAddMember} className="mb-5">
+            <div className="flex gap-3">
+              <input
+                type="text"
+                placeholder="Enter member name"
+                value={newMember.name}
+                onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
+                className="border p-2 rounded w-full"
+              />
+              <select
+                value={newMember.role}
+                onChange={(e) => setNewMember({ ...newMember, role: e.target.value })}
+                className="border p-2 rounded w-full"
+              >
+                <option value="">Select Role</option>
+                <option value="operator">Operator</option>
+                <option value="supervisor">Supervisor</option>
+                <option value="air boy">Air Boy</option>
+              </select>
+              <select
+                value={newMember.shift}
+                onChange={(e) => setNewMember({ ...newMember, shift: e.target.value })}
+                className="border p-2 rounded w-full"
+              >
+                <option value="">Select Shift</option>
+                <option value="morning">Morning</option>
+                <option value="evening">Evening</option>
+              </select>
+              <select
+                value={newMember.available}
+                onChange={(e) => setNewMember({ ...newMember, available: e.target.value })}
+                className="border p-2 rounded w-full"
+              >
+                <option value="">Select Availability</option>
+                <option value="present">Present</option>
+                <option value="absent">Absent</option>
+              </select>
+              <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+                <FaPlus /> Add
+              </button>
+            </div>
+          </form>
+        </div>
 
-        {/* Member List */}
-        <div className="mb-5">
-          <h2 className="text-xl font-semibold mb-3">Team Members</h2>
+        <div className="bg-white rounded-lg p-4">
+          <h2 className="text-2xl mb-2 font-semibold text-center">Member List</h2>
           <ul>
             {members.map((member, index) => (
               <li key={member._id} className="flex justify-between items-center mb-2">
@@ -230,49 +232,49 @@ const ShiftManagementSystem = () => {
             ))}
           </ul>
         </div>
+      </div>
 
-        {/* Shift Assignment */}
-        <button onClick={handleAssignShiftsAndOvertime} className="block mx-auto bg-green-500 text-white px-4 py-2 rounded mb-5 ">
+      <div className="flex justify-center mt-5">
+        <button onClick={handleAssignShiftsAndOvertime} className="bg-green-500 text-white px-4 py-2 rounded">
           Assign Shifts
         </button>
+      </div>
 
-        {/* Shift Tables */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {shifts.map((shift) => (
-            <div key={shift.id} className="bg-gray-100 rounded-lg p-4">
-              <h3 className="text-2xl mb-2 font-semibold text-center">{shift.name}</h3>
-              <strong className="flex justify-evenly"> {shift.supervisor && <span>Supervisor: {shift.supervisor.name.toUpperCase()}</span>}
-                <div className="text-center">{shift.airBoy && <span>Air Boy: {shift.airBoy.name.toUpperCase()}</span>}</div></strong>
-              <table className="w-full mt-2">
-                <thead>
-                  <tr>
-                    <th className="text-left border-b">Nozzle</th>
-                    <th className="text-left border-b">Member</th>
-                    <th className="text-left border-b">Overtime</th>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5">
+        {shifts.map((shift) => (
+          <div key={shift.id} className="bg-gray-100 rounded-lg p-4">
+            <h3 className="text-2xl mb-2 font-semibold text-center">{shift.name}</h3>
+            <strong className="flex justify-evenly"> {shift.supervisor && <span>Supervisor: {shift.supervisor.name.toUpperCase()}</span>}
+              <div className="text-center">{shift.airBoy && <span>Air Boy: {shift.airBoy.name.toUpperCase()}</span>}</div></strong>
+            <table className="w-full mt-2">
+              <thead>
+                <tr>
+                  <th className="text-left border-b">Nozzle</th>
+                  <th className="text-left border-b">Member</th>
+                  <th className="text-left border-b">Overtime</th>
+                </tr>
+              </thead>
+              <tbody>
+                {shift.nozzles.map((nozzle, index) => (
+                  <tr key={index}>
+                    <td className="py-1">{nozzle}</td>
+                    <td className="py-1">
+                      {shift.members[index]?.name || "Unassigned"}
+                    </td>
+                    <td className="py-1">
+                      {shift.members[index] && (shift.name === "Morning Shift" ? morningOvertimeMembers.includes(shift.members[index]._id) : eveningOvertimeMembers.includes(shift.members[index]._id))
+                        ? "🟢"
+                        : "🔴"}
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {shift.nozzles.map((nozzle, index) => (
-                    <tr key={index}>
-                      <td className="py-1">{nozzle}</td>
-                      <td className="py-1">
-                        {shift.members[index]?.name || "Unassigned"}
-                      </td>
-                      <td className="py-1">
-                        {shift.members[index] && (shift.name === "Morning Shift" ? morningOvertimeMembers.includes(shift.members[index]._id) : eveningOvertimeMembers.includes(shift.members[index]._id))
-                          ? "🟢"
-                          : "🔴"}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ))}
-        </div>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ))}
       </div>
     </div>
   );
 };
 
-export default ShiftManagementSystem;  
+export default ShiftManagementSystem;
