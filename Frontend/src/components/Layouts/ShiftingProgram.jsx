@@ -132,6 +132,7 @@ const ShiftManagementSystem = () => {
       setMorningOvertimeMembers(morningOvertime.map(m => m._id));
       setEveningOvertimeMembers(eveningOvertime.map(m => m._id));
 
+
       morningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && m.shift === "morning");
       eveningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && m.shift === "evening");
 
@@ -245,7 +246,8 @@ const ShiftManagementSystem = () => {
           <div key={shift.id} className="bg-gray-100 rounded-lg p-4">
             <h3 className="text-2xl mb-2 font-semibold text-center">{shift.name}</h3>
             <strong className="flex justify-evenly"> {shift.supervisor && <span>Supervisor: {shift.supervisor.name.toUpperCase()}</span>}
-              <div className="text-center">{shift.airBoy && <span>Air Boy: {shift.airBoy.name.toUpperCase()}</span>}</div></strong>
+              <div className="text-center">{shift.airBoy && <span>Air Boy: {shift.airBoy.name.toUpperCase()}</span>}</div>
+              <div className="text-center">Free Member:  </div></strong>
             <table className="w-full mt-2">
               <thead>
                 <tr>
