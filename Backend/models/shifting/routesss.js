@@ -29,8 +29,7 @@ router.get("", async (req, res) => {
 
 router.put("", async (req, res) => {
   try {
-    const { id, ...updatedData } = req.body;
-    const member = await Member.findByIdAndUpdate(id, updatedData, { new: true });
+    const member = await Member.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.status(200).json(member);
   } catch (error) { 
     res.status(400).json({ error: error.message });
@@ -50,8 +49,8 @@ router.delete("/:id", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   try {
-    const { available } = req.body;
-    const updatedMember = await Member.findByIdAndUpdate(req.params.id, { available }, { new: true });
+    const {role, available } = req.body;
+    const updatedMember = await Member.findByIdAndUpdate(req.params.id, {   ...(role && { role }),  available }, { new: true });
     res.json(updatedMember);
   } catch (error) {
     res.status(500).json({ message: "Error updating availability", error });

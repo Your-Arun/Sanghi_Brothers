@@ -77,10 +77,12 @@ const ShiftManagementSystem = () => {
     }
   };
 
-  const handleUpdateAvailability = async (id, status) => {
+  const handleUpdateAvailability = async (id, status, newRole) => {
     try {
-      await axios.put(`http://localhost:5500/shifting/${id}`, { available: status });
-      setMembers(members.map((m) => (m._id === id ? { ...m, available: status } : m)));
+      const response = await axios.put(`http://localhost:5500/shifting/${id}`, { available: status, role: newRole });
+      const updatedMember = response.data;
+
+      setMembers(members.map(m => (m._id === id ? updatedMember : m)));
     } catch (error) {
       console.error("Error updating availability:", error);
     }
@@ -125,25 +127,30 @@ const ShiftManagementSystem = () => {
 
       const morningOvertime = overtimeCandidatesMorning.slice(0, unassignedMorning);
       const eveningOvertime = overtimeCandidatesEvening.slice(0, unassignedEvening);
-      
+
       morningShift.members = [...morningShift.members, ...morningOvertime];
       eveningShift.members = [...eveningShift.members, ...eveningOvertime];
 
       setMorningOvertimeMembers(morningOvertime.map(m => m._id));
       setEveningOvertimeMembers(eveningOvertime.map(m => m._id));
 
-      morningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && m.shift === "morning");
-      eveningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && m.shift === "evening");
+      morningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && "Supervisor" && m.shift === "morning");
+      eveningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && "Supervisor" && m.shift === "evening");
 
-      morningShift.airBoy = availableMembers.find(m => m.role === "air boy" && m.shift === "morning");
-      eveningShift.airBoy = availableMembers.find(m => m.role === "air boy" && m.shift === "evening");
+      morningShift.airBoy = availableMembers.find(m => m.role === "air boy" && "Air boy" && m.shift === "morning");
+      eveningShift.airBoy = availableMembers.find(m => m.role === "air boy" && "Air boy" && m.shift === "evening");
 
+      morningMembers.free = !morningMembers;
       setShifts([morningShift, eveningShift]);
     }
   };
 
+  const handleRoleChange = (id, newRole) => {
+    handleUpdateAvailability(id, null, newRole);
+  };
+
   return (
-    <div className="h-screen w-full bg-gray-100 p-5">
+    <div className="h-screen w-full bg-gray-100 p-5 ">
       <div className="flex justify-between items-center mb-6">
         <Link to={'/dashboard'}>
           <img src={previousImage} width={50} alt="Back" />
@@ -205,32 +212,55 @@ const ShiftManagementSystem = () => {
         </div>
 
         <div className="bg-white rounded-lg p-4">
-          <h2 className="text-2xl mb-2 font-semibold text-center">Member List</h2>
-          <ul>
-            {members.map((member, index) => (
-              <li key={member._id} className="flex justify-between items-center mb-2">
-                <span>{index + 1}. {member.name.toUpperCase()} - ({member.role.toUpperCase()})</span>
-                <div className="flex items-center gap-6">
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={member.available === "present"}
-                      onChange={() => handleUpdateAvailability(member._id, member.available === "present" ? "absent" : "present")}
-                      className="w-5 h-5 cursor-pointer"
-                    />
-                    <label className="ml-2">{member.available === "present" ? "Present" : "Absent"}</label>
-                  </label>
-                  <span>Shift: {member.shift.toUpperCase()}</span>
-                  <button
-                    onClick={() => handleRemoveMember(member._id)}
-                    className="bg-red-500 text-white px-2 py-1 rounded ml-2"
-                  >
-                    <FaTrash />
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <h2 className="text-2xl mb-4 font-semibold text-center">Member List</h2>
+          <div className="flex justify-center">
+            <ul className="w-3/4">
+              {members.map((member, index) => (
+                <li key={member._id} className="flex justify-between items-center mb-4">
+                  <span className="text-lg w-1/4">{index + 1}. {member.name.toUpperCase()}</span>
+
+                  {/* Role Dropdown */}
+                  <div className="w-1/4 text-center">
+                    <select
+                      value={member.role}
+                      onChange={(e) => handleRoleChange(member._id, e.target.value)}
+                      className="border p-2 rounded"
+                    >
+                      <option value="operator">Operator</option>
+                      <option value="supervisor">Supervisor</option>
+                      <option value="air boy">Air Boy</option>
+                    </select>
+                  </div>
+
+                  <div className="w-1/4 text-center">
+                    {/* Availability Toggle */}
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={member.available === "present"}
+                        onChange={() => handleUpdateAvailability(member._id, member.available === "present" ? "absent" : "present", null)}
+                        className="w-5 h-5 cursor-pointer"
+                      />
+                      <span className="ml-2">{member.available === "present" ? "Present" : "Absent"}</span>
+                    </label>
+                  </div>
+
+                  <div className="w-1/4 text-center">
+                    <span className="text-lg">Shift: {member.shift.toUpperCase()}</span>
+                  </div>
+
+                  <div className="w-1/4 text-center">
+                    <button
+                      onClick={() => handleRemoveMember(member._id)}
+                      className="bg-red-500 text-white px-2 py-1 rounded"
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -240,19 +270,19 @@ const ShiftManagementSystem = () => {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5 mb-2 ">
         {shifts.map((shift) => (
           <div key={shift.id} className="bg-gray-100 rounded-lg p-4">
             <h3 className="text-2xl mb-2 font-semibold text-center">{shift.name}</h3>
             <strong className="flex justify-evenly"> {shift.supervisor && <span>Supervisor: {shift.supervisor.name.toUpperCase()}</span>}
               <div className="text-center">{shift.airBoy && <span>Air Boy: {shift.airBoy.name.toUpperCase()}</span>}</div>
-              <div className="text-center">Free Member: </div></strong>
+            </strong>
             <table className="w-full mt-2">
               <thead>
-                <tr>
-                  <th className="text-left border-b">Nozzle</th>
-                  <th className="text-left border-b">Member</th>
-                  <th className="text-left border-b">Overtime</th>
+                <tr className="">
+                  <th className="text-center border-b">Nozzle</th>
+                  <th className="text-center border-b">Member</th>
+                  <th className="text-center border-b">Overtime</th>
                 </tr>
               </thead>
               <tbody>
