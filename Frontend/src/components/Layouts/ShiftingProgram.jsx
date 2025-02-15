@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 const ShiftManagementSystem = () => {
   const [members, setMembers] = useState([]);
   const [absentees, setAbsentees] = useState([]);
+  const [absentMembers, setAbsentMembers] = useState([]);
   const [morningOvertimeMembers, setMorningOvertimeMembers] = useState([]);
   const [eveningOvertimeMembers, setEveningOvertimeMembers] = useState([]);
   const [shifts, setShifts] = useState([
@@ -40,6 +41,7 @@ const ShiftManagementSystem = () => {
       try {
         const response = await axios.get("http://localhost:5500/shifting");
         setMembers(response.data);
+        setAbsentMembers(response.data.filter((m) => m.available === "absent"));
       } catch (error) {
         console.error("Error fetching members:", error);
       }
@@ -79,10 +81,13 @@ const ShiftManagementSystem = () => {
 
   const handleUpdateAvailability = async (id, status, newRole) => {
     try {
-      const response = await axios.put(`http://localhost:5500/shifting/${id}`, { available: status, role: newRole });
-      const updatedMember = response.data;
-
-      setMembers(members.map(m => (m._id === id ? updatedMember : m)));
+      await axios.put(`http://localhost:5500/shifting/${id}`, { available: status, role: newRole });
+      setMembers(members.map((m) => (m._id === id ? { ...m, available: status, role: newRole } : m)));
+      if (status === "absent") {
+        setAbsentMembers([...absentMembers, members.find((m) => m._id === id)]);
+      } else {
+        setAbsentMembers(absentMembers.filter((m) => m._id !== id));
+      }
     } catch (error) {
       console.error("Error updating availability:", error);
     }
@@ -134,11 +139,11 @@ const ShiftManagementSystem = () => {
       setMorningOvertimeMembers(morningOvertime.map(m => m._id));
       setEveningOvertimeMembers(eveningOvertime.map(m => m._id));
 
-      morningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && "Supervisor" && m.shift === "morning");
-      eveningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && "Supervisor" && m.shift === "evening");
+      morningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && m.shift === "morning");
+      eveningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && m.shift === "evening");
 
-      morningShift.airBoy = availableMembers.find(m => m.role === "air boy" && "Air boy" && m.shift === "morning");
-      eveningShift.airBoy = availableMembers.find(m => m.role === "air boy" && "Air boy" && m.shift === "evening");
+      morningShift.airBoy = availableMembers.find(m => m.role === "air boy" && m.shift === "morning");
+      eveningShift.airBoy = availableMembers.find(m => m.role === "air boy" && m.shift === "evening");
 
       morningMembers.free = !morningMembers;
       setShifts([morningShift, eveningShift]);
@@ -148,9 +153,29 @@ const ShiftManagementSystem = () => {
   const handleRoleChange = (id, newRole) => {
     handleUpdateAvailability(id, null, newRole);
   };
+  const handleUpdateShift = async (id, shift) => {
+    try {
+      await axios.put(`http://localhost:5500/shifting/${id}`, { shift });
+      setMembers(members.map((m) => (m._id === id ? { ...m, shift } : m)));
+    } catch (error) {
+      console.error("Error updating shift:", error);
+    }
+  };
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const currentTime = new Date();
+      const hours = currentTime.getHours();
+  
+      if (hours === 4 || hours === 13) {
+        handleAssignShiftsAndOvertime();
+      }
+    }, 60000); // 60000 milliseconds = 1 minute
+  
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
-    <div className="h-screen w-full bg-gray-100 p-5 ">
+    <div className="h-[90%] w-full bg-gray-100 p-5 ">
       <div className="flex justify-between items-center mb-6">
         <Link to={'/dashboard'}>
           <img src={previousImage} width={50} alt="Back" />
@@ -210,7 +235,6 @@ const ShiftManagementSystem = () => {
             </div>
           </form>
         </div>
-
         <div className="bg-white rounded-lg p-4">
           <h2 className="text-2xl mb-4 font-semibold text-center">Member List</h2>
           <div className="flex justify-center">
@@ -246,7 +270,15 @@ const ShiftManagementSystem = () => {
                   </div>
 
                   <div className="w-1/4 text-center">
-                    <span className="text-lg">Shift: {member.shift.toUpperCase()}</span>
+                    {/* Shift Dropdown */}
+                    <select
+                      value={member.shift}
+                      onChange={(e) => handleUpdateShift(member._id, e.target.value)}
+                      className="border p-2 rounded"
+                    >
+                      <option value="morning">Morning</option>
+                      <option value="evening">Evening</option>
+                    </select>
                   </div>
 
                   <div className="w-1/4 text-center">
@@ -255,6 +287,32 @@ const ShiftManagementSystem = () => {
                       className="bg-red-500 text-white px-2 py-1 rounded"
                     >
                       <FaTrash />
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h2 className="text-2xl mb-4 font-semibold text-center">Absent Members</h2>
+            <ul className="list-none p-0 m-0">
+              {absentMembers.map((member) => (
+                <li key={member._id} className="flex justify-between items-center border p-2 rounded mb-2">
+                  <div className="w-1/4 text-center">
+                    <span className="text-lg">{member.name.toUpperCase()}</span>
+                  </div>
+                  <div className="w-1/4 text-center">
+                    <span className="text-lg">Role: {member.role}</span>
+                  </div>
+                  <div className="w-1/4 text-center">
+                    <span className="text-lg">Shift: {member.shift}</span>
+                  </div>
+                  <div className="w-1/4 text-center">
+                    <button
+                      onClick={() => handleUpdateAvailability(member._id, "present", null)}
+                      className="bg-green-500 text-white px-2 py-1 rounded"
+                    >
+                      Mark as Present
                     </button>
                   </div>
                 </li>
