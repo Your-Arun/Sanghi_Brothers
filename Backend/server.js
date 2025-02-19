@@ -29,17 +29,19 @@ const Staffmng =require('./routes/mastersheet/staffroute')
 const Financemng =require('./routes/mastersheet/financeroute')
 const Lekha= require('./routes/routelekhajokha')
 const ShiftingRoutes = require('./models/shifting/routesss');
+const MeterClose = require('./routes/metercloseroute');
+
+
+
+
 const app = express();
 app.use(bodyparser.json());
 app.use(express.json());
 app.use(cors());
 // MongoDB Connection
 mongoose
-  .connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("MongoDB connected"))
+  .connect(process.env.MONGODB_URI,)
+  .then(() => console.log("MongoDB connected 🟢🟢"))
   .catch((err) => console.error(err));
 //save flow data
 app.use('/bank', FlowRoute);
@@ -63,7 +65,8 @@ app.use('/mastersheet',TankLorryManagement);
 app.use('/mastersheet',BPCLSTATUTORY);
 app.use('/mastersheet',Staffmng);
 app.use('/mastersheet',Financemng);
-app.use('/newlekhajokha',Lekha)
+app.use('/newlekhajokha',Lekha);
+app.use('',MeterClose);
 // Middleware to Verify JWT
 const authMiddleware = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
