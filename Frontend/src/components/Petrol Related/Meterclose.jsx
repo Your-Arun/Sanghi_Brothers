@@ -82,7 +82,7 @@ const Meterclose = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = {
-          date: new Date(date).toISOString().split('T')[0],
+          date: date,
           rate: rate,
           points: inputs.points.map((point) => ({
             ...point,
@@ -115,11 +115,15 @@ const Meterclose = () => {
           closingMetern6: closingMetern6 || 0,
         };
         try {
-          const response = await axios.post('http://localhost:5500/meterclose', data);
-          alert('Meter Close saved successfully!');
-        } catch (error) {
-          alert('Error saving Meter Close!');
-        }
+            if (date === '') {
+              alert('Please select a date');
+            }  else {
+              const response = await axios.post('http://localhost:5500/meterclose', data);
+              alert('Meter Close saved successfully!');
+            }
+          } catch (error) {
+            alert('Error saving Meter Close!');
+          }
       };
 
     const openingMeterIndex = items.indexOf('Opening Meter');
@@ -185,7 +189,7 @@ const Meterclose = () => {
         <div className="relative p-6 bg-gradient-to-r from-gray-200 to-white min-h-screen">
             <form onSubmit={handleSubmit}>
                 <div className="flex justify-between items-center mb-6">
-                    <Link to={'/dashboard'}>
+                    <Link to={'/createmeterclose'}>
                         <img src={previousImage} width={50} alt="Back" />
                     </Link>
                     <div>  <div className="grid mb-4 grid-row-2 items-center gap-2">
@@ -419,6 +423,7 @@ const Meterclose = () => {
                                             id="name"
                                             value={inputs.items1[index].name}
                                             onChange={(e) => handleInputChange(e, index, 'items1')}
+                                            placeholder="Name"
                                             className="p-2 w-[180px] border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                                         /></td>
                                         <td><input type="number" id="qnty" className='w-[70px]' value={inputs.items1[index].qnty} onChange={(e) => {

@@ -436,7 +436,7 @@ const Dashboard = () => {
               </a>
             </div>
             <div>
-              <a href="/meterclose">
+              <a href="/createmeterclose">
                 <button className="bg-green-500 text-white rounded-lg p-4 shadow-lg hover:bg-green-600 transition duration-300 flex items-center ml-2">
                   METER CLOSE
                 </button>
