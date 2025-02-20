@@ -108,28 +108,28 @@ const UpdateMeterclose = () => {
         e.preventDefault();
         const originalData = data;
         const updatedData = {
-            date: new Date(date).toISOString().split('T')[0],
-            rate,
-            cashUnknown,
-            cashMs,
-            cashSp,
-            crSalesMs,
-            u2,
-            inputs,
+          date: new Date(date).toISOString().split('T')[0],
+          rate,
+          cashUnknown,
+          cashMs,
+          cashSp,
+          crSalesMs,
+          u2,
         };
-
+      
         if (JSON.stringify(originalData) !== JSON.stringify(updatedData)) {
-            try {
-                const response = await axios.put(`http://localhost:5500/meterclose/${id}`, updatedData);
-                alert('Meter Close updated successfully!');
-            } catch (error) {
-                alert('Error updating Meter Close!');
-            }
+          try {
+            const response = await axios.put(`http://localhost:5500/meterclose/${id}`, updatedData);
+            console.log(response); // Check the response to see if the data is being saved correctly
+            alert('Meter Close updated successfully!');
+          } catch (error) {
+            console.error(error); // Check the error to see if there are any server-side errors
+            alert('Error updating Meter Close!');
+          }
         } else {
-            alert('No changes made. Data saved without changes.');
+          alert('No changes made. Data saved without changes.');
         }
-    };
-
+      };
     const handleDelete = async () => {
         if (window.confirm('Are you sure you want to delete this report?')) {
             try {
