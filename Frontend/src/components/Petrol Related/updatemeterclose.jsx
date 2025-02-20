@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import Binimage from '/public/bin.png';
 import previousImage from '/public/previous.png';
@@ -147,17 +147,16 @@ const UpdateMeterclose = () => {
     };
 
     const datee = date.split('T')[0];
-
     const openingMeterIndex = items.indexOf('Opening Meter');
     const salesIndex = items.indexOf('Sales');
     const oilIndex = items.indexOf('Oil');
     const totalsIndex = items.indexOf('Totals');
     const testingIndex = items.indexOf('Testing');
-    const openingMeterValues = data.points && data.points[0] ? data.points[0] : {};
-    const salesValues = data.points && data.points[1] ? data.points[1] : {};
-    const oilValues = data.points && data.points[2] ? data.points[2] : {};
-    const totalsValues = data.points && data.points[3] ? data.points[3] : {};
-    const testingValues = data.points && data.points[4] ? data.points[4] : {};
+    const openingMeterValues = inputs.points[openingMeterIndex];
+    const salesValues = inputs.points[salesIndex];
+    const oilValues = inputs.points[oilIndex];
+    const totalsValues = inputs.points[totalsIndex];
+    const testingValues = inputs.points[testingIndex];
     const nozzleValues = {
         n1: salesValues.n1,
         n2: salesValues.n2,
@@ -174,12 +173,13 @@ const UpdateMeterclose = () => {
         n5: openingMeterValues.n5,
         n6: openingMeterValues.n6
     };
-    const totaln1 = parseInt(totalOpeningMeter.n1) + parseInt(nozzleValues.n1) || 0;
-    const totaln2 = parseInt(totalOpeningMeter.n2) + parseInt(nozzleValues.n2) || 0;
-    const totaln3 = parseInt(totalOpeningMeter.n3) + parseInt(nozzleValues.n3) || 0;
-    const totaln4 = parseInt(totalOpeningMeter.n4) + parseInt(nozzleValues.n4) || 0;
-    const totaln5 = parseInt(totalOpeningMeter.n5) + parseInt(nozzleValues.n5) || 0;
-    const totaln6 = parseInt(totalOpeningMeter.n6) + parseInt(nozzleValues.n6) || 0;
+
+    const totaln1 = useMemo(() => parseInt(totalOpeningMeter.n1) + parseInt(nozzleValues.n1) || 0, [totalOpeningMeter, nozzleValues]);
+    const totaln2 = useMemo(() => parseInt(totalOpeningMeter.n2) + parseInt(nozzleValues.n2) || 0, [totalOpeningMeter, nozzleValues]);
+    const totaln3 = useMemo(() => parseInt(totalOpeningMeter.n3) + parseInt(nozzleValues.n3) || 0, [totalOpeningMeter, nozzleValues]);
+    const totaln4 = useMemo(() => parseInt(totalOpeningMeter.n4) + parseInt(nozzleValues.n4) || 0, [totalOpeningMeter, nozzleValues]);
+    const totaln5 = useMemo(() => parseInt(totalOpeningMeter.n5) + parseInt(nozzleValues.n5) || 0, [totalOpeningMeter, nozzleValues]);
+    const totaln6 = useMemo(() => parseInt(totalOpeningMeter.n6) + parseInt(nozzleValues.n6) || 0, [totalOpeningMeter, nozzleValues]);
 
     const oilValuesCalculated = {
         n1: oilValues.n1,
@@ -189,20 +189,22 @@ const UpdateMeterclose = () => {
         n5: oilValues.n5,
         n6: oilValues.n6
     };
-    //totals for total and oil values
-    const totals1 = parseInt(totaln1) + parseInt(oilValuesCalculated.n1) || 0;
-    const totals2 = parseInt(totaln2) + parseInt(oilValuesCalculated.n2) || 0;
-    const totals3 = parseInt(totaln3) + parseInt(oilValuesCalculated.n3) || 0;
-    const totals4 = parseInt(totaln4) + parseInt(oilValuesCalculated.n4) || 0;
-    const totals5 = parseInt(totaln5) + parseInt(oilValuesCalculated.n5) || 0;
-    const totals6 = parseInt(totaln6) + parseInt(oilValuesCalculated.n6) || 0;
-    const closingMetern1 = parseInt(oilValuesCalculated.n1) + parseInt(totaln1) + parseInt(testingValues.n1) || 0;
-    const closingMetern2 = parseInt(oilValuesCalculated.n2) + parseInt(totaln2) + parseInt(testingValues.n2) || 0;
-    const closingMetern3 = parseInt(oilValuesCalculated.n3) + parseInt(totaln3) + parseInt(testingValues.n3) || 0;
-    const closingMetern4 = parseInt(oilValuesCalculated.n4) + parseInt(totaln4) + parseInt(testingValues.n4) || 0;
-    const closingMetern5 = parseInt(oilValuesCalculated.n5) + parseInt(totaln5) + parseInt(testingValues.n5) || 0;
-    const closingMetern6 = parseInt(oilValuesCalculated.n6) + parseInt(totaln6) + parseInt(testingValues.n6) || 0;
-    const totalCredit = parseInt(cashMs) + parseInt(cashSp) + parseInt(crSalesMs) + parseInt(u2) || 0;
+
+    const totals1 = useMemo(() => parseInt(totaln1) + parseInt(oilValuesCalculated.n1) || 0, [totaln1, oilValuesCalculated]);
+    const totals2 = useMemo(() => parseInt(totaln2) + parseInt(oilValuesCalculated.n2) || 0, [totaln2, oilValuesCalculated]);
+    const totals3 = useMemo(() => parseInt(totaln3) + parseInt(oilValuesCalculated.n3) || 0, [totaln3, oilValuesCalculated]);
+    const totals4 = useMemo(() => parseInt(totaln4) + parseInt(oilValuesCalculated.n4) || 0, [totaln4, oilValuesCalculated]);
+    const totals5 = useMemo(() => parseInt(totaln5) + parseInt(oilValuesCalculated.n5) || 0, [totaln5, oilValuesCalculated]);
+    const totals6 = useMemo(() => parseInt(totaln6) + parseInt(oilValuesCalculated.n6) || 0, [totaln6, oilValuesCalculated]);
+
+    const closingMetern1 = useMemo(() => parseInt(oilValuesCalculated.n1) + parseInt(totaln1) + parseInt(testingValues.n1) || 0, [oilValuesCalculated, totaln1, testingValues]);
+    const closingMetern2 = useMemo(() => parseInt(oilValuesCalculated.n2) + parseInt(totaln2) + parseInt(testingValues.n2) || 0, [oilValuesCalculated, totaln2, testingValues]);
+    const closingMetern3 = useMemo(() => parseInt(oilValuesCalculated.n3) + parseInt(totaln3) + parseInt(testingValues.n3) || 0, [oilValuesCalculated, totaln3, testingValues]);
+    const closingMetern4 = useMemo(() => parseInt(oilValuesCalculated.n4) + parseInt(totaln4) + parseInt(testingValues.n4) || 0, [oilValuesCalculated, totaln4, testingValues]);
+    const closingMetern5 = useMemo(() => parseInt(oilValuesCalculated.n5) + parseInt(totaln5) + parseInt(testingValues.n5) || 0, [oilValuesCalculated, totaln5, testingValues]);
+    const closingMetern6 = useMemo(() => parseInt(oilValuesCalculated.n6) + parseInt(totaln6) + parseInt(testingValues.n6) || 0, [oilValuesCalculated, totaln6, testingValues]);
+
+    const totalCredit = useMemo(() => parseInt(cashMs) + parseInt(cashSp) + parseInt(crSalesMs) + parseInt(u2) || 0, [cashMs, cashSp, crSalesMs, u2]);
 
     return (
         <div className="relative p-6 bg-gradient-to-r from-gray-200 to-white min-h-screen">
