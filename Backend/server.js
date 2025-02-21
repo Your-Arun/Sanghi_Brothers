@@ -6,12 +6,6 @@ const nodemailer = require("nodemailer");
 const bodyparser = require("body-parser");
 
 
-const multer = require("multer");
-const xlsx = require("xlsx");
-const fs = require("fs");
-const path = require("path");
-
-
 const cors = require("cors");
 require("dotenv").config();
 const ReportFile = require("./models/reportfile");
@@ -30,6 +24,7 @@ const Financemng =require('./routes/mastersheet/financeroute')
 const Lekha= require('./routes/routelekhajokha')
 const ShiftingRoutes = require('./models/shifting/routesss');
 const MeterClose = require('./routes/metercloseroute');
+const Excelsheet = require('./routes/exceslsheetuploding')
 
 
 
@@ -467,57 +462,11 @@ app.delete("/fundposition/:id", async (req, res) => {
     res.status(500).send(error);
   }
 });
-// Define a Schema for Excel Data
-const excelSchema = new mongoose.Schema({}, { strict: false });
-const ExcelData = mongoose.model("ExcelData", excelSchema);
-
-// Multer Storage for File Uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "uploads/"),
-  filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname)),
-});
-const upload = multer({ storage });
-
-// Upload Excel File & Save to DB
-app.post("/upload", upload.single("file"), async (req, res) => {
-  try {
-    const filePath = req.file.path;
-    const workbook = xlsx.readFile(filePath);
-    const sheetName = workbook.SheetNames[0];
-    const data = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName]);
-
-    await ExcelData.insertMany(data);
-    fs.unlinkSync(filePath); // Remove file after upload
-
-    res.json({ message: "File uploaded and data saved!" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
 // Retrieve Data from MongoDB
-app.get("/data", async (req, res) => {
-  const data = await ExcelData.find();
-  res.json(data);
-});
-
-// Download Data as Excel
-app.get("/download", async (req, res) => {
-  const data = await ExcelData.find();
-  const worksheet = xlsx.utils.json_to_sheet(data);
-  const workbook = xlsx.utils.book_new();
-  xlsx.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-
-  const filePath = "output.xlsx";
-  xlsx.writeFile(workbook, filePath);
-  res.download(filePath, "data.xlsx", () => fs.unlinkSync(filePath)); // Auto-delete after sending
-});
-
-
 app.use('/shifting', ShiftingRoutes);
 
-
-
+//excelsheet uploading filess routes
+app.use('', Excelsheet);
 
 // Start Server
 const PORT = process.env.PORT || 5000;

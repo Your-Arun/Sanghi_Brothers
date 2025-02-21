@@ -46,6 +46,7 @@ import ExcelUploader from './components/excelsheet/exceluploader'
 import MeterClose from './components/Petrol Related/Meterclose'
 import MeterBox from './components/Petrol Related/meterclosebox'
 import UpdateMeter  from './components/Petrol Related/updatemeterclose'
+import Cashier from "./components/Layouts/cashier"
 
 
 
@@ -121,6 +122,8 @@ const AppContent = () => {
         <Route path="/createmeterclose" element={<MeterBox/>} />
         <Route path="/meterclose" element={<MeterClose/>} />
         <Route path="/meterclose/:id" element={<UpdateMeter/>} />
+        <Route path="/cashier" element={<Cashier/>} />
+
       </Routes>
     </>
   );

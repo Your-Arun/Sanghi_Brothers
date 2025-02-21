@@ -108,28 +108,49 @@ const UpdateMeterclose = () => {
         e.preventDefault();
         const originalData = data;
         const updatedData = {
-          date: new Date(date).toISOString().split('T')[0],
-          rate,
-          cashUnknown,
-          cashMs,
-          cashSp,
-          crSalesMs,
-          u2,
+            date: new Date(date).toISOString().split('T')[0],
+            rate,
+            cashUnknown,
+            cashMs,
+            cashSp,
+            crSalesMs,
+            u2,
+            points: inputs.points,  // Include this
+            items1: inputs.items1,  // Include this
+            totaln1,
+            totaln2,
+            totaln3,
+            totaln4,
+            totaln5,
+            totaln6,
+            totals1,
+            totaln2,
+            totaln3,
+            totaln4,
+            totaln5,
+            totaln6,
+            closingMetern1,
+            closingMetern2,
+            closingMetern3,
+            closingMetern4,
+            closingMetern5,
+            closingMetern6,
         };
-      
+    
         if (JSON.stringify(originalData) !== JSON.stringify(updatedData)) {
-          try {
-            const response = await axios.put(`http://localhost:5500/meterclose/${id}`, updatedData);
-            console.log(response); // Check the response to see if the data is being saved correctly
-            alert('Meter Close updated successfully!');
-          } catch (error) {
-            console.error(error); // Check the error to see if there are any server-side errors
-            alert('Error updating Meter Close!');
-          }
+            try {
+                const response = await axios.put(`http://localhost:5500/meterclose/${id}`, updatedData);
+                console.log(response.data); // Debugging
+                alert('Meter Close updated successfully!');
+            } catch (error) {
+                console.error(error.response?.data || error.message); // Debugging errors
+                alert('Error updating Meter Close!');
+            }
         } else {
-          alert('No changes made. Data saved without changes.');
+            alert('No changes made. Data saved without changes.');
         }
-      };
+    };
+    
     const handleDelete = async () => {
         if (window.confirm('Are you sure you want to delete this report?')) {
             try {

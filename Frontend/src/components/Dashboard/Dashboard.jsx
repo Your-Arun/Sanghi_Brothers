@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import add from "/public/add.png";
 
 const Dashboard = () => {
   const [departments, setDepartments] = useState([]);
@@ -307,7 +308,7 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="mb-6">
-            <h2 className="text-2xl font-semibold mb-4 text-center text-brown-600">
+            <h2 className="text-2xl font-semibold mb-4 text-center text-indigo-600">
               SB Master CheckList
             </h2>
             <div className="flex flex-col items-center">
@@ -353,6 +354,36 @@ const Dashboard = () => {
           )}
         </div>
 
+        {/* Cashier Kaam */}
+        <div className="mb-8">
+          <div className="flex items-center justify-center">
+            <h2 className="text-2xl font-semibold mb-4 mt-8 text-blue-600">Cashier Kaam</h2>
+            <img src={add} alt="Create" width={50} className="mr-4 mt-4 ml-4 cursor-pointer"  onClick={()=>navigate("/cashier")}/>
+          </div>
+          {reportfile.length > 0 ? (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-5">
+              {reportfile.map((reportfile) => (
+                <div
+                  key={reportfile._id}
+                  onClick={() => navigate(`/reportfile/${reportfile._id}`)}
+                  className="p-6 border rounded-lg shadow-lg bg-gray-300 hover:bg-gray-400 cursor-pointer transition duration-300"
+                >
+                  <h1 className="text-xl text-brown-600 text-center font-bold">
+                    {reportfile.department.toUpperCase()}
+                  </h1>
+                  <h3 className="text-lg font-serif text-center text-gray-700">
+                    {new Date(reportfile.entryDate).toLocaleDateString()}
+                  </h3>
+                  <h3 className="text-sm text-red-700 text-center">
+                    Cash Sales: {reportfile.reports.cashsales}
+                  </h3>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-600 text-center">No reports available.</p>
+          )}
+        </div>
         {/* Complaints Section */}
         <div className="mb-8">
           <h2 className="text-2xl font-semibold mb-4 mt-10 text-center text-brown-600">
@@ -412,7 +443,7 @@ const Dashboard = () => {
             />
             <button
               className="bg-blue-500 text-white rounded-lg p-4 shadow-lg hover:bg-blue-600 transition duration-300 flex items-center"
-              aria-label="Upload File" 
+              aria-label="Upload File"
               onClick={() => navigate("/exceluploader")}
             >
               <span className="mr-2">📤</span>{" "}

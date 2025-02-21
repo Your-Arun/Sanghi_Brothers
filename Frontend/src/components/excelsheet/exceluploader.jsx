@@ -1,100 +1,135 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const ExcelUploader = () => {
-  const [file, setFile] = useState(null);
-  const [data, setData] = useState([]);
-  const [uploadError, setUploadError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+function UploadExcel({ token }) {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [message, setMessage] = useState('');
+  const [savedFiles, setSavedFiles] = useState([]);
 
-  // Handle File Upload
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
   };
 
-  const uploadFile = async (e) => {
-    e.preventDefault();
-    if (!file) return alert("Please select a file");
+  const handleSaveToDB = async () => {
+    if (!selectedFile) {
+      setMessage('❌ Please select a file');
+      clearMessageAfterDelay(); // Auto-clear after delay
+      return;
+    }
 
-    setIsLoading(true);
-    setUploadError(null);
+    setMessage('⏳ Uploading file...'); // Show uploading message
+
+    const formData = new FormData();
+    formData.append('excelFile', selectedFile);
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
+      const response = await axios.post('http://localhost:5500/exceluploader', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`
+        }
+      });
 
-      await axios.post("http://localhost:5000/upload", formData);
-      alert("File uploaded successfully!");
-      fetchData(); // Refresh Data
+      setMessage(`✅ ${response.data.message}`);
+      setSelectedFile(null);  // Reset file input
+      fetchSavedFiles();  // Refresh file list
     } catch (error) {
-      setUploadError("Failed to upload file. Please try again.");
-    } finally {
-      setIsLoading(false);
+      setMessage('❌ Error saving file');
     }
+
+    clearMessageAfterDelay(); // Auto-clear message
   };
 
-  // Fetch Data from Backend
-  const fetchData = async () => {
+  // **Message Auto-Clear Function**
+  const clearMessageAfterDelay = () => {
+    setTimeout(() => {
+      setMessage('');
+    }, 3000); // Clear after 3 seconds
+  };
+
+
+  const fetchSavedFiles = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/data");
-      setData(res.data);
+      const response = await axios.get('http://localhost:5500/exceluploader', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      setSavedFiles(response.data);
     } catch (error) {
-      console.error("Failed to fetch data:", error);
+      console.error('Error fetching files:', error);
     }
-  };
-
-  // Download Excel
-  const downloadExcel = () => {
-    window.location.href = "http://localhost:5000/download";
   };
 
   useEffect(() => {
-    fetchData();
+    fetchSavedFiles(); // Initial fetch
+    const interval = setInterval(fetchSavedFiles, 5000);
+    return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
   return (
-    <div>
-      <h2>Excel Upload & Display</h2>
-      <form onSubmit={uploadFile}>
-        <input
-          type="file"
-          accept=".xlsx, .xls"
-          onChange={handleFileChange}
-          disabled={isLoading}
-        />
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? "Uploading..." : "Upload"}
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-6">
+      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-lg">
+        <h2 className="text-2xl font-semibold mb-5 text-center">📂 Upload Excel File</h2>
+
+        <label className="w-full flex flex-col items-center justify-center border-2 border-dashed border-gray-300 p-6 rounded-lg cursor-pointer hover:border-blue-500">
+          <input type="file" accept=".xlsx, .xls" className="hidden" onChange={handleFileChange} />
+          <div className="text-center">
+            <span className="text-gray-600">{selectedFile ? selectedFile.name : 'Click or Drag & Drop File Here'}</span>
+          </div>
+        </label>
+
+        <button
+          onClick={handleSaveToDB}
+          className="mt-5 bg-green-500 text-white px-5 py-3 rounded-lg w-full hover:bg-green-600"
+        >
+          💾 Save to Database
         </button>
-        {uploadError && <p style={{ color: "red" }}>{uploadError}</p>}
-      </form>
 
-      <button onClick={downloadExcel}>Download Excel</button>
+        {/* Status Message */}
+        {message && (
+          <p className={`mt-4 text-center text-sm font-medium ${message.startsWith('✅') ? 'text-green-600' : 'text-red-600'}`}>
+            {message}
+          </p>
+        )}
+      </div>
+      <div className="mt-8 bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl">
+        <h3 className="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
+          📄 Saved Files
+        </h3>
 
-      <h3>Excel Data</h3>
-      {data.length > 0 ? (
-        <table border="1">
-          <thead>
-            <tr>
-              {Object.keys(data[0]).map((key) => (
-                <th key={key}>{key}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((row, i) => (
-              <tr key={i}>
-                {Object.values(row).map((val, j) => (
-                  <td key={j}>{val}</td>
-                ))}
-              </tr>
+        {savedFiles.length === 0 ? (
+          <p className="text-gray-500 text-center">No files available</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {savedFiles.map((file, index) => (
+              <div
+                key={index}
+                className="bg-gray-100 p-4 rounded-lg shadow-md flex flex-col items-center transition hover:scale-105 hover:shadow-lg"
+              >
+                <div className="text-4xl">📄</div> {/* File Icon */}
+                <p className="text-sm text-gray-700 font-medium mt-2 text-center">
+                  {file.filename.length > 20 ? file.filename.slice(0, 20) + "..." : file.filename}
+                </p>
+
+                {/* File Info */}
+                <p className="text-xs text-gray-500 mt-1">Size: {(file.chunkSize)/1024} KB</p>
+                <p className="text-xs text-gray-500">Uploaded: {new Date(file.uploadDate).toLocaleDateString()}</p>
+
+                {/* Download Button */}
+                <button
+                  onClick={() => handleDownload(file.filename)}
+                  className="mt-3 bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 transition"
+                >
+                  📥 Download
+                </button>
+              </div>
             ))}
-          </tbody>
-        </table>
-      ) : (
-        <p>No data available.</p>
-      )}
+          </div>
+        )}
+      </div>
+
+
     </div>
   );
-};
+}
 
-export default ExcelUploader;
+export default UploadExcel;
