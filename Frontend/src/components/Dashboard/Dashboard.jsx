@@ -20,6 +20,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [reportfile, setReportFile] = useState([]);
   const [sb3update, setSb3Update] = useState([]);
+  const [cashier, setCashier] = useState([]);
 
   //reportfile ke lie
   useEffect(() => {
@@ -107,6 +108,10 @@ const Dashboard = () => {
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setSb3Update(sb3resp.data);
+        const response = await axios.get("http://localhost:5500/cashier", {
+          headers: { Authorization: `Bearer ${token}` },
+      });
+      setCashier(response.data);
       } catch (err) {
         console.error("Error fetching data:");
         alert("Failed to fetch data.");
@@ -238,152 +243,172 @@ const Dashboard = () => {
         <div>
           {/* Departments Section */}
           <div className="mb-6">
-            <h2 className="text-2xl font-semibold mb-4 text-center text-teal-600">
-              Departments
-            </h2>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-              {departments.map((dept) => (
-                <div
-                  key={dept}
-                  className="p-6 border bg-yellow-300 rounded-lg shadow-lg hover:bg-yellow-400 cursor-pointer transition duration-300 text-center"
-                  onClick={() => viewReports(dept)}
-                >
-                  <h3 className="text-xl font-bold text-orange-600">
-                    {dept.toUpperCase()}
-                  </h3>
-                </div>
-              ))}
-            </div>
-          </div>
+  <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">
+    🏢 Departments
+  </h2>
+  <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+    {departments.map((dept) => (
+      <div
+        key={dept}
+        className="p-6 border bg-yellow-200 rounded-xl shadow-md hover:bg-yellow-300 cursor-pointer transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg"
+        onClick={() => viewReports(dept)}
+      >
+        <h3 className="text-xl font-bold text-orange-700 uppercase">
+          {dept}
+        </h3>
+      </div>
+    ))}
+  </div>
+</div>
+
         </div>
         {/* SB Section */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 p-6 bg-pink-100">
-          <div className="mb-6">
-            <h2 className="text-2xl font-semibold mb-4 text-center text-blue-600">
-              SB Bank Report
-            </h2>
-            <div className="flex flex-col items-center">
-              <Link
-                to="/sbbank"
-                className="p-6 border bg-green-300 rounded-lg shadow-lg hover:bg-green-400 transition duration-300 text-center w-full"
-              >
-                <h3 className="text-xl font-bold text-red-600 ">Bank Report</h3>
-              </Link>
-            </div>
-          </div>
-          {/* Monthly Flow Section */}
-          <div className="mb-6">
-            <h2 className="text-2xl font-semibold mb-4 text-center text-indigo-600">
-              Monthly Fund Flow
-            </h2>
-            <div className="flex flex-col items-center">
-              <Link
-                to="/bank/monthlyfundflow/"
-                className="p-6 border bg-purple-300 rounded-lg shadow-lg hover:bg-purple-400 transition duration-300 text-center w-full"
-              >
-                <h3 className="text-xl font-bold text-pink-600">
-                  Monthly Fund Flow
-                </h3>
-              </Link>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 p-6 bg-blue-50">
+  {/* SB Bank Report Section */}
+  <div className="mb-6">
+    <h2 className="text-2xl font-semibold mb-4 text-center text-blue-700">
+      🏦 SB Bank Report
+    </h2>
+    <div className="flex flex-col items-center">
+      <Link
+        to="/sbbank"
+        className="p-6 border bg-green-200 rounded-lg shadow-md hover:bg-green-300 transition-all duration-300 text-center w-full transform hover:scale-105"
+      >
+        <h3 className="text-xl font-bold text-red-700">📊 Bank Report</h3>
+      </Link>
+    </div>
+  </div>
 
-              <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {sb3update.map((fund) => (
-                  <Link
-                    to={`/bank/monthlyfundflow/${fund._id}`}
-                    key={fund._id} // Ensure you use a unique identifier
-                    className="p-4 border bg-gray-300 rounded-lg shadow-md hover:bg-gray-400 transition duration-300 text-center cursor-pointer"
-                  >
-                    <h4 className="text-lg font-bold">
-                      {new Date(fund.Date)
-                        .toLocaleString("en-GB", {
-                          day: "2-digit",
-                          month: "2-digit",
-                          year: "numeric",
-                        })
-                        .replace(/\//g, "/")}
-                    </h4>{" "}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className="mb-6">
-            <h2 className="text-2xl font-semibold mb-4 text-center text-indigo-600">
-              SB Master CheckList
-            </h2>
-            <div className="flex flex-col items-center">
-              <Link
-                to="/mastersheet"
-                className="p-6 border bg-green-300 rounded-lg shadow-lg hover:bg-green-400 transition duration-300 text-center w-full"
-              >
-                <h3 className="text-xl font-bold text-red-600">
-                  Master CheckList
-                </h3>
-              </Link>
-            </div>
-          </div>
-        </div>
+  {/* Monthly Flow Section */}
+  <div className="mb-6">
+    <h2 className="text-2xl font-semibold mb-4 text-center text-indigo-700">
+      🔄 Monthly Fund Flow
+    </h2>
+    <div className="flex flex-col items-center">
+      <Link
+        to="/bank/monthlyfundflow/"
+        className="p-6 border bg-purple-200 rounded-lg shadow-md hover:bg-purple-300 transition-all duration-300 text-center w-full transform hover:scale-105"
+      >
+        <h3 className="text-xl font-bold text-pink-700">
+          📅 Monthly Fund Flow
+        </h3>
+      </Link>
+
+      {/* Fund Flow Links */}
+      <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {sb3update.map((fund) => (
+          <Link
+            to={`/bank/monthlyfundflow/${fund._id}`}
+            key={fund._id}
+            className="p-4 border bg-gray-200 rounded-lg shadow-md hover:bg-gray-300 transition-all duration-300 text-center cursor-pointer transform hover:scale-105"
+          >
+            <h4 className="text-lg font-bold text-gray-800">
+              📆 {new Date(fund.Date)
+                .toLocaleString("en-GB", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })
+                .replace(/\//g, "/")}
+            </h4>
+          </Link>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  {/* SB Master CheckList */}
+  <div className="mb-6">
+    <h2 className="text-2xl font-semibold mb-4 text-center text-indigo-700">
+      📋 SB Master CheckList
+    </h2>
+    <div className="flex flex-col items-center">
+      <Link
+        to="/mastersheet"
+        className="p-6 border bg-green-200 rounded-lg shadow-md hover:bg-green-300 transition-all duration-300 text-center w-full transform hover:scale-105"
+      >
+        <h3 className="text-xl font-bold text-red-700">
+          ✅ Master CheckList
+        </h3>
+      </Link>
+    </div>
+  </div>
+</div>
+
 
         {/* ReportFile */}
         <div className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4 mt-8 text-center text-blue-600">
-            Report File
-          </h2>
-          {reportfile.length > 0 ? (
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-5">
-              {reportfile.map((reportfile) => (
-                <div
-                  key={reportfile._id}
-                  onClick={() => navigate(`/reportfile/${reportfile._id}`)}
-                  className="p-6 border rounded-lg shadow-lg bg-gray-300 hover:bg-gray-400 cursor-pointer transition duration-300"
-                >
-                  <h1 className="text-xl text-brown-600 text-center font-bold">
-                    {reportfile.department.toUpperCase()}
-                  </h1>
-                  <h3 className="text-lg font-serif text-center text-gray-700">
-                    {new Date(reportfile.entryDate).toLocaleDateString()}
-                  </h3>
-                  <h3 className="text-sm text-red-700 text-center">
-                    Cash Sales: {reportfile.reports.cashsales}
-                  </h3>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-600 text-center">No reports available.</p>
-          )}
+  {/* Heading */}
+  <h2 className="text-3xl font-bold mb-6 mt-8 text-center text-blue-700">
+    📊 Report File
+  </h2>
+
+  {/* Report List */}
+  {reportfile.length > 0 ? (
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      {reportfile.map((report) => (
+        <div
+          key={report._id}
+          onClick={() => navigate(`/reportfile/${report._id}`)}
+          className="p-6 border rounded-xl shadow-lg bg-white hover:bg-gray-100 cursor-pointer transition duration-300 transform hover:scale-105 hover:shadow-xl"
+        >
+          <h1 className="text-xl font-bold text-center text-green-700 uppercase">
+            {report.department}
+          </h1>
+          <h3 className="text-lg font-medium text-center text-gray-800 mt-2">
+            📅 {new Date(report.entryDate).toLocaleDateString()}
+          </h3>
+          <h3 className="text-md font-semibold text-center text-red-600 mt-1">
+            💵 Cash Sales: ₹{report.reports.cashsales}
+          </h3>
         </div>
+      ))}
+    </div>
+  ) : (
+    <p className="text-gray-600 text-center mt-4">No reports available.</p>
+  )}
+</div>
+
 
         {/* Cashier Kaam */}
         <div className="mb-8">
-          <div className="flex items-center justify-center">
-            <h2 className="text-2xl font-semibold mb-4 mt-8 text-blue-600">Cashier Kaam</h2>
-            <img src={add} alt="Create" width={50} className="mr-4 mt-4 ml-4 cursor-pointer"  onClick={()=>navigate("/cashier")}/>
-          </div>
-          {reportfile.length > 0 ? (
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-5">
-              {reportfile.map((reportfile) => (
-                <div
-                  key={reportfile._id}
-                  onClick={() => navigate(`/reportfile/${reportfile._id}`)}
-                  className="p-6 border rounded-lg shadow-lg bg-gray-300 hover:bg-gray-400 cursor-pointer transition duration-300"
-                >
-                  <h1 className="text-xl text-brown-600 text-center font-bold">
-                    {reportfile.department.toUpperCase()}
-                  </h1>
-                  <h3 className="text-lg font-serif text-center text-gray-700">
-                    {new Date(reportfile.entryDate).toLocaleDateString()}
-                  </h3>
-                  <h3 className="text-sm text-red-700 text-center">
-                    Cash Sales: {reportfile.reports.cashsales}
-                  </h3>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-600 text-center">No reports available.</p>
-          )}
+  {/* Heading with Button */}
+  <div className="flex items-center justify-center">
+    <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">💰 Cashier Kaam</h2>
+    <img
+      src={add}
+      alt="Create"
+      width={50}
+      className="ml-4 cursor-pointer transform transition hover:scale-110 hover:rotate-12"
+      onClick={() => navigate("/cashier")}
+    />
+  </div>
+
+  {/* Cashier Records */}
+  {cashier.length > 0 ? (
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      {cashier.map((cashier) => (
+        <div
+          key={cashier._id}
+          className="p-6 border rounded-xl shadow-xl bg-white hover:bg-gray-100 cursor-pointer transition duration-300 transform hover:scale-105"
+        >
+          <h1 className="text-2xl text-green-700 font-bold text-center">
+            ₹{cashier.amount}
+          </h1>
+          <h3 className="text-lg font-semibold text-center text-gray-800 mt-2">
+            🏦 {cashier.bank}
+          </h3>
+          <h3 className="text-sm text-gray-600 text-center mt-1">
+            📅 {new Date(cashier.date).toLocaleDateString()}
+          </h3>
         </div>
+      ))}
+    </div>
+  ) : (
+    <p className="text-gray-600 text-center mt-4">No reports available.</p>
+  )}
+</div>
+
         {/* Complaints Section */}
         <div className="mb-8">
           <h2 className="text-2xl font-semibold mb-4 mt-10 text-center text-brown-600">
