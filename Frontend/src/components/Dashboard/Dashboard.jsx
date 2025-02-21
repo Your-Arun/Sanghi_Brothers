@@ -349,9 +349,17 @@ const Dashboard = () => {
         {/* ReportFile */}
         <div className="mb-8">
           {/* Heading */}
-          <h2 className="text-3xl font-bold mb-6 mt-8 text-center text-blue-700">
-            📊 Report File
-          </h2>
+          <div className="flex items-center justify-center">
+            <h2 className="text-3xl font-bold mb-6 mt-8 text-center text-blue-700">
+              📊 Report File
+            </h2>
+            <img
+              src={add}
+              alt="Create"
+              width={50}
+              className="ml-4 cursor-pointer transform transition hover:scale-110 hover:rotate-12"
+              onClick={() => navigate("/reportfile")}
+            /></div>
 
           {/* Report List */}
           {reportfile.length > 0 ? (
@@ -422,9 +430,15 @@ const Dashboard = () => {
         {/* Complaints Section */}
         <div className="mb-10 p-6 bg-gray-50 rounded-lg shadow-md">
           {/* Heading */}
-          <h2 className="text-3xl font-extrabold mb-6 text-center text-red-700">
+          <div className="flex items-center justify-center"> <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">
             🚨 Complaints
-          </h2>
+          </h2> <img
+              src={add}
+              alt="Create"
+              width={50}
+              className="ml-4 cursor-pointer transform transition hover:scale-110 hover:rotate-12"
+              onClick={() => setShowModal2(true)}
+            /></div>
 
           {/* Complaints List */}
           {reports.length > 0 ? (
@@ -455,56 +469,43 @@ const Dashboard = () => {
         </div>
 
 
-        {/* Floating Action & Navigation Buttons */}
-<div className="relative flex flex-col items-center mt-6">
-  {/* Floating Buttons */}
-  <div className="bg-white p-6 rounded-xl shadow-lg flex flex-col md:flex-row items-center justify-center space-y-4 md:space-x-6 md:space-y-0 w-full max-w-3xl">
-    <button
-      onClick={() => setShowModal2(true)}
-      className="bg-red-500 text-white flex items-center px-6 py-3 rounded-lg shadow-md hover:bg-red-600 transition-all w-full md:w-auto"
-      aria-label="Create Report"
-    >
-      📝 <span className="ml-2">Create Complaint</span>
-    </button>
+        {/* Floating Buttons & Navigation */}
+        <div className="relative flex flex-col items-center mt-6">
+          {/* Floating Action Buttons */}
+          <div className="bg-white p-6 rounded-xl shadow-lg grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-4xl">
+            <button
+              onClick={() => navigate("/shifting")}
+              className="bg-red-500 text-white flex items-center px-6 py-3 rounded-full shadow-lg hover:bg-red-600 transform hover:scale-105 transition-all ease-in-out w-full"
+            >
+              👫 <span className="ml-2">SHIFTING ARRANGEMENT</span>
+            </button>
 
-    <button
-      onClick={handleSubmit}
-      className="bg-orange-500 text-white flex items-center px-6 py-3 rounded-lg shadow-md hover:bg-orange-600 transition-all w-full md:w-auto"
-      aria-label="Report File"
-    >
-      📄 <span className="ml-2">Report File</span>
-    </button>
+            <button
+              onClick={() => navigate("/lekhajokha")}
+              className="bg-orange-500 text-white flex items-center px-6 py-3 rounded-full shadow-lg hover:bg-orange-600 transform hover:scale-105 transition-all ease-in-out w-full"
+            >
+              📄 <span className="ml-2">LEKHA JOKHA</span>
+            </button>
 
-    <button
-      className="bg-blue-500 text-white flex items-center px-6 py-3 rounded-lg shadow-md hover:bg-blue-600 transition-all w-full md:w-auto"
-      aria-label="Upload File"
-      onClick={() => navigate("/exceluploader")}
-    >
-      📤 <span className="ml-2">Upload File</span>
-    </button>
-  </div>
+            <button
+              onClick={() => navigate("/exceluploader")}
+              className="bg-blue-500 text-white flex items-center px-6 py-3 rounded-full shadow-lg hover:bg-blue-600 transform hover:scale-105 transition-all ease-in-out w-full"
+              aria-label="Upload File"
+            >
+              📤 <span className="ml-2">UPLOAD FILE</span>
+            </button>
 
-  {/* Navigation Buttons */}
-  <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-3xl">
-    <a href="/shifting" className="w-full">
-      <button className="bg-green-500 text-white w-full flex items-center justify-center px-6 py-3 rounded-lg shadow-md hover:bg-green-600 transition-all">
-        SHIFTING
-      </button>
-    </a>
+            <button
+              onClick={() => navigate("/createmeterclose")}
+              className="bg-purple-500 text-white flex items-center px-6 py-3 rounded-full shadow-lg hover:bg-purple-600 transform hover:scale-105 transition-all ease-in-out w-full"
+              aria-label="Meter Close"
+            >
+              🔒 <span className="ml-2">METER CLOSE</span>
+            </button>
+          </div>
+        </div>
 
-    <a href="/lekhajokha" className="w-full">
-      <button className="bg-green-500 text-white w-full flex items-center justify-center px-6 py-3 rounded-lg shadow-md hover:bg-green-600 transition-all">
-        LEKHA JOKHA
-      </button>
-    </a>
 
-    <a href="/createmeterclose" className="w-full">
-      <button className="bg-green-500 text-white w-full flex items-center justify-center px-6 py-3 rounded-lg shadow-md hover:bg-green-600 transition-all">
-        METER CLOSE
-      </button>
-    </a>
-  </div>
-</div>
 
 
 

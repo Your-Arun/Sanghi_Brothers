@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import previousImage from "/public/previous.png";
+import { Link } from 'react-router-dom';
 
 function UploadExcel({ token }) {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -126,7 +128,11 @@ function UploadExcel({ token }) {
           </div>
         )}
       </div>
-
+      <div className="fixed bottom-6 left-6 p-4  rounded-full ">
+                <Link to="/dashboard">
+                    <img src={previousImage} alt="Back" width={50} className="rounded-full" />
+                </Link>
+            </div>
 
     </div>
   );

@@ -50,12 +50,12 @@ const ChekList = () => {
                                     >
                                         <h4 className="text-lg font-bold">
                                             <p>Update Report</p>
-                                           <h2> {new Date(pump.date).toLocaleDateString("en-GB", {
+                                            <h2> {new Date(pump.date).toLocaleDateString("en-GB", {
                                                 day: "2-digit",
                                                 month: "2-digit",
                                                 year: "numeric",
                                             })}</h2>
-                                           Shift:  {shift[index]}
+                                            Shift:  {shift[index]}
                                         </h4>
                                     </Link>
                                 ))}
@@ -66,11 +66,9 @@ const ChekList = () => {
             </div>
 
             <div>
-                <div className="flex justify-evenly mb-[10px] mt-[calc-(container)]">
-                    <Link to={"/dashboard"}>
-                        <div>
-                            <img src={previousImage} width={50} alt="Back" />
-                        </div>
+                <div className="fixed bottom-6 left-6 p-4  rounded-full ">
+                    <Link to="/dashboard">
+                        <img src={previousImage} alt="Back" width={50} className="rounded-full" />
                     </Link>
                 </div>
             </div>

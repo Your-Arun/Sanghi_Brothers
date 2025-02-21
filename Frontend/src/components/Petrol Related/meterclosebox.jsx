@@ -63,13 +63,11 @@ const ChekList = () => {
             </div>
 
             <div>
-                <div className="flex justify-evenly mb-[10px] mt-[calc-(container)]">
-                    <Link to={"/dashboard"}>
-                        <div>
-                            <img src={previousImage} width={50} alt="Back" />
-                        </div>
-                    </Link>
-                </div>
+            <div className="fixed bottom-6 left-6 p-4  rounded-full ">
+                <Link to="/dashboard">
+                    <img src={previousImage} alt="Back" width={50} className="rounded-full" />
+                </Link>
+            </div>
             </div>
         </>
     );
