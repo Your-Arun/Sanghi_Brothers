@@ -511,71 +511,59 @@ const Dashboard = () => {
 
         {/* Profile Modal */}
         {showProfileModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-              <h2 className="text-2xl font-bold mb-4 text-center text-blue-600">
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+            role="dialog"
+            aria-labelledby="profile-modal-title"
+          >
+            {/* Modal Box */}
+            <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm md:max-w-md relative">
+              {/* Close Button */}
+              <button
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+                onClick={() => setShowProfileModal(false)}
+                aria-label="Close"
+              >
+                ❌
+              </button>
+
+              <h2
+                id="profile-modal-title"
+                className="text-2xl font-bold mb-4 text-center text-blue-600"
+              >
                 Profile
               </h2>
+
               <form>
-                <div className="mb-4">
-                  <label className="block text-gray-700 font-semibold">
-                    Name:
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    value={updatedProfile.username || ""}
-                    onChange={(e) =>
-                      setUpdatedProfile({
-                        ...updatedProfile,
-                        username: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700 font-semibold">
-                    Email:
-                  </label>
-                  <input
-                    type="email"
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    value={updatedProfile.email || ""}
-                    onChange={(e) =>
-                      setUpdatedProfile({
-                        ...updatedProfile,
-                        email: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700 font-semibold">
-                    Department:
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    value={updatedProfile.department || ""}
-                    onChange={(e) =>
-                      setUpdatedProfile({
-                        ...updatedProfile,
-                        department: e.target.value,
-                      })
-                    }
-                  />
-                </div>
+                {[
+                  { label: "Name", value: updatedProfile.username, key: "username" },
+                  { label: "Email", value: updatedProfile.email, key: "email", type: "email" },
+                  { label: "Department", value: updatedProfile.department, key: "department" }
+                ].map(({ label, value, key, type = "text" }) => (
+                  <div key={key} className="mb-4">
+                    <label className="block text-gray-700 font-semibold">{label}:</label>
+                    <input
+                      type={type}
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={value || ""}
+                      onChange={(e) =>
+                        setUpdatedProfile({ ...updatedProfile, [key]: e.target.value })
+                      }
+                    />
+                  </div>
+                ))}
+
                 <div className="flex justify-end">
                   <button
                     type="button"
-                    className="px-4 py-2 bg-gray-300 text-black rounded-lg mr-2 transition duration-300 hover:bg-gray-400"
+                    className="px-4 py-2 bg-gray-300 text-black rounded-lg mr-2 hover:bg-gray-400 transition"
                     onClick={() => setShowProfileModal(false)}
                   >
                     Cancel
                   </button>
                   <button
                     type="button"
-                    className="px-4 py-2 bg-blue-500 text-white rounded-lg transition duration-300 hover:bg-blue-600"
+                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
                     onClick={handleProfileSave}
                   >
                     Save
@@ -585,46 +573,69 @@ const Dashboard = () => {
             </div>
           </div>
         )}
+
         {/* Edit Modal */}
         {isEditing && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-              <h2 className="text-2xl font-bold mb-4 text-center text-blue-600">
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+            role="dialog"
+            aria-labelledby="edit-report-modal-title"
+          >
+            {/* Modal Box */}
+            <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm md:max-w-md relative">
+              {/* Close Button */}
+              <button
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+                onClick={() => setIsEditing(false)}
+                aria-label="Close"
+              >
+                ❌
+              </button>
+
+              <h2
+                id="edit-report-modal-title"
+                className="text-2xl font-bold mb-4 text-center text-blue-600"
+              >
                 Edit Report
               </h2>
+
               <form>
-                <div className="mb-4">
-                  <label className="block text-gray-700 font-semibold">
-                    Title:
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    value={updatedTitle}
-                    onChange={(e) => setUpdatedTitle(e.target.value)}
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700 font-semibold">
-                    Content:
-                  </label>
-                  <textarea
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    rows="6"
-                    value={updatedContent}
-                    onChange={(e) => setUpdatedContent(e.target.value)}
-                  ></textarea>
-                </div>
+                {[
+                  { label: "Title", value: updatedTitle, setValue: setUpdatedTitle },
+                  { label: "Content", value: updatedContent, setValue: setUpdatedContent, type: "textarea" }
+                ].map(({ label, value, setValue, type = "text" }) => (
+                  <div key={label} className="mb-4">
+                    <label className="block text-gray-700 font-semibold">{label}:</label>
+                    {type === "text" ? (
+                      <input
+                        type="text"
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={value}
+                        onChange={(e) => setValue(e.target.value)}
+                      />
+                    ) : (
+                      <textarea
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows="6"
+                        value={value}
+                        onChange={(e) => setValue(e.target.value)}
+                      ></textarea>
+                    )}
+                  </div>
+                ))}
+
                 <div className="flex justify-end">
                   <button
+                    type="button"
+                    className="px-4 py-2 bg-gray-300 text-black rounded-lg mr-2 hover:bg-gray-400 transition"
                     onClick={() => setIsEditing(false)}
-                    className="px-4 py-2 bg-gray-300 text-black rounded-lg mr-2 transition duration-300 hover:bg-gray-400"
                   >
                     Cancel
                   </button>
                   <button
+                    type="button"
+                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
                     onClick={handleUpdateReport}
-                    className="px-4 py-2 bg-blue-500 text-white rounded-lg transition duration-300 hover:bg-blue-600"
                   >
                     Save
                   </button>
@@ -633,13 +644,33 @@ const Dashboard = () => {
             </div>
           </div>
         )}
+
         {/* Modal for Selecting Department of complaint report */}
         {showModal2 && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-              <h2 className="text-2xl font-bold mb-4 text-center text-blue-600">
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+            role="dialog"
+            aria-labelledby="department-modal-title"
+            onClick={(e) => e.target.id === "modal-overlay" && setShowModal2(false)}
+          >
+            {/* Modal Box */}
+            <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm md:max-w-md relative">
+              {/* Close Button */}
+              <button
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+                onClick={() => setShowModal2(false)}
+                aria-label="Close"
+              >
+                ❌
+              </button>
+
+              <h2
+                id="department-modal-title"
+                className="text-2xl font-bold mb-4 text-center text-blue-600"
+              >
                 Select a Department
               </h2>
+
               <select
                 className="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={selectedDepartment}
@@ -654,16 +685,19 @@ const Dashboard = () => {
                   </option>
                 ))}
               </select>
+
               <div className="flex justify-end">
                 <button
+                  type="button"
+                  className="px-4 py-2 bg-gray-300 text-black rounded-lg mr-2 hover:bg-gray-400 transition"
                   onClick={() => setShowModal2(false)}
-                  className="px-4 py-2 bg-gray-300 text-black rounded-lg mr-2 transition duration-300 hover:bg-gray-400"
                 >
                   Cancel
                 </button>
                 <button
+                  type="button"
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
                   onClick={openReportPage}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg transition duration-300 hover:bg-blue-600"
                 >
                   Proceed
                 </button>
@@ -671,6 +705,7 @@ const Dashboard = () => {
             </div>
           </div>
         )}
+
       </div>
     </>
   );
