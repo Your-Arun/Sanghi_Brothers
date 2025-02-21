@@ -253,7 +253,7 @@ const Dashboard = () => {
 
         <div>
           {/* Departments Section */}
-          <div className="mb-6">
+          <div className="mb-10 p-6  rounded-lg shadow-md"><div className="mb-6">
             <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">
               🏢 Departments
             </h2>
@@ -270,10 +270,10 @@ const Dashboard = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </div></div>
         </div>
         {/* SB Section */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 p-6 bg-blue-50">
+        <div className="mb-10 p-6  rounded-lg shadow-md"><div className="grid grid-cols-1 gap-6 md:grid-cols-3 p-6 ">
           {/* SB Bank Report Section */}
           <div className="mb-6">
             <h2 className="text-2xl font-semibold mb-4 text-center text-blue-700">
@@ -343,11 +343,11 @@ const Dashboard = () => {
               </Link>
             </div>
           </div>
-        </div>
+        </div></div>
 
 
         {/* ReportFile */}
-        <div className="mb-8">
+        <div className="mb-10 p-6  rounded-lg shadow-md">
           {/* Heading */}
           <div className="flex items-center justify-center">
             <h2 className="text-3xl font-bold mb-6 mt-8 text-center text-blue-700">
@@ -389,7 +389,7 @@ const Dashboard = () => {
 
 
         {/* Cashier Kaam */}
-        <div className="mb-8">
+        <div className="mb-10 p-6  rounded-lg shadow-md">
           {/* Heading with Button */}
           <div className="flex items-center justify-center">
             <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">💰 Cashier Kaam</h2>
@@ -428,7 +428,7 @@ const Dashboard = () => {
         </div>
 
         {/* Complaints Section */}
-        <div className="mb-10 p-6 bg-gray-50 rounded-lg shadow-md">
+        <div className="mb-10 p-6  rounded-lg shadow-md">
           {/* Heading */}
           <div className="flex items-center justify-center"> <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">
             🚨 Complaints
