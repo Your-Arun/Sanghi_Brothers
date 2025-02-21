@@ -110,8 +110,8 @@ const Dashboard = () => {
         setSb3Update(sb3resp.data);
         const response = await axios.get("http://localhost:5500/cashier", {
           headers: { Authorization: `Bearer ${token}` },
-      });
-      setCashier(response.data);
+        });
+        setCashier(response.data);
       } catch (err) {
         console.error("Error fetching data:");
         alert("Failed to fetch data.");
@@ -205,301 +205,308 @@ const Dashboard = () => {
   return (
     <>
       <div className="relative p-6 dashboard  min-h-screen">
-        <h1 className="text-4xl font-bold mt-[-20px] font-serif uppercase mb-6 text-center text-purple-600">
+        <h1 className="text-5xl font-extrabold uppercase font-serif text-center 
+               text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-500 
+               drop-shadow-lg mt-[-10px] mb-8">
           Dashboard
         </h1>
 
+
         <div className="relative mb-4">
-          <div className="flex items-center  mt-[-60px] justify-end">
+          {/* Profile Icon with Proper Spacing */}
+          <div className="flex items-center justify-end pr-6">
             <img
               src="public/user.png"
-              alt="User "
-              className="w-12 h-12 cursor-pointer hover:scale-110 transition-transform"
+              alt="User"
+              className="w-12 h-12 rounded-full border-2 border-gray-400 shadow-md cursor-pointer
+                 hover:scale-105 transition-transform duration-300"
               onClick={() => setShowUserMenu(!showUserMenu)}
             />
           </div>
 
+          {/* Dropdown Menu with Proper Positioning */}
           {showUserMenu && (
-            <div className="absolute right-0 mt-2 w-40 bg-white border rounded shadow-md">
+            <div className="absolute right-6 top-14 w-44 bg-white rounded-lg shadow-lg border border-gray-200
+                    transition-all duration-300 ease-in-out z-50">
               <button
-                className="block px-4 py-2 text-left w-full text-red-500 hover:bg-gray-100"
+                className="block px-4 py-2 text-left w-full text-gray-700 font-medium hover:bg-gray-100 
+                   transition-all duration-200"
                 onClick={() => {
                   fetchProfile();
                   setShowProfileModal(true);
                   setShowUserMenu(false);
                 }}
               >
-                Profile
+                👤 Profile
               </button>
               <button
-                className="block px-4 py-2 text-left w-full text-red-500 hover:bg-gray-100"
+                className="block px-4 py-2 text-left w-full text-red-500 font-medium hover:bg-red-100 
+                   transition-all duration-200"
                 onClick={handleLogout}
               >
-                Logout
+                🚪 Logout
               </button>
             </div>
           )}
         </div>
+
+
         <div>
           {/* Departments Section */}
           <div className="mb-6">
-  <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">
-    🏢 Departments
-  </h2>
-  <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-    {departments.map((dept) => (
-      <div
-        key={dept}
-        className="p-6 border bg-yellow-200 rounded-xl shadow-md hover:bg-yellow-300 cursor-pointer transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg"
-        onClick={() => viewReports(dept)}
-      >
-        <h3 className="text-xl font-bold text-orange-700 uppercase">
-          {dept}
-        </h3>
-      </div>
-    ))}
-  </div>
-</div>
-
+            <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">
+              🏢 Departments
+            </h2>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              {departments.map((dept) => (
+                <div
+                  key={dept}
+                  className="p-6 border bg-yellow-200 rounded-xl shadow-md hover:bg-yellow-300 cursor-pointer transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg"
+                  onClick={() => viewReports(dept)}
+                >
+                  <h3 className="text-xl font-bold text-orange-700 uppercase">
+                    {dept}
+                  </h3>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
         {/* SB Section */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3 p-6 bg-blue-50">
-  {/* SB Bank Report Section */}
-  <div className="mb-6">
-    <h2 className="text-2xl font-semibold mb-4 text-center text-blue-700">
-      🏦 SB Bank Report
-    </h2>
-    <div className="flex flex-col items-center">
-      <Link
-        to="/sbbank"
-        className="p-6 border bg-green-200 rounded-lg shadow-md hover:bg-green-300 transition-all duration-300 text-center w-full transform hover:scale-105"
-      >
-        <h3 className="text-xl font-bold text-red-700">📊 Bank Report</h3>
-      </Link>
-    </div>
-  </div>
+          {/* SB Bank Report Section */}
+          <div className="mb-6">
+            <h2 className="text-2xl font-semibold mb-4 text-center text-blue-700">
+              🏦 SB Bank Report
+            </h2>
+            <div className="flex flex-col items-center">
+              <Link
+                to="/sbbank"
+                className="p-6 border bg-green-200 rounded-lg shadow-md hover:bg-green-300 transition-all duration-300 text-center w-full transform hover:scale-105"
+              >
+                <h3 className="text-xl font-bold text-red-700">📊 Bank Report</h3>
+              </Link>
+            </div>
+          </div>
 
-  {/* Monthly Flow Section */}
-  <div className="mb-6">
-    <h2 className="text-2xl font-semibold mb-4 text-center text-indigo-700">
-      🔄 Monthly Fund Flow
-    </h2>
-    <div className="flex flex-col items-center">
-      <Link
-        to="/bank/monthlyfundflow/"
-        className="p-6 border bg-purple-200 rounded-lg shadow-md hover:bg-purple-300 transition-all duration-300 text-center w-full transform hover:scale-105"
-      >
-        <h3 className="text-xl font-bold text-pink-700">
-          📅 Monthly Fund Flow
-        </h3>
-      </Link>
+          {/* Monthly Flow Section */}
+          <div className="mb-6">
+            <h2 className="text-2xl font-semibold mb-4 text-center text-indigo-700">
+              🔄 Monthly Fund Flow
+            </h2>
+            <div className="flex flex-col items-center">
+              <Link
+                to="/bank/monthlyfundflow/"
+                className="p-6 border bg-purple-200 rounded-lg shadow-md hover:bg-purple-300 transition-all duration-300 text-center w-full transform hover:scale-105"
+              >
+                <h3 className="text-xl font-bold text-pink-700">
+                  📅 Monthly Fund Flow
+                </h3>
+              </Link>
 
-      {/* Fund Flow Links */}
-      <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {sb3update.map((fund) => (
-          <Link
-            to={`/bank/monthlyfundflow/${fund._id}`}
-            key={fund._id}
-            className="p-4 border bg-gray-200 rounded-lg shadow-md hover:bg-gray-300 transition-all duration-300 text-center cursor-pointer transform hover:scale-105"
-          >
-            <h4 className="text-lg font-bold text-gray-800">
-              📆 {new Date(fund.Date)
-                .toLocaleString("en-GB", {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                })
-                .replace(/\//g, "/")}
-            </h4>
-          </Link>
-        ))}
-      </div>
-    </div>
-  </div>
+              {/* Fund Flow Links */}
+              <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {sb3update.map((fund) => (
+                  <Link
+                    to={`/bank/monthlyfundflow/${fund._id}`}
+                    key={fund._id}
+                    className="p-4 border bg-gray-200 rounded-lg shadow-md hover:bg-gray-300 transition-all duration-300 text-center cursor-pointer transform hover:scale-105"
+                  >
+                    <h4 className="text-lg font-bold text-gray-800">
+                      📆 {new Date(fund.Date)
+                        .toLocaleString("en-GB", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })
+                        .replace(/\//g, "/")}
+                    </h4>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
 
-  {/* SB Master CheckList */}
-  <div className="mb-6">
-    <h2 className="text-2xl font-semibold mb-4 text-center text-indigo-700">
-      📋 SB Master CheckList
-    </h2>
-    <div className="flex flex-col items-center">
-      <Link
-        to="/mastersheet"
-        className="p-6 border bg-green-200 rounded-lg shadow-md hover:bg-green-300 transition-all duration-300 text-center w-full transform hover:scale-105"
-      >
-        <h3 className="text-xl font-bold text-red-700">
-          ✅ Master CheckList
-        </h3>
-      </Link>
-    </div>
-  </div>
-</div>
+          {/* SB Master CheckList */}
+          <div className="mb-6">
+            <h2 className="text-2xl font-semibold mb-4 text-center text-indigo-700">
+              📋 SB Master CheckList
+            </h2>
+            <div className="flex flex-col items-center">
+              <Link
+                to="/mastersheet"
+                className="p-6 border bg-green-200 rounded-lg shadow-md hover:bg-green-300 transition-all duration-300 text-center w-full transform hover:scale-105"
+              >
+                <h3 className="text-xl font-bold text-red-700">
+                  ✅ Master CheckList
+                </h3>
+              </Link>
+            </div>
+          </div>
+        </div>
 
 
         {/* ReportFile */}
         <div className="mb-8">
-  {/* Heading */}
-  <h2 className="text-3xl font-bold mb-6 mt-8 text-center text-blue-700">
-    📊 Report File
-  </h2>
-
-  {/* Report List */}
-  {reportfile.length > 0 ? (
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      {reportfile.map((report) => (
-        <div
-          key={report._id}
-          onClick={() => navigate(`/reportfile/${report._id}`)}
-          className="p-6 border rounded-xl shadow-lg bg-white hover:bg-gray-100 cursor-pointer transition duration-300 transform hover:scale-105 hover:shadow-xl"
-        >
-          <h1 className="text-xl font-bold text-center text-green-700 uppercase">
-            {report.department}
-          </h1>
-          <h3 className="text-lg font-medium text-center text-gray-800 mt-2">
-            📅 {new Date(report.entryDate).toLocaleDateString()}
-          </h3>
-          <h3 className="text-md font-semibold text-center text-red-600 mt-1">
-            💵 Cash Sales: ₹{report.reports.cashsales}
-          </h3>
-        </div>
-      ))}
-    </div>
-  ) : (
-    <p className="text-gray-600 text-center mt-4">No reports available.</p>
-  )}
-</div>
-
-
-        {/* Cashier Kaam */}
-        <div className="mb-8">
-  {/* Heading with Button */}
-  <div className="flex items-center justify-center">
-    <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">💰 Cashier Kaam</h2>
-    <img
-      src={add}
-      alt="Create"
-      width={50}
-      className="ml-4 cursor-pointer transform transition hover:scale-110 hover:rotate-12"
-      onClick={() => navigate("/cashier")}
-    />
-  </div>
-
-  {/* Cashier Records */}
-  {cashier.length > 0 ? (
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      {cashier.map((cashier) => (
-        <div
-          key={cashier._id}
-          className="p-6 border rounded-xl shadow-xl bg-white hover:bg-gray-100 cursor-pointer transition duration-300 transform hover:scale-105"
-        >
-          <h1 className="text-2xl text-green-700 font-bold text-center">
-            ₹{cashier.amount}
-          </h1>
-          <h3 className="text-lg font-semibold text-center text-gray-800 mt-2">
-            🏦 {cashier.bank}
-          </h3>
-          <h3 className="text-sm text-gray-600 text-center mt-1">
-            📅 {new Date(cashier.date).toLocaleDateString()}
-          </h3>
-        </div>
-      ))}
-    </div>
-  ) : (
-    <p className="text-gray-600 text-center mt-4">No reports available.</p>
-  )}
-</div>
-
-        {/* Complaints Section */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4 mt-10 text-center text-brown-600">
-            Complaints
+          {/* Heading */}
+          <h2 className="text-3xl font-bold mb-6 mt-8 text-center text-blue-700">
+            📊 Report File
           </h2>
-          {reports.length > 0 ? (
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-              {reports.map((report) => (
+
+          {/* Report List */}
+          {reportfile.length > 0 ? (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {reportfile.map((report) => (
                 <div
                   key={report._id}
-                  className="p-6 border bg-gray-300 rounded-lg shadow-lg hover:bg-gray-400 cursor-pointer transition duration-300"
-                  onClick={() => handleReportClick(report)} // Open edit modal
+                  onClick={() => navigate(`/reportfile/${report._id}`)}
+                  className="p-6 border rounded-xl shadow-lg bg-white hover:bg-gray-100 cursor-pointer transition duration-300 transform hover:scale-105 hover:shadow-xl"
                 >
-                  <h3 className="font-bold text-lg text-blue-600">
-                    {report.title}
+                  <h1 className="text-xl font-bold text-center text-green-700 uppercase">
+                    {report.department}
+                  </h1>
+                  <h3 className="text-lg font-medium text-center text-gray-800 mt-2">
+                    📅 {new Date(report.entryDate).toLocaleDateString()}
                   </h3>
-                  <p className="text-sm text-gray-600">{report.department}</p>
-                  <p className="mt-2 text-gray-800">{report.content}</p>
+                  <h3 className="text-md font-semibold text-center text-red-600 mt-1">
+                    💵 Cash Sales: ₹{report.reports.cashsales}
+                  </h3>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-gray-600 text-center">No reports available.</p>
+            <p className="text-gray-600 text-center mt-4">No reports available.</p>
           )}
         </div>
 
-        {/* Floating Buttons */}
-        <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4 mt-6">
-          {/* Create Complaint Button */}
-          <button
-            onClick={() => setShowModal2(true)}
-            className="bg-red-500 text-white rounded-lg p-4 shadow-lg hover:bg-red-600 transition duration-300 flex items-center"
-            aria-label="Create Report"
-          >
-            <span className="mr-2">📝</span>{" "}
-            {/* Optional icon for visual appeal */}
-            Create Complaint
-          </button>
 
-          {/* Report File Button */}
-          <button
-            onClick={handleSubmit}
-            className="bg-orange-500 text-white rounded-lg p-4 shadow-lg hover:bg-orange-600 transition duration-300 flex items-center"
-            aria-label="Report File"
-          >
-            <span className="mr-2">📄</span>{" "}
-            {/* Optional icon for visual appeal */}
-            Report File
-          </button>
-
-          {/* Upload File Section */}
-          <div className="flex items-center">
-            <input
-              type="file"
-              accept=".pdf,.jpg,.jpeg,.xls,.xlsx"
-              className="mr-2 w-full hidden"
+        {/* Cashier Kaam */}
+        <div className="mb-8">
+          {/* Heading with Button */}
+          <div className="flex items-center justify-center">
+            <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">💰 Cashier Kaam</h2>
+            <img
+              src={add}
+              alt="Create"
+              width={50}
+              className="ml-4 cursor-pointer transform transition hover:scale-110 hover:rotate-12"
+              onClick={() => navigate("/cashier")}
             />
-            <button
-              className="bg-blue-500 text-white rounded-lg p-4 shadow-lg hover:bg-blue-600 transition duration-300 flex items-center"
-              aria-label="Upload File"
-              onClick={() => navigate("/exceluploader")}
-            >
-              <span className="mr-2">📤</span>{" "}
-              Upload File
-            </button>
           </div>
 
-          <div className="flex justify-between">
-            <div>
-              <a href="/shifting">
-                <button className="bg-green-500 text-white rounded-lg p-4 shadow-lg hover:bg-green-600 transition duration-300 flex items-center ml-2">
-                  SHIFTING
-                </button>
-              </a>
+          {/* Cashier Records */}
+          {cashier.length > 0 ? (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {cashier.map((cashier) => (
+                <div
+                  key={cashier._id}
+                  className="p-6 border rounded-xl shadow-xl bg-white hover:bg-gray-100 cursor-pointer transition duration-300 transform hover:scale-105"
+                >
+                  <h1 className="text-2xl text-green-700 font-bold text-center">
+                    ₹{cashier.amount}
+                  </h1>
+                  <h3 className="text-lg font-semibold text-center text-gray-800 mt-2">
+                    🏦 {cashier.bank}
+                  </h3>
+                  <h3 className="text-sm text-gray-600 text-center mt-1">
+                    📅 {new Date(cashier.date).toLocaleDateString()}
+                  </h3>
+                </div>
+              ))}
             </div>
-            <div>
-              <a href="/lekhajokha">
-                <button className="bg-green-500 text-white rounded-lg p-4 shadow-lg hover:bg-green-600 transition duration-300 flex items-center ml-2">
-                  LEKHA JOKHA
-                </button>
-              </a>
-            </div>
-            <div>
-              <a href="/createmeterclose">
-                <button className="bg-green-500 text-white rounded-lg p-4 shadow-lg hover:bg-green-600 transition duration-300 flex items-center ml-2">
-                  METER CLOSE
-                </button>
-              </a>
-            </div>
-          </div>
+          ) : (
+            <p className="text-gray-600 text-center mt-4">No reports available.</p>
+          )}
         </div>
+
+        {/* Complaints Section */}
+        <div className="mb-10 p-6 bg-gray-50 rounded-lg shadow-md">
+          {/* Heading */}
+          <h2 className="text-3xl font-extrabold mb-6 text-center text-red-700">
+            🚨 Complaints
+          </h2>
+
+          {/* Complaints List */}
+          {reports.length > 0 ? (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {reports.map((report) => (
+                <div
+                  key={report._id}
+                  className="p-6 border border-gray-300 bg-white rounded-xl shadow-lg hover:bg-gray-100 transition duration-300 transform hover:scale-105"
+                  onClick={() => handleReportClick(report)} // Open edit modal
+                >
+                  <h3 className="font-bold text-lg text-blue-600 text-center">
+                    {report.title}
+                  </h3>
+                  <p className="text-sm text-gray-600 text-center font-semibold mt-1">
+                    📂 {report.department}
+                  </p>
+                  <p className="mt-3 text-gray-800 text-center line-clamp-2">
+                    {report.content}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 text-center mt-4 italic">
+              No complaints available.
+            </p>
+          )}
+        </div>
+
+
+        {/* Floating Action & Navigation Buttons */}
+<div className="relative flex flex-col items-center mt-6">
+  {/* Floating Buttons */}
+  <div className="bg-white p-6 rounded-xl shadow-lg flex flex-col md:flex-row items-center justify-center space-y-4 md:space-x-6 md:space-y-0 w-full max-w-3xl">
+    <button
+      onClick={() => setShowModal2(true)}
+      className="bg-red-500 text-white flex items-center px-6 py-3 rounded-lg shadow-md hover:bg-red-600 transition-all w-full md:w-auto"
+      aria-label="Create Report"
+    >
+      📝 <span className="ml-2">Create Complaint</span>
+    </button>
+
+    <button
+      onClick={handleSubmit}
+      className="bg-orange-500 text-white flex items-center px-6 py-3 rounded-lg shadow-md hover:bg-orange-600 transition-all w-full md:w-auto"
+      aria-label="Report File"
+    >
+      📄 <span className="ml-2">Report File</span>
+    </button>
+
+    <button
+      className="bg-blue-500 text-white flex items-center px-6 py-3 rounded-lg shadow-md hover:bg-blue-600 transition-all w-full md:w-auto"
+      aria-label="Upload File"
+      onClick={() => navigate("/exceluploader")}
+    >
+      📤 <span className="ml-2">Upload File</span>
+    </button>
+  </div>
+
+  {/* Navigation Buttons */}
+  <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-3xl">
+    <a href="/shifting" className="w-full">
+      <button className="bg-green-500 text-white w-full flex items-center justify-center px-6 py-3 rounded-lg shadow-md hover:bg-green-600 transition-all">
+        SHIFTING
+      </button>
+    </a>
+
+    <a href="/lekhajokha" className="w-full">
+      <button className="bg-green-500 text-white w-full flex items-center justify-center px-6 py-3 rounded-lg shadow-md hover:bg-green-600 transition-all">
+        LEKHA JOKHA
+      </button>
+    </a>
+
+    <a href="/createmeterclose" className="w-full">
+      <button className="bg-green-500 text-white w-full flex items-center justify-center px-6 py-3 rounded-lg shadow-md hover:bg-green-600 transition-all">
+        METER CLOSE
+      </button>
+    </a>
+  </div>
+</div>
+
+
 
         {/* Profile Modal */}
         {showProfileModal && (
