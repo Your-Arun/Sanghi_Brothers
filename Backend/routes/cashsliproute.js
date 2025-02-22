@@ -2,8 +2,7 @@ const express = require('express');
 const router = express.Router();
 const CashSlip = require('../models/cashslipmodal');
 
-
-
+// ➤ Save a new Cash Slip
 router.post("/Cashslip", async (req, res) => {
     try {
         const newSlip = new CashSlip(req.body);
@@ -15,10 +14,17 @@ router.post("/Cashslip", async (req, res) => {
     }
 });
 
-// ➤ Get All Cash Slips
+// ➤ Get Cash Slips by Date (Fixed)
 router.get("/Cashslip", async (req, res) => {
     try {
-        const slips = await CashSlip.find();
+        const { date } = req.query; // Get date from query params
+        let filter = {};
+
+        if (date) {
+            filter.date = date; // Filter by date if provided
+        }
+
+        const slips = await CashSlip.find(filter);
         res.status(200).json(slips);
     } catch (error) {
         console.error("❌ Error Fetching Cash Slips:", error);
@@ -26,33 +32,36 @@ router.get("/Cashslip", async (req, res) => {
     }
 });
 
+// ➤ Get a Single Cash Slip by ID
 router.get("/Cashslip/:id", async (req, res) => {
     try {
         const slip = await CashSlip.findById(req.params.id);
         if (!slip) {
-            return res.status(404).json({ message: "�� Cash slip not found!" });
+            return res.status(404).json({ message: "❌ Cash slip not found!" });
         }
         res.status(200).json(slip);
     } catch (error) {
-        console.error("�� Error Fetching Cash Slip:", error);
-        res.status(500).json({ message: "�� Failed to fetch cash slip!", error: error.message });
+        console.error("❌ Error Fetching Cash Slip:", error);
+        res.status(500).json({ message: "❌ Failed to fetch cash slip!", error: error.message });
     }
 });
 
+// ➤ Update a Cash Slip by ID (Fixed `new: true`)
 router.put("/Cashslip/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const updatedSlip = await CashSlip.findByIdAndUpdate(id, req.body, {
-            new: tru
+            new: true, // ✅ Corrected `true` instead of `tru`
         });
+
         if (!updatedSlip) {
             return res.status(404).json({ message: "❌ Cash slip not found!" });
         }
-        res.status(200).json({ message: "�� Cash slip updated successfully!", data: updatedSlip });
+        res.status(200).json({ message: "✅ Cash slip updated successfully!", data: updatedSlip });
     } catch (error) {
-        console.error("�� Error Updating Cash Slip:", error);
-        res.status(400).json({ message: "�� Failed to update cash slip!", error: error.message });
+        console.error("❌ Error Updating Cash Slip:", error);
+        res.status(400).json({ message: "❌ Failed to update cash slip!", error: error.message });
     }
 });
 
-module.exports = router;   
+module.exports = router;

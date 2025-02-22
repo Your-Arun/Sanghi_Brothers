@@ -5,7 +5,10 @@ import previousImage from '/public/previous.png';
 
 const CashSlip = () => {
     const [fecthcashSlip, setFecthcashSlip] = useState([]);
-
+    const [selectedDate, setSelectedDate] = useState(() => {
+        const today = new Date();
+        return today.toISOString().split("T")[0];
+    });
     useEffect(() => {
         const fetchCashSlip = async () => {
             try {
@@ -19,6 +22,20 @@ const CashSlip = () => {
         fetchCashSlip();
     }, []);
 
+    useEffect(() => {
+        fetchCashSlipByDate(selectedDate);
+    }, [selectedDate]);
+
+    const fetchCashSlipByDate = async (date) => {
+        try {
+            let url = `http://localhost:5500/Cashslip?date=${date}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            setFetchCashSlip(data);
+        } catch (error) {
+            console.error("Error fetching cash slip:", error);
+        }
+    };
 
     const [cashSlip, setCashSlip] = useState({
         date: "",
@@ -76,9 +93,23 @@ const CashSlip = () => {
         ) + Number(cashSlip.uFill) + Number(cashSlip.iciciSlip) + Number(cashSlip.sbiSlip) + Number(cashSlip.paytm) + Number(cashSlip.expenses);
         setTotalAmount(total);
     }, [cashSlip]);
-    const handleSubmit = async (e) => {
+    useEffect(() => {
+        fetchCashSlip();
+    }, []);
+
+    const fetchCashSlip = async () => {
         try {
-            e.preventDefault();
+            const response = await fetch('http://localhost:5500/Cashslip');
+            const data = await response.json();
+            setFecthcashSlip(data);
+        } catch (error) {
+            console.error("Error fetching cash slip:", error);
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
             const cashdata = {
                 date: cashSlip.date,
                 shift: cashSlip.shift,
@@ -103,8 +134,12 @@ const CashSlip = () => {
                 total: totalAmount,
             };
 
-            const response = await axios.post("http://localhost:5500/Cashslip", cashdata);
-            alert("Cash Slip saved successfully!"); // ✅ Success message
+            await axios.post("http://localhost:5500/Cashslip", cashdata);
+            alert("Cash Slip saved successfully!");
+            fetchCashSlipByDate(selectedDate);
+
+            // ✅ Data save hone ke turant baad fetch karna
+            fetchCashSlip();
 
         } catch (error) {
             console.error("Error saving cash slip:", error.response ? error.response.data : error);
@@ -112,10 +147,11 @@ const CashSlip = () => {
         }
     };
 
+
     return (
         <div className="min-h-screen flex flex-col items-center bg-gray-50 p-6">
             <div className="bg-white shadow-lg rounded-lg p-6 max-w-2xl w-full">
-                <h2 className="text-2xl font-bold text-center text-blue-600 mb-4">Daily Cash Slip</h2>
+                <h2 className="text-4xl font-bold text-center text-blue-600 mb-8 ">Daily Cash Slip</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Date & Shift */}
                     <div className="flex flex-col sm:flex-row gap-4">
@@ -189,20 +225,28 @@ const CashSlip = () => {
                 </form>
             </div>
             {/* Cash Slips Display */}
-            <div className="mt-10 w-full max-w-4xl">
+           <div className="mt-10 w-full max-w-4xl">
+                <div className="mb-4 flex justify-center">
+                    <label className="font-bold mr-2">Select Date:</label>
+                    <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="border p-2 rounded-md" />
+                </div>
                 <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">Previous Cash Slips</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {fecthcashSlip.map((cashSlip, index) => (
-                        <div key={index} className="bg-white shadow-md p-4 rounded-lg border border-gray-200">
-                            <h3 className="text-lg font-bold text-blue-600">{cashSlip.name}</h3>
-                            <p><strong>Shift:</strong> {cashSlip.shift}</p>
-                            <p><strong>Nozzle No:</strong> {cashSlip.nozzleNo}</p>
-                            <p><strong>Opening:</strong> {cashSlip.openingReading}</p>
-                            <p><strong>Closing:</strong> {cashSlip.closingReading}</p>
-                            <p><strong>Sales:</strong> {cashSlip.salesInLtr} L</p>
-                            <p><strong>Total:</strong> ₹{cashSlip.total}</p>
-                        </div>
-                    ))}
+                    {fetchCashSlip.length > 0 ? (
+                        fetchCashSlip.map((cashSlip, index) => (
+                            <div key={index} className="bg-white shadow-md p-4 rounded-lg border border-gray-200">
+                                <h3 className="text-lg font-bold text-blue-600">{cashSlip.name}</h3>
+                                <p><strong>Shift:</strong> {cashSlip.shift}</p>
+                                <p><strong>Nozzle No:</strong> {cashSlip.nozzleNo}</p>
+                                <p><strong>Opening:</strong> {cashSlip.openingReading}</p>
+                                <p><strong>Closing:</strong> {cashSlip.closingReading}</p>
+                                <p><strong>Sales:</strong> {cashSlip.salesInLtr} L</p>
+                                <p><strong>Total:</strong> ₹{cashSlip.total}</p>
+                            </div>
+                        ))
+                    ) : (
+                        <p className="text-center text-gray-500">No cash slips found for this date.</p>
+                    )}
                 </div>
             </div>
             {/* Back Button */}
