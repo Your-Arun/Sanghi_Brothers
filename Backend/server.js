@@ -26,6 +26,7 @@ const ShiftingRoutes = require('./models/shifting/routesss');
 const MeterClose = require('./routes/metercloseroute');
 const Excelsheet = require('./routes/exceslsheetuploding')
 const DepostRoute=require('./routes/depositRoutes')
+const CashSlip = require('./routes/cashsliproute')
 
 
 
@@ -469,6 +470,7 @@ app.use('/shifting', ShiftingRoutes);
 //excelsheet uploading filess routes
 app.use('', Excelsheet);
 app.use('',DepostRoute)
+app.use('', CashSlip)
 
 // Start Server
 const PORT = process.env.PORT || 5000;
