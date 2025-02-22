@@ -31,7 +31,7 @@ const CashSlip = () => {
             let url = `http://localhost:5500/Cashslip?date=${date}`;
             const response = await fetch(url);
             const data = await response.json();
-            setFetchCashSlip(data);
+            setFecthcashSlip(data);
         } catch (error) {
             console.error("Error fetching cash slip:", error);
         }
@@ -225,21 +225,18 @@ const CashSlip = () => {
                 </form>
             </div>
             {/* Cash Slips Display */}
-            <div className="mt-10 w-full max-w-4xl">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">Previous Cash Slips</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {fecthcashSlip.map((cashSlip, index) => (
-                        <div key={index} className="bg-white shadow-md p-4 rounded-lg border border-gray-200">
-                            <h3 className="text-lg font-bold text-blue-600">{cashSlip.name}</h3>
-                            <p><strong>Shift:</strong> {cashSlip.shift}</p>
-                            <p><strong>Nozzle No:</strong> {cashSlip.nozzleNo}</p>
-                            <p><strong>Opening:</strong> {cashSlip.openingReading}</p>
-                            <p><strong>Closing:</strong> {cashSlip.closingReading}</p>
-                            <p><strong>Sales:</strong> {cashSlip.salesInLtr} L</p>
-                            <p><strong>Total:</strong> ₹{cashSlip.total}</p>
-                        </div>
-                    ))}
-                </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 mt-6">
+                {fecthcashSlip.map((cashSlip, index) => (
+                    <div key={index} className="bg-white shadow-md p-4 rounded-lg border border-gray-200">
+                        <h3 className="text-lg font-bold text-blue-600">{cashSlip.name}</h3>
+                        <p><strong>Shift:</strong> {cashSlip.shift}</p>
+                        <p><strong>Nozzle No:</strong> {cashSlip.nozzleNo}</p>
+                        <p><strong>Opening:</strong> {cashSlip.openingReading}</p>
+                        <p><strong>Closing:</strong> {cashSlip.closingReading}</p>
+                        <p><strong>Sales:</strong> {cashSlip.salesInLtr} L</p>
+                        <p><strong>Total:</strong> ₹{cashSlip.total}</p>
+                    </div>
+                ))}
             </div>
             {/* Back Button */}
             <div className="fixed bottom-6 left-6 p-4 rounded-full">
