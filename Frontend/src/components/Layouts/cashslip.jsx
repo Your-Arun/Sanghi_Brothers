@@ -225,28 +225,20 @@ const CashSlip = () => {
                 </form>
             </div>
             {/* Cash Slips Display */}
-           <div className="mt-10 w-full max-w-4xl">
-                <div className="mb-4 flex justify-center">
-                    <label className="font-bold mr-2">Select Date:</label>
-                    <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="border p-2 rounded-md" />
-                </div>
+            <div className="mt-10 w-full max-w-4xl">
                 <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">Previous Cash Slips</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {fetchCashSlip.length > 0 ? (
-                        fetchCashSlip.map((cashSlip, index) => (
-                            <div key={index} className="bg-white shadow-md p-4 rounded-lg border border-gray-200">
-                                <h3 className="text-lg font-bold text-blue-600">{cashSlip.name}</h3>
-                                <p><strong>Shift:</strong> {cashSlip.shift}</p>
-                                <p><strong>Nozzle No:</strong> {cashSlip.nozzleNo}</p>
-                                <p><strong>Opening:</strong> {cashSlip.openingReading}</p>
-                                <p><strong>Closing:</strong> {cashSlip.closingReading}</p>
-                                <p><strong>Sales:</strong> {cashSlip.salesInLtr} L</p>
-                                <p><strong>Total:</strong> ₹{cashSlip.total}</p>
-                            </div>
-                        ))
-                    ) : (
-                        <p className="text-center text-gray-500">No cash slips found for this date.</p>
-                    )}
+                    {fecthcashSlip.map((cashSlip, index) => (
+                        <div key={index} className="bg-white shadow-md p-4 rounded-lg border border-gray-200">
+                            <h3 className="text-lg font-bold text-blue-600">{cashSlip.name}</h3>
+                            <p><strong>Shift:</strong> {cashSlip.shift}</p>
+                            <p><strong>Nozzle No:</strong> {cashSlip.nozzleNo}</p>
+                            <p><strong>Opening:</strong> {cashSlip.openingReading}</p>
+                            <p><strong>Closing:</strong> {cashSlip.closingReading}</p>
+                            <p><strong>Sales:</strong> {cashSlip.salesInLtr} L</p>
+                            <p><strong>Total:</strong> ₹{cashSlip.total}</p>
+                        </div>
+                    ))}
                 </div>
             </div>
             {/* Back Button */}
