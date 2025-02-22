@@ -21,6 +21,8 @@ const Dashboard = () => {
   const [reportfile, setReportFile] = useState([]);
   const [sb3update, setSb3Update] = useState([]);
   const [cashier, setCashier] = useState([]);
+  const [cashierTotal, setCashierTotal] = useState([]);
+
 
   //reportfile ke lie
   useEffect(() => {
@@ -112,6 +114,7 @@ const Dashboard = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setCashier(response.data);
+        setCashierTotal(response.data.totalamount)
       } catch (err) {
         console.error("Error fetching data:");
         alert("Failed to fetch data.");
@@ -198,9 +201,7 @@ const Dashboard = () => {
       alert("Please select a department!");
     }
   };
-  const handleSubmit = () => {
-    navigate("/reportfile");
-  };
+ 
 
   return (
     <>
@@ -401,6 +402,7 @@ const Dashboard = () => {
               onClick={() => navigate("/cashier")}
             />
           </div>
+          <div className="flex items-center mt-[-50px] mb-[30px] justify-center"><span className="text-xl font-bold mb-4 mt-8 text-blue-700">Total Amount : {cashierTotal}</span></div>
 
           {/* Cashier Records */}
           {cashier.length > 0 ? (
@@ -502,13 +504,15 @@ const Dashboard = () => {
             >
               🔒 <span className="ml-2">METER CLOSE</span>
             </button>
+            <button
+              onClick={() => navigate("/Cashslip")}
+              className="bg-purple-500 text-white flex items-center px-6 py-3 rounded-full shadow-lg hover:bg-purple-600 transform hover:scale-105 transition-all ease-in-out w-full"
+              aria-label="Cash Slip"
+            >
+              💵 <span className="ml-2">Cash Slip</span>
+            </button>
           </div>
         </div>
-
-
-
-
-
         {/* Profile Modal */}
         {showProfileModal && (
           <div
@@ -573,7 +577,6 @@ const Dashboard = () => {
             </div>
           </div>
         )}
-
         {/* Edit Modal */}
         {isEditing && (
           <div
@@ -644,7 +647,6 @@ const Dashboard = () => {
             </div>
           </div>
         )}
-
         {/* Modal for Selecting Department of complaint report */}
         {showModal2 && (
           <div
@@ -705,7 +707,6 @@ const Dashboard = () => {
             </div>
           </div>
         )}
-
       </div>
     </>
   );

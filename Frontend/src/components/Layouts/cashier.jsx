@@ -67,7 +67,7 @@ const CashierDeposit = ({ token }) => {
             return;
         }
 
-        const depositData = { amount: parseFloat(amount), bank: selectedBank };
+        const depositData = { amount: parseFloat(amount), bank: selectedBank ,totalamount:totalAmount};
 
         try {
             const response = await axios.post(

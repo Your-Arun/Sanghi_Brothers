@@ -7,6 +7,7 @@ const depositSchema = new mongoose.Schema({
     amount: { type: Number, required: true },
     bank: { type: String, required: true },
     date: { type: Date, default: Date.now },
+    totalamount: { type: Number, default: 0 },
 });
 
 const Deposit = mongoose.model("Deposit", depositSchema);

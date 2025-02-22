@@ -47,6 +47,7 @@ import MeterClose from './components/Petrol Related/Meterclose'
 import MeterBox from './components/Petrol Related/meterclosebox'
 import UpdateMeter  from './components/Petrol Related/updatemeterclose'
 import Cashier from "./components/Layouts/cashier"
+import CashSlip from "./components/Layouts/cashslip"
 
 
 
@@ -123,6 +124,7 @@ const AppContent = () => {
         <Route path="/meterclose" element={<MeterClose/>} />
         <Route path="/meterclose/:id" element={<UpdateMeter/>} />
         <Route path="/cashier" element={<Cashier/>} />
+        <Route path="/Cashslip" element={<CashSlip/>} />
 
       </Routes>
     </>
