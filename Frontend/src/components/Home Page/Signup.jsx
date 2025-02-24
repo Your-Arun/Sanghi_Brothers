@@ -107,9 +107,9 @@ const Signup = () => {
           onChange={(e) => setDepartment(e.target.value)}
           required
         >
-          <option value="manager">Manager</option>
-          <option value="accounts">Accounts/Finance</option>
-          <option value="backoffice">Back Office</option>
+          <option value="manager">MANAGER</option>
+          <option value="accounts">ACCOUNTS/FINANCE</option>
+          <option value="backoffice">BACK OFFICE</option>
         </select>
         
         <button className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition duration-300">
