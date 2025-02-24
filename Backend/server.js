@@ -83,7 +83,7 @@ app.post("/signup", async (req, res) => {
     const { name, username, email, password, department } = req.body;
 
     // Validate department
-    if (!["sales", "finance", "accounts"].includes(department)) {
+    if (!["manager", "backoffice", "accounts"].includes(department)) {
       return res.status(400).json({ message: "Invalid department" });
     }
 

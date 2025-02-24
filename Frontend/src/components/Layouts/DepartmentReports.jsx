@@ -13,9 +13,14 @@ const DepartmentReports = () => {
         const token = localStorage.getItem("token");
         const userDepartment = localStorage.getItem("userDepartment");
 
-        if (userDepartment !== department) {
+        if (userDepartment === "manager") {
+          navigate(`/department-reports?department=Manager`);
+        } else if (userDepartment === "accounts") {
+          navigate(`/department-reports?department=Accounts`);
+        } else if (userDepartment === "backoffice") {
+          navigate(`/department-reports?department=Backoffice`);
+        } else {
           alert("You are not authorized to view reports for this department.");
-          return;
         }
 
         const { data } = await axios.get(

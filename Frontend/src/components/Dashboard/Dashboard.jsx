@@ -185,14 +185,26 @@ const Dashboard = () => {
       alert("Failed to update report. Please try again.");
     }
   };
-  const viewReports = (department) => {
-    const userDepartment = localStorage.getItem("userDepartment"); // Assuming this is set during login
-    if (userDepartment !== department) {
-      alert("You can only view reports for your own department.");
-      return;
+  const viewReports = async () => {
+    const userDepartment = localStorage.getItem("userDepartment");
+    const token = localStorage.getItem("token");
+  
+    try {
+      const { data } = await axios.get("http://localhost:5500/departments", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+  
+      if (data.department === userDepartment) {
+        navigate(`/department-reports?department=${userDepartment}`);
+      } else {
+        alert("You are not authorized to view reports for this department.");
+      }
+    } catch (err) {
+      console.error("Error fetching department", err);
+      alert("Failed to verify department.");
     }
-    navigate(`/department-reports?department=${department}`);
   };
+  
   const openReportPage = () => {
     if (selectedDepartment) {
       navigate(`/report?department=${selectedDepartment}`);
