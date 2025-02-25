@@ -24,6 +24,36 @@ const Dashboard = () => {
   const [cashierTotal, setCashierTotal] = useState([]);
 
 
+
+  ///
+  const checkUserAuthentication = async () => {
+    const navigate = useNavigate();
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/login"); // 🚀 No token? Redirect to login
+      return;
+    }
+
+    try {
+      const { data } = await axios.get("http://localhost:5500/profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!data || !data.username) {
+        navigate("/login"); // 🚀 No user data? Redirect to login
+      }
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      navigate("/login"); // 🚀 API Error? Redirect to login
+    }
+  };
+  useEffect(() => {
+    checkUserAuthentication();
+  }, []);
+
+
+
   //reportfile ke lie
   useEffect(() => {
     const fetchrepoFile = async () => {
@@ -185,26 +215,18 @@ const Dashboard = () => {
       alert("Failed to update report. Please try again.");
     }
   };
-  const viewReports = async () => {
+  const viewReports = (department) => {
     const userDepartment = localStorage.getItem("userDepartment");
-    const token = localStorage.getItem("token");
-  
-    try {
-      const { data } = await axios.get("http://localhost:5500/departments", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-  
-      if (data.department === userDepartment) {
-        navigate(`/department-reports?department=${userDepartment}`);
-      } else {
-        alert("You are not authorized to view reports for this department.");
-      }
-    } catch (err) {
-      console.error("Error fetching department", err);
-      alert("Failed to verify department.");
+    if (userDepartment === "manager") {
+      navigate(`/department-reports?department=manager`);
+    } else if (userDepartment === "accounts") {
+      navigate(`/department-reports?department=accounts`);
+    } else if (userDepartment === "backoffice") {
+      navigate(`/department-reports?department=backoffice`);
+    } else {
+      alert("You are not authorized to view reports for this department.");
     }
   };
-  
   const openReportPage = () => {
     if (selectedDepartment) {
       navigate(`/report?department=${selectedDepartment}`);
@@ -213,7 +235,7 @@ const Dashboard = () => {
       alert("Please select a department!");
     }
   };
- 
+
 
   return (
     <>
@@ -265,26 +287,29 @@ const Dashboard = () => {
 
 
         <div>
-          {/* Departments Section */}
-          <div className="mb-10 p-6  rounded-lg shadow-md"><div className="mb-6">
-            <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">
-              🏢 Departments
-            </h2>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-              {departments.map((dept) => (
-                <div
-                  key={dept}
-                  className="p-6 border bg-yellow-200 rounded-xl shadow-md hover:bg-yellow-300 cursor-pointer transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg"
-                  onClick={() => viewReports(dept)}
-                >
-                  <h3 className="text-xl font-bold text-orange-700 uppercase">
-                    {dept}
-                  </h3>
-                </div>
-              ))}
-            </div>
-          </div></div>
-        </div>
+  {/* Departments Section */}
+  <div className="mb-10 p-6 rounded-lg shadow-md">
+    <div className="mb-6">
+      <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">
+        🏢 Departments
+      </h2>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        {["Manager", "Accounts/Finance", "Backoffice"].map((dept) => (
+          <div
+            key={dept}
+            className="p-6 border bg-yellow-200 rounded-xl shadow-md hover:bg-yellow-300 cursor-pointer transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg"
+            onClick={() => viewReports(dept)}
+          >
+            <h3 className="text-xl font-bold text-orange-700 uppercase">
+              {dept}
+            </h3>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
+
         {/* SB Section */}
         <div className="mb-10 p-6  rounded-lg shadow-md"><div className="grid grid-cols-1 gap-6 md:grid-cols-3 p-6 ">
           {/* SB Bank Report Section */}
@@ -552,20 +577,26 @@ const Dashboard = () => {
 
               <form>
                 {[
-                  { label: "Name", value: updatedProfile.username, key: "username" },
-                  { label: "Email", value: updatedProfile.email, key: "email", type: "email" },
-                  { label: "Department", value: updatedProfile.department, key: "department" }
-                ].map(({ label, value, key, type = "text" }) => (
+                  { label: "Name", value: updatedProfile.username, key: "username", editable: true },
+                  { label: "Email", value: updatedProfile.email, key: "email", editable: false },
+                  { label: "Department", value: updatedProfile.department, key: "department", editable: false },
+                ].map(({ label, value, key, editable }) => (
                   <div key={key} className="mb-4">
                     <label className="block text-gray-700 font-semibold">{label}:</label>
-                    <input
-                      type={type}
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      value={value || ""}
-                      onChange={(e) =>
-                        setUpdatedProfile({ ...updatedProfile, [key]: e.target.value })
-                      }
-                    />
+                    {editable ? (
+                      <input
+                        type="text"
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={value || ""}
+                        onChange={(e) =>
+                          setUpdatedProfile({ ...updatedProfile, [key]: e.target.value })
+                        }
+                      />
+                    ) : (
+                      <p className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100">
+                        {value || "N/A"}
+                      </p>
+                    )}
                   </div>
                 ))}
 

@@ -1,141 +1,142 @@
 import React, { useEffect, useState } from "react";
-import { Link,  useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const DepartmentReports = () => {
   const [reports, setReports] = useState([]);
-  const [userName, setUserName] = useState(""); // State to hold user name
-  const [reportfile, setreportfile] = useState(""); // State to hold user name
+  const [userName, setUserName] = useState("");
+  const [reportFile, setReportFile] = useState([]);
+  const [userDepartment, setUserDepartment] = useState("");
+
   const location = useLocation();
+  const navigate = useNavigate();
   const query = new URLSearchParams(location.search);
   const department = query.get("department");
 
   useEffect(() => {
-    const fetchReports = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `http://localhost:5500/reports?department=${department}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        setReports(response.data);
-      } catch (error) {
-        console.error("Error fetching reports:", error);
-        alert("Failed to fetch reports.");
-      }
-    };
+    const token = localStorage.getItem("token");
 
-    const Profile = async () => {
+    if (!token) {
+      alert("You are not authorized. Please login first.");
+      navigate("/login");
+      return;
+    }
+
+    const fetchUserProfile = async () => {
       try {
-        const token = localStorage.getItem("token");
         const response = await axios.get("http://localhost:5500/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setUserName(response.data.username); // Assuming the user's name is in the 'username' field
+
+        setUserName(response.data.username);
+        setUserDepartment(response.data.department);
       } catch (error) {
         console.error("Error fetching user profile:", error);
         alert("Failed to fetch user profile.");
       }
     };
 
-    const file = async () => {
+    const fetchReports = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:5500/reportfile", {
+        const response = await axios.get("http://localhost:5500/reports", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setreportfile(response.data);
-        console.log(response.data);
+
+        const filteredReports = response.data.filter(
+          (report) => report.department === userDepartment
+        );
+
+        setReports(filteredReports);
       } catch (error) {
-        console.error("Error fetching Report File.", error);
-        alert("Failed to fetch Report File.");
+        console.error("Error fetching reports:", error);
+        alert("Failed to fetch reports.");
       }
     };
 
-    if (department) {
-      fetchReports();
-      Profile();
-      file();
-    }
-  }, [department]);
+    const fetchReportFiles = async () => {
+      try {
+        const response = await axios.get("http://localhost:5500/reportfile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const filteredFiles = response.data.filter(
+          (file) => file.department === userDepartment
+        );
+
+        setReportFile(filteredFiles);
+      } catch (error) {
+        console.error("Error fetching report files:", error);
+        alert("Failed to fetch report files.");
+      }
+    };
+
+    fetchUserProfile();
+    fetchReports();
+    fetchReportFiles();
+  }, [userDepartment]);
 
   return (
-    <>
-      <div className="h-[90vh]">
+    <div className="h-[90vh] bg-gray-100 flex flex-col items-center">
+      {/* Header Section */}
+      <div className="w-full bg-teal-700 text-white py-6 text-center shadow-lg">
         {userName && (
-          <h2 className="text-4xl p-4 font-serif mb-2 text-center">
-            Welcome, <span className="text-red-400 text-5xl">{userName} </span>!
+          <h2 className="text-3xl font-semibold">
+            Welcome, <span className="text-yellow-300">{userName.toLocaleUpperCase()}   !</span>
           </h2>
         )}
-        <h1 className="text-2xl font-serif mb-2 text-center">
-          Reports for {department}
-        </h1>
-        <div>
-          <div>
-            <h2 className="text-3xl p-2 font-serif">Report File</h2>
-            <div className="grid p-4 grid-cols-1 text-center gap-4 md:grid-cols-3">
-              {reportfile.length > 0 ? (
-                reportfile
-                  .filter((repofile) => repofile.department === department) // Filter by department
-                  .map((repofile) => (
-                   <Link to={`/reportfile/${repofile._id}`}> 
-                    <div
-                   key={repofile._id}
-                   
-                   className="p-4 border bg-slate-400 rounded shadow hover:bg-blue-200 cursor-pointer"
-                 >
-                   <h2 className="font-bold">
-                     {repofile.entryDate.split("T")[0]}
-                   </h2>
-                   <h2>
-                     {" "}
-                     Cash Sales{" "}
-                     <span className="font-bold">
-                       {repofile.reports.cashsales}
-                     </span>
-                   </h2>
-                   <p>{repofile.content}</p>{" "}
-                   {/* Adjust according to your data structure */}
-                 </div>
-                 </Link>
-                  ))
-              ) : (
-                <p>No report files available.</p>
-              )}
-            </div>
-          </div>
-          <div>
-            <h2 className="text-3xl p-2 font-serif">Complaints</h2>
-            <div className="grid p-4 grid-cols-1 text-center gap-4 md:grid-cols-3">
-              {reports.length > 0 ? (
-                reports
-                  .filter((report) => report.department === department)
-                  .map((report) => (
-                    <div>
-                      <div
-                        className="p-4 border   bg-slate-400 rounded shadow hover:bg-blue-200 cursor-pointer"
-                        key={report._id}
-                      >
-                        <h2>{report.title}</h2>
-                        <p>{report.content}</p>
-                      </div>
-                    </div>
-                  ))
-              ) : (
-                <p>No reports available for this department.</p>
-              )}
-            </div>
-          </div>
+        <h1 className="text-xl mt-2">Department: {userDepartment.toLocaleUpperCase()}</h1>
+      </div>
+
+      {/* Report Files Section */}
+      <div className="container mx-auto p-6">
+        <h2 className="text-2xl font-semibold text-teal-800 mb-4">📂 Report Files</h2>
+        <div className="grid gap-6 md:grid-cols-3">
+          {reportFile.length > 0 ? (
+            reportFile.map((file) => (
+              <Link key={file._id} to={`/reportfile/${file._id}`}>
+                <div className="p-6 border bg-white shadow-md rounded-lg hover:shadow-lg transition transform hover:scale-105 cursor-pointer">
+                  <h2 className="font-bold text-teal-700">
+                    {file.entryDate.split("T")[0]}
+                  </h2>
+                  <p className="text-gray-700">
+                    Cash Sales: <span className="font-bold">{file.reports.cashsales}</span>
+                  </p>
+                  <p className="text-gray-500">{file.content}</p>
+                </div>
+              </Link>
+            ))
+          ) : (
+            <p className="text-gray-500">No report files available.</p>
+          )}
         </div>
       </div>
-      <div>
-       <footer>
-        <Link to={'/dashboard'}> <img className="w-[40px] mx-auto m-4" src="public/backarrow.png" alt="Back" /> </Link>
-       </footer>
+
+      {/* Complaints Section */}
+      <div className="container mx-auto p-6">
+        <h2 className="text-2xl font-semibold text-red-600 mb-4">⚠️ Complaints</h2>
+        <div className="grid gap-6 md:grid-cols-3">
+          {reports.length > 0 ? (
+            reports.map((report) => (
+              <div key={report._id} className="p-6 border bg-white shadow-md rounded-lg hover:shadow-lg transition transform hover:scale-105">
+                <h2 className="font-bold text-red-600">{report.title}</h2>
+                <p className="text-gray-600">{report.content}</p>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500">No reports available for this department.</p>
+          )}
+        </div>
       </div>
-    </>
+
+      {/* Back Button */}
+      <div className="my-6">
+        <Link to="/dashboard">
+          <button className="flex items-center px-6 py-2 bg-teal-600 text-white rounded-lg shadow-md hover:bg-teal-700 transition">
+            🔙 Back to Dashboard
+          </button>
+        </Link>
+      </div>
+    </div>
   );
 };
 

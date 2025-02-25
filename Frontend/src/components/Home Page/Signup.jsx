@@ -108,7 +108,7 @@ const Signup = () => {
           required
         >
           <option value="manager">MANAGER</option>
-          <option value="accounts">ACCOUNTS/FINANCE</option>
+          <option value="accounts/finance">ACCOUNTS/FINANCE</option>
           <option value="backoffice">BACK OFFICE</option>
         </select>
         
