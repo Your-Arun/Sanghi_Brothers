@@ -254,7 +254,7 @@ const SB03_Monthly = () => {
             Monthly Data Flow
           </h1>
           <div className="flex justify-evenly items-center  p-4">
-            <Link to={"/dashboard"}>
+            <Link to={"/bankreport"}>
               <div className="">
                 <img src={previousImage} width={50} alt="Back" />
               </div>

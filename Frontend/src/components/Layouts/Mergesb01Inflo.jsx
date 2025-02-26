@@ -104,7 +104,7 @@ const Mergesb01Inflo = () => {
 
       {/* Bottom Navigation */}
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-white rounded-t-lg shadow-md flex justify-center">
-        <Link to="/dashboard" className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition">
+        <Link to="/bankreport" className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition">
           <FaArrowLeft className="text-2xl" />
           <span className="text-lg font-semibold">Back</span>
         </Link>

@@ -314,79 +314,24 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* SB Section */}
-        <div className="mb-10 p-6  rounded-lg shadow-md"><div className="grid grid-cols-1 gap-6 md:grid-cols-3 p-6 ">
-          {/* SB Bank Report Section */}
-          <div className="mb-6">
-            <h2 className="text-2xl font-semibold mb-4 text-center text-blue-700">
-              🏦 SB Bank Report
+      
+
+        {/* sb section ke lie */}
+        <div className="mb-10 p-6  rounded-lg shadow-md">
+          {/* Heading */}
+          <div className="flex items-center justify-center">
+            <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">
+              📊 BANK Related Reports
             </h2>
-            <div className="flex flex-col items-center">
-              <Link
-                to="/sbbank"
-                className="p-6 border bg-green-200 rounded-lg shadow-md hover:bg-green-300 transition-all duration-300 text-center w-full transform hover:scale-105"
-              >
-                <h3 className="text-xl font-bold text-red-700">📊 Bank Report</h3>
-              </Link>
-            </div>
-          </div>
+            <img
+              src={add}
+              alt="Create"
+              width={50}
+              className="ml-4 cursor-pointer transform transition hover:scale-110 hover:rotate-12"
+              onClick={() => navigate("/bankreport")}
+            /></div>
 
-          {/* Monthly Flow Section */}
-          <div className="mb-6">
-            <h2 className="text-2xl font-semibold mb-4 text-center text-indigo-700">
-              🔄 Monthly Fund Flow
-            </h2>
-            <div className="flex flex-col items-center">
-              <Link
-                to="/bank/monthlyfundflow/"
-                className="p-6 border bg-purple-200 rounded-lg shadow-md hover:bg-purple-300 transition-all duration-300 text-center w-full transform hover:scale-105"
-              >
-                <h3 className="text-xl font-bold text-pink-700">
-                  📅 Monthly Fund Flow
-                </h3>
-              </Link>
-
-              {/* Fund Flow Links */}
-              <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {sb3update.map((fund) => (
-                  <Link
-                    to={`/bank/monthlyfundflow/${fund._id}`}
-                    key={fund._id}
-                    className="p-4 border bg-gray-200 rounded-lg shadow-md hover:bg-gray-300 transition-all duration-300 text-center cursor-pointer transform hover:scale-105"
-                  >
-                    <h4 className="text-lg font-bold text-gray-800">
-                      📆 {new Date(fund.Date)
-                        .toLocaleString("en-GB", {
-                          day: "2-digit",
-                          month: "2-digit",
-                          year: "numeric",
-                        })
-                        .replace(/\//g, "/")}
-                    </h4>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* SB Master CheckList */}
-          <div className="mb-6">
-            <h2 className="text-2xl font-semibold mb-4 text-center text-indigo-700">
-              📋 SB Master CheckList
-            </h2>
-            <div className="flex flex-col items-center">
-              <Link
-                to="/mastersheet"
-                className="p-6 border bg-green-200 rounded-lg shadow-md hover:bg-green-300 transition-all duration-300 text-center w-full transform hover:scale-105"
-              >
-                <h3 className="text-xl font-bold text-red-700">
-                  ✅ Master CheckList
-                </h3>
-              </Link>
-            </div>
-          </div>
-        </div></div>
-
+        </div>
 
         {/* ReportFile */}
         <div className="mb-10 p-6  rounded-lg shadow-md">
