@@ -24,6 +24,7 @@ const Dashboard = () => {
   const [cashierTotal, setCashierTotal] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
+  const [isOpen3, setIsOpen3] = useState(false);
 
 
 
@@ -391,7 +392,7 @@ const Dashboard = () => {
         <div className="mb-10 p-6  rounded-lg shadow-md">
           {/* Heading */}
           <div className="flex items-center justify-center">
-            <h2 className="text-3xl font-bold mb-6 mt-8 text-center text-blue-700">
+            <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">
               📊 Report File
             </h2>
             <img
@@ -404,20 +405,20 @@ const Dashboard = () => {
 
           {/* Report List */}
           {reportfile.length > 0 ? (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {reportfile.map((report) => (
+            <div className="flex space-x-4 justify-center overflow-x-auto pb-3 scrollbar-hide">
+              {reportfile.slice(0, 4).map((report) => (
                 <div
                   key={report._id}
                   onClick={() => navigate(`/reportfile/${report._id}`)}
-                  className="p-6 border rounded-xl shadow-lg bg-white hover:bg-gray-100 cursor-pointer transition duration-300 transform hover:scale-105 hover:shadow-xl"
+                  className="min-w-[200px] p-4 border rounded-xl shadow-md bg-white hover:bg-gray-100 cursor-pointer transition duration-300 transform hover:scale-105"
                 >
-                  <h1 className="text-xl font-bold text-center text-green-700 uppercase">
+                  <h1 className="text-xl text-green-700 font-bold text-center">
                     {report.department}
                   </h1>
-                  <h3 className="text-lg font-medium text-center text-gray-800 mt-2">
+                  <h3 className="text-md font-semibold text-center text-gray-800 mt-2 flex items-center justify-center gap-1">
                     📅 {new Date(report.entryDate).toLocaleDateString()}
                   </h3>
-                  <h3 className="text-md font-semibold text-center text-red-600 mt-1">
+                  <h3 className="text-md font-semibold text-center text-gray-800 mt-2 flex items-center justify-center gap-1">
                     💵 Cash Sales: ₹{report.reports.cashsales}
                   </h3>
                 </div>
@@ -426,6 +427,46 @@ const Dashboard = () => {
           ) : (
             <p className="text-gray-600 text-center mt-4">No reports available.</p>
           )}
+
+          {/* See More Button */}
+          {reportfile.length > 4 && (
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => setIsOpen3(true)}
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+              >
+                See More
+              </button>
+            </div>
+          )}
+          {/* Modal for Full List */}
+          {isOpen3 && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
+              <div className="bg-white p-6 rounded-lg shadow-xl w-[90%] max-w-2xl relative">
+                {/* Close Button */}
+                <button
+                  onClick={() => setIsOpen3(false)}
+                  className="absolute top-3 right-3 text-gray-600 hover:text-gray-800"
+                >
+                  <FaTimes className="text-2xl" />
+                </button>
+
+                <h2 className="text-xl font-bold text-center mb-4 text-blue-700"> Full Reportfiles</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {reportfile.map((item) => (
+                    <div key={item._id} className="p-4 border rounded-lg bg-gray-100 cursor-pointer transition duration-300 ease-in-out hover:text-lg hover:scale-110" onClick={() => navigate(`/reportfile/${item._id}`)}>
+                      <h1 className="text-lg font-bold text-green-700 text-center">₹{item.department}</h1>
+                      <h3 className="text-sm text-gray-600 text-center">📅 {new Date(item.entryDate).toLocaleDateString()}</h3>
+                      <h3 className="text-md font-semibold text-center text-gray-800 flex items-center justify-center gap-1">
+                        💵 Cash Sales: {item.reports.cashsales}
+                      </h3>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
         </div>
 
 
@@ -497,7 +538,7 @@ const Dashboard = () => {
                 <h2 className="text-xl font-bold text-center mb-4 text-blue-700">💰 Full Cashier Report</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {cashier.map((item) => (
-                    <div key={item._id} className="p-4 border rounded-lg bg-gray-100">
+                    <div key={item._id} className="p-4 border rounded-lg bg-gray-100 cursor-pointer transition duration-300 ease-in-out hover:text-lg hover:scale-110">
                       <h1 className="text-lg font-bold text-green-700 text-center">₹{item.amount}</h1>
                       <h3 className="text-md font-semibold text-center text-gray-800 flex items-center justify-center gap-1">
                         <FaUniversity className="text-blue-600" /> {item.bank}
@@ -514,10 +555,10 @@ const Dashboard = () => {
         {/* Complaints Section */}
         <div className="mb-10 p-6  rounded-lg shadow-md">
           {/* Heading */}
-          <div className="flex items-center justify-center"> 
+          <div className="flex items-center justify-center">
             <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">
-            🚨 Complaints
-          </h2> <img
+              🚨 Complaints
+            </h2> <img
               src={add}
               alt="Create"
               width={50}
@@ -528,7 +569,7 @@ const Dashboard = () => {
           {/* Complaints List */}
           {reports.length > 0 ? (
             <div className="flex space-x-4 justify-center overflow-x-auto pb-3 scrollbar-hide">
-              {reports.map((report) => (
+              {reports.slice(0,4).map((report) => (
                 <div
                   key={report._id}
                   className="min-w-[200px] p-4 border rounded-xl shadow-md bg-white hover:bg-gray-100 cursor-pointer transition duration-300 transform hover:scale-105"
@@ -537,7 +578,7 @@ const Dashboard = () => {
                   <h3 className="text-xl text-green-700 font-bold text-center">
                     {report.title}
                   </h3>
-                  <p  className="text-md font-semibold text-center text-gray-800 mt-2 flex items-center justify-center gap-1">
+                  <p className="text-md font-semibold text-center text-gray-800 mt-2 flex items-center justify-center gap-1">
                     📂 {report.department}
                   </p>
                   <p className="mt-3 text-gray-800 text-center line-clamp-2">
@@ -576,10 +617,10 @@ const Dashboard = () => {
                 <h2 className="text-xl font-bold text-center mb-4 text-blue-700">💰 Full Complaints Report</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {reports.map((item) => (
-                    <div key={item._id} className="p-4 border rounded-lg bg-gray-100 cursor-pointer" onClick={() => handleReportClick(item)}>
+                    <div key={item._id} className="p-4 border rounded-lg bg-gray-100 cursor-pointer transition duration-300 ease-in-out hover:text-lg hover:scale-110" onClick={() => handleReportClick(item)}>
                       <h1 className="text-lg font-bold text-green-700 text-center">{item.title}</h1>
                       <h3 className="text-md font-semibold text-center text-gray-800 flex items-center justify-center gap-1">
-                      {item.department} 
+                        {item.department}
                       </h3>
                     </div>
                   ))}
@@ -593,7 +634,6 @@ const Dashboard = () => {
 
 
         </div>
-
 
         {/* Floating Buttons & Navigation */}
         <div className="relative flex flex-col items-center mt-6">
