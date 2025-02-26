@@ -188,7 +188,7 @@ function SBI01Update() {
         </h1>
         <h1>SBI 02 Bank position as on {updtSbi.createdAt.split("T")[0]}</h1>
         <div className="flex justify-evenly items-center  p-4">
-            <Link to={"/dashboard"}>
+            <Link to={"/sbbank"}>
               <div className="">
                 <img src={previousImage} width={50} alt="Back" />
               </div>

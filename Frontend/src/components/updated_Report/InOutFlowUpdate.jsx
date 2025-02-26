@@ -178,7 +178,7 @@ const InOutFlowUpdate = () => {
       <div>
         <form onSubmit={handleSavee}>
           <div className="flex justify-evenly p-4">
-            <Link to={"/dashboard"}>
+            <Link to={"/sbbank"}>
               <div className="">
                 <img src={previousImage} width={50} alt="Back" />
               </div>
