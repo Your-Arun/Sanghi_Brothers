@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import add from "/public/add.png";
-
+import { FaTimes, FaUniversity } from "react-icons/fa";
 const Dashboard = () => {
   const [departments, setDepartments] = useState([]);
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -22,6 +22,8 @@ const Dashboard = () => {
   const [sb3update, setSb3Update] = useState([]);
   const [cashier, setCashier] = useState([]);
   const [cashierTotal, setCashierTotal] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen2, setIsOpen2] = useState(false);
 
 
 
@@ -158,6 +160,7 @@ const Dashboard = () => {
     setUpdatedContent(report.content);
     setUpdatedTitle(report.title); // Populate the modal with existing content
     setIsEditing(true); // Show the modal
+    setShowModal(true);
   };
   const handleUpdateReport = async () => {
     try {
@@ -287,28 +290,28 @@ const Dashboard = () => {
 
 
         <div>
-  {/* Departments Section */}
-  <div className="mb-10 p-6 rounded-lg shadow-md">
-    <div className="mb-6">
-      <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">
-        🏢 Departments
-      </h2>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-        {["Manager", "Accounts/Finance", "Backoffice"].map((dept) => (
-          <div
-            key={dept}
-            className="p-6 border bg-yellow-200 rounded-xl shadow-md hover:bg-yellow-300 cursor-pointer transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg"
-            onClick={() => viewReports(dept)}
-          >
-            <h3 className="text-xl font-bold text-orange-700 uppercase">
-              {dept}
-            </h3>
+          {/* Departments Section */}
+          <div className="mb-10 p-6 rounded-lg shadow-md">
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">
+                🏢 Departments
+              </h2>
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                {["Manager", "Accounts/Finance", "Backoffice"].map((dept) => (
+                  <div
+                    key={dept}
+                    className="p-6 border bg-yellow-200 rounded-xl shadow-md hover:bg-yellow-300 cursor-pointer transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg"
+                    onClick={() => viewReports(dept)}
+                  >
+                    <h3 className="text-xl font-bold text-orange-700 uppercase">
+                      {dept}
+                    </h3>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-        ))}
-      </div>
-    </div>
-  </div>
-</div>
+        </div>
 
         {/* SB Section */}
         <div className="mb-10 p-6  rounded-lg shadow-md"><div className="grid grid-cols-1 gap-6 md:grid-cols-3 p-6 ">
@@ -427,7 +430,7 @@ const Dashboard = () => {
 
 
         {/* Cashier Kaam */}
-        <div className="mb-10 p-6  rounded-lg shadow-md">
+        <div className="mb-10 p-6 rounded-lg shadow-md">
           {/* Heading with Button */}
           <div className="flex items-center justify-center">
             <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">💰 Cashier Kaam</h2>
@@ -439,24 +442,26 @@ const Dashboard = () => {
               onClick={() => navigate("/cashier")}
             />
           </div>
-          <div className="flex items-center mt-[-50px] mb-[30px] justify-center"><span className="text-xl font-bold mb-4 mt-8 text-blue-700">Total Amount : {cashierTotal}</span></div>
 
-          {/* Cashier Records */}
+          {/* Total Amount */}
+          <div className="flex items-center mt-[-50px] mb-[30px] justify-center">
+            <span className="text-xl font-bold mb-4 mt-8 text-blue-700">Total Amount: ₹{cashierTotal}</span>
+          </div>
+
+          {/* Cashier Records (Horizontal Scroll) */}
           {cashier.length > 0 ? (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {cashier.map((cashier) => (
+            <div className="flex space-x-4 justify-center overflow-x-auto pb-3 scrollbar-hide">
+              {cashier.slice(0, 4).map((item) => (
                 <div
-                  key={cashier._id}
-                  className="p-6 border rounded-xl shadow-xl bg-white hover:bg-gray-100 cursor-pointer transition duration-300 transform hover:scale-105"
+                  key={item._id}
+                  className="min-w-[200px] p-4 border rounded-xl shadow-md bg-white hover:bg-gray-100 cursor-pointer transition duration-300 transform hover:scale-105"
                 >
-                  <h1 className="text-2xl text-green-700 font-bold text-center">
-                    ₹{cashier.amount}
-                  </h1>
-                  <h3 className="text-lg font-semibold text-center text-gray-800 mt-2">
-                    🏦 {cashier.bank}
+                  <h1 className="text-xl text-green-700 font-bold text-center">₹{item.amount}</h1>
+                  <h3 className="text-md font-semibold text-center text-gray-800 mt-2 flex items-center justify-center gap-1">
+                    <FaUniversity className="text-blue-600" /> {item.bank}
                   </h3>
                   <h3 className="text-sm text-gray-600 text-center mt-1">
-                    📅 {new Date(cashier.date).toLocaleDateString()}
+                    📅 {new Date(item.date).toLocaleDateString()}
                   </h3>
                 </div>
               ))}
@@ -464,12 +469,53 @@ const Dashboard = () => {
           ) : (
             <p className="text-gray-600 text-center mt-4">No reports available.</p>
           )}
+
+          {/* See More Button */}
+          {cashier.length > 4 && (
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => setIsOpen(true)}
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+              >
+                See More
+              </button>
+            </div>
+          )}
+
+          {/* Modal for Full List */}
+          {isOpen && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
+              <div className="bg-white p-6 rounded-lg shadow-xl w-[90%] max-w-2xl relative">
+                {/* Close Button */}
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="absolute top-3 right-3 text-gray-600 hover:text-gray-800"
+                >
+                  <FaTimes className="text-2xl" />
+                </button>
+
+                <h2 className="text-xl font-bold text-center mb-4 text-blue-700">💰 Full Cashier Report</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {cashier.map((item) => (
+                    <div key={item._id} className="p-4 border rounded-lg bg-gray-100">
+                      <h1 className="text-lg font-bold text-green-700 text-center">₹{item.amount}</h1>
+                      <h3 className="text-md font-semibold text-center text-gray-800 flex items-center justify-center gap-1">
+                        <FaUniversity className="text-blue-600" /> {item.bank}
+                      </h3>
+                      <h3 className="text-sm text-gray-600 text-center">📅 {new Date(item.date).toLocaleDateString()}</h3>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Complaints Section */}
         <div className="mb-10 p-6  rounded-lg shadow-md">
           {/* Heading */}
-          <div className="flex items-center justify-center"> <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">
+          <div className="flex items-center justify-center"> 
+            <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">
             🚨 Complaints
           </h2> <img
               src={add}
@@ -481,17 +527,17 @@ const Dashboard = () => {
 
           {/* Complaints List */}
           {reports.length > 0 ? (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <div className="flex space-x-4 justify-center overflow-x-auto pb-3 scrollbar-hide">
               {reports.map((report) => (
                 <div
                   key={report._id}
-                  className="p-6 border border-gray-300 bg-white rounded-xl shadow-lg hover:bg-gray-100 transition duration-300 transform hover:scale-105"
+                  className="min-w-[200px] p-4 border rounded-xl shadow-md bg-white hover:bg-gray-100 cursor-pointer transition duration-300 transform hover:scale-105"
                   onClick={() => handleReportClick(report)} // Open edit modal
                 >
-                  <h3 className="font-bold text-lg text-blue-600 text-center">
+                  <h3 className="text-xl text-green-700 font-bold text-center">
                     {report.title}
                   </h3>
-                  <p className="text-sm text-gray-600 text-center font-semibold mt-1">
+                  <p  className="text-md font-semibold text-center text-gray-800 mt-2 flex items-center justify-center gap-1">
                     📂 {report.department}
                   </p>
                   <p className="mt-3 text-gray-800 text-center line-clamp-2">
@@ -505,6 +551,47 @@ const Dashboard = () => {
               No complaints available.
             </p>
           )}
+          {/* See More Button */}
+          {reports.length > 4 && (
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => setIsOpen2(true)}
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+              >
+                See More
+              </button>
+            </div>
+          )}
+          {isOpen2 && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
+              <div className="bg-white p-6 rounded-lg shadow-xl w-[90%] max-w-2xl relative">
+                {/* Close Button */}
+                <button
+                  onClick={() => setIsOpen2(false)}
+                  className="absolute top-3 right-3 text-gray-600 hover:text-gray-800"
+                >
+                  <FaTimes className="text-2xl" />
+                </button>
+
+                <h2 className="text-xl font-bold text-center mb-4 text-blue-700">💰 Full Complaints Report</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {reports.map((item) => (
+                    <div key={item._id} className="p-4 border rounded-lg bg-gray-100 cursor-pointer" onClick={() => handleReportClick(item)}>
+                      <h1 className="text-lg font-bold text-green-700 text-center">{item.title}</h1>
+                      <h3 className="text-md font-semibold text-center text-gray-800 flex items-center justify-center gap-1">
+                      {item.department} 
+                      </h3>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+
+
+
+
         </div>
 
 

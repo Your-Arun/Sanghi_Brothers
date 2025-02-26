@@ -16,6 +16,7 @@ const sections = [
 
 const ChekList = () => {
   const [data, setData] = useState({});
+  const [visibleCounts, setVisibleCounts] = useState({}); // Track visible reports per section
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,12 +33,24 @@ const ChekList = () => {
         }, {});
 
         setData(newData);
+
+        // Initialize visible counts for each section (default: show 6 items)
+        const initialCounts = sections.reduce((acc, section) => {
+          acc[section.key] = 6;
+          return acc;
+        }, {});
+        setVisibleCounts(initialCounts);
       } catch (err) {
         alert("Failed to fetch data");
       }
     };
     fetchData();
   }, []);
+
+  // Function to load more items
+  const loadMore = (key) => {
+    setVisibleCounts((prev) => ({ ...prev, [key]: prev[key] + 6 }));
+  };
 
   return (
     <div className="container mx-auto px-6 py-8">
@@ -55,26 +68,43 @@ const ChekList = () => {
                 Create
               </Link>
             </div>
-            <div className="grid mt-4 grid-cols-1 gap-4">
-              {data[key]?.map((item) => (
+            
+            {/* Update Report Cards */}
+            <div className="grid mt-4 grid-cols-3 gap-3">
+              {data[key]?.slice(0, visibleCounts[key]).map((item) => (
                 <Link
                   to={`/mastersheet/${route}/${item._id}`}
                   key={item._id}
-                  className="p-4 bg-gray-100 border rounded-lg shadow-md hover:bg-gray-200 transition text-center"
+                  className="p-3 bg-gray-100 border rounded-md shadow-sm hover:bg-gray-200 transition text-center text-xs"
                 >
-                  <p className="font-bold">Update Report</p>
-                  <span className="text-gray-700 text-sm">
+                  <p className="font-bold text-sm">Update</p>
+                  <span className="text-gray-600">
                     {new Date(item.date).toLocaleDateString("en-GB", {
-                      day: "2-digit", month: "2-digit", year: "numeric"
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
                     })}
                   </span>
                 </Link>
               ))}
             </div>
+
+            {/* See More Button */}
+            {data[key]?.length > visibleCounts[key] && (
+              <div className="flex justify-center mt-3">
+                <button
+                  onClick={() => loadMore(key)}
+                  className="px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition text-xs"
+                >
+                  See More
+                </button>
+              </div>
+            )}
           </div>
         ))}
       </div>
 
+      {/* Back to Dashboard */}
       <div className="flex justify-center mt-8">
         <Link to="/dashboard" className="flex items-center gap-2 text-blue-600 hover:text-blue-800">
           <FaArrowLeft className="text-xl" /> <span>Back to Dashboard</span>
