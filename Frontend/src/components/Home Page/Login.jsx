@@ -1,12 +1,21 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false); // State to manage password visibility
   const navigate = useNavigate();
+  const location = useLocation();
+
+
+  useEffect(() => {
+    if (location.state?.message) {
+      alert(location.state.message);
+    }
+  }, [location]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent the default form submission behavior
