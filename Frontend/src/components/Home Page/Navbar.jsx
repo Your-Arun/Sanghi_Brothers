@@ -46,7 +46,7 @@ const Navbar = () => {
                     </li>
                     <li>
                         <NavLink 
-                            to="/contact/contactus" 
+                            to="/contact-us" 
                             className={({ isActive }) => 
                                 `text-white hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
                             }
@@ -98,7 +98,7 @@ const Navbar = () => {
                     </li>
                     <li>
                         <NavLink 
-                            to="/contactuspage" 
+                            to="/contact-us" 
                             className={({ isActive }) => 
                                 `block text-white hover:bg-gray-300 hover:text-blue- 500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
                             }
