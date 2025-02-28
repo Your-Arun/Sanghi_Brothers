@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import previousImage from '/public/previous.png';
+import BackButton from '../Home Page/backbutton';
 
 const CashSlip = () => {
     const [fecthcashSlip, setFecthcashSlip] = useState([]);
@@ -239,10 +240,8 @@ const CashSlip = () => {
                 ))}
             </div>
             {/* Back Button */}
-            <div className="fixed bottom-6 left-6 p-4 rounded-full">
-                <Link to="/dashboard">
-                    <img src={previousImage} alt="Back" width={50} className="rounded-full shadow-md" />
-                </Link>
+            <div>
+                <BackButton previousImage="/public/previous.png" />
             </div>
         </div>
     );
