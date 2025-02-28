@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import previousImage from "/public/previous.png";
-import { Link } from "react-router-dom";
+import BackButton from "../Home Page/backbutton";
 
 
 
@@ -165,11 +164,9 @@ const CashierDeposit = ({ token }) => {
                     <h4 className="text-lg font-semibold text-blue-700">Total Deposited: ₹{totalAmount}</h4>
                 </div>
             </div>
-            <div className="fixed bottom-6 left-6 p-4  rounded-full ">
-                <Link to="/dashboard">
-                    <img src={previousImage} alt="Back" width={50} className="rounded-full" />
-                </Link>
-            </div>
+            <div>
+     <BackButton previousImage="/public/previous.png" />
+     </div>
         </div>
 
     );
