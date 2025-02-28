@@ -76,10 +76,6 @@ const Sb03Update = () => {
     sumofvab51: "",
     maybeL: "",
     maybeP: "",
-    target1: "",
-    target2: "",
-    target3: "",
-    target4: "",
   });
 
   useEffect(() => {

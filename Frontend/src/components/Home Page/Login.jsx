@@ -1,21 +1,23 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import jwt_decode from "jwt-decode"; // Import jwt-decode library
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false); // State to manage password visibility
   const navigate = useNavigate();
-  const location = useLocation();
 
+  const checkTokenExpiration = (token) => {
+    if (!token) return true; // If no token, treat it as expired
 
-  useEffect(() => {
-    if (location.state?.message) {
-      alert(location.state.message);
-    }
-  }, [location]);
+    const decoded = jwt_decode(token); // Decode the token to get the expiration time
+    const currentTime = Date.now() / 1000; // Get the current time in seconds
 
+    // If token expiration time is less than current time, the token is expired
+    return decoded.exp < currentTime;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent the default form submission behavior
@@ -25,6 +27,15 @@ const Login = () => {
         password,
       });
       const { token, user } = response.data;
+
+      if (checkTokenExpiration(token)) {
+        alert("Your session has expired. Please log in again.");
+        localStorage.removeItem("token"); // Remove expired token from localStorage
+        navigate("/login"); // Redirect to login page
+        return;
+      }
+
+      // Store the token and user info in localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("userDepartment", user.department);
       // Redirect to the dashboard or another page after successful login

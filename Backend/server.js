@@ -77,6 +77,22 @@ const authMiddleware = (req, res, next) => {
     return res.status(401).json({ message: "Invalid Token" });
   }
 };
+
+const verifyToken = (req, res, next) => {
+  const token = req.headers['authorization']?.split(' ')[1]; // Assuming token is sent in "Authorization: Bearer <token>"
+
+  if (!token) {
+    return res.status(403).json({ message: "Token is required" });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ message: "Token is expired or invalid" });
+    }
+    req.user = decoded;  // Add user info to request
+    next();
+  });
+};
 // User Registration
 app.post("/signup", async (req, res) => {
   try {
@@ -135,6 +151,7 @@ app.post("/login", async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "4h",
     });
+    
 
     res.json({
       token,
