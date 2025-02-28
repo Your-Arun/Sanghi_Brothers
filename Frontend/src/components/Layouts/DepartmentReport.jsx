@@ -13,6 +13,53 @@ const DepartmentReports = () => {
   const query = new URLSearchParams(location.search);
   const department = query.get("department");
 
+
+
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const userRole = localStorage.getItem("userRole"); // Get user role
+    const userDept = localStorage.getItem("userDepartment"); // Get logged-in user's department
+  
+    if (!token) {
+      alert("You are not authorized. Please login first.");
+      navigate("/login");
+      return;
+    }
+  
+    const fetchData = async () => {
+      try {
+        const [reportsResponse, reportFilesResponse] = await Promise.all([
+          axios.get("http://localhost:5500/reports", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get("http://localhost:5500/reportfile", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
+  
+        const deptToUse = userRole === "manager" ? null : userDept; // Manager sees all
+  
+        setReports(
+          deptToUse
+            ? reportsResponse.data.filter((report) => report.department === deptToUse)
+            : reportsResponse.data
+        );
+  
+        setReportFile(
+          deptToUse
+            ? reportFilesResponse.data.filter((file) => file.department === deptToUse)
+            : reportFilesResponse.data
+        );
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        alert("Failed to fetch data.");
+      }
+    };
+  
+    fetchData();
+  }, []);
+  
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -74,6 +121,8 @@ const DepartmentReports = () => {
     fetchReports();
     fetchReportFiles();
   }, [userDepartment]);
+
+
 
   return (
     <div className="h-[90vh] bg-gray-100 flex flex-col items-center">

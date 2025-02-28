@@ -27,35 +27,32 @@ const Dashboard = () => {
   const [isOpen3, setIsOpen3] = useState(false);
 
 
-
-  ///
-  const checkUserAuthentication = async () => {
-    const navigate = useNavigate();
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      navigate("/login"); // 🚀 No token? Redirect to login
-      return;
-    }
-
-    try {
-      const { data } = await axios.get("http://localhost:5500/profile", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!data || !data.username) {
-        navigate("/login"); // 🚀 No user data? Redirect to login
-      }
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      navigate("/login"); // 🚀 API Error? Redirect to login
-    }
-  };
   useEffect(() => {
+    const checkUserAuthentication = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      try {
+        const { data } = await axios.get("http://localhost:5500/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!data || !data.username) {
+          navigate("/login");
+        } else {
+          setUserName(data.username);
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        navigate("/login");
+      }
+    };
+
     checkUserAuthentication();
-  }, []);
-
-
+  }, [navigate]);
 
   //reportfile ke lie
   useEffect(() => {
@@ -219,18 +216,26 @@ const Dashboard = () => {
       alert("Failed to update report. Please try again.");
     }
   };
-  const viewReports = (department) => {
-    const userDepartment = localStorage.getItem("userDepartment");
-    if (userDepartment === "manager") {
-      navigate(`/department-reports?department=manager`);
-    } else if (userDepartment === "accounts") {
-      navigate(`/department-reports?department=accounts`);
-    } else if (userDepartment === "backoffice") {
-      navigate(`/department-reports?department=backoffice`);
-    } else {
-      alert("You are not authorized to view reports for this department.");
-    }
-  };
+    // View Reports Function
+    const viewReports = (department) => {
+      const userDepartment = localStorage.getItem("userDepartment")?.toLowerCase(); // Normalize
+      const userRole = localStorage.getItem("userRole")?.toLowerCase(); // Normalize
+      const departmentNormalized = department.toLowerCase(); // Normalize department
+    
+      if (userRole === "manager") {
+        // ✅ Manager ko sab departments ka access hai
+        navigate(`/department-reports?department=${department}`);
+      } else if (userDepartment === departmentNormalized) {
+        // ✅ Agar user ka department match hota hai toh allow karo
+        navigate(`/department-reports?department=${department}`);
+      } else {
+        // ❌ Unauthorized access
+        alert("You are not authorized to view reports for this department.");
+      }
+    };
+    
+    
+  
   const openReportPage = () => {
     if (selectedDepartment) {
       navigate(`/report?department=${selectedDepartment}`);
@@ -293,25 +298,24 @@ const Dashboard = () => {
         <div>
           {/* Departments Section */}
           <div className="mb-10 p-6 rounded-lg shadow-md">
-            <div className="mb-6">
-              <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">
-                🏢 Departments
-              </h2>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                {["Manager", "Accounts/Finance", "Backoffice"].map((dept) => (
-                  <div
-                    key={dept}
-                    className="p-6 border bg-yellow-200 rounded-xl shadow-md hover:bg-yellow-300 cursor-pointer transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg"
-                    onClick={() => viewReports(dept)}
-                  >
-                    <h3 className="text-xl font-bold text-orange-700 uppercase">
-                      {dept}
-                    </h3>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+  <div className="mb-6">
+    <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">
+      🏢 Departments
+    </h2>
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+      {["Manager", "Accounts/Finance", "Backoffice"].map((dept) => (
+        <div
+          key={dept}
+          className="p-6 border bg-yellow-200 rounded-xl shadow-md hover:bg-yellow-300 cursor-pointer transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg"
+          onClick={() => viewReports(dept)}
+        >
+          <h3 className="text-xl font-bold text-orange-700 uppercase">{dept}</h3>
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
+
         </div>
 
       
