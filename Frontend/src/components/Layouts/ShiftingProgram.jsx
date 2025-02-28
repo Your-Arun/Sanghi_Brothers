@@ -171,15 +171,21 @@ const ShiftManagementSystem = () => {
 
     return () => clearInterval(intervalId);
   }, []);
+  const [date, setDate] = useState('');
+
+  useEffect(() => {
+    const todayDate = new Date();
+    const year = todayDate.getFullYear();
+    const month = String(todayDate.getMonth() + 1).padStart(2, '0');
+    const day = String(todayDate.getDate()).padStart(2, '0');
+    setDate(`${year}-${month}-${day}`);
+  }, []);
+
+
 
   return (
     <div className="h-[90%] w-full bg-transparent p-5 ">
-
       <h1 className="text-3xl font-bold text-center mb-5">SHIFT MANAGEMENT SYSTEM</h1>
-
-
-
-
       <div className=" md:grid-cols-2 gap-4">
         <div className="bg-white rounded-lg p-3 shadow-md">
           <h2 className="text-lg md:text-xl font-semibold text-center mb-2">Add Member</h2>
@@ -250,14 +256,18 @@ const ShiftManagementSystem = () => {
                   </select>
 
                   {/* Availability Toggle */}
-                  <label className="flex items-center gap-1 text-sm w-[15%]">
-                    <input
-                      type="checkbox"
-                      checked={member.available === "present"}
-                      onChange={() => handleUpdateAvailability(member._id, member.available === "present" ? "absent" : "present", null)}
-                      className="w-4 h-4 cursor-pointer"
-                    />
-                    {member.available === "present" ? "Present" : "Absent"}
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input class="sr-only peer" value="" type="checkbox" 
+                      checked={member.available === "present"}   onChange={() => handleUpdateAvailability(member._id, member.available === "present" ? "absent" : "present", null)}
+                      />
+                    <div class="peer rounded-full outline-none duration-100 after:duration-500
+                     w-20 h-8 bg-sky-500 peer-focus:outline-none peer-focus:ring-4 
+                     peer-focus:ring-blue-500  after:content-['A'] after:absolute 
+                     after:outline-none after:rounded-full after:h-6 after:w-6 after:bg-white 
+                     after:top-1 after:left-1 after:flex after:justify-center after:items-center  
+                     after:text-sky-800 after:font-bold peer-checked:after:translate-x-10
+                      peer-checked:after:content-['P'] peer-checked:after:border-white ">
+                    </div>
                   </label>
 
                   {/* Shift Dropdown */}
@@ -271,12 +281,57 @@ const ShiftManagementSystem = () => {
                   </select>
 
                   {/* Delete Button */}
-                  <button
-                    onClick={() => handleRemoveMember(member._id)}
-                    className="bg-red-500 text-white px-2 py-1 rounded text-sm hover:bg-red-600 transition w-[10%]"
+                  <button onClick={() => handleRemoveMember(member._id)}
+                    class="group relative flex h-10 w-10 flex-col items-center justify-center overflow-hidden rounded-xl border-2 border-red-800 bg-red-400 hover:bg-red-600"
                   >
-                    <FaTrash />
+                    <svg
+                      viewBox="0 0 1.625 1.625"
+                      class="absolute -top-7 fill-white delay-100 group-hover:top-6 group-hover:animate-[spin_1.4s] group-hover:duration-1000"
+                      height="15"
+                      width="15"
+                    >
+                      <path
+                        d="M.471 1.024v-.52a.1.1 0 0 0-.098.098v.618c0 .054.044.098.098.098h.487a.1.1 0 0 0 .098-.099h-.39c-.107 0-.195 0-.195-.195"
+                      ></path>
+                      <path
+                        d="M1.219.601h-.163A.1.1 0 0 1 .959.504V.341A.033.033 0 0 0 .926.309h-.26a.1.1 0 0 0-.098.098v.618c0 .054.044.098.098.098h.487a.1.1 0 0 0 .098-.099v-.39a.033.033 0 0 0-.032-.033"
+                      ></path>
+                      <path
+                        d="m1.245.465-.15-.15a.02.02 0 0 0-.016-.006.023.023 0 0 0-.023.022v.108c0 .036.029.065.065.065h.107a.023.023 0 0 0 .023-.023.02.02 0 0 0-.007-.016"
+                      ></path>
+                    </svg>
+                    <svg
+                      width="16"
+                      fill="none"
+                      viewBox="0 0 39 7"
+                      class="origin-right duration-500 group-hover:rotate-90"
+                    >
+                      <line stroke-width="4" stroke="white" y2="5" x2="39" y1="5"></line>
+                      <line
+                        stroke-width="3"
+                        stroke="white"
+                        y2="1.5"
+                        x2="26.0357"
+                        y1="1.5"
+                        x1="12"
+                      ></line>
+                    </svg>
+                    <svg width="16" fill="none" viewBox="0 0 33 39" class="">
+                      <mask fill="white" id="path-1-inside-1_8_19">
+                        <path
+                          d="M0 0H33V35C33 37.2091 31.2091 39 29 39H4C1.79086 39 0 37.2091 0 35V0Z"
+                        ></path>
+                      </mask>
+                      <path
+                        mask="url(#path-1-inside-1_8_19)"
+                        fill="white"
+                        d="M0 0H33H0ZM37 35C37 39.4183 33.4183 43 29 43H4C-0.418278 43 -4 39.4183 -4 35H4H29H37ZM4 43C-0.418278 43 -4 39.4183 -4 35V0H4V35V43ZM37 0V35C37 39.4183 33.4183 43 29 43V35V0H37Z"
+                      ></path>
+                      <path stroke-width="4" stroke="white" d="M12 6L12 29"></path>
+                      <path stroke-width="4" stroke="white" d="M21 6V29"></path>
+                    </svg>
                   </button>
+
                 </li>
               ))}
             </ul>
@@ -305,17 +360,17 @@ const ShiftManagementSystem = () => {
         </div>
 
       </div>
-
       <div className="flex justify-center mt-5">
         <button onClick={handleAssignShiftsAndOvertime} className="bg-green-500 text-white px-4 py-2 rounded">
           Assign Shifts
         </button>
       </div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5 mb-2 ">
         {shifts.map((shift) => (
           <div key={shift.id} className="bg-gray-100 rounded-lg p-4">
-            <h3 className="text-2xl mb-2 font-semibold text-center">{shift.name}</h3>
+            <h3 className="text-3xl mb-2 font-semibold text-center">{shift.name}</h3>
+            <h3 className="text-xl mb-2 mt-[-10px] font-semibold text-center">Date: {date}</h3>
+            <h3 className="text-[1.2rem] mb-2 mt-[-10px] font-semibold text-center">{shift.startTime}A.M - {shift.endTime}P.M</h3>
             <strong className="flex justify-evenly"> {shift.supervisor && <span>Supervisor: {shift.supervisor.name.toUpperCase()}</span>}
               <div className="text-center">{shift.airBoy && <span>Air Boy: {shift.airBoy.name.toUpperCase()}</span>}</div>
             </strong>
@@ -346,9 +401,9 @@ const ShiftManagementSystem = () => {
           </div>
         ))}
       </div>
-     <div>
-     <BackButton previousImage="/public/previous.png" />
-     </div>
+      <div>
+        <BackButton previousImage="/public/previous.png" />
+      </div>
     </div>
   );
 };
