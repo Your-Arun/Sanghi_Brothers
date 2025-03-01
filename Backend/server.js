@@ -126,7 +126,7 @@ app.post("/signup", async (req, res) => {
 
     // Generate token
     const token = jwt.sign({ id: savedUser._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "4h",
     });
 
     // Respond with success message and token

@@ -216,26 +216,30 @@ const Dashboard = () => {
       alert("Failed to update report. Please try again.");
     }
   };
-    // View Reports Function
-    const viewReports = (department) => {
-      const userDepartment = localStorage.getItem("userDepartment")?.toLowerCase(); // Normalize
-      const userRole = localStorage.getItem("userRole")?.toLowerCase(); // Normalize
-      const departmentNormalized = department.toLowerCase(); // Normalize department
-    
-      if (userRole === "manager") {
-        // ✅ Manager ko sab departments ka access hai
-        navigate(`/department-reports?department=${department}`);
-      } else if (userDepartment === departmentNormalized) {
-        // ✅ Agar user ka department match hota hai toh allow karo
-        navigate(`/department-reports?department=${department}`);
-      } else {
-        // ❌ Unauthorized access
-        alert("You are not authorized to view reports for this department.");
-      }
-    };
-    
-    
+  // View Reports Function
+  const viewReports = (department) => {
+    const userDepartment = localStorage.getItem("userDepartment")?.toLowerCase(); // Normalize
+    const userRole = localStorage.getItem("userRole")?.toLowerCase(); // Normalize
+    const departmentNormalized = department.toLowerCase(); // Normalize department
   
+    console.log(`User Role: ${userRole}, User Dept: ${userDepartment}, Clicked Dept: ${departmentNormalized}`);
+  
+    if (userRole === "manager") {
+      // ✅ Manager ko sab departments ka access hai
+      navigate(`/department-reports?department=${department}`);
+    } else if (userDepartment === departmentNormalized) {
+      // ✅ Agar user ka department match hota hai toh allow karo
+      navigate(`/department-reports?department=${department}`);
+    } else {
+      // ❌ Unauthorized access
+      alert("You are not authorized to view reports for this department.");
+    }
+  };
+  
+
+
+
+
   const openReportPage = () => {
     if (selectedDepartment) {
       navigate(`/report?department=${selectedDepartment}`);
@@ -307,7 +311,7 @@ const Dashboard = () => {
         <div
           key={dept}
           className="p-6 border bg-yellow-200 rounded-xl shadow-md hover:bg-yellow-300 cursor-pointer transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg"
-          onClick={() => viewReports(dept)}
+          onClick={() => viewReports(dept.toLowerCase())} // ✅ Fix
         >
           <h3 className="text-xl font-bold text-orange-700 uppercase">{dept}</h3>
         </div>
@@ -318,7 +322,7 @@ const Dashboard = () => {
 
         </div>
 
-      
+
 
         {/* sb section ke lie */}
         <div className="mb-10 p-6  rounded-lg shadow-md">
@@ -518,7 +522,7 @@ const Dashboard = () => {
           {/* Complaints List */}
           {reports.length > 0 ? (
             <div className="flex space-x-4 justify-center overflow-x-auto pb-3 scrollbar-hide">
-              {reports.slice(0,4).map((report) => (
+              {reports.slice(0, 4).map((report) => (
                 <div
                   key={report._id}
                   className="min-w-[200px] p-4 border rounded-xl shadow-md bg-white hover:bg-gray-100 cursor-pointer transition duration-300 transform hover:scale-105"
