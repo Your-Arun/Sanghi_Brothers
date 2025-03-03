@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-
-import previousImage from "/public/previous.png";
-import saveImage from "/public/save.png";
+import previousImage from "/previous.png";
+import saveImage from "/save.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
 

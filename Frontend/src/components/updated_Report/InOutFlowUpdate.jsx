@@ -1,9 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import binImage from "/public/bin.png";
-import previousImage from "/public/previous.png";
-import saveImage from "/public/save.png";
+import binImage from "/bin.png";
+import previousImage from "/previous.png";
+import saveImage from "/save.png";
 
 const InOutFlowUpdate = () => {
   const navigate = useNavigate();

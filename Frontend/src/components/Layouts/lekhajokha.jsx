@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import previousImage from "/public/previous.png";
+import previousImage from "/previous.png";
 import saveImage from "/public/save.png";
 import { Link } from "react-router-dom";
 import axios from "axios";

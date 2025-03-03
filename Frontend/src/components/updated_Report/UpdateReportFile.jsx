@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
-
-import previousImage from "/public/previous.png";
-import saveImage from "/public/save.png";
-import binImage from "/public/bin.png";
+import previousImage from "/previous.png";
+import saveImage from "/save.png";
+import binImage from "/bin.png";
 
 const UpdateReportFile = () => {
   const { id } = useParams();

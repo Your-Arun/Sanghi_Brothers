@@ -2,9 +2,9 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link,  useNavigate, useParams } from "react-router-dom";
 
-import previousImage from "/public/previous.png";
-import saveImage from "/public/save.png";
-import binImage from "/public/bin.png";
+import previousImage from "/previous.png";
+import saveImage from "/save.png";
+import binImage from "/bin.png";
 
 function SBI01Update() {
   // const date= new Date().toLocaleDateString();

@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import previousImage from "/public/previous.png";
-import saveImage from "/public/save.png";
+import previousImage from "/previous.png";
+import saveImage from "/save.png";
 const SB03_Monthly = () => {
   const [username, setUserName] = useState("");
   const [department, setDepartment] = useState([]);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link,  useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const DepartmentReports = () => {
@@ -7,7 +7,6 @@ const DepartmentReports = () => {
   const [userName, setUserName] = useState("");
   const [reportFile, setReportFile] = useState([]);
   const [userDepartment, setUserDepartment] = useState("");
-  const [userRole, setUserRole] = useState("");
 
   const navigate = useNavigate();
 

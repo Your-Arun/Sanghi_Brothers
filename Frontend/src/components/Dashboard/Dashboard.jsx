@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
-import add from "/public/add.png";
+import {  useNavigate } from "react-router-dom";
+import add from "/add.png";
 import { FaTimes, FaUniversity } from "react-icons/fa";
 const Dashboard = () => {
   const [departments, setDepartments] = useState([]);

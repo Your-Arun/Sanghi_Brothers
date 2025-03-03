@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import saveImage from "/public/save.png";
-import previousImage from "/public/previous.png";
+import saveImage from "/save.png";
+import previousImage from "/previous.png";
 import { Link } from "react-router-dom";
 
 const Sb01 = () => {

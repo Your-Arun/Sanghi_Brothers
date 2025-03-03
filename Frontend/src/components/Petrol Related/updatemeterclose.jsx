@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Binimage from '/public/bin.png';
-import previousImage from '/public/previous.png';
-import saveImage from '/public/save.png';
+import Binimage from '/bin.png';
+import previousImage from '/previous.png';
+import saveImage from '/save.png';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 
 const UpdateMeterclose = () => {

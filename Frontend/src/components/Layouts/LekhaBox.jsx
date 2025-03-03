@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import previousImage from "/public/previous.png";
+import previousImage from "/previous.png";
 
 const ChekList = () => {
     const [pumpSheetData, setPumpSheetData] = useState([]);

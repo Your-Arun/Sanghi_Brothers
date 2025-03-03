@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-import previousImage from "/public/previous.png";
-import saveImage from "/public/save.png";
-import binImage from "/public/bin.png";
+import previousImage from "/previous.png";
+import saveImage from "/save.png";
+import binImage from "/bin.png";
 
 const Sb03Update = () => {
   const { id } = useParams();

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
-import previousImage from '/public/previous.png';
 import BackButton from '../Home Page/backbutton';
 
 const CashSlip = () => {
