@@ -7,26 +7,33 @@ const DepartmentReports = () => {
   const [userName, setUserName] = useState("");
   const [reportFile, setReportFile] = useState([]);
   const [userDepartment, setUserDepartment] = useState("");
+  const [userRole, setUserRole] = useState("");
 
-  const location = useLocation();
   const navigate = useNavigate();
-  const query = new URLSearchParams(location.search);
-  const department = query.get("department");
-
-
-
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const userRole = localStorage.getItem("userRole"); // Get user role
-    const userDept = localStorage.getItem("userDepartment"); // Get logged-in user's department
-  
+    const department = localStorage.getItem("userDepartment")?.toLowerCase();
+
     if (!token) {
       alert("You are not authorized. Please login first.");
       navigate("/login");
       return;
     }
-  
+    setUserDepartment(department);
+
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get("http://localhost:5500/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUserName(response.data.username);
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+        alert("Failed to fetch user profile.");
+      }
+    };
+
     const fetchData = async () => {
       try {
         const [reportsResponse, reportFilesResponse] = await Promise.all([
@@ -37,109 +44,46 @@ const DepartmentReports = () => {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
-  
-        const deptToUse = userRole === "manager" ? null : userDept; // Manager sees all
-  
-        setReports(
-          deptToUse
-            ? reportsResponse.data.filter((report) => report.department === deptToUse)
-            : reportsResponse.data
-        );
-  
-        setReportFile(
-          deptToUse
-            ? reportFilesResponse.data.filter((file) => file.department === deptToUse)
-            : reportFilesResponse.data
-        );
+
+        // ✅ Manager ko saare reports aur files dikhane hain
+        if (department === "manager") {
+          setReports(reportsResponse.data);
+          setReportFile(reportFilesResponse.data);
+        } else {
+          // ✅ Accounts/Finance wale ko sirf apne department ka dikhana hai
+          setReports(
+            reportsResponse.data.filter((report) => report.department.toLowerCase() === department)
+          );
+          setReportFile(
+            reportFilesResponse.data.filter((file) => file.department.toLowerCase() === department)
+          );
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
         alert("Failed to fetch data.");
       }
     };
-  
-    fetchData();
-  }, []);
-  
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      alert("You are not authorized. Please login first.");
-      navigate("/login");
-      return;
-    }
-
-    const fetchUserProfile = async () => {
-      try {
-        const response = await axios.get("http://localhost:5500/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        setUserName(response.data.username);
-        setUserDepartment(response.data.department);
-      } catch (error) {
-        console.error("Error fetching user profile:", error);
-        alert("Failed to fetch user profile.");
-      }
-    };
-
-    const fetchReports = async () => {
-      try {
-        const response = await axios.get("http://localhost:5500/reports", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        const filteredReports = response.data.filter(
-          (report) => report.department === userDepartment
-        );
-
-        setReports(filteredReports);
-      } catch (error) {
-        console.error("Error fetching reports:", error);
-        alert("Failed to fetch reports.");
-      }
-    };
-
-    const fetchReportFiles = async () => {
-      try {
-        const response = await axios.get("http://localhost:5500/reportfile", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        const filteredFiles = response.data.filter(
-          (file) => file.department === userDepartment
-        );
-
-        setReportFile(filteredFiles);
-      } catch (error) {
-        console.error("Error fetching report files:", error);
-        alert("Failed to fetch report files.");
-      }
-    };
 
     fetchUserProfile();
-    fetchReports();
-    fetchReportFiles();
-  }, [userDepartment]);
-
-
+    fetchData();
+  }, []);
 
   return (
-    <div className="h-[90vh] bg-gray-100 flex flex-col items-center">
+    <div className="h-screen-min bg-gray-100 flex flex-col items-center">
       {/* Header Section */}
       <div className="w-full bg-teal-700 text-white py-6 text-center shadow-lg">
         {userName && (
           <h2 className="text-3xl font-semibold">
-            Welcome, <span className="text-yellow-300">{userName.toLocaleUpperCase()}   !</span>
+            Welcome, <span className="text-yellow-300">{userName.toUpperCase()}!</span>
           </h2>
         )}
-        <h1 className="text-xl mt-2">Department: {userDepartment.toLocaleUpperCase()}</h1>
+        <h1 className="text-xl mt-2">Department: {userDepartment.toUpperCase()}</h1>
       </div>
 
       {/* Report Files Section */}
       <div className="container mx-auto p-6">
         <h2 className="text-2xl font-semibold text-teal-800 mb-4">📂 Report Files</h2>
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-5">
           {reportFile.length > 0 ? (
             reportFile.map((file) => (
               <Link key={file._id} to={`/reportfile/${file._id}`}>
@@ -151,6 +95,7 @@ const DepartmentReports = () => {
                     Cash Sales: <span className="font-bold">{file.reports.cashsales}</span>
                   </p>
                   <p className="text-gray-500">{file.content}</p>
+                  <p className="text-gray-500">{file.department}</p>
                 </div>
               </Link>
             ))
@@ -163,12 +108,13 @@ const DepartmentReports = () => {
       {/* Complaints Section */}
       <div className="container mx-auto p-6">
         <h2 className="text-2xl font-semibold text-red-600 mb-4">⚠️ Complaints</h2>
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-5">
           {reports.length > 0 ? (
             reports.map((report) => (
               <div key={report._id} className="p-6 border bg-white shadow-md rounded-lg hover:shadow-lg transition transform hover:scale-105">
                 <h2 className="font-bold text-red-600">{report.title}</h2>
                 <p className="text-gray-600">{report.content}</p>
+                <p className="text-gray-600">{report.department}</p>
               </div>
             ))
           ) : (

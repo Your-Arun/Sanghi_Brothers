@@ -219,26 +219,22 @@ const Dashboard = () => {
   // View Reports Function
   const viewReports = (department) => {
     const userDepartment = localStorage.getItem("userDepartment")?.toLowerCase(); // Normalize
-    const userRole = localStorage.getItem("userRole")?.toLowerCase(); // Normalize
     const departmentNormalized = department.toLowerCase(); // Normalize department
-  
-    console.log(`User Role: ${userRole}, User Dept: ${userDepartment}, Clicked Dept: ${departmentNormalized}`);
-  
-    if (userRole === "manager") {
-      // ✅ Manager ko sab departments ka access hai
+
+    if (userDepartment === "manager") {
+      // ✅ Manager ko teeno departments ka access hai
       navigate(`/department-reports?department=${department}`);
-    } else if (userDepartment === departmentNormalized) {
-      // ✅ Agar user ka department match hota hai toh allow karo
+    } else if (
+      (userDepartment === "accounts/finance" && departmentNormalized === "accounts/finance") ||
+      (userDepartment === "backoffice" && departmentNormalized === "backoffice")
+    ) {
+      // ✅ Account wale ko sirf "Accounts/Finance" aur Backoffice wale ko sirf "Backoffice" access milega
       navigate(`/department-reports?department=${department}`);
     } else {
       // ❌ Unauthorized access
       alert("You are not authorized to view reports for this department.");
     }
   };
-  
-
-
-
 
   const openReportPage = () => {
     if (selectedDepartment) {
@@ -302,23 +298,23 @@ const Dashboard = () => {
         <div>
           {/* Departments Section */}
           <div className="mb-10 p-6 rounded-lg shadow-md">
-  <div className="mb-6">
-    <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">
-      🏢 Departments
-    </h2>
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-      {["Manager", "Accounts/Finance", "Backoffice"].map((dept) => (
-        <div
-          key={dept}
-          className="p-6 border bg-yellow-200 rounded-xl shadow-md hover:bg-yellow-300 cursor-pointer transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg"
-          onClick={() => viewReports(dept.toLowerCase())} // ✅ Fix
-        >
-          <h3 className="text-xl font-bold text-orange-700 uppercase">{dept}</h3>
-        </div>
-      ))}
-    </div>
-  </div>
-</div>
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">
+                🏢 Departments
+              </h2>
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                {["Manager", "Accounts/Finance", "Backoffice"].map((dept) => (
+                  <div
+                    key={dept}
+                    className="p-6 border bg-yellow-200 rounded-xl shadow-md hover:bg-yellow-300 cursor-pointer transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg"
+                    onClick={() => viewReports(dept.toLowerCase())} // ✅ Fix
+                  >
+                    <h3 className="text-xl font-bold text-orange-700 uppercase">{dept}</h3>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
 
         </div>
 
@@ -659,7 +655,7 @@ const Dashboard = () => {
                 {[
                   { label: "Name", value: updatedProfile.username, key: "username", editable: true },
                   { label: "Email", value: updatedProfile.email, key: "email", editable: false },
-                  { label: "Department", value: updatedProfile.department, key: "department", editable: false },
+                  { label: "Role", value: updatedProfile.department, key: "department", editable: false },
                 ].map(({ label, value, key, editable }) => (
                   <div key={key} className="mb-4">
                     <label className="block text-gray-700 font-semibold">{label}:</label>
