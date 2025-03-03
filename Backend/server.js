@@ -27,9 +27,7 @@ const MeterClose = require('./routes/metercloseroute');
 const Excelsheet = require('./routes/exceslsheetuploding')
 const DepostRoute=require('./routes/depositRoutes')
 const CashSlip = require('./routes/cashsliproute')
-
-
-
+const Contactus =require('./routes/contactus')
 
 const app = express();
 app.use(bodyparser.json());
@@ -64,6 +62,13 @@ app.use('/mastersheet',Staffmng);
 app.use('/mastersheet',Financemng);
 app.use('/newlekhajokha',Lekha);
 app.use('',MeterClose);
+app.use('',Contactus);
+
+//excelsheet uploading filess routes
+app.use('', Excelsheet);
+app.use('',DepostRoute)
+app.use('', CashSlip)
+
 // Middleware to Verify JWT
 const authMiddleware = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
@@ -78,21 +83,6 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-const verifyToken = (req, res, next) => {
-  const token = req.headers['authorization']?.split(' ')[1]; // Assuming token is sent in "Authorization: Bearer <token>"
-
-  if (!token) {
-    return res.status(403).json({ message: "Token is required" });
-  }
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ message: "Token is expired or invalid" });
-    }
-    req.user = decoded;  // Add user info to request
-    next();
-  });
-};
 // User Registration
 app.post("/signup", async (req, res) => {
   try {
@@ -134,6 +124,14 @@ app.post("/signup", async (req, res) => {
   } catch (err) {
     console.error("Error during signup:", err); // Log the error
     res.status(500).json({ error: err.message });
+  }
+});
+app.post("/verify-invite", (req, res) => {
+  const { invitationCode } = req.body;
+  if (process.env.validInvitationCodes.includes(invitationCode)) {
+    res.json({ valid: true });
+  } else {
+    res.json({ valid: false });
   }
 });
 // User Login
@@ -484,11 +482,7 @@ app.delete("/fundposition/:id", async (req, res) => {
 // Retrieve Data from MongoDB
 app.use('/shifting', ShiftingRoutes);
 
-//excelsheet uploading filess routes
-app.use('', Excelsheet);
-app.use('',DepostRoute)
-app.use('', CashSlip)
 
 // Start Server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}🔴🔴`));

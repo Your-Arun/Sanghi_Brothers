@@ -25,6 +25,7 @@ const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
   const [isOpen3, setIsOpen3] = useState(false);
+  const [isOpen4, setIsOpen4] = useState(false);
 
 
   useEffect(() => {
@@ -334,7 +335,69 @@ const Dashboard = () => {
               className="ml-4 cursor-pointer transform transition hover:scale-110 hover:rotate-12"
               onClick={() => navigate("/bankreport")}
             /></div>
+            {/* Report List */}
+          {reportfile.length > 0 ? (
+            <div className="flex space-x-4 justify-center overflow-x-auto pb-3 scrollbar-hide">
+              {reportfile.slice(0, 4).map((report) => (
+                <div
+                  key={report._id}
+                  onClick={() => navigate(`/reportfile/${report._id}`)}
+                  className="min-w-[200px] p-4 border rounded-xl shadow-md bg-white hover:bg-gray-100 cursor-pointer transition duration-300 transform hover:scale-105"
+                >
+                  <h1 className="text-xl text-green-700 font-bold text-center">
+                    {report.department}
+                  </h1>
+                  <h3 className="text-md font-semibold text-center text-gray-800 mt-2 flex items-center justify-center gap-1">
+                    📅 {new Date(report.entryDate).toLocaleDateString()}
+                  </h3>
+                  <h3 className="text-md font-semibold text-center text-gray-800 mt-2 flex items-center justify-center gap-1">
+                    💵 Cash Sales: ₹{report.reports.cashsales}
+                  </h3>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-600 text-center mt-4">No reports available.</p>
+          )}
 
+          {/* See More Button */}
+          {reportfile.length > 4 && (
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => setIsOpen3(true)}
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+              >
+                See More
+              </button>
+            </div>
+          )}
+          {/* Modal for Full List */}
+          {isOpen3 && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
+              <div className="bg-white p-6 rounded-lg shadow-xl w-[90%] max-w-2xl relative">
+                {/* Close Button */}
+                <button
+                  onClick={() => setIsOpen3(false)}
+                  className="absolute top-3 right-3 text-gray-600 hover:text-gray-800"
+                >
+                  <FaTimes className="text-2xl" />
+                </button>
+
+                <h2 className="text-xl font-bold text-center mb-4 text-blue-700"> Full Reportfiles</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {reportfile.map((item) => (
+                    <div key={item._id} className="p-4 border rounded-lg bg-gray-100 cursor-pointer transition duration-300 ease-in-out hover:text-lg hover:scale-110" onClick={() => navigate(`/reportfile/${item._id}`)}>
+                      <h1 className="text-lg font-bold text-green-700 text-center">₹{item.department}</h1>
+                      <h3 className="text-sm text-gray-600 text-center">📅 {new Date(item.entryDate).toLocaleDateString()}</h3>
+                      <h3 className="text-md font-semibold text-center text-gray-800 flex items-center justify-center gap-1">
+                        💵 Cash Sales: {item.reports.cashsales}
+                      </h3>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* ReportFile */}

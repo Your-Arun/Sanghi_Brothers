@@ -77,7 +77,7 @@ const AppContent = () => {
   
   
   // Routes where the Navbar should be shown
-  const showNavbarRoutes = ["/", "/contact-us", "/services", "/about"];
+  const showNavbarRoutes = ["/", "/contact-us", "/services", "/about",'/login',"/signup"];
   const shouldShowNavbar = showNavbarRoutes.includes(location.pathname);
 
   return (
