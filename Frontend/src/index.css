@@ -9,73 +9,82 @@ body {
   color: #333; /* Dark gray text for readability */
   margin: 0;
   padding: 0px;
+  overflow-x: hidden; /* Hide horizontal scrolling */
 }
 
-/* General table container styles */
+/* Hide scrollbar but allow scrolling */
+::-webkit-scrollbar {
+  display: none; /* Hides scrollbar in WebKit browsers */
+}
+
+body {
+  -ms-overflow-style: none;  /* Hides scrollbar in IE and Edge */
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+}
+
+/* Table container */
 .table-container {
   padding: 30px;
-  background-color: #ffffff; /* White background for a clean look */
-  border-radius: 16px; /* Smooth rounded corners */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   max-width: 1200px;
-  margin: 30px auto; /* Center the table container */
-  border: 1px solid #e0e0e0; /* Soft border for structure */
-  overflow: hidden; /* Clip content to rounded corners */
+  margin: 30px auto;
+  border: 1px solid #e0e0e0;
+  overflow: hidden;
 }
 
 /* Table styles */
 table {
   width: 100%;
-  border-collapse: collapse; /* Remove space between borders */
-  background-color: #ffffff; /* White background for the table */
+  border-collapse: collapse;
+  background-color: #ffffff;
   border-radius: 12px;
   overflow: hidden;
-  color: #333; /* Dark gray text */
+  color: #333;
 }
 
 /* Header styles */
 th {
-  background: linear-gradient(90deg, #4caf50, #3a9d3a); /* Vibrant green gradient for headers */
-  color: #ffffff; /* White text */
+  background: linear-gradient(90deg, #4caf50, #3a9d3a);
+  color: #ffffff;
   font-weight: bold;
   font-size: 16px;
   padding: 16px;
-  text-transform: uppercase; /* Convert text to uppercase */
-  letter-spacing: 1px; /* Add spacing between letters */
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 /* Cell styles */
 th, td {
   padding: 10px;
-  text-align: center; /* Center-align text */
+  text-align: center;
   font-size: 13px;
-  border: 1px solid #e0e0e0; /* Light border for separation */
+  border: 1px solid #e0e0e0;
 }
 
 /* Row styles */
 tr:nth-child(even) {
-  background-color: #f2f2f2; /* Light gray for even rows */
+  background-color: #f2f2f2;
 }
 
 tr:nth-child(odd) {
-  background-color: #ffffff; /* White background for odd rows */
+  background-color: #ffffff;
 }
 
-/* Hover effect for rows */
+/* Hover effect */
 tr:hover {
-  background-color: #e8f5e9; /* Light green highlight */
-  color: #333; /* Dark text on hover */
-  transform: scale(1.01); /* Subtle zoom effect */
+  background-color: #e8f5e9;
+  color: #333;
+  transform: scale(1.01);
   transition: all 0.3s ease-in-out;
-  
-}
-
-/* Add animation for table */
-table {
-  animation: fadeIn 0.8s ease-in-out; /* Smooth fade-in animation */
 }
 
 /* Fade-in animation */
+table {
+  animation: fadeIn 0.8s ease-in-out;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -89,24 +98,23 @@ table {
 
 /* Input styles */
 input[type="number"], input[type="text"] {
-  background-color: #f9f9f9; /* Light input background */
-  color: #333; /* Dark text for inputs */
-  border: 1px solid #ccc; /* Soft border */
+  background-color: #f9f9f9;
+  color: #333;
+  border: 1px solid #ccc;
   padding: 8px;
   border-radius: 4px;
 }
 
 input[type="number"]:focus, input[type="text"]:focus {
-  border-color: #4caf50; /* Highlight border on focus */
+  border-color: #4caf50;
   outline: none;
 }
 
-/* Responsive design */
+/* Responsive table */
 @media (max-width: 768px) {
   table {
-    font-size: 14px; /* Adjust font size for smaller screens */
+    font-size: 14px;
   }
-
   th, td {
     padding: 10px;
   }
@@ -114,8 +122,7 @@ input[type="number"]:focus, input[type="text"]:focus {
 
 /* Button styles */
 button {
-
-  color: #ffffff; /* White text */
+  color: #ffffff;
   border: none;
   border-radius: 8px;
   padding: 10px 20px;
@@ -124,9 +131,7 @@ button {
   transition: background-color 0.3s ease;
 }
 
-
-
-/* Container styles for center alignment */
+/* Center align container */
 .container {
   display: flex;
   flex-direction: column;
@@ -134,18 +139,9 @@ button {
   padding: 20px;
 }
 
-@media (max-width: 768px) {
-  .table {
-    font-size: 0.9em;
-  }
-
-  .button-container {
-    flex-direction: column;
-    align-items: center;
-  }
-}
+/* Hide spin buttons in number input fields */
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
   -webkit-appearance: none; 
   margin: 0; 
-}
+} 

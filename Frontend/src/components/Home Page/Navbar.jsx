@@ -12,13 +12,13 @@ const Navbar = () => {
     return (
         <nav className="bg-gradient-to-r from-blue-500 to-purple-600 p-4 shadow-lg">
             <div className="container mx-auto flex justify-between items-center">
-                <div className="text-white text-3xl mb-5 font-sm font-serif">SANGHI BROTHERS</div>
-                <ul className={`md:flex space-x-8 ${isOpen ? 'flex' : 'hidden'} md:items-center`}>
+                <div className="text-white text-6xl mb-5 font-sm font-serif">SANGHI BROTHERS</div>
+                <ul className={`md:flex text-2xl space-x-8 ${isOpen ? 'flex' : 'hidden'} md:items-center`}>
                     <li>
                         <NavLink 
                             to="/" 
                             className={({ isActive }) => 
-                                `text-white hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
+                                `text-blue hover:bg-gray-300  hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
                             }
                         >
                             Home
@@ -28,7 +28,7 @@ const Navbar = () => {
                         <NavLink 
                             to="/about" 
                             className={({ isActive }) => 
-                                `text-white hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
+                                `text-blue hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
                             }
                         >
                             About
@@ -38,7 +38,7 @@ const Navbar = () => {
                         <NavLink 
                             to="/services" 
                             className={({ isActive }) => 
-                                `text-white hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
+                                `text-blue hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
                             }
                         >
                             Services
@@ -48,7 +48,7 @@ const Navbar = () => {
                         <NavLink 
                             to="/contact-us" 
                             className={({ isActive }) => 
-                                `text-white hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
+                                `text-blue hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
                             }
                         >
                             Contact
