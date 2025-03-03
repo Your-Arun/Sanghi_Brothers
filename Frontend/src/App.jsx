@@ -142,3 +142,5 @@ const AppContent = () => {
 };
 
 export default App;
+/////naya compont jo stafff ke lie hogaa bsss  jisse vo cashslip shifting dekh payenge 
+//usko naya code milega bsss jisse vo access kr skte hai

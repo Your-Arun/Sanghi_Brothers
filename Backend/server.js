@@ -130,6 +130,8 @@ app.post("/verify-invite", (req, res) => {
   const { invitationCode } = req.body;
   if (process.env.validInvitationCodes.includes(invitationCode)) {
     res.json({ valid: true });
+    } else if (process.env.validInvitationCodesForStaff.includes(invitationCode)) {
+      res.json({ valid: true, staff: true });    
   } else {
     res.json({ valid: false });
   }
