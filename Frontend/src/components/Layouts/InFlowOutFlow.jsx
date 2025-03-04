@@ -207,7 +207,7 @@ const InFlowOutFlow = () => {
               {departments.length > 0 ? (
                 departments.map((dept) => (
                   <option key={dept} value={dept}>
-                    {dept}
+                    {dept.toUpperCase()}
                   </option>
                 ))
               ) : (

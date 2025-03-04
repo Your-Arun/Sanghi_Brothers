@@ -246,7 +246,7 @@ function ReportFile() {
                   </option>
                   {departments.map((dept) => (
                     <option key={dept} value={dept}>
-                      {dept}
+                      {dept.toUpperCase()}
                     </option>
                   ))}
                 </select>

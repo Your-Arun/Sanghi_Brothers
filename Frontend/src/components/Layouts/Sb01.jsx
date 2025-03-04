@@ -261,7 +261,7 @@ const Sb01 = () => {
                   {departments.length > 0 ? (
                     departments.map((dept) => (
                       <option key={dept} value={dept}>
-                        {dept}
+                        {dept.toUpperCase()}
                       </option>
                     ))
                   ) : (
