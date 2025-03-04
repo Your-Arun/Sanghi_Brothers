@@ -365,6 +365,19 @@ app.put("/reports/:id", async (req, res) => {
     res.status(500).json({ error: "Failed to update report" });
   }
 });
+app.delete('/reports/:id', async (req, res) => {
+  try{
+    const reportId = req.params.id;
+    const report = await Reports.findByIdAndDelete(reportId);
+    if (!report) {
+      return res.status(404).json({ message: "Report not found" });
+    }
+    res.status(200).json(report);
+  }catch (e) {
+    console.error("Error deleting report:", e);
+    res.status(500).json({ message: "Server error" });
+  }}
+);
 // Get Profile
 app.get("/profile", authMiddleware, async (req, res) => {
   try {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -6,29 +6,46 @@ const Report = () => {
   const location = useLocation();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [role, setRole] = useState("");  // Pre-fill fields with user's role
   const department = new URLSearchParams(location.search).get("department");
   const navigate = useNavigate();
- 
-  
-  
-  
-  
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get("http://localhost:5500/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });      
+        setRole(response.data.department); // Pre-fill fields
+      } catch (err) {
+        console.error("Error fetching profile:", err);
+        alert("Failed to fetch profile data.");
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post(
-        "http://localhost:5500/report", // POST request to backend
-        { title, department, content }, // sending title, department, and content
-        {
-          headers: { Authorization: `Bearer ${token}` }, // Authorization token
-        }
+      await axios.post(
+        "http://localhost:5500/report",
+        { title, department, content },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       alert("Report created successfully!");
 
-      // Redirect to the dashboard
-      navigate("/dashboard");
+      // Redirect based on user role
+      if (role === "staff") {
+        navigate("/staff-dashboard");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (err) {
       console.error(err);
       alert("Failed to create the report. Please try again.");
