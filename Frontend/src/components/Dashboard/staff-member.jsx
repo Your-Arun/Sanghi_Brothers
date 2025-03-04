@@ -1,10 +1,19 @@
 import React, { useState } from "react";
-import { FaMoneyBill, FaTruck, FaExclamationTriangle, FaUser } from "react-icons/fa";
-import ProfileModal from "./profile"; // Import profile modal
+import { FaMoneyBill, FaTruck, FaExclamationTriangle, FaUser, FaSignOutAlt } from "react-icons/fa";
+import ProfileModal from "./profile";
+import { useNavigate } from "react-router-dom"; // Redirect ke liye
 
-const Staffmember = () => {
+const StaffDashboard = () => {
   const [activeTab, setActiveTab] = useState("cashslip");
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isProfileOpen, setProfileOpen] = useState(false);
+  const navigate = useNavigate(); // Navigation ke liye
+
+  // Logout Function
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Token remove
+    alert("Logged out successfully!");
+    navigate("/login"); // Login page pe redirect
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -12,17 +21,22 @@ const Staffmember = () => {
       <aside className="w-64 bg-blue-600 text-white p-6 space-y-4">
         <h2 className="text-2xl font-bold">Staff Dashboard</h2>
         <nav className="space-y-3">
-          <button onClick={() => setActiveTab("cashslip")} className={`flex items-center gap-2 p-3 w-full rounded-lg ${activeTab === "cashslip" ? "bg-blue-700" : "hover:bg-blue-500"}`}>
+          <button onClick={() => setActiveTab("cashslip")} className="flex items-center gap-2 p-2 w-full bg-blue-700 rounded-lg hover:bg-blue-500">
             <FaMoneyBill /> Cash Slip
           </button>
-          <button onClick={() => setActiveTab("shifting")} className={`flex items-center gap-2 p-3 w-full rounded-lg ${activeTab === "shifting" ? "bg-blue-700" : "hover:bg-blue-500"}`}>
+          <button onClick={() => setActiveTab("shifting")} className="flex items-center gap-2 p-2 w-full bg-blue-700 rounded-lg hover:bg-blue-500">
             <FaTruck /> Shifting Arrangement
           </button>
-          <button onClick={() => setActiveTab("complaint")} className={`flex items-center gap-2 p-3 w-full rounded-lg ${activeTab === "complaint" ? "bg-blue-700" : "hover:bg-blue-500"}`}>
+          <button onClick={() => setActiveTab("complaint")} className="flex items-center gap-2 p-2 w-full bg-blue-700 rounded-lg hover:bg-blue-500">
             <FaExclamationTriangle /> Complaints
           </button>
-          <button onClick={() => setIsProfileOpen(true)} className="flex items-center gap-2 p-3 w-full bg-blue-700 rounded-lg hover:bg-blue-500">
+          <button onClick={() => setProfileOpen(true)} className="flex items-center gap-2 p-2 w-full bg-blue-700 rounded-lg hover:bg-blue-500">
             <FaUser /> Profile
+          </button>
+
+          {/* Logout Button */}
+          <button onClick={handleLogout} className="flex items-center gap-2 p-2 w-full bg-red-600 rounded-lg hover:bg-red-500 mt-4">
+            <FaSignOutAlt /> Logout
           </button>
         </nav>
       </aside>
@@ -35,9 +49,9 @@ const Staffmember = () => {
       </main>
 
       {/* Profile Modal */}
-      {isProfileOpen && <ProfileModal closeModal={() => setIsProfileOpen(false)} />}
+      {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
     </div>
   );
 };
 
-export default Staffmember;
+export default StaffDashboard;
