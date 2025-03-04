@@ -4,15 +4,18 @@ import { LuLayoutDashboard } from "react-icons/lu";
 import ProfileModal from "./profile";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import addIcon from "/add.png"; // Make sure you have an image in the correct path
 
 const StaffDashboard = () => {
     const [activeTab, setActiveTab] = useState("dashboard");
     const [isProfileOpen, setProfileOpen] = useState(false);
     const [reports, setReports] = useState([]);
     const [showFullReports, setShowFullReports] = useState(false);
+    const [showModal2, setShowModal2] = useState(false);
+  const [selectedDepartment, setSelectedDepartment] = useState("");
     const navigate = useNavigate();
 
-    // Logout Function
+   // Logout Function
     const handleLogout = () => {
         localStorage.removeItem("token");
         alert("Logged out successfully!");
@@ -28,12 +31,29 @@ const StaffDashboard = () => {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setReports(response.data);
+
+                
+        const departmentResponse = await axios.get(
+            "http://localhost:5500/departments",
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+          setDepartments(departmentResponse.data);
+  
             } catch (err) {
                 console.error("Error fetching complaints:", err);
             }
         };
         fetchReports();
     }, []);
+
+    // Handle Report Page Navigation
+    const openReportPage = () => {
+        if (!selectedDepartment) {
+            alert("Please select a department!");
+            return;
+        }
+        navigate(`/report/${selectedDepartment}`);
+    };
 
     return (
         <div className="flex min-h-screen bg-gray-100">
@@ -69,9 +89,20 @@ const StaffDashboard = () => {
                 {activeTab === "dashboard" && <div className="bg-white p-6 rounded-lg shadow-md"><h1 className="text-3xl text-center">DASHBOARD</h1></div>}
                 {activeTab === "cashslip" && <div className="bg-white p-6 rounded-lg shadow-md">Cash Slip Section</div>}
                 {activeTab === "shifting" && <div className="bg-white p-6 rounded-lg shadow-md">Shifting Arrangement Section</div>}
+                
+                {/* Complaints Section */}
                 {activeTab === "complaint" && (
                     <div className="bg-white p-6 rounded-lg shadow-md">
-                        <h2 className="text-3xl font-bold text-blue-700 mb-4">🚨 Complaints</h2>
+                        <div className="flex items-center justify-center">
+                            <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">🚨 Complaints</h2>
+                            <img
+                                src={addIcon}
+                                alt="Create"
+                                width={50}
+                                className="ml-4 cursor-pointer transform transition hover:scale-110 hover:rotate-12"
+                                onClick={() => setShowModal2(true)}
+                            />
+                        </div>
 
                         {/* Complaints List */}
                         {reports.length > 0 ? (
@@ -86,34 +117,51 @@ const StaffDashboard = () => {
                         ) : (
                             <p className="text-gray-500 text-center mt-4 italic">No complaints available.</p>
                         )}
-
-                        {/* See More Button */}
-                        {reports.length > 4 && (
-                            <div className="flex justify-center mt-4">
-                                <button onClick={() => setShowFullReports(true)} className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition">
-                                    See More
-                                </button>
-                            </div>
-                        )}
                     </div>
                 )}
             </main>
 
-            {/* Full Reports Modal */}
-            {showFullReports && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
-                    <div className="bg-white p-6 rounded-lg shadow-xl w-[90%] max-w-2xl relative">
-                        <button onClick={() => setShowFullReports(false)} className="absolute top-3 right-3 text-gray-600 hover:text-gray-800">
+            {/* Department Selection Modal */}
+            {showModal2 && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" role="dialog">
+                    <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm md:max-w-md relative">
+                        {/* Close Button */}
+                        <button
+                            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+                            onClick={() => setShowModal2(false)}
+                            aria-label="Close"
+                        >
                             ❌
                         </button>
-                        <h2 className="text-xl font-bold text-center mb-4 text-blue-700">💰 Full Complaints Report</h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            {reports.map((item) => (
-                                <div key={item._id} className="p-4 border rounded-lg bg-gray-100">
-                                    <h1 className="text-lg font-bold text-green-700 text-center">{item.title}</h1>
-                                    <h3 className="text-md font-semibold text-center text-gray-800">{item.department}</h3>
-                                </div>
+
+                        <h2 className="text-2xl font-bold mb-4 text-center text-blue-600">Select a Department</h2>
+
+                        <select
+                            className="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            value={selectedDepartment}
+                            onChange={(e) => setSelectedDepartment(e.target.value)}
+                        >
+                            <option value="" disabled>-- Choose a Department --</option>
+                            {departments.map((dept) => (
+                                <option key={dept} value={dept}>{dept}</option>
                             ))}
+                        </select>
+
+                        <div className="flex justify-end">
+                            <button
+                                type="button"
+                                className="px-4 py-2 bg-gray-300 text-black rounded-lg mr-2 hover:bg-gray-400 transition"
+                                onClick={() => setShowModal2(false)}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                                onClick={openReportPage}
+                            >
+                                Proceed
+                            </button>
                         </div>
                     </div>
                 </div>
