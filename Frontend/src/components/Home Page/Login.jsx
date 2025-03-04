@@ -1,48 +1,55 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import jwt_decode from "jwt-decode"; // Import jwt-decode library
+import { Link, useNavigate } from "react-router-dom";
+import jwt_decode from "jwt-decode";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false); // Loading state
   const navigate = useNavigate();
 
-  const checkTokenExpiration = (token) => {
-    if (!token) return true;
-
-    const decoded = jwt_decode(token);
-    const currentTime = Date.now() / 1000;
-
-    return decoded.exp < currentTime;
+  // ✅ Simplified Token Expiry Check
+  const isTokenExpired = (token) => {
+    try {
+      const decoded = jwt_decode(token);
+      return decoded.exp < Date.now() / 1000;
+    } catch (error) {
+      return true;
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Show loading state
+
     try {
-      const response = await axios.post("http://localhost:5500/login", {
+      const { data } = await axios.post("http://localhost:5500/login", {
         email,
         password,
       });
-      const { token, user } = response.data;
 
-      if (checkTokenExpiration(token)) {
-        alert("Your session has expired. Please log in again.");
+      const { token, user } = data;
+
+      // ✅ Check Token Expiry
+      if (isTokenExpired(token)) {
+        alert("Session expired. Please log in again.");
         localStorage.removeItem("token");
         navigate("/login");
         return;
       }
 
+      // ✅ Store Data in Local Storage
       localStorage.setItem("token", token);
       localStorage.setItem("userDepartment", user.department);
-      navigate("/dashboard");
+
+      // ✅ Redirect Based on Department
+      navigate(user.department === "staff" ? "/staff-dashboard" : "/dashboard");
     } catch (err) {
-      if (err.response?.status === 401) {
-        alert("Invalid credentials. Please try again.");
-      } else {
-        alert("An error occurred. Please try again later.");
-      }
+      alert(err.response?.data?.message || "An error occurred. Please try again.");
+    } finally {
+      setLoading(false); // Hide loading state
     }
   };
 
@@ -56,6 +63,7 @@ const Login = () => {
           Login
         </h2>
 
+        {/* Email Input */}
         <input
           type="email"
           placeholder="Email"
@@ -65,6 +73,7 @@ const Login = () => {
           required
         />
 
+        {/* Password Input */}
         <div className="relative mb-4">
           <input
             type={showPassword ? "text" : "password"}
@@ -83,22 +92,27 @@ const Login = () => {
           </button>
         </div>
 
-        <button className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-200">
-          Login
+        {/* Submit Button */}
+        <button
+          className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-200 disabled:opacity-50"
+          disabled={loading} // Disable when loading
+        >
+          {loading ? "Logging in..." : "Login"}
         </button>
 
+        {/* Links */}
         <p className="mt-4 text-center text-gray-600">
           Create an account?{" "}
-          <a href="/signup" className="text-blue-500 hover:underline">
+          <Link to={"/signup"} className="text-blue-500 hover:underline">
             Signup
-          </a>
+          </Link>
         </p>
 
         <p className="mt-2 text-center text-gray-600">
           Forgot your password?{" "}
-          <a href="/forgot-password" className="text-blue-500 hover:underline">
+          <Link to={"/forgot-password"} className="text-blue-500 hover:underline">
             Reset it here
-          </a>
+          </Link>
         </p>
       </form>
     </div>

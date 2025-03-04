@@ -12,22 +12,22 @@ const ReportFile = require("./models/reportfile");
 const Reports = require("./models/report");
 const SBI_02_Bank = require("./models/sbi01");
 const FlowRoute = require('./routes/flowroutes');
-const Monthlyfundflow= require('./routes/sbo3flow');
+const Monthlyfundflow = require('./routes/sbo3flow');
 const PumpReport = require("./routes/pumproute");
 const SalesManagementSheet = require("./routes/mastersheet/salemngemntroute");
-const PurchaseManagement= require("./routes/mastersheet/purchaseroute");
-const Lubricant= require("./routes/mastersheet/lubricantroute");
-const TankLorryManagement=require('./routes/mastersheet/tanklorryroute')
-const BPCLSTATUTORY= require('./routes/mastersheet/routebpclstatutory')
-const Staffmng =require('./routes/mastersheet/staffroute')
-const Financemng =require('./routes/mastersheet/financeroute')
-const Lekha= require('./routes/routelekhajokha')
+const PurchaseManagement = require("./routes/mastersheet/purchaseroute");
+const Lubricant = require("./routes/mastersheet/lubricantroute");
+const TankLorryManagement = require('./routes/mastersheet/tanklorryroute')
+const BPCLSTATUTORY = require('./routes/mastersheet/routebpclstatutory')
+const Staffmng = require('./routes/mastersheet/staffroute')
+const Financemng = require('./routes/mastersheet/financeroute')
+const Lekha = require('./routes/routelekhajokha')
 const ShiftingRoutes = require('./models/shifting/routesss');
 const MeterClose = require('./routes/metercloseroute');
 const Excelsheet = require('./routes/exceslsheetuploding')
-const DepostRoute=require('./routes/depositRoutes')
+const DepostRoute = require('./routes/depositRoutes')
 const CashSlip = require('./routes/cashsliproute')
-const Contactus =require('./routes/contactus')
+const Contactus = require('./routes/contactus')
 
 const app = express();
 app.use(bodyparser.json());
@@ -40,33 +40,33 @@ mongoose
   .catch((err) => console.error(err));
 //save flow data
 app.use('/bank', FlowRoute);
-app.use('/bank',FlowRoute);
-app.use('/bank',FlowRoute);
-app.use('/bank',FlowRoute);
+app.use('/bank', FlowRoute);
+app.use('/bank', FlowRoute);
+app.use('/bank', FlowRoute);
 //saving monthly flow fund data
-app.use('/bank',Monthlyfundflow);
-app.use('/bank',Monthlyfundflow);
-app.use('/bank',Monthlyfundflow);
-app.use('/bank',Monthlyfundflow);
-app.use('/bank',Monthlyfundflow);
-app.use('/bank',Monthlyfundflow);
-app.use('/bank',Monthlyfundflow);
+app.use('/bank', Monthlyfundflow);
+app.use('/bank', Monthlyfundflow);
+app.use('/bank', Monthlyfundflow);
+app.use('/bank', Monthlyfundflow);
+app.use('/bank', Monthlyfundflow);
+app.use('/bank', Monthlyfundflow);
+app.use('/bank', Monthlyfundflow);
 //mastersheet calling
-app.use('/mastersheet',PumpReport);
-app.use('/mastersheet',SalesManagementSheet);
-app.use('/mastersheet',PurchaseManagement);
-app.use('/mastersheet',Lubricant);
-app.use('/mastersheet',TankLorryManagement);
-app.use('/mastersheet',BPCLSTATUTORY);
-app.use('/mastersheet',Staffmng);
-app.use('/mastersheet',Financemng);
-app.use('/newlekhajokha',Lekha);
-app.use('',MeterClose);
-app.use('',Contactus);
+app.use('/mastersheet', PumpReport);
+app.use('/mastersheet', SalesManagementSheet);
+app.use('/mastersheet', PurchaseManagement);
+app.use('/mastersheet', Lubricant);
+app.use('/mastersheet', TankLorryManagement);
+app.use('/mastersheet', BPCLSTATUTORY);
+app.use('/mastersheet', Staffmng);
+app.use('/mastersheet', Financemng);
+app.use('/newlekhajokha', Lekha);
+app.use('', MeterClose);
+app.use('', Contactus);
 
 //excelsheet uploading filess routes
 app.use('', Excelsheet);
-app.use('',DepostRoute)
+app.use('', DepostRoute)
 app.use('', CashSlip)
 
 // Middleware to Verify JWT
@@ -89,7 +89,7 @@ app.post("/signup", async (req, res) => {
     const { name, username, email, password, department } = req.body;
 
     // Validate department
-    if (!["manager", "backoffice", "accounts/finance"].includes(department)) {
+    if (!["manager", "backoffice", "accounts/finance", "staff"].includes(department)) {
       return res.status(400).json({ message: "Invalid department" });
     }
 
@@ -129,9 +129,9 @@ app.post("/signup", async (req, res) => {
 app.post("/verify-invite", (req, res) => {
   const { invitationCode } = req.body;
   if (process.env.validInvitationCodes.includes(invitationCode)) {
-    res.json({ valid: true });
-    } else if (process.env.validInvitationCodesForStaff.includes(invitationCode)) {
-      res.json({ valid: true, staff: true });    
+    res.json({ valid: true,department: "members"});
+  } else if (process.env.validInvitationCodesForStaff.includes(invitationCode)) {
+    res.json({ valid: true, staff: true ,department: "staff"});
   } else {
     res.json({ valid: false });
   }
@@ -151,7 +151,7 @@ app.post("/login", async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "4h",
     });
-    
+
 
     res.json({
       token,

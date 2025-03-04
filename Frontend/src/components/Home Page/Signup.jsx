@@ -7,16 +7,15 @@ const Signup = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [department, setDepartment] = useState("manager");
+  const [department, setDepartment] = useState("manager"); // Default department
   const [showPassword, setShowPassword] = useState(false);
   const [invitationCode, setInvitationCode] = useState("");
-  const [isCodeValid, setIsCodeValid] = useState(null);
   const [isVerified, setIsVerified] = useState(false);
+  const [userRole, setUserRole] = useState(""); // New state for user role
   const [error, setError] = useState("");
-
   const navigate = useNavigate();
 
-  // Check invitation code before enabling signup
+  // ✅ Verify Invitation Code
   const verifyInvitationCode = async () => {
     try {
       const response = await axios.post("http://localhost:5500/verify-invite", {
@@ -24,25 +23,24 @@ const Signup = () => {
       });
 
       if (response.data.valid) {
-        setIsCodeValid(true);
-        setIsVerified(true); // Hide the button
+        setIsVerified(true);
+        setUserRole(response.data.department); // "staff" or "member"
         setError("");
       } else {
-        setIsCodeValid(false);
         setError("Invalid invitation code. Please contact your admin.");
       }
     } catch (err) {
       console.error("Error verifying code:", err);
-      setIsCodeValid(false);
       setError("Server error. Please try again later.");
     }
   };
 
+  // ✅ Handle Signup
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!isCodeValid) {
-      alert("Please enter a valid invitation code.");
+    if (!isVerified) {
+      alert("Please verify the invitation code first.");
       return;
     }
 
@@ -52,8 +50,8 @@ const Signup = () => {
         username,
         email,
         password,
-        department,
-        invitationCode, // Send invitation code to backend
+        department: userRole === "staff" ? "staff" : department, // Auto-set staff department
+        invitationCode,
       });
 
       if (response.data.token) {
@@ -61,28 +59,25 @@ const Signup = () => {
       }
 
       alert(response.data.message || "User registered successfully");
-      navigate("/dashboard");
+
+      navigate(userRole === "staff" ? "/staff-dashboard" : "/dashboard");
     } catch (err) {
       console.error("Signup error:", err);
-      if (err.response) {
-        alert(err.response.data.message || "Signup failed");
-      } else {
-        alert("An error occurred. Please try again.");
-      }
+      alert(err.response?.data?.message || "Signup failed");
     }
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
       <form
-        className="bg-white p-6 md:p-8 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl transition-transform transform"
+        className="bg-white p-6 md:p-8 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl"
         onSubmit={handleSubmit}
       >
         <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center text-blue-600">
           Signup
         </h2>
 
-        {/* Invitation Code Section */}
+        {/* Invitation Code */}
         <div className="mb-4">
           <input
             type="text"
@@ -91,7 +86,7 @@ const Signup = () => {
             value={invitationCode}
             onChange={(e) => setInvitationCode(e.target.value)}
             required
-            disabled={isVerified} // Disable input after successful verification
+            disabled={isVerified}
           />
           {!isVerified && (
             <button
@@ -105,8 +100,18 @@ const Signup = () => {
           {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
         </div>
 
-        {/* Signup Fields - Show only after successful verification */}
-        {isCodeValid && (
+        {/* ✅ Show Role after Verification */}
+        {isVerified && (
+          <p className="text-lg font-semibold text-center text-gray-700 mb-4">
+            🎉 Verified! You are signing up as:{" "}
+            <span className="text-blue-600 font-bold">
+              {userRole === "staff" ? "Staff" : "Member"}
+            </span>
+          </p>
+        )}
+
+        {/* Signup Form (Only show after verification) */}
+        {isVerified && (
           <>
             <input
               type="text"
@@ -135,7 +140,7 @@ const Signup = () => {
               required
             />
 
-            {/* Password Field with Show/Hide Toggle */}
+            {/* Password Input */}
             <div className="relative mb-4">
               <input
                 type={showPassword ? "text" : "password"}
@@ -154,17 +159,19 @@ const Signup = () => {
               </button>
             </div>
 
-            {/* Department Selection */}
-            <select
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={department}
-              onChange={(e) => setDepartment(e.target.value)}
-              required
-            >
-              <option value="manager">MANAGER</option>
-              <option value="accounts/finance">ACCOUNTS/FINANCE</option>
-              <option value="backoffice">BACK OFFICE</option>
-            </select>
+            {/* Department Selection - Hide if Staff */}
+            {userRole !== "staff" && (
+              <select
+                className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={department}
+                onChange={(e) => setDepartment(e.target.value)}
+                required
+              >
+                <option value="manager">MANAGER</option>
+                <option value="accounts/finance">ACCOUNTS/FINANCE</option>
+                <option value="backoffice">BACK OFFICE</option>
+              </select>
+            )}
 
             {/* Signup Button */}
             <button className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition duration-300">

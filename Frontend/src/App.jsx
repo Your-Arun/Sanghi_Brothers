@@ -49,6 +49,7 @@ import UpdateMeter from './components/Petrol Related/updatemeterclose';
 import Cashier from "./components/Layouts/cashier";
 import CashSlip from "./components/Layouts/cashslip";
 import MergingSbSection from './components/Dashboard/sbbankk/mergingsbsection.jsx';
+import Staffmember from "./components/Dashboard/staff-member.jsx";
 
 // Function to check if user is authenticated
 const isAuthenticated = () => {
@@ -96,6 +97,7 @@ const AppContent = () => {
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/staff-dashboard" element={<Staffmember />} />
           <Route path="/report" element={<Report />} />
           <Route path="/reportfile" element={<ReportFile />} />
           <Route path="/reportfile/:id" element={<UpdateReportFile />} />
