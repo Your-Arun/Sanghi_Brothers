@@ -50,23 +50,7 @@ const StaffDashboard = () => {
         setShowModal2(false);
     };
 
-    const handleDeleteReport = async (reportId) => {
-        const confirmDelete = window.confirm("Are you sure you want to delete this report?");
-        if (!confirmDelete) return;
 
-        try {
-            const token = localStorage.getItem("token");
-            await axios.delete(`http://localhost:5500/reports/${reportId}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-
-            setReports(reports.filter((report) => report._id !== reportId));
-            alert("Report deleted successfully!");
-        } catch (error) {
-            console.error("Error deleting report:", error);
-            alert("Failed to delete report. Please try again.");
-        }
-    };
 
     return (
         <div className="flex min-h-screen bg-gray-100">
@@ -117,12 +101,7 @@ const StaffDashboard = () => {
                                     <div key={report._id} className="min-w-[200px] p-4 border rounded-xl shadow-md bg-white hover:bg-gray-100 cursor-pointer transform hover:scale-105">
                                         <h3 className="text-xl text-green-700 font-bold text-center">{report.title}</h3>
                                         <p className="text-md font-semibold text-center text-gray-800">📂 {report.department}</p>
-                                        <button
-                                            className="mt-2 px-3 py-1 bg-red-500 text-white rounded-lg w-full hover:bg-red-600 flex items-center justify-center gap-2"
-                                            onClick={() => handleDeleteReport(report._id)}
-                                        >
-                                            <FaTrash /> Delete
-                                        </button>
+
                                     </div>
                                 ))}
                             </div>

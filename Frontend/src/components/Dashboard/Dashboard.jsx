@@ -161,7 +161,7 @@ const Dashboard = () => {
     setUpdatedTitle(report.title); // Populate the modal with existing content
     setIsEditing(true); // Show the modal
     setShowModal(true);
-    
+
   };
   const handleDeleteReport = async (reportId) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this report?");
@@ -276,8 +276,6 @@ const Dashboard = () => {
                 drop-shadow-lg mt-[-10px] mb-8">
           Dashboard
         </h1>
-
-
         <div className="relative mb-4">
           {/* Profile Icon with Proper Spacing */}
           <div className="flex items-center justify-end pr-6">
@@ -315,8 +313,6 @@ const Dashboard = () => {
             </div>
           )}
         </div>
-
-
         <div>
           {/* Departments Section */}
           <div className="mb-10 p-6 rounded-lg shadow-md">
@@ -337,11 +333,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-
         </div>
-
-
-
         {/* sb section ke lie */}
         <div className="mb-10 p-6  rounded-lg shadow-md">
           {/* Heading */}
@@ -420,7 +412,6 @@ const Dashboard = () => {
             </div>
           )}
         </div>
-
         {/* ReportFile */}
         <div className="mb-10 p-6  rounded-lg shadow-md">
           {/* Heading */}
@@ -501,8 +492,6 @@ const Dashboard = () => {
           )}
 
         </div>
-
-
         {/* Cashier Kaam */}
         <div className="mb-10 p-6 rounded-lg shadow-md">
           {/* Heading with Button */}
@@ -584,14 +573,12 @@ const Dashboard = () => {
             </div>
           )}
         </div>
-
         {/* Complaints Section */}
-        <div className="mb-10 p-6  rounded-lg shadow-md">
+        <div className="mb-10 p-6 rounded-lg shadow-md">
           {/* Heading */}
           <div className="flex items-center justify-center">
-            <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">
-              🚨 Complaints
-            </h2> <img
+            <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">🚨 Complaints</h2>
+            <img
               src={add}
               alt="Create"
               width={50}
@@ -607,32 +594,29 @@ const Dashboard = () => {
                 <div
                   key={report._id}
                   className="min-w-[200px] p-4 border rounded-xl shadow-md bg-white hover:bg-gray-100 cursor-pointer transition duration-300 transform hover:scale-105"
-                  onClick={() => handleReportClick(report)} // Open edit modal
+                  onClick={() => handleReportClick(report)}
                 >
-                  <h3 className="text-xl text-green-700 font-bold text-center">
-                    {report.title}
-                  </h3>
+                  <h3 className="text-xl text-green-700 font-bold text-center">{report.title}</h3>
                   <p className="text-md font-semibold text-center text-gray-800 mt-2 flex items-center justify-center gap-1">
                     📂 {report.department}
                   </p>
-                  <p className="mt-3 text-gray-800 text-center line-clamp-2">
-                    {report.content}
-                  </p>
+                  <p className="mt-3 text-gray-800 text-center line-clamp-2">{report.content}</p>
                   <button
                     className="mt-2 px-3 py-1 bg-red-500 text-white rounded-lg w-full hover:bg-red-600 flex items-center justify-center gap-2"
-                    onClick={() => handleDeleteReport(report._id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteReport(report._id);
+                    }}
                   >
                     <FaTrash /> Delete
                   </button>
                 </div>
-              
               ))}
             </div>
           ) : (
-            <p className="text-gray-500 text-center mt-4 italic">
-              No complaints available.
-            </p>
+            <p className="text-gray-500 text-center mt-4 italic">No complaints available.</p>
           )}
+
           {/* See More Button */}
           {reports.length > 4 && (
             <div className="flex justify-center mt-4">
@@ -644,9 +628,10 @@ const Dashboard = () => {
               </button>
             </div>
           )}
+
           {isOpen2 && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
-              <div className="bg-white p-6 rounded-lg shadow-xl w-[90%] max-w-2xl relative">
+              <div className="bg-white p-6 rounded-lg shadow-xl w-[90%] max-w-2xl relative overflow-y-auto max-h-[90vh]">
                 {/* Close Button */}
                 <button
                   onClick={() => setIsOpen2(false)}
@@ -658,11 +643,20 @@ const Dashboard = () => {
                 <h2 className="text-xl font-bold text-center mb-4 text-blue-700">💰 Full Complaints Report</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {reports.map((item) => (
-                    <div key={item._id} className="p-4 border rounded-lg bg-gray-100 cursor-pointer transition duration-300 ease-in-out hover:text-lg hover:scale-110" onClick={() => handleReportClick(item)}>
+                    <div key={item._id} className="p-4 border rounded-lg bg-gray-100 cursor-pointer transition duration-300 ease-in-out hover:text-lg hover:scale-110">
                       <h1 className="text-lg font-bold text-green-700 text-center">{item.title}</h1>
                       <h3 className="text-md font-semibold text-center text-gray-800 flex items-center justify-center gap-1">
                         {item.department}
                       </h3>
+                      <button
+                        className="mt-2 px-3 py-1 bg-red-500 text-white rounded-lg w-full hover:bg-red-600 flex items-center justify-center gap-2"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteReport(item._id);
+                        }}
+                      >
+                        <FaTrash /> Delete
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -670,6 +664,7 @@ const Dashboard = () => {
             </div>
           )}
         </div>
+
 
         {/* Floating Buttons & Navigation */}
         <div className="relative flex flex-col items-center mt-6">
