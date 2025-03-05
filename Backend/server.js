@@ -86,44 +86,41 @@ const authMiddleware = (req, res, next) => {
 // User Registration
 app.post("/signup", async (req, res) => {
   try {
-    const { name, username, email, password, department } = req.body;
+    let { name, username, email, password, department } = req.body;
+
+    // Trim unnecessary spaces
+    name = name.trim();
+    username = username.trim();
+    email = email.trim();
+    department = department.toLowerCase(); // Convert to lowercase for uniformity
 
     // Validate department
-    if (!["manager", "backoffice", "accounts/finance", "staff"].includes(department)) {
-      return res.status(400).json({ message: "Invalid department" });
+    const validDepartments = ["manager", "backoffice", "accounts/finance", "staff"];
+    if (!validDepartments.includes(department)) {
+      return res.status(400).json({ message: "Invalid department selected" });
     }
 
     // Check for existing user
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
-      return res
-        .status(400)
-        .json({ message: "Username or email already exists" });
+      return res.status(400).json({ message: "Username or email already taken" });
     }
 
-    // Hash the password
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new user
-    const newUser = new User({
-      name,
-      username,
-      email,
-      password: hashedPassword,
-      department,
-    });
-    const savedUser = await newUser.save();
+    // Create new user
+    const newUser = new User({ name, username, email, password: hashedPassword, department });
+    await newUser.save();
 
-    // Generate token
-    const token = jwt.sign({ id: savedUser._id }, process.env.JWT_SECRET, {
-      expiresIn: "4h",
-    });
+    // Generate JWT Token
+    const token = jwt.sign({ id: newUser._id, department }, process.env.JWT_SECRET, { expiresIn: "4h" });
 
-    // Respond with success message and token
-    res.status(201).json({ message: "User  registered successfully", token });
+    res.status(201).json({ message: "User registered successfully", token });
+
   } catch (err) {
-    console.error("Error during signup:", err); // Log the error
-    res.status(500).json({ error: err.message });
+    console.error("Signup Error:", err); // Log the error for debugging
+    res.status(500).json({ message: "Internal server error. Please try again later." });
   }
 });
 
@@ -143,17 +140,22 @@ app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
+
     if (!user) return res.status(404).json({ message: "User not found" });
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
       return res.status(400).json({ message: "Please check your password" });
 
-    // Generate token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "4h",
-    });
+    // ✅ Check Correct User in Console
+    console.log("Logged in User:", user);
 
+    // Generate token with user details
+    const token = jwt.sign(
+      { id: user._id, username: user.username, department: user.department },
+      process.env.JWT_SECRET,
+      { expiresIn: "4h" }
+    );
 
     res.json({
       token,
@@ -168,6 +170,8 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+
 // Route to handle forgot password and send OTP
 app.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
