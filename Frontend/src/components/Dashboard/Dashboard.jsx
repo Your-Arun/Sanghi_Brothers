@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import add from "/add.png";
-import { FaTimes, FaUniversity } from "react-icons/fa";
+import { FaTimes, FaTrash, FaUniversity } from "react-icons/fa";
 const Dashboard = () => {
   const [departments, setDepartments] = useState([]);
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -161,6 +161,7 @@ const Dashboard = () => {
     setUpdatedTitle(report.title); // Populate the modal with existing content
     setIsEditing(true); // Show the modal
     setShowModal(true);
+    
   };
   const handleDeleteReport = async (reportId) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this report?");
@@ -617,7 +618,14 @@ const Dashboard = () => {
                   <p className="mt-3 text-gray-800 text-center line-clamp-2">
                     {report.content}
                   </p>
+                  <button
+                    className="mt-2 px-3 py-1 bg-red-500 text-white rounded-lg w-full hover:bg-red-600 flex items-center justify-center gap-2"
+                    onClick={() => handleDeleteReport(report._id)}
+                  >
+                    <FaTrash /> Delete
+                  </button>
                 </div>
+              
               ))}
             </div>
           ) : (
