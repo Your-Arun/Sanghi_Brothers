@@ -75,11 +75,12 @@ const Dashboard = () => {
   }, []);
 
   const handleLogout = () => {
-    // Clear user token and redirect to login
     localStorage.removeItem("token");
+    localStorage.removeItem("userData");
+    window.location.reload(); // ✅ Force refresh to remove old data
     navigate("/login");
-    alert("Logout SuccessFully");
   };
+  
   //profile ke lie
   const fetchProfile = async () => {
     try {

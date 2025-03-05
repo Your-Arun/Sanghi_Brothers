@@ -2,30 +2,37 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const ProfileModal = ({ closeModal }) => {
-  const [profile, setProfile] = useState({});
+  const [profile, setProfile] = useState(null);
   const [updatedProfile, setUpdatedProfile] = useState({ username: "", email: "", department: "" });
 
-  // Fetch profile from API
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem("token");
+  
+        if (!token) {
+          alert("Session expired. Please login again.");
+          navigate("/login");
+          return;
+        }
+  
         const response = await axios.get("http://localhost:5500/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
-
+  
+        // ✅ Fetch fresh user data
         setProfile(response.data);
-        setUpdatedProfile(response.data); // Pre-fill fields
+        setUpdatedProfile(response.data);
       } catch (err) {
         console.error("Error fetching profile:", err);
         alert("Failed to fetch profile data.");
       }
     };
-
+  
     fetchProfile();
   }, []);
-
-  // Save profile changes
+  
+  
   const handleProfileSave = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -35,23 +42,24 @@ const ProfileModal = ({ closeModal }) => {
 
       alert("Profile updated successfully!");
       setProfile(updatedProfile);
-      closeModal(); // Close modal after save
+      closeModal(); // ✅ Close modal after save
     } catch (err) {
       console.error("Error updating profile:", err);
       alert("Failed to update profile.");
     }
   };
 
+  if (!profile) return null; // ✅ Prevent rendering empty modal
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      {/* Modal Box */}
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm md:max-w-md relative">
         {/* Close Button */}
         <button className="absolute top-4 right-4 text-gray-500 hover:text-gray-700" onClick={closeModal} aria-label="Close">
           ❌
         </button>
 
-        <h2 className="text-2xl font-bold mb-4 text-center text-blue-600">Profile</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center text-blue-600">Edit Profile</h2>
 
         <form>
           {[

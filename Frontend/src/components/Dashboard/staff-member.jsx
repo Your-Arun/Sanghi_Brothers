@@ -37,9 +37,11 @@ const StaffDashboard = () => {
 
     const handleLogout = () => {
         localStorage.removeItem("token");
-        alert("Logged out successfully!");
+        localStorage.removeItem("userData");
+        window.location.reload(); // ✅ Force refresh to remove old data
         navigate("/login");
-    };
+      };
+      
 
     const openReportPage = () => {
         if (!selectedDepartment) {

@@ -22,37 +22,34 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Show loading state
-
+    setLoading(true);
+  
     try {
-      const { data } = await axios.post("http://localhost:5500/login", {
-        email,
-        password,
-      });
-
+      const { data } = await axios.post("http://localhost:5500/login", { email, password });
+  
       const { token, user } = data;
-
-      // ✅ Check Token Expiry
-      if (isTokenExpired(token)) {
-        alert("Session expired. Please log in again.");
-        localStorage.removeItem("token");
-        navigate("/login");
-        return;
-      }
-
-      // ✅ Store Data in Local Storage
+  
+      // ✅ Clear old session before storing new user data
+      localStorage.removeItem("token");
+      localStorage.removeItem("userData");
+  
+      // ✅ Store the correct user data
       localStorage.setItem("token", token);
-      localStorage.setItem("userDepartment", user.department);
-
-      // ✅ Redirect Based on Department
+      localStorage.setItem("userData", JSON.stringify(user));
+  
+      // ✅ Redirect based on user role
       navigate(user.department === "staff" ? "/staff-dashboard" : "/dashboard");
+  
+      // ✅ Force refresh to load correct user data
+      window.location.reload();
     } catch (err) {
       alert(err.response?.data?.message || "An error occurred. Please try again.");
     } finally {
-      setLoading(false); // Hide loading state
+      setLoading(false);
     }
   };
-
+  
+  
   
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">

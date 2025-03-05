@@ -145,18 +145,16 @@ app.post("/login", async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
-      return res.status(400).json({ message: "Please check your password" });
+      return res.status(400).json({ message: "Incorrect password" });
 
-    // ✅ Check Correct User in Console
-    console.log("Logged in User:", user);
-
-    // Generate token with user details
+    // ✅ Generate a fresh token for each login
     const token = jwt.sign(
       { id: user._id, username: user.username, department: user.department },
       process.env.JWT_SECRET,
       { expiresIn: "4h" }
     );
 
+    // ✅ Send unique token for each session
     res.json({
       token,
       user: {
@@ -170,6 +168,7 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
 
 
 // Route to handle forgot password and send OTP
