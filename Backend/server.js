@@ -126,6 +126,8 @@ app.post("/signup", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+
 app.post("/verify-invite", (req, res) => {
   const { invitationCode } = req.body;
   if (process.env.validInvitationCodes.includes(invitationCode)) {
@@ -224,7 +226,7 @@ app.post("/reset-password", async (req, res) => {
   }
 });
 // Get Departments
-app.get("/departments", authMiddleware, async (req, res) => {
+app.get("/departments", async (req, res) => {
   try {
     const departments = await User.distinct("department");
     res.json(departments);

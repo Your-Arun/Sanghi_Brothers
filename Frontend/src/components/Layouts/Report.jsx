@@ -14,10 +14,9 @@ const Report = () => {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:5500/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        });      
-        setRole(response.data.department); // Pre-fill fields
+        const role = await axios.get('http://localhost:5500/departments')
+        console.log(role.data)
+        setRole(role.data)
       } catch (err) {
         console.error("Error fetching profile:", err);
         alert("Failed to fetch profile data.");

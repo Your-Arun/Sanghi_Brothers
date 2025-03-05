@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
@@ -12,18 +13,16 @@ const Home = () => {
           <span className="font-semibold">Signup</span> below.
         </p>
         <div className="flex gap-4 justify-center">
-          <a
-            href="/login"
+          <Link to="/login"
             className="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-600 transition duration-300 transform hover:scale-105 text-sm md:text-base"
           >
             Login
-          </a>
-          <a
-            href="/signup"
+          </Link>
+          <Link to="/signup"
             className="bg-green-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-green-600 transition duration-300 transform hover:scale-105 text-sm md:text-base"
           >
             Signup
-          </a>
+          </Link>
         </div>
       </div>
     </div>

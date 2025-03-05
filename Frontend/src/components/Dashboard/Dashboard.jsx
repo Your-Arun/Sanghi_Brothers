@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import add from "/add.png";
-import { FaTimes, FaTrash, FaUniversity } from "react-icons/fa";
+import { FaTimes, FaUniversity } from "react-icons/fa";
 const Dashboard = () => {
   const [departments, setDepartments] = useState([]);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [userName, setUserName] = useState("");
   const [reports, setReports] = useState([]); // State to hold reports
+  const [showModal, setShowModal] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [selectedReport, setSelectedReport] = useState(null); // Selected report for editing
@@ -161,6 +162,25 @@ const Dashboard = () => {
     setIsEditing(true); // Show the modal
     setShowModal(true);
   };
+  const handleDeleteReport = async (reportId) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this report?");
+    if (!confirmDelete) return;
+
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`http://localhost:5500/reports/${reportId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setReports(reports.filter((report) => report._id !== reportId));
+      alert("Report deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting report:", error);
+      alert("Failed to delete report. Please try again.");
+    }
+  };
+
+
   const handleUpdateReport = async () => {
     try {
       // Check if token is present
@@ -245,23 +265,7 @@ const Dashboard = () => {
       alert("Please select a department!");
     }
   };
-  const handleDeleteReport = async (reportId) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this report?");
-    if (!confirmDelete) return;
 
-    try {
-      const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5500/reports/${reportId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      setReports(reports.filter((report) => report._id !== reportId));
-      alert("Report deleted successfully!");
-    } catch (error) {
-      console.error("Error deleting report:", error);
-      alert("Failed to delete report. Please try again.");
-    }
-  };
 
   return (
     <>
@@ -581,11 +585,12 @@ const Dashboard = () => {
         </div>
 
         {/* Complaints Section */}
-        <div className="mb-10 p-6 rounded-lg shadow-md">
+        <div className="mb-10 p-6  rounded-lg shadow-md">
           {/* Heading */}
           <div className="flex items-center justify-center">
-            <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">🚨 Complaints</h2>
-            <img
+            <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">
+              🚨 Complaints
+            </h2> <img
               src={add}
               alt="Create"
               width={50}
@@ -601,27 +606,25 @@ const Dashboard = () => {
                 <div
                   key={report._id}
                   className="min-w-[200px] p-4 border rounded-xl shadow-md bg-white hover:bg-gray-100 cursor-pointer transition duration-300 transform hover:scale-105"
+                  onClick={() => handleReportClick(report)} // Open edit modal
                 >
-                  <h3 className="text-xl text-green-700 font-bold text-center">{report.title}</h3>
+                  <h3 className="text-xl text-green-700 font-bold text-center">
+                    {report.title}
+                  </h3>
                   <p className="text-md font-semibold text-center text-gray-800 mt-2 flex items-center justify-center gap-1">
                     📂 {report.department}
                   </p>
-                  <p className="mt-3 text-gray-800 text-center line-clamp-2">{report.content}</p>
-                  <div className="flex justify-center mt-3">
-                    <button
-                      onClick={() => handleDeleteReport(report._id)}
-                      className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition flex items-center gap-2"
-                    >
-                      <FaTrash /> Delete
-                    </button>
-                  </div>
+                  <p className="mt-3 text-gray-800 text-center line-clamp-2">
+                    {report.content}
+                  </p>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-gray-500 text-center mt-4 italic">No complaints available.</p>
+            <p className="text-gray-500 text-center mt-4 italic">
+              No complaints available.
+            </p>
           )}
-
           {/* See More Button */}
           {reports.length > 4 && (
             <div className="flex justify-center mt-4">
@@ -633,7 +636,6 @@ const Dashboard = () => {
               </button>
             </div>
           )}
-
           {isOpen2 && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
               <div className="bg-white p-6 rounded-lg shadow-xl w-[90%] max-w-2xl relative">
@@ -648,19 +650,11 @@ const Dashboard = () => {
                 <h2 className="text-xl font-bold text-center mb-4 text-blue-700">💰 Full Complaints Report</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {reports.map((item) => (
-                    <div key={item._id} className="p-4 border rounded-lg bg-gray-100 cursor-pointer transition duration-300 ease-in-out hover:text-lg hover:scale-110">
+                    <div key={item._id} className="p-4 border rounded-lg bg-gray-100 cursor-pointer transition duration-300 ease-in-out hover:text-lg hover:scale-110" onClick={() => handleReportClick(item)}>
                       <h1 className="text-lg font-bold text-green-700 text-center">{item.title}</h1>
                       <h3 className="text-md font-semibold text-center text-gray-800 flex items-center justify-center gap-1">
                         {item.department}
                       </h3>
-                      <div className="flex justify-center mt-3">
-                        <button
-                          onClick={() => handleDeleteReport(item._id)}
-                          className="px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition flex items-center gap-2"
-                        >
-                          <FaTrash /> Delete
-                        </button>
-                      </div>
                     </div>
                   ))}
                 </div>
@@ -668,7 +662,6 @@ const Dashboard = () => {
             </div>
           )}
         </div>
-
 
         {/* Floating Buttons & Navigation */}
         <div className="relative flex flex-col items-center mt-6">
