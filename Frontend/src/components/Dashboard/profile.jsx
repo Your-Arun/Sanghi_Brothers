@@ -1,43 +1,39 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ProfileModal = ({ closeModal }) => {
   const [profile, setProfile] = useState(null);
   const [updatedProfile, setUpdatedProfile] = useState({ username: "", email: "", department: "" });
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const token = localStorage.getItem("token");
-  
-        if (!token) {
-          alert("Session expired. Please login again.");
-          navigate("/login");
-          return;
-        }
-  
         const response = await axios.get("http://localhost:5500/profile", {
-          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true, // ✅ Send cookies for authentication
         });
-  
-        // ✅ Fetch fresh user data
+
         setProfile(response.data);
         setUpdatedProfile(response.data);
       } catch (err) {
         console.error("Error fetching profile:", err);
-        alert("Failed to fetch profile data.");
+        if (err.response?.status === 401) {
+          alert("Session expired. Please login again.");
+          navigate("/login");
+        } else {
+          alert("Failed to fetch profile data.");
+        }
       }
     };
-  
+
     fetchProfile();
-  }, []);
-  
-  
+  }, [navigate]);
+
   const handleProfileSave = async () => {
     try {
-      const token = localStorage.getItem("token");
       await axios.put("http://localhost:5500/profile", updatedProfile, {
-        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true, // ✅ Ensure cookies are sent
       });
 
       alert("Profile updated successfully!");

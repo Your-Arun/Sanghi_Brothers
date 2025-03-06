@@ -35,11 +35,14 @@ const StaffDashboard = () => {
         fetchData();
     }, []);
 
-    const handleLogout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("userData");
-        window.location.reload(); // ✅ Force refresh to remove old data
-        navigate("/login");
+    const handleLogout = async () => {
+        try {
+          await axios.post("http://localhost:5500/logout", {}, { withCredentials: true });
+          localStorage.removeItem("userData"); // Remove user data
+          window.location.reload(); // Reload to clear session
+        } catch (err) {
+          console.error("Logout failed:", err.response?.data?.message);
+        }
       };
       
 

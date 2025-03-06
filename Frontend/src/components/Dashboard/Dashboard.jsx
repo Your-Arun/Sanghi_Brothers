@@ -74,11 +74,14 @@ const Dashboard = () => {
     fetchrepoFile();
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userData");
-    window.location.reload(); // ✅ Force refresh to remove old data
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      await axios.post("http://localhost:5500/logout", {}, { withCredentials: true });
+      localStorage.removeItem("userData"); // Remove user data
+      window.location.reload(); // Reload to clear session
+    } catch (err) {
+      console.error("Logout failed:", err.response?.data?.message);
+    }
   };
   
   //profile ke lie
@@ -242,23 +245,19 @@ const Dashboard = () => {
   };
   // View Reports Function
   const viewReports = (department) => {
-    const userDepartment = localStorage.getItem("userDepartment")?.toLowerCase(); // Normalize
-    const departmentNormalized = department.toLowerCase(); // Normalize department
-
-    if (userDepartment === "manager") {
-      // ✅ Manager ko teeno departments ka access hai
-      navigate(`/department-reports?department=${department}`);
-    } else if (
-      (userDepartment === "accounts/finance" && departmentNormalized === "accounts/finance") ||
-      (userDepartment === "backoffice" && departmentNormalized === "backoffice")
-    ) {
-      // ✅ Account wale ko sirf "Accounts/Finance" aur Backoffice wale ko sirf "Backoffice" access milega
+    if (!userDepartment) {
+      alert("Could not determine your access level. Please try again.");
+      return;
+    }
+  
+    const departmentNormalized = department.toLowerCase();
+    if (userDepartment === "manager" || userDepartment === departmentNormalized) {
       navigate(`/department-reports?department=${department}`);
     } else {
-      // ❌ Unauthorized access
       alert("You are not authorized to view reports for this department.");
     }
   };
+  
 
   const openReportPage = () => {
     if (selectedDepartment) {

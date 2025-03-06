@@ -4,10 +4,24 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const bodyparser = require("body-parser");
-
-
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
 require("dotenv").config();
+
+const app = express();
+
+// ✅ CORS should be placed **before** cookieParser
+app.use(cors({
+  origin: "http://localhost:5173",  // ✅ Change this to your frontend URL
+  credentials: true,  // ✅ Allow cookies
+  allowedHeaders: ["Content-Type", "Authorization"],  // ✅ Explicitly allow headers
+  exposedHeaders: ["set-cookie"],  // ✅ Expose cookies to the frontend
+}));
+
+app.use(cookieParser());
+app.use(bodyparser.json());
+app.use(express.json());
+
 const ReportFile = require("./models/reportfile");
 const Reports = require("./models/report");
 const SBI_02_Bank = require("./models/sbi01");
@@ -29,10 +43,7 @@ const DepostRoute = require('./routes/depositRoutes')
 const CashSlip = require('./routes/cashsliproute')
 const Contactus = require('./routes/contactus')
 
-const app = express();
-app.use(bodyparser.json());
-app.use(express.json());
-app.use(cors());
+
 // MongoDB Connection
 mongoose
   .connect(process.env.MONGODB_URI,)
@@ -70,19 +81,42 @@ app.use('', DepostRoute)
 app.use('', CashSlip)
 
 // Middleware to Verify JWT
-const authMiddleware = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ message: "Access Denied" });
-
+const authMiddleware = async (req, res, next) => {
   try {
+    const token = req.cookies.authToken;
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+    const user = await User.findById(decoded.id);
+
+    if (!user || user.currentToken !== token) {
+      return res.status(403).json({ message: "Session expired, please login again" });
+    }
+
+    // ✅ Check if token has expired
+    const expiryTime = decoded.exp * 1000;
+    if (Date.now() > expiryTime) {
+      return res.status(403).json({ message: "Session expired, please login again" });
+    }
+
+    req.user = user;
     next();
   } catch (err) {
-    return res.status(401).json({ message: "Invalid Token" });
+    res.status(403).json({ message: "Invalid session" });
   }
 };
 
+
+// User Schema
+const UserSchema = new mongoose.Schema({
+  username: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  department: { type: String, required: true },
+  currentToken: { type: String },  // Store active token
+}, { timestamps: true });
+
+const User = mongoose.model("User", UserSchema);
 // User Registration
 app.post("/signup", async (req, res) => {
   try {
@@ -124,18 +158,8 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-
-app.post("/verify-invite", (req, res) => {
-  const { invitationCode } = req.body;
-  if (process.env.validInvitationCodes.includes(invitationCode)) {
-    res.json({ valid: true,department: "members"});
-  } else if (process.env.validInvitationCodesForStaff.includes(invitationCode)) {
-    res.json({ valid: true, staff: true ,department: "staff"});
-  } else {
-    res.json({ valid: false });
-  }
-});
 // User Login
+
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -144,32 +168,70 @@ app.post("/login", async (req, res) => {
     if (!user) return res.status(404).json({ message: "User not found" });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-      return res.status(400).json({ message: "Incorrect password" });
+    if (!isMatch) return res.status(400).json({ message: "Incorrect password" });
 
-    // ✅ Generate a fresh token for each login
+    // ✅ Generate a fresh token
     const token = jwt.sign(
       { id: user._id, username: user.username, department: user.department },
       process.env.JWT_SECRET,
       { expiresIn: "4h" }
     );
 
-    // ✅ Send unique token for each session
-    res.json({
-      token,
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        department: user.department,
-      },
+    // ✅ Store new token in DB (Invalidate previous sessions)
+    user.currentToken = token;
+    await user.save();
+
+    // ✅ Set Secure HttpOnly Cookie (Fixing potential issues)
+    res.cookie("authToken", token, {
+      httpOnly: true,
+      secure: true, // ✅ Set to true if using HTTPS
+      sameSite: "None", // ✅ Required for cross-origin cookies
     });
+
+    res.json({ message: "Login successful" });
+
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.post("/logout", async (req, res) => {
+  try {
+    const token = req.cookies.authToken;
+    if (!token) return res.status(400).json({ message: "No active session found" });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+
+    if (user) {
+      user.currentToken = null; // ✅ Remove token from DB
+      await user.save();
+    }
+
+    res.clearCookie("authToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+
+    res.json({ message: "Logged out successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Logout failed" });
   }
 });
 
 
+app.post("/verify-invite", (req, res) => {
+  const { invitationCode } = req.body;
+  if (process.env.validInvitationCodes.includes(invitationCode)) {
+    res.json({ valid: true, department: "members" });
+  } else if (process.env.validInvitationCodesForStaff.includes(invitationCode)) {
+    res.json({ valid: true, staff: true, department: "staff" });
+  } else {
+    res.json({ valid: false });
+  }
+});
 
 // Route to handle forgot password and send OTP
 app.post("/forgot-password", async (req, res) => {
@@ -371,17 +433,18 @@ app.put("/reports/:id", async (req, res) => {
   }
 });
 app.delete('/reports/:id', async (req, res) => {
-  try{
+  try {
     const reportId = req.params.id;
     const report = await Reports.findByIdAndDelete(reportId);
     if (!report) {
       return res.status(404).json({ message: "Report not found" });
     }
     res.status(200).json(report);
-  }catch (e) {
+  } catch (e) {
     console.error("Error deleting report:", e);
     res.status(500).json({ message: "Server error" });
-  }}
+  }
+}
 );
 // Get Profile
 app.get("/profile", authMiddleware, async (req, res) => {
@@ -414,15 +477,7 @@ app.put("/profile", authMiddleware, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-// User Schema
-const userSchema = new mongoose.Schema({
-  username: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  department: { type: String, required: true },
-  otp: { type: String }, // Store OTP temporarily
-});
-const User = mongoose.model("User", userSchema);
+
 //sbi01 report file saving
 app.post("/fundposition", async (req, res) => {
   try {

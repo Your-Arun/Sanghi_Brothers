@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import jwt_decode from "jwt-decode";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -10,37 +9,29 @@ const Login = () => {
   const [loading, setLoading] = useState(false); // Loading state
   const navigate = useNavigate();
 
-  // ✅ Simplified Token Expiry Check
-  const isTokenExpired = (token) => {
-    try {
-      const decoded = jwt_decode(token);
-      return decoded.exp < Date.now() / 1000;
-    } catch (error) {
-      return true;
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-  
+
     try {
-      const { data } = await axios.post("http://localhost:5500/login", { email, password });
-  
-      const { token, user } = data;
-  
-      // ✅ Clear old session before storing new user data
-      localStorage.removeItem("token");
+      const { data } = await axios.post(
+        "http://localhost:5500/login",
+        { email, password },
+        { withCredentials: true } // ✅ Ensure cookies are used
+      );
+
+      const { user } = data;
+
+      // ✅ Remove any old session storage
       localStorage.removeItem("userData");
-  
-      // ✅ Store the correct user data
-      localStorage.setItem("token", token);
+
+      // ✅ Store user data (WITHOUT token)
       localStorage.setItem("userData", JSON.stringify(user));
-  
-      // ✅ Redirect based on user role
+
+      // ✅ Redirect based on role
       navigate(user.department === "staff" ? "/staff-dashboard" : "/dashboard");
-  
-      // ✅ Force refresh to load correct user data
+
+      // ✅ Reload to apply session changes
       window.location.reload();
     } catch (err) {
       alert(err.response?.data?.message || "An error occurred. Please try again.");
@@ -48,9 +39,7 @@ const Login = () => {
       setLoading(false);
     }
   };
-  
-  
-  
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
       <form
