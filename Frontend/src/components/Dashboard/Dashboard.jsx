@@ -29,33 +29,29 @@ const Dashboard = () => {
   const [isOpen4, setIsOpen4] = useState(false);
 
 
+  // ✅ Fetch authenticated user profile
   useEffect(() => {
-    const checkUserAuthentication = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        navigate("/login");
-        return;
-      }
-
+    const fetchUserProfile = async () => {
       try {
         const { data } = await axios.get("http://localhost:5500/profile", {
-          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true, // ✅ Ensure cookies are sent
         });
 
         if (!data || !data.username) {
           navigate("/login");
-        } else {
-          setUserName(data.username);
+          return;
         }
+
+        setUserName(data.username);
+        setUserDepartment(data.department.toLowerCase()); // ✅ Fetch from backend instead of localStorage
       } catch (error) {
         console.error("Error fetching user:", error);
         navigate("/login");
       }
     };
 
-    checkUserAuthentication();
+    fetchUserProfile();
   }, [navigate]);
-
 
   //reportfile ke lie
   useEffect(() => {
@@ -74,26 +70,33 @@ const Dashboard = () => {
     fetchrepoFile();
   }, []);
 
+  // ✅ Logout user
   const handleLogout = async () => {
     try {
       await axios.post("http://localhost:5500/logout", {}, { withCredentials: true });
-      localStorage.removeItem("userData"); // Remove user data
-      window.location.reload(); // Reload to clear session
+
+      // ✅ Remove authentication data
+      localStorage.removeItem("token");
+      localStorage.removeItem("userData");
+      localStorage.removeItem("userDepartment");
+
+      navigate("/login"); // ✅ Redirect instead of reloading
     } catch (err) {
       console.error("Logout failed:", err.response?.data?.message);
     }
   };
+
   
   //profile ke lie
+  c// ✅ Fetch profile data
   const fetchProfile = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5500/profile", {
-        headers: { Authorization: `Bearer ${token}` },
+      const { data } = await axios.get("http://localhost:5500/profile", {
+        withCredentials: true,
       });
-      setProfile(response.data);
-      setUpdatedProfile(response.data);
-      setUserName(response.data.username); // Pre-fill editable fields
+      setProfile(data);
+      setUpdatedProfile(data);
+      setUserName(data.username);
     } catch (err) {
       console.error("Error fetching profile:", err);
       alert("Failed to fetch profile data.");
@@ -102,15 +105,13 @@ const Dashboard = () => {
 
   const handleProfileSave = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.put(
-        "http://localhost:5500/profile",
-        updatedProfile,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await axios.put("http://localhost:5500/profile", updatedProfile, {
+        withCredentials: true,
+      });
+
       if (response.status === 200) {
-        setProfile(updatedProfile); // Update local state
-        setShowProfileModal(false); // Close modal
+        setProfile(updatedProfile);
+        setShowProfileModal(false);
         alert("Profile updated successfully!");
       } else {
         alert("Failed to update profile.");
@@ -120,65 +121,57 @@ const Dashboard = () => {
       alert("Failed to update profile. Please try again.");
     }
   };
-  // department and report ke lie get kr rhe h
-  useEffect(() => {
+
+   // ✅ Fetch all required data
+   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          alert("No valid token found. Please log in.");
-          return; // Exit early if no token
-        }
-
-        const departmentResponse = await axios.get(
-          "http://localhost:5500/departments",
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setDepartments(departmentResponse.data);
-
-        const reportsResponse = await axios.get(
-          "http://localhost:5500/reports",
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setReports(reportsResponse.data);
-
-        const sb3resp = await axios.get(
-          `http://localhost:5500/bank/monthlyfundflow`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setSb3Update(sb3resp.data);
-        const response = await axios.get("http://localhost:5500/cashier", {
-          headers: { Authorization: `Bearer ${token}` },
+        const { data: departmentData } = await axios.get("http://localhost:5500/departments", {
+          withCredentials: true,
         });
-        setCashier(response.data);
-        setCashierTotal(response.data.totalamount)
+        setDepartments(departmentData);
+
+        const { data: reportData } = await axios.get("http://localhost:5500/reports", {
+          withCredentials: true,
+        });
+        setReports(reportData);
+
+        const { data: sb3Data } = await axios.get("http://localhost:5500/bank/monthlyfundflow", {
+          withCredentials: true,
+        });
+        setSb3Update(sb3Data);
+
+        const { data: cashierData } = await axios.get("http://localhost:5500/cashier", {
+          withCredentials: true,
+        });
+        setCashier(cashierData);
+        setCashierTotal(cashierData.totalamount);
       } catch (err) {
-        console.error("Error fetching data:");
+        console.error("Error fetching data:", err);
         alert("Failed to fetch data.");
       }
     };
+
     fetchData();
   }, []);
 
-  const handleReportClick = (report) => {
-    setSelectedReport(report); // Set the selected report for editing
-    setUpdatedContent(report.content);
-    setUpdatedTitle(report.title); // Populate the modal with existing content
-    setIsEditing(true); // Show the modal
-    setShowModal(true);
 
+   // ✅ Handle report selection for editing
+   const handleReportClick = (report) => {
+    setSelectedReport(report);
+    setUpdatedTitle(report.title);
+    setUpdatedContent(report.content);
+    setShowModal(true);
   };
   const handleDeleteReport = async (reportId) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this report?");
-    if (!confirmDelete) return;
+    if (!window.confirm("Are you sure you want to delete this report?")) return;
 
     try {
-      const token = localStorage.getItem("token");
       await axios.delete(`http://localhost:5500/reports/${reportId}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       });
 
-      setReports(reports.filter((report) => report._id !== reportId));
+      setReports((prev) => prev.filter((report) => report._id !== reportId));
       alert("Report deleted successfully!");
     } catch (error) {
       console.error("Error deleting report:", error);
@@ -243,13 +236,13 @@ const Dashboard = () => {
       alert("Failed to update report. Please try again.");
     }
   };
-  // View Reports Function
-  const viewReports = (department) => {
+   // ✅ Handle viewing department reports securely
+   const viewReports = (department) => {
     if (!userDepartment) {
       alert("Could not determine your access level. Please try again.");
       return;
     }
-  
+
     const departmentNormalized = department.toLowerCase();
     if (userDepartment === "manager" || userDepartment === departmentNormalized) {
       navigate(`/department-reports?department=${department}`);
@@ -257,7 +250,7 @@ const Dashboard = () => {
       alert("You are not authorized to view reports for this department.");
     }
   };
-  
+
 
   const openReportPage = () => {
     if (selectedDepartment) {
