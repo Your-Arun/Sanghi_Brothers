@@ -20,12 +20,12 @@ const StaffDashboard = () => {
             try {
                 const token = localStorage.getItem("token");
                 const response = await axios.get("http://localhost:5500/reports", {
-                    headers: { Authorization: `Bearer ${token}` },
+                     withCredentials: true 
                 });
                 setReports(response.data);
 
                 const departmentResponse = await axios.get("http://localhost:5500/departments", {
-                    headers: { Authorization: `Bearer ${token}` },
+                    withCredentials: true 
                 });
                 setDepartments(departmentResponse.data);
             } catch (err) {

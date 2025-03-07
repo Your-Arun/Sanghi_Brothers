@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import add from "/add.png";
 import { FaTimes, FaTrash, FaUniversity } from "react-icons/fa";
+import ProfileModal from "./profile";
 const Dashboard = () => {
   const [departments, setDepartments] = useState([]);
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -27,40 +28,19 @@ const Dashboard = () => {
   const [isOpen2, setIsOpen2] = useState(false);
   const [isOpen3, setIsOpen3] = useState(false);
   const [isOpen4, setIsOpen4] = useState(false);
+  const [userDepartment, setUserDepartment] = useState("");
+  
+  const [isProfileOpen, setProfileOpen] = useState(false);
 
 
-  // ✅ Fetch authenticated user profile
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const { data } = await axios.get("http://localhost:5500/profile", {
-          withCredentials: true, // ✅ Ensure cookies are sent
-        });
-
-        if (!data || !data.username) {
-          navigate("/login");
-          return;
-        }
-
-        setUserName(data.username);
-        setUserDepartment(data.department.toLowerCase()); // ✅ Fetch from backend instead of localStorage
-      } catch (error) {
-        console.error("Error fetching user:", error);
-        navigate("/login");
-      }
-    };
-
-    fetchUserProfile();
-  }, [navigate]);
-
+ 
   //reportfile ke lie
   useEffect(() => {
     const fetchrepoFile = async () => {
       try {
-        const token = localStorage.getItem("token");
-
+        
         const responsee = await axios.get("http://localhost:5500/reportfile", {
-          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true, // Cookies will be included
         });
         setReportFile(responsee.data);
       } catch (error) {
@@ -74,53 +54,15 @@ const Dashboard = () => {
   const handleLogout = async () => {
     try {
       await axios.post("http://localhost:5500/logout", {}, { withCredentials: true });
-
-      // ✅ Remove authentication data
-      localStorage.removeItem("token");
-      localStorage.removeItem("userData");
-      localStorage.removeItem("userDepartment");
-
-      navigate("/login"); // ✅ Redirect instead of reloading
+      localStorage.removeItem("userData"); // Remove user data
+      window.location.reload(); // Reload to clear session
     } catch (err) {
       console.error("Logout failed:", err.response?.data?.message);
     }
   };
-
   
-  //profile ke lie
-  c// ✅ Fetch profile data
-  const fetchProfile = async () => {
-    try {
-      const { data } = await axios.get("http://localhost:5500/profile", {
-        withCredentials: true,
-      });
-      setProfile(data);
-      setUpdatedProfile(data);
-      setUserName(data.username);
-    } catch (err) {
-      console.error("Error fetching profile:", err);
-      alert("Failed to fetch profile data.");
-    }
-  };
-
-  const handleProfileSave = async () => {
-    try {
-      const response = await axios.put("http://localhost:5500/profile", updatedProfile, {
-        withCredentials: true,
-      });
-
-      if (response.status === 200) {
-        setProfile(updatedProfile);
-        setShowProfileModal(false);
-        alert("Profile updated successfully!");
-      } else {
-        alert("Failed to update profile.");
-      }
-    } catch (err) {
-      console.error("Error updating profile:", err);
-      alert("Failed to update profile. Please try again.");
-    }
-  };
+  
+ 
 
    // ✅ Fetch all required data
    useEffect(() => {
@@ -182,13 +124,7 @@ const Dashboard = () => {
 
   const handleUpdateReport = async () => {
     try {
-      // Check if token is present
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("No authorization token found. Please log in again.");
-        return;
-      }
-
+     
       // Check if selectedReport exists
       if (!selectedReport || !selectedReport._id) {
         alert("No report selected for update.");
@@ -289,23 +225,20 @@ const Dashboard = () => {
               <button
                 className="block px-4 py-2 text-left w-full text-gray-700 font-medium hover:bg-gray-100 
                     transition-all duration-200"
-                onClick={() => {
-                  fetchProfile();
-                  setShowProfileModal(true);
-                  setShowUserMenu(false);
-                }}
+                    onClick={() => setProfileOpen(true)}
               >
                 👤 Profile
               </button>
               <button
                 className="block px-4 py-2 text-left w-full text-red-500 font-medium hover:bg-red-100 
                     transition-all duration-200"
-                onClick={handleLogout}
+                    onClick={handleLogout} 
               >
                 🚪 Logout
               </button>
             </div>
           )}
+             {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
         </div>
         <div>
           {/* Departments Section */}
@@ -702,76 +635,8 @@ const Dashboard = () => {
             </button>
           </div>
         </div>
-        {/* Profile Modal */}
-        {showProfileModal && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-            role="dialog"
-            aria-labelledby="profile-modal-title"
-          >
-            {/* Modal Box */}
-            <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm md:max-w-md relative">
-              {/* Close Button */}
-              <button
-                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-                onClick={() => setShowProfileModal(false)}
-                aria-label="Close"
-              >
-                ❌
-              </button>
-
-              <h2
-                id="profile-modal-title"
-                className="text-2xl font-bold mb-4 text-center text-blue-600"
-              >
-                Profile
-              </h2>
-
-              <form>
-                {[
-                  { label: "Name", value: updatedProfile.username, key: "username", editable: true },
-                  { label: "Email", value: updatedProfile.email, key: "email", editable: false },
-                  { label: "Role", value: updatedProfile.department, key: "department", editable: false },
-                ].map(({ label, value, key, editable }) => (
-                  <div key={key} className="mb-4">
-                    <label className="block text-gray-700 font-semibold">{label}:</label>
-                    {editable ? (
-                      <input
-                        type="text"
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        value={value || ""}
-                        onChange={(e) =>
-                          setUpdatedProfile({ ...updatedProfile, [key]: e.target.value })
-                        }
-                      />
-                    ) : (
-                      <p className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100">
-                        {value || "N/A"}
-                      </p>
-                    )}
-                  </div>
-                ))}
-
-                <div className="flex justify-end">
-                  <button
-                    type="button"
-                    className="px-4 py-2 bg-gray-300 text-black rounded-lg mr-2 hover:bg-gray-400 transition"
-                    onClick={() => setShowProfileModal(false)}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="button"
-                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-                    onClick={handleProfileSave}
-                  >
-                    Save
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
+       
+       
         {/* Edit Modal */}
         {isEditing && (
           <div
