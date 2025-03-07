@@ -247,6 +247,29 @@ Router.put("/profile", authMiddleware, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+Router.get("/users", async (req, res) => {
+  try {
+    const users = await User.find({}, "id username email department"); // ✅ Sirf important fields fetch karo
+
+    if (!users.length) {
+      return res.status(404).json({ message: "No users found" });
+    }
+
+    res.json({ success: true, users });
+  } catch (err) {
+    console.error("❌ Error fetching users:", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+Router.get("/user-profile", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id); // ✅ JWT ya session se user ID leke fetch karo
+    res.json({ user });
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching user profile" });
+  }
+});
+
 
 
 

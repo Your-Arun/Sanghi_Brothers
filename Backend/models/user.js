@@ -4,6 +4,7 @@ const UserSchema = new mongoose.Schema({
   username: String,
   email: String,
   password: String,
+  department:String,
   tokens: [{ token: String }], // Multiple tokens maintain karne ke liye array
 });
 

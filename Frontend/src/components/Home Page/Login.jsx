@@ -1,65 +1,52 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react"; // Icons for better UX
+import { Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [userDepartment, setUserDepartment] = useState("");
   const navigate = useNavigate();
-
-
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const  data  = await axios.get("http://localhost:5500/departments", {
-          withCredentials: true, // ✅ Ensure cookies are sent
-        });
-
-        setUserDepartment(data.data[3]); // ✅ Fetch from backend instead of localStorage
-        console.log(data.data[3])
-      } catch (error) {
-        console.error("Error fetching user:", error);
-        navigate("/login");
-      }
-    };
-
-    fetchUserProfile();
-  }, [navigate]);
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-  
+
     try {
-      // ✅ Pehle user ko login karna
-      await axios.post(
+      // ✅ Step 1: Login User
+      const loginResponse = await axios.post(
         "http://localhost:5500/login",
         { email, password },
         { withCredentials: true }
       );
-  
-      console.log("Login Successful");
-  
-      // ✅ Department ke basis pe navigate karna
-      if (userDepartment) {
+
+      console.log("✅ Login Successful", loginResponse.data);
+
+      // ✅ Step 2: Fetch user data after login
+      const userResponse = await axios.get("http://localhost:5500/user-profile", {
+        withCredentials: true,
+      });
+
+      const loggedInUser = userResponse.data.user; // ✅ Sirf logged-in user ka data
+
+      console.log("✅ Logged-in User:", loggedInUser);
+
+      // ✅ Step 3: Navigate Based on Department
+      if (loggedInUser.department?.toLowerCase() === "staff") {
         navigate("/staff-dashboard");
       } else {
         navigate("/dashboard");
       }
-      
+
     } catch (err) {
-      console.error("Login Error:", err.response?.data || err);
+      console.error("❌ Login Error:", err.response?.data || err);
       alert(err.response?.data?.message || "Invalid credentials, please try again.");
     } finally {
       setLoading(false);
     }
   };
-  
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
@@ -108,14 +95,14 @@ const Login = () => {
 
         {/* Links */}
         <p className="mt-4 text-center text-gray-600">
-          Don't have an account? {" "}
+          Don't have an account?{" "}
           <Link to="/signup" className="text-blue-500 hover:underline">
             Sign up
           </Link>
         </p>
 
         <p className="mt-2 text-center text-gray-600">
-          Forgot your password? {" "}
+          Forgot your password?{" "}
           <Link to="/forgot-password" className="text-blue-500 hover:underline">
             Reset it here
           </Link>
