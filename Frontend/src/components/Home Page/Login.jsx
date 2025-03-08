@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
+import UserContext from "./UserContext";
 
 const Login = () => {
+  const { setUser } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -13,33 +15,34 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+  
     try {
-      // ✅ Step 1: Login User
       const loginResponse = await axios.post(
         "http://localhost:5500/login",
         { email, password },
         { withCredentials: true }
       );
-
-      console.log("✅ Login Successful", loginResponse.data);
-
-      // ✅ Step 2: Fetch user data after login
-      const userResponse = await axios.get("http://localhost:5500/user-profile", {
-        withCredentials: true,
-      });
-
-      const loggedInUser = userResponse.data.user; // ✅ Sirf logged-in user ka data
-
-      console.log("✅ Logged-in User:", loggedInUser);
-
-      // ✅ Step 3: Navigate Based on Department
-      if (loggedInUser.department?.toLowerCase() === "staff") {
-        navigate("/staff-dashboard");
-      } else {
-        navigate("/dashboard");
+  
+      console.log("✅ Login Response:", loginResponse.data); // 🔍 Debugging
+  
+      const { user, token } = loginResponse.data;  // 🛠 Token extract karo
+  
+      if (!token) {
+        console.error("❌ No token received from server.");
+        alert("Login failed. No token received.");
+        return;
       }
-
+  
+      // ✅ Token store karo
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+  
+      console.log("✅ Token Stored:", token); // 🔍 Debugging
+      console.log("✅ User Stored:", user); // 🔍 Debugging
+  
+      setUser(user);
+  
+      navigate(user.department?.trim().toLowerCase() === "staff" ? "/staff-dashboard" : "/dashboard");
     } catch (err) {
       console.error("❌ Login Error:", err.response?.data || err);
       alert(err.response?.data?.message || "Invalid credentials, please try again.");
@@ -47,6 +50,8 @@ const Login = () => {
       setLoading(false);
     }
   };
+  
+  
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
@@ -60,7 +65,7 @@ const Login = () => {
         <input
           type="email"
           placeholder="Email"
-          className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -71,7 +76,7 @@ const Login = () => {
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Password"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required

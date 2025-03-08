@@ -13,12 +13,17 @@ Router.use(cookieParser());
 
 const authMiddleware = async (req, res, next) => {
   try {
-    console.log("Cookies received:", req.cookies);
-    const token = req.cookies.authToken;
+    console.log("🟢 Cookies received:", req.cookies); // Check if cookies are coming
+    const token = req.cookies.authToken; 
+    console.log("🟢 Token extracted:", token); // Check if token is extracted
+
     if (!token) return res.status(401).json({ message: "Unauthorized - No Token" });
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("🟢 Decoded token:", decoded); // Check if token decoding is working
+
     const user = await User.findById(decoded.id);
+    console.log("🟢 User found in DB:", user); // Check if user exists
 
     if (!user || user.currentToken !== token) {
       return res.status(403).json({ message: "Session expired, please login again" });
@@ -32,10 +37,11 @@ const authMiddleware = async (req, res, next) => {
     req.user = user;
     next();
   } catch (err) {
-    console.error("Auth Error:", err);
+    console.error("❌ Auth Error:", err);
     res.status(403).json({ message: "Invalid session" });
   }
 };
+
 
 
 
@@ -73,36 +79,29 @@ Router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: "User not found" });
 
-    const isMatch = bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Incorrect password" });
+    if (!user) return res.status(400).json({ message: "Invalid credentials" });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
     const token = jwt.sign(
-      { id: user._id, username: user.username, department: user.department },
-      process.env.JWT_SECRET,
-      { expiresIn: "4h" }
+      { id: user._id, username: user.username }, 
+      process.env.JWT_SECRET, 
+      { expiresIn: "1d" }
     );
 
-    user.currentToken = token;
-    await user.save();
+    console.log("🟢 Token Generated:", token); // ✅ Debugging
 
-    res.cookie("authToken", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
-      maxAge: 4 * 60 * 60 * 1000,
-    });
-
-    res.json({
-      message: "Login successful",
-      user: { id: user._id, username: user.username, email: user.email, department: user.department },
-    });
+    return res.json({ user, token }); // ✅ Ensure token is in response
   } catch (err) {
-    console.error("Login Error:", err);
-    res.status(500).json({ message: "Internal Server Error" });
+    console.error("❌ Server Error:", err);
+    return res.status(500).json({ message: "Server error" });
   }
 });
+
+
+
 
 
 // ✅ Secure Logout Route
@@ -135,8 +134,8 @@ Router.post("/logout", async (req, res) => {
 Router.post("/verify-invite", (req, res) => {
   const { invitationCode } = req.body;
 
-  const validCodes = process.env.VALID_INVITATION_CODES?.split(",") || [];
-  const staffCodes = process.env.VALID_INVITATION_CODES_FOR_STAFF?.split(",") || [];
+  const validCodes = process.env.VALID_INVITATION_CODES;
+  const staffCodes = process.env.VALID_INVITATION_CODES_FOR_STAFF;
 
   if (validCodes.includes(invitationCode)) {
     res.json({ valid: true, department: "members" });
@@ -263,14 +262,15 @@ Router.get("/users", async (req, res) => {
 });
 Router.get("/user-profile", authMiddleware, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id); // ✅ JWT ya session se user ID leke fetch karo
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
     res.json({ user });
   } catch (err) {
     res.status(500).json({ message: "Error fetching user profile" });
   }
 });
-
-
 
 
 module.exports = Router;

@@ -1,23 +1,25 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate, Outlet, useLocation } from "react-router-dom";
+import { UserProvider } from "./components/Home Page/UserContext.jsx";
 import "./index.css";
+import Navbar from "./components/Home Page/Navbar";
+import Home from "./components/Home Page/Home";
+import ContactUs from "./components/Home Page/ContactUs";
+import Services from "./components/Home Page/ServicesPage";
+import AboutUs from "./components/Home Page/AboutsUs";
+import Login from "./components/Home Page/Login";
+import Signup from "./components/Home Page/Signup";
+import ForgotPassword from "./components/Home Page/ForgetPassword";
+import Dashboard from "./components/Dashboard/Dashboard";
+import Staffmember from "./components/Dashboard/staff-member.jsx";
 import Report from "./components/Layouts/Report";
 import ReportFile from "./components/Layouts/ReportFile";
 import UpdateReportFile from "./components/updated_Report/UpdateReportFile";
 import DepartmentReports from "./components/Layouts/DepartmentReport";
-import ForgotPassword from "./components/Home Page/ForgetPassword";
 import Sb01 from "./components/Layouts/Sb01";
 import SBI01Update from "./components/updated_Report/SBI01Update";
 import InFlowOutFlow from "./components/Layouts/InFlowOutFlow";
 import InOutFlowUpdate from "./components/updated_Report/InOutFlowUpdate";
-import ContactUs from "./components/Home Page/ContactUs";
-import Navbar from "./components/Home Page/Navbar";
-import Services from "./components/Home Page/ServicesPage";
-import AboutUs from "./components/Home Page/AboutsUs";
-import Home from "./components/Home Page/Home";
-import Signup from "./components/Home Page/Signup";
-import Login from "./components/Home Page/Login";
-import Dashboard from "./components/Dashboard/Dashboard";
 import SB03_Monthly from "./components/Layouts/SB03_Monthly";
 import Sb03Update from "./components/updated_Report/sb03update";
 import Mergesb01Inflo from "./components/Layouts/Mergesb01Inflo";
@@ -49,36 +51,36 @@ import UpdateMeter from './components/Petrol Related/updatemeterclose';
 import Cashier from "./components/Layouts/cashier";
 import CashSlip from "./components/Layouts/cashslip";
 import MergingSbSection from './components/Dashboard/sbbankk/mergingsbsection.jsx';
-import Staffmember from "./components/Dashboard/staff-member.jsx";
 
-// Function to check if user is authenticated
+// ✅ Fix Token Storage Key in `isAuthenticated`
 const isAuthenticated = () => {
-  return localStorage.getItem("token") ? true : false;
+  return localStorage.getItem("authToken") ? true : false;
 };
 
-// Protected Route Component
+// ✅ Protected Route Component
 const ProtectedRoute = () => {
   if (!isAuthenticated()) {
     alert("Please sign up or log in to continue.");
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
   }
   return <Outlet />;
 };
 
 const App = () => {
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <UserProvider> {/* ✅ Correct Placement of UserProvider */}
+      <Router>
+        <AppContent />
+      </Router>
+    </UserProvider>
   );
 };
 
 const AppContent = () => {
   const location = useLocation();
-  
-  
-  // Routes where the Navbar should be shown
-  const showNavbarRoutes = ["/", "/contact-us", "/services", "/about",'/login',"/signup"];
+
+  // ✅ Show Navbar Only on These Routes
+  const showNavbarRoutes = ["/", "/contact-us", "/services", "/about", "/login", "/signup"];
   const shouldShowNavbar = showNavbarRoutes.includes(location.pathname);
 
   return (
@@ -144,5 +146,3 @@ const AppContent = () => {
 };
 
 export default App;
-/////naya compont jo stafff ke lie hogaa bsss  jisse vo cashslip shifting dekh payenge 
-//usko naya code milega bsss jisse vo access kr skte hai

@@ -54,16 +54,18 @@ const Dashboard = () => {
   const handleLogout = async () => {
     try {
       await axios.post("http://localhost:5500/logout", {}, { withCredentials: true });
-      localStorage.removeItem("userData"); // Remove user data
-      window.location.reload(); // Reload to clear session
+  
+      // ✅ Token & User Data Remove Karein
+      localStorage.removeItem("userData"); 
+      localStorage.removeItem("token");  
+  
+      window.location.reload(); // ✅ Reload to clear session
     } catch (err) {
       console.error("Logout failed:", err.response?.data?.message);
     }
   };
   
   
- 
-
    // ✅ Fetch all required data
    useEffect(() => {
     const fetchData = async () => {
@@ -96,8 +98,6 @@ const Dashboard = () => {
 
     fetchData();
   }, []);
-
-
    // ✅ Handle report selection for editing
    const handleReportClick = (report) => {
     setSelectedReport(report);
@@ -120,58 +120,57 @@ const Dashboard = () => {
       alert("Failed to delete report. Please try again.");
     }
   };
-
-
   const handleUpdateReport = async () => {
     try {
-     
-      // Check if selectedReport exists
       if (!selectedReport || !selectedReport._id) {
         alert("No report selected for update.");
         return;
       }
-
-      // Prepare updated report data
+  
+      // ✅ Token from LocalStorage
+      const token = localStorage.getItem("token");  
+      if (!token) {
+        alert("Unauthorized: Please log in again.");
+        return;
+      }
+  
+      // ✅ Updated Report Data
       const updatedReport = {
-        ...selectedReport,
         title: updatedTitle,
         content: updatedContent,
       };
-
-      // Log the updated report data for debugging
-      console.log("Updating report with data:", updatedReport);
-
-      // Send the update request to the server
+  
+      // ✅ API Call with Correct Authorization Header
       const response = await axios.put(
         `http://localhost:5500/reports/${selectedReport._id}`,
         updatedReport,
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: { 
+            Authorization: `Bearer ${token}`,  // ✅ Correct token format
+            "Content-Type": "application/json"
+          },
+          withCredentials: true, // ✅ Ensures cookies are sent properly
+        }
       );
-
-      // Check server response
-      console.log("Server response:", response);
-
+  
       if (response.status === 200) {
-        // Update the local state with the updated report
+        // ✅ Update UI
         setReports((prevReports) =>
           prevReports.map((report) =>
-            report._id === selectedReport._id ? updatedReport : report
+            report._id === selectedReport._id ? { ...report, ...updatedReport } : report
           )
         );
-        setIsEditing(false); // Close the modal after successful update
+        setShowModal(false); // ✅ Close modal after success
         alert("Report updated successfully!");
       } else {
         alert("Failed to update report.");
       }
     } catch (err) {
-      // Capture and log the error details
-      console.error(
-        "Error during report update:",
-        err.response?.data || err.message
-      );
+      console.error("Error updating report:", err.response?.data || err.message);
       alert("Failed to update report. Please try again.");
     }
   };
+  
    // ✅ Handle viewing department reports securely
    const viewReports = (department) => {
     if (!userDepartment) {
@@ -186,8 +185,6 @@ const Dashboard = () => {
       alert("You are not authorized to view reports for this department.");
     }
   };
-
-
   const openReportPage = () => {
     if (selectedDepartment) {
       navigate(`/report?department=${selectedDepartment}`);
