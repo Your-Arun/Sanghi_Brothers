@@ -54,17 +54,14 @@ const Dashboard = () => {
   const handleLogout = async () => {
     try {
       await axios.post("http://localhost:5500/logout", {}, { withCredentials: true });
-  
-      // ✅ Token & User Data Remove Karein
-      localStorage.removeItem("userData"); 
-      localStorage.removeItem("token");  
-  
-      window.location.reload(); // ✅ Reload to clear session
+      localStorage.removeItem("userData");
+      alert("Logout Successfully")
+      navigate("/login"); // Redirect after logout
     } catch (err) {
       console.error("Logout failed:", err.response?.data?.message);
     }
   };
-  
+
   
    // ✅ Fetch all required data
    useEffect(() => {

@@ -9,11 +9,12 @@ const session = require("express-session");
 
 const app = express();
 
-// 🛡️ CORS Configuration (Frontend Connection)
+// 🛡️ CORS Configuration
 app.use(
   cors({
-    origin: "http://localhost:5173", // Frontend ka URL
-    credentials: true, // ✅ Cookies & Sessions Allow Karega
+    origin: process.env.FRONTEND_URL || "http://localhost:5173", // Use ENV variable for frontend URL
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   })
 );
 
@@ -23,10 +24,12 @@ app.use(
     secret: process.env.JWT_SECRET || "your-secret-key",
     resave: false,
     saveUninitialized: false,
+    rolling: true, // Refresh session expiry on every request
     cookie: {
       httpOnly: true,
       secure: false, // ✅ Agar HTTPS use nahi kar rahe ho
       sameSite: "lax", // ✅ Cross-origin issues fix karega
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
     },
   })
 );
@@ -38,20 +41,17 @@ app.use(express.json());
 
 
 const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1]; // 🛠 Token Extract
-  console.log("🔍 Received Auth Header:", req.headers.authorization);
+  const token = req.cookies.authToken; // Use cookie instead of header
+  console.log("🔍 Received Auth Token:", token);
 
-  if (!token) {
-    return res.status(403).json({ message: "No token provided" });
-  }
+  if (!token) return res.status(403).json({ message: "Unauthorized - No Token" });
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
-    console.log("✅ Token Verified:", decoded);
     next();
   } catch (err) {
-    return res.status(401).json({ message: "Invalid token" });
+    return res.status(401).json({ message: "Invalid or expired token" });
   }
 };
 

@@ -1,14 +1,9 @@
-const express = require("express");const bcrypt = require("bcryptjs");
-
+const express = require("express");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const nodemailer = require("nodemailer");
-const cookieParser = require("cookie-parser");
-
 const Router = express.Router();
-
-// ✅ Middleware to parse cookies
-Router.use(cookieParser());
 
 
 const authMiddleware = async (req, res, next) => {
@@ -77,6 +72,7 @@ Router.post("/signup", async (req, res) => {
 
 Router.post("/login", async (req, res) => {
   try {
+    console.log("🔍 Full Headers:", req.headers); // ✅ Debugging ke liye
     const { email, password } = req.body;
     const user = await User.findOne({ email });
 
@@ -92,6 +88,7 @@ Router.post("/login", async (req, res) => {
     );
 
     console.log("🟢 Token Generated:", token); // ✅ Debugging
+    console.log("🟢 Sent Token in Response & Cookie"); // ✅ Debugging
 
     return res.json({ user, token }); // ✅ Ensure token is in response
   } catch (err) {

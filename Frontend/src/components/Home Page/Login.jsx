@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import UserContext from "./UserContext";
+import axiosInstance from "../Dashboard/axiosInstance"; // ✅ Common Axios import karo
 
 const Login = () => {
   const { setUser } = useContext(UserContext);
@@ -17,15 +18,11 @@ const Login = () => {
     setLoading(true);
   
     try {
-      const loginResponse = await axios.post(
-        "http://localhost:5500/login",
-        { email, password },
-        { withCredentials: true }
-      );
+      const loginResponse = await axiosInstance.post("/login", { email, password });
+
+      console.log("✅ Login Response:", loginResponse.data);
   
-      console.log("✅ Login Response:", loginResponse.data); // 🔍 Debugging
-  
-      const { user, token } = loginResponse.data;  // 🛠 Token extract karo
+      const { user, token } = loginResponse.data;
   
       if (!token) {
         console.error("❌ No token received from server.");

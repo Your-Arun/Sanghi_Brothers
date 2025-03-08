@@ -38,7 +38,8 @@ const StaffDashboard = () => {
     try {
       await axios.post("http://localhost:5500/logout", {}, { withCredentials: true });
       localStorage.removeItem("userData");
-      navigate("/"); // Redirect after logout
+      alert("Logout Successfully")
+      navigate("/login"); // Redirect after logout
     } catch (err) {
       console.error("Logout failed:", err.response?.data?.message);
     }
@@ -78,7 +79,7 @@ const StaffDashboard = () => {
             </button>
           ))}
           <button onClick={() => setProfileOpen(true)} className="flex items-center gap-2 p-2 w-full bg-blue-700 rounded-lg hover:bg-blue-500">
-            <FaUser /> Profile
+            <FaUser /> Profile 
           </button>
           <button onClick={handleLogout} className="flex items-center gap-2 p-2 w-full bg-red-600 rounded-lg hover:bg-red-500 mt-4">
             <FaSignOutAlt /> Logout
