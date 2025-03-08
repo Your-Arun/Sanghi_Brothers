@@ -36,14 +36,24 @@ const StaffDashboard = () => {
 
   const handleLogout = async () => {
     try {
+      const response = await axios.get("http://localhost:5500/check-session", { withCredentials: true });
+  
+      if (!response.data.active) {
+        alert("No active session found. Redirecting to login.");
+        navigate("/login");
+        return;
+      }
+  
       await axios.post("http://localhost:5500/logout", {}, { withCredentials: true });
+  
       localStorage.removeItem("userData");
-      alert("Logout Successfully")
-      navigate("/login"); // Redirect after logout
+      alert("Logout Successfully");
+      navigate("/login");
     } catch (err) {
       console.error("Logout failed:", err.response?.data?.message);
     }
   };
+  
 
   const openReportPage = () => {
     if (!selectedDepartment) {

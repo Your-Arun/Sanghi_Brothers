@@ -12,11 +12,12 @@ const app = express();
 // 🛡️ CORS Configuration
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173", // Use ENV variable for frontend URL
-    credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+    origin: "http://localhost:5173", // Frontend URL
+    credentials: true, // ✅ Allow cookies & authentication headers
+    allowedHeaders: ["Content-Type", "Authorization"], // ✅ Ensure Authorization is allowed
   })
 );
+
 
 // 🛡️ Session Configuration
 app.use(
@@ -41,19 +42,25 @@ app.use(express.json());
 
 
 const verifyToken = (req, res, next) => {
-  const token = req.cookies.authToken; // Use cookie instead of header
-  console.log("🔍 Received Auth Token:", token);
+  console.log("🔍 Headers:", req.headers);
+  console.log("🔍 Cookies:", req.cookies);
 
-  if (!token) return res.status(403).json({ message: "Unauthorized - No Token" });
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+
+  if (!token) {
+    return res.status(403).json({ message: "No token provided" });
+  }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
+    console.log("✅ Token Verified:", decoded);
     next();
   } catch (err) {
-    return res.status(401).json({ message: "Invalid or expired token" });
+    return res.status(401).json({ message: "Invalid token" });
   }
 };
+
 
 module.exports = verifyToken;
 

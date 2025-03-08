@@ -86,7 +86,12 @@ Router.post("/login", async (req, res) => {
       process.env.JWT_SECRET, 
       { expiresIn: "1d" }
     );
-
+    res.cookie("token", token, {
+      httpOnly: true, // ✅ Prevent client-side access
+      secure: false,  // ✅ Set to true in production (HTTPS required)
+      sameSite: "lax", // ✅ Adjust if needed (try "none" with secure: true for cross-origin)
+    });
+    
     console.log("🟢 Token Generated:", token); // ✅ Debugging
     console.log("🟢 Sent Token in Response & Cookie"); // ✅ Debugging
 
@@ -102,30 +107,19 @@ Router.post("/login", async (req, res) => {
 
 
 // ✅ Secure Logout Route
-Router.post("/logout", async (req, res) => {
-  try {
-    const token = req.cookies.authToken;
-    if (!token) return res.status(400).json({ message: "No active session found" });
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id);
-
-    if (user) {
-      user.currentToken = null;
-      await user.save();
-    }
-
-    res.clearCookie("authToken", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
-    });
-
-    res.json({ message: "Logged out successfully" });
-  } catch (err) {
-    res.status(500).json({ message: "Logout failed" });
+Router.post('/logout', (req, res) => {
+  if (!req.session.user) {
+    return res.status(400).json({ message: "No active session found" });
   }
+  req.session.destroy(err => {
+    if (err) {
+      return res.status(500).json({ message: "Logout failed" });
+    }
+    res.clearCookie('connect.sid'); // If using express-session
+    res.json({ message: "Logged out successfully" });
+  });
 });
+
 
 // ✅ Verify Invitation Code
 Router.post("/verify-invite", (req, res) => {
@@ -267,6 +261,12 @@ Router.get("/user-profile", authMiddleware, async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: "Error fetching user profile" });
   }
+});
+Router.get('/check-session', (req, res) => {
+  if (req.session.user) {
+    return res.json({ active: true });
+  }
+  return res.json({ active: false });
 });
 
 
