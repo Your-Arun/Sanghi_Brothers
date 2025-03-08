@@ -42,8 +42,6 @@ app.use(express.json());
 
 
 const verifyToken = (req, res, next) => {
-  console.log("🔍 Headers:", req.headers);
-  console.log("🔍 Cookies:", req.cookies);
 
   const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
 
@@ -54,8 +52,7 @@ const verifyToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
-    console.log("✅ Token Verified:", decoded);
-    next();
+     next();
   } catch (err) {
     return res.status(401).json({ message: "Invalid token" });
   }

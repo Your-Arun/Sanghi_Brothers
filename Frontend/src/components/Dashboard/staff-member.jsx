@@ -36,15 +36,11 @@ const StaffDashboard = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/check-session", { withCredentials: true });
-  
-      if (!response.data.active) {
-        alert("No active session found. Redirecting to login.");
-        navigate("/login");
-        return;
-      }
-  
+      console.log("🔥 Sending logout request");
+      
       await axios.post("http://localhost:5500/logout", {}, { withCredentials: true });
+  
+      console.log("✅ Logout success");
   
       localStorage.removeItem("userData");
       alert("Logout Successfully");

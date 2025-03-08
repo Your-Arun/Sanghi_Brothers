@@ -8,18 +8,15 @@ const Router = express.Router();
 
 const authMiddleware = async (req, res, next) => {
   try {
-    console.log("🟢 Cookies received:", req.cookies); // Check if cookies are coming
-    const token = req.cookies.authToken; 
-    console.log("🟢 Token extracted:", token); // Check if token is extracted
+    console.log("Cookies received:", req.cookies); // Debugging
 
+    const token = req.cookies.authToken; 
     if (!token) return res.status(401).json({ message: "Unauthorized - No Token" });
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("🟢 Decoded token:", decoded); // Check if token decoding is working
+    console.log("Decoded Token:", decoded); // Debugging
 
     const user = await User.findById(decoded.id);
-    console.log("🟢 User found in DB:", user); // Check if user exists
-
     if (!user || user.currentToken !== token) {
       return res.status(403).json({ message: "Session expired, please login again" });
     }
@@ -72,8 +69,7 @@ Router.post("/signup", async (req, res) => {
 
 Router.post("/login", async (req, res) => {
   try {
-    console.log("🔍 Full Headers:", req.headers); // ✅ Debugging ke liye
-    const { email, password } = req.body;
+   const { email, password } = req.body;
     const user = await User.findOne({ email });
 
     if (!user) return res.status(400).json({ message: "Invalid credentials" });
@@ -92,9 +88,6 @@ Router.post("/login", async (req, res) => {
       sameSite: "lax", // ✅ Adjust if needed (try "none" with secure: true for cross-origin)
     });
     
-    console.log("🟢 Token Generated:", token); // ✅ Debugging
-    console.log("🟢 Sent Token in Response & Cookie"); // ✅ Debugging
-
     return res.json({ user, token }); // ✅ Ensure token is in response
   } catch (err) {
     console.error("❌ Server Error:", err);
@@ -106,19 +99,6 @@ Router.post("/login", async (req, res) => {
 
 
 
-// ✅ Secure Logout Route
-Router.post('/logout', (req, res) => {
-  if (!req.session.user) {
-    return res.status(400).json({ message: "No active session found" });
-  }
-  req.session.destroy(err => {
-    if (err) {
-      return res.status(500).json({ message: "Logout failed" });
-    }
-    res.clearCookie('connect.sid'); // If using express-session
-    res.json({ message: "Logged out successfully" });
-  });
-});
 
 
 // ✅ Verify Invitation Code
@@ -262,11 +242,38 @@ Router.get("/user-profile", authMiddleware, async (req, res) => {
     res.status(500).json({ message: "Error fetching user profile" });
   }
 });
-Router.get('/check-session', (req, res) => {
-  if (req.session.user) {
-    return res.json({ active: true });
+
+// ✅ Secure Logout Route
+Router.post("/logout", async (req, res) => {
+  try {
+    console.log("Received Logout Request 🚀");
+    console.log("Cookies in Request:", req.cookies); // Check if cookie is sent
+
+    const token = req.cookies.authToken;
+    if (!token) {
+      console.log("❌ No active session found");
+      return res.status(400).json({ message: "No active session found" });
+    }
+
+    // Fetch user from DB
+    const user = await User.findOne({ currentToken: token });
+    if (!user) {
+      console.log("❌ User not found or already logged out");
+      return res.status(400).json({ message: "Session already expired or invalid" });
+    }
+
+    // Clear token in DB
+    await User.findByIdAndUpdate(user._id, { currentToken: null });
+
+    // Clear cookie
+    res.clearCookie("authToken", { httpOnly: true, secure: false });
+    console.log("✅ Logged out successfully");
+
+    res.json({ message: "Logged out successfully" });
+  } catch (err) {
+    console.error("Logout Error:", err);
+    res.status(500).json({ message: "Logout failed" });
   }
-  return res.json({ active: false });
 });
 
 
