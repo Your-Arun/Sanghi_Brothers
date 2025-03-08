@@ -10,9 +10,8 @@ const authMiddleware = async (req, res, next) => {
   try {
     console.log("Cookies received:", req.cookies); // Debugging
 
-    const token = req.cookies.authToken; 
+    const token = req.cookies.token; // Change authToken → token
     if (!token) return res.status(401).json({ message: "Unauthorized - No Token" });
-
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log("Decoded Token:", decoded); // Debugging
 
@@ -82,11 +81,15 @@ Router.post("/login", async (req, res) => {
       process.env.JWT_SECRET, 
       { expiresIn: "1d" }
     );
-    res.cookie("token", token, {
-      httpOnly: true, // ✅ Prevent client-side access
-      secure: false,  // ✅ Set to true in production (HTTPS required)
-      sameSite: "lax", // ✅ Adjust if needed (try "none" with secure: true for cross-origin)
+    res.cookie("authToken", token, { // "token" ki jagah "authToken"
+      httpOnly: true,
+      secure: false, // HTTPS me true rakho
+      sameSite: "lax",
     });
+    // 🔴 Yahan Token Save Karna Zaroori Hai
+    user.currentToken = token;
+    await user.save(); // Token DB me store hoga
+    console.log("✅ Token saved in DB:", token);
     
     return res.json({ user, token }); // ✅ Ensure token is in response
   } catch (err) {
@@ -244,37 +247,33 @@ Router.get("/user-profile", authMiddleware, async (req, res) => {
 });
 
 // ✅ Secure Logout Route
-Router.post("/logout", async (req, res) => {
+Router.post("/logout", authMiddleware, async (req, res) => {
   try {
-    console.log("Received Logout Request 🚀");
-    console.log("Cookies in Request:", req.cookies); // Check if cookie is sent
+    console.log("🔍 Finding User with ID:", req.user.id);
 
-    const token = req.cookies.authToken;
-    if (!token) {
-      console.log("❌ No active session found");
-      return res.status(400).json({ message: "No active session found" });
-    }
+    const user = await User.findById(req.user.id);
+    console.log("🧐 User Found:", user);
 
-    // Fetch user from DB
-    const user = await User.findOne({ currentToken: token });
     if (!user) {
-      console.log("❌ User not found or already logged out");
-      return res.status(400).json({ message: "Session already expired or invalid" });
+      return res.status(403).json({ message: "User not found or session expired" });
     }
 
-    // Clear token in DB
-    await User.findByIdAndUpdate(user._id, { currentToken: null });
+    if (user.currentToken !== req.cookies.token) {
+      console.log("❌ Token mismatch. Expected:", user.currentToken, "Received:", req.cookies.token);
+      return res.status(403).json({ message: "Session expired, please login again" });
+    }
 
-    // Clear cookie
-    res.clearCookie("authToken", { httpOnly: true, secure: false });
-    console.log("✅ Logged out successfully");
-
-    res.json({ message: "Logged out successfully" });
+    user.currentToken = null;
+    await user.save();
+    res.clearCookie("token");
+    
+    res.json({ message: "Logout successful" });
   } catch (err) {
-    console.error("Logout Error:", err);
-    res.status(500).json({ message: "Logout failed" });
+    console.error("❌ Logout Error:", err);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 
 module.exports = Router;

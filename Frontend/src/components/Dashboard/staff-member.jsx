@@ -36,17 +36,16 @@ const StaffDashboard = () => {
 
   const handleLogout = async () => {
     try {
-      console.log("🔥 Sending logout request");
+      console.log("🔥 Sending logout request...");
       
       await axios.post("http://localhost:5500/logout", {}, { withCredentials: true });
   
       console.log("✅ Logout success");
-  
       localStorage.removeItem("userData");
       alert("Logout Successfully");
       navigate("/login");
     } catch (err) {
-      console.error("Logout failed:", err.response?.data?.message);
+      console.error("❌ Logout failed:", err.response?.data?.message);
     }
   };
   
