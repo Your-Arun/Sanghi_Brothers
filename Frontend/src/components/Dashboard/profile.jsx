@@ -18,17 +18,21 @@ const ProfileModal = ({ closeModal }) => {
     const fetchProfile = async () => {
       try {
         const { data } = await axios.get("http://localhost:5500/profile", {
-          withCredentials: true, // Ensure cookies are sent
+          withCredentials: true,
         });
+
         console.log("Profile Data:", data);
+        setProfile(data);
+        setUpdatedProfile(data); // ✅ Pre-fill form with fetched data
       } catch (err) {
         console.error("Error fetching profile:", err);
+        toast.error("Failed to fetch profile data. Please log in again.");
+        navigate("/login");
       }
     };
-    
 
     fetchProfile();
-  }, [navigate]);
+  }, []);
 
   const handleProfileSave = async () => {
     const token = localStorage.getItem("authToken");
@@ -41,7 +45,7 @@ const ProfileModal = ({ closeModal }) => {
       });
 
       toast.success("Profile updated successfully!");
-      setProfile(updatedProfile);
+      setProfile(updatedProfile); // ✅ Update UI with new profile data
       closeModal();
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to update profile.");
@@ -63,7 +67,15 @@ const ProfileModal = ({ closeModal }) => {
     }
   };
 
-  if (!profile) return null;
+  if (!profile) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm md:max-w-md text-center">
+          <p className="text-gray-700">Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">

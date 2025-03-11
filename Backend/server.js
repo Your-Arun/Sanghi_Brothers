@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 require("dotenv").config();
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 
 const app = express();
 
@@ -22,9 +23,13 @@ app.use(
 // 🛡️ Session Configuration
 app.use(
   session({
-    secret: process.env.JWT_SECRET || "your-secret-key",
+    secret: process.env.JWT_SECRET,
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+      ttl: 4 * 60 * 60, // 4 hours
+    }),
     rolling: true, // Refresh session expiry on every request
     cookie: {
       httpOnly: true,

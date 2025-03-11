@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { FaMoneyBill, FaTruck, FaExclamationTriangle, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { LuLayoutDashboard } from "react-icons/lu";
-import ProfileModal from "./profile"; // ✅ Ensure correct import path
+import ProfileModal from "./profile";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import addIcon from "/add.png";
+import axiosInstance from "./axiosInstance";
 
 const StaffDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -20,8 +21,8 @@ const StaffDashboard = () => {
     const fetchData = async () => {
       try {
         const [reportsResponse, departmentResponse] = await Promise.all([
-          axios.get("http://localhost:5500/reports", { withCredentials: true }),
-          axios.get("http://localhost:5500/departments", { withCredentials: true }),
+          axiosInstance.get("/reports"),
+          axiosInstance.get("/departments"),
         ]);
         setReports(reportsResponse.data || []);
         setDepartments(departmentResponse.data || []);
@@ -38,14 +39,24 @@ const StaffDashboard = () => {
     try {
       console.log("🔥 Sending logout request...");
       
-      await axios.post("http://localhost:5500/logout", {}, { withCredentials: true });
+      const response = await axiosInstance.post("/logout", {}, { withCredentials: true });
   
-      console.log("✅ Logout success");
-      localStorage.removeItem("userData");
-      alert("Logout Successfully");
-      navigate("/login");
+      if (response.status === 200) {
+        console.log("✅ Logout success");
+        localStorage.removeItem("userData");
+        alert("Logout Successfully");
+        navigate("/login");
+      }
     } catch (err) {
-      console.error("❌ Logout failed:", err.response?.data?.message);
+      console.error("❌ Logout failed:", err.response?.data?.message || err.message);
+      
+      // If the session is already expired, clear localStorage & navigate to login
+      if (err.response?.status === 400) {
+        localStorage.removeItem("userData");
+        navigate("/login");
+      } else {
+        alert(err.response?.data?.message || "Logout failed. Please try again.");
+      }
     }
   };
   
@@ -68,7 +79,6 @@ const StaffDashboard = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
       <aside className="w-64 bg-blue-600 text-white p-6 space-y-4">
         <h2 className="text-2xl font-bold">Staff Dashboard</h2>
         <nav className="space-y-3">
@@ -92,7 +102,6 @@ const StaffDashboard = () => {
         </nav>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 p-6">
         {activeTab === "dashboard" && <div className="bg-white p-6 rounded-lg shadow-md text-center text-3xl">DASHBOARD</div>}
 
@@ -126,10 +135,9 @@ const StaffDashboard = () => {
         )}
       </main>
 
-      {/* Department Selection Modal */}
       {showModal2 && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm md:max-w-md relative">
+          <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md relative">
             <button className="absolute top-4 right-4 text-gray-500 hover:text-gray-700" onClick={() => setShowModal2(false)}>❌</button>
             <h2 className="text-2xl font-bold mb-4 text-center text-blue-600">Select a Department</h2>
             <select
@@ -143,8 +151,8 @@ const StaffDashboard = () => {
               ))}
             </select>
             <div className="flex justify-end">
-              <button className="px-4 py-2 bg-gray-300 text-black rounded-lg mr-2 hover:bg-gray-400 transition" onClick={() => setShowModal2(false)}>Cancel</button>
-              <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition" onClick={openReportPage}>Proceed</button>
+              <button className="px-4 py-2 bg-gray-300 text-black rounded-lg mr-2 hover:bg-gray-400" onClick={() => setShowModal2(false)}>Cancel</button>
+              <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600" onClick={openReportPage}>Proceed</button>
             </div>
           </div>
         </div>

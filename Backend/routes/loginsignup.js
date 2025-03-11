@@ -18,7 +18,6 @@ const authMiddleware = async (req, res, next) => {
     req.user = user;
     next();
   } catch (err) {
-    console.error("❌ Auth Error:", err);
     
     // 🔴 Agar token expire ho chuka hai to logout ka response bhejo
     if (err.name === "TokenExpiredError") {
@@ -27,8 +26,6 @@ const authMiddleware = async (req, res, next) => {
     res.status(403).json({ message: "Invalid session" });
   }
 };
-
-
 
 
 
@@ -85,19 +82,12 @@ Router.post("/login", async (req, res) => {
     // 🔴 Yahan Token Save Karna Zaroori Hai
     user.currentToken = token;
     await user.save(); // Token DB me store hoga
-    console.log("✅ Token saved in DB:", token);
     
     return res.json({ user, token }); // ✅ Ensure token is in response
   } catch (err) {
-    console.error("❌ Server Error:", err);
     return res.status(500).json({ message: "Server error" });
   }
 });
-
-
-
-
-
 
 
 // ✅ Verify Invitation Code
@@ -243,28 +233,11 @@ Router.get("/user-profile", authMiddleware, async (req, res) => {
 });
 
 // ✅ Secure Logout Route
-Router.post("/logout", async (req, res) => {
-  try {
-    const token = req.cookies.token;
-    if (!token) return res.status(400).json({ message: "No active session found" });
-
-    const decoded = jwt.decode(token);
-    if (!decoded) return res.status(400).json({ message: "Invalid token" });
-
-    const user = await User.findById(decoded.id);
-    if (!user) return res.status(400).json({ message: "User not found" });
-
-    // 🔴 Database me se token hata do
-    user.currentToken = null;
-    await user.save();
-
-    res.clearCookie("token");
-    res.json({ message: "Logout successful" });
-  } catch (err) {
-    console.error("❌ Logout Error:", err);
-    res.status(500).json({ message: "Internal server error" });
-  }
+Router.post("/logout", (req, res) => {
+  res.clearCookie("authToken"); // Clear session/token cookie
+  res.status(200).json({ message: "Logged out successfully" }); // Always return 200
 });
+
 
 
 

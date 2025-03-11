@@ -51,14 +51,21 @@ const Dashboard = () => {
   const handleLogout = async () => {
     try {
       console.log("🔥 Sending logout request...");
-      await axiosInstance.post("/logout", {}, { withCredentials: true });
-      localStorage.removeItem("userData");
-      alert("Logout Successfully");
-      navigate("/login");
+  
+      const response = await axios.post("http://localhost:5500/logout", {}, { withCredentials: true });
+  
+      if (response.status === 200) {
+        console.log("✅ Logout success");
+        localStorage.removeItem("userData");
+        alert("Logout Successfully");
+        navigate("/login");
+      }
     } catch (err) {
-      console.error("❌ Logout failed:", err.response?.data?.message);
+      console.error("❌ Logout failed:", err.response?.data?.message || err.message);
+      alert(err.response?.data?.message || "Logout failed. Please try again.");
     }
   };
+  
   
    // ✅ Fetch all required data
    useEffect(() => {
