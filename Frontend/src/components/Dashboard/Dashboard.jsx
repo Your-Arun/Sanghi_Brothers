@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import add from "/add.png";
 import { FaTimes, FaTrash, FaUniversity } from "react-icons/fa";
 import ProfileModal from "./profile";
+import axiosInstance from './axiosInstance'
 const Dashboard = () => {
   const [departments, setDepartments] = useState([]);
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -27,8 +28,6 @@ const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
   const [isOpen3, setIsOpen3] = useState(false);
-  const [isOpen4, setIsOpen4] = useState(false);
-  const [userDepartment, setUserDepartment] = useState("");
   
   const [isProfileOpen, setProfileOpen] = useState(false);
 
@@ -36,63 +35,52 @@ const Dashboard = () => {
  
   //reportfile ke lie
   useEffect(() => {
-    const fetchrepoFile = async () => {
+    const fetchRepoFile = async () => {
       try {
-        
-        const responsee = await axios.get("http://localhost:5500/reportfile", {
-          withCredentials: true, // Cookies will be included
-        });
-        setReportFile(responsee.data);
+        const response = await axiosInstance.get("/reportfile", { withCredentials: true });
+        setReportFile(response.data);
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching report files:", error);
       }
     };
-    fetchrepoFile();
+    fetchRepoFile();
   }, []);
+
 
   // ✅ Logout user
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:5500/logout", {}, { withCredentials: true });
+      console.log("🔥 Sending logout request...");
+      await axiosInstance.post("/logout", {}, { withCredentials: true });
       localStorage.removeItem("userData");
-      alert("Logout Successfully")
-      navigate("/login"); // Redirect after logout
+      alert("Logout Successfully");
+      navigate("/login");
     } catch (err) {
-      console.error("Logout failed:", err.response?.data?.message);
+      console.error("❌ Logout failed:", err.response?.data?.message);
     }
   };
-
   
    // ✅ Fetch all required data
    useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data: departmentData } = await axios.get("http://localhost:5500/departments", {
-          withCredentials: true,
-        });
-        setDepartments(departmentData);
+        const [departmentRes, reportRes, sb3Res, cashierRes] = await Promise.all([
+          axiosInstance.get("/departments", { withCredentials: true }),
+          axiosInstance.get("/reports", { withCredentials: true }),
+          axiosInstance.get("/bank/monthlyfundflow", { withCredentials: true }),
+          axiosInstance.get("/cashier", { withCredentials: true })
+        ]);
 
-        const { data: reportData } = await axios.get("http://localhost:5500/reports", {
-          withCredentials: true,
-        });
-        setReports(reportData);
-
-        const { data: sb3Data } = await axios.get("http://localhost:5500/bank/monthlyfundflow", {
-          withCredentials: true,
-        });
-        setSb3Update(sb3Data);
-
-        const { data: cashierData } = await axios.get("http://localhost:5500/cashier", {
-          withCredentials: true,
-        });
-        setCashier(cashierData);
-        setCashierTotal(cashierData.totalamount);
+        setDepartments(departmentRes.data);
+        setReports(reportRes.data);
+        setSb3Update(sb3Res.data);
+        setCashier(cashierRes.data);
+        setCashierTotal(cashierRes.data.totalamount);
       } catch (err) {
         console.error("Error fetching data:", err);
         alert("Failed to fetch data.");
       }
     };
-
     fetchData();
   }, []);
    // ✅ Handle report selection for editing
@@ -104,12 +92,8 @@ const Dashboard = () => {
   };
   const handleDeleteReport = async (reportId) => {
     if (!window.confirm("Are you sure you want to delete this report?")) return;
-
     try {
-      await axios.delete(`http://localhost:5500/reports/${reportId}`, {
-        withCredentials: true,
-      });
-
+      await axiosInstance.delete(`/reports/${reportId}`, { withCredentials: true });
       setReports((prev) => prev.filter((report) => report._id !== reportId));
       alert("Report deleted successfully!");
     } catch (error) {
@@ -117,47 +101,34 @@ const Dashboard = () => {
       alert("Failed to delete report. Please try again.");
     }
   };
+  
   const handleUpdateReport = async () => {
     try {
       if (!selectedReport || !selectedReport._id) {
         alert("No report selected for update.");
         return;
       }
-  
-      // ✅ Token from LocalStorage
       const token = localStorage.getItem("token");  
       if (!token) {
         alert("Unauthorized: Please log in again.");
         return;
       }
-  
-      // ✅ Updated Report Data
-      const updatedReport = {
-        title: updatedTitle,
-        content: updatedContent,
-      };
-  
-      // ✅ API Call with Correct Authorization Header
-      const response = await axios.put(
-        `http://localhost:5500/reports/${selectedReport._id}`,
+      const updatedReport = { title: updatedTitle, content: updatedContent };
+      const response = await axiosInstance.put(
+        `/reports/${selectedReport._id}`,
         updatedReport,
         {
-          headers: { 
-            Authorization: `Bearer ${token}`,  // ✅ Correct token format
-            "Content-Type": "application/json"
-          },
-          withCredentials: true, // ✅ Ensures cookies are sent properly
+          headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+          withCredentials: true
         }
       );
-  
       if (response.status === 200) {
-        // ✅ Update UI
         setReports((prevReports) =>
           prevReports.map((report) =>
             report._id === selectedReport._id ? { ...report, ...updatedReport } : report
           )
         );
-        setShowModal(false); // ✅ Close modal after success
+        setShowModal(false);
         alert("Report updated successfully!");
       } else {
         alert("Failed to update report.");
@@ -190,7 +161,48 @@ const Dashboard = () => {
       alert("Please select a department!");
     }
   };
+  <div className="relative mb-4 user-menu">
+      {/* Profile Icon */}
+      <div className="flex items-center justify-end pr-6">
+        <img
+          src="/user.png"
+          alt="User"
+          className="w-12 h-12 rounded-full border-2 border-gray-400 shadow-md cursor-pointer
+                  hover:scale-105 transition-transform duration-300"
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowUserMenu(!showUserMenu);
+          }}
+        />
+      </div>
 
+      {/* Dropdown Menu */}
+      {showUserMenu && (
+        <div className="absolute right-6 top-14 w-44 bg-white rounded-lg shadow-lg border border-gray-200
+                      transition-all duration-300 ease-in-out z-50">
+          <button
+            className="block px-4 py-2 text-left w-full text-gray-700 font-medium hover:bg-gray-100 
+                    transition-all duration-200"
+            onClick={() => {
+              setProfileOpen(true);
+              setShowUserMenu(false);
+            }}
+          >
+            👤 Profile
+          </button>
+          <button
+            className="block px-4 py-2 text-left w-full text-red-500 font-medium hover:bg-red-100 
+                    transition-all duration-200"
+            onClick={handleLogout}
+          >
+            🚪 Logout
+          </button>
+        </div>
+      )}
+
+      {/* Profile Modal */}
+      {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
+    </div>
 
   return (
     <>
@@ -200,40 +212,48 @@ const Dashboard = () => {
                 drop-shadow-lg mt-[-10px] mb-8">
           Dashboard
         </h1>
-        <div className="relative mb-4">
-          {/* Profile Icon with Proper Spacing */}
-          <div className="flex items-center justify-end pr-6">
-            <img
-              src="public/user.png"
-              alt="User"
-              className="w-12 h-12 rounded-full border-2 border-gray-400 shadow-md cursor-pointer
+        <div className="relative mb-4 user-menu">
+      {/* Profile Icon */}
+      <div className="flex items-center justify-end pr-6">
+        <img
+          src="/user.png"
+          alt="User"
+          className="w-12 h-12 rounded-full border-2 border-gray-400 shadow-md cursor-pointer
                   hover:scale-105 transition-transform duration-300"
-              onClick={() => setShowUserMenu(!showUserMenu)}
-            />
-          </div>
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowUserMenu(!showUserMenu);
+          }}
+        />
+      </div>
 
-          {/* Dropdown Menu with Proper Positioning */}
-          {showUserMenu && (
-            <div className="absolute right-6 top-14 w-44 bg-white rounded-lg shadow-lg border border-gray-200
+      {/* Dropdown Menu */}
+      {showUserMenu && (
+        <div className="absolute right-6 top-14 w-44 bg-white rounded-lg shadow-lg border border-gray-200
                       transition-all duration-300 ease-in-out z-50">
-              <button
-                className="block px-4 py-2 text-left w-full text-gray-700 font-medium hover:bg-gray-100 
+          <button
+            className="block px-4 py-2 text-left w-full text-gray-700 font-medium hover:bg-gray-100 
                     transition-all duration-200"
-                    onClick={() => setProfileOpen(true)}
-              >
-                👤 Profile
-              </button>
-              <button
-                className="block px-4 py-2 text-left w-full text-red-500 font-medium hover:bg-red-100 
+            onClick={() => {
+              setProfileOpen(true);
+              setShowUserMenu(false);
+            }}
+          >
+            👤 Profile
+          </button>
+          <button
+            className="block px-4 py-2 text-left w-full text-red-500 font-medium hover:bg-red-100 
                     transition-all duration-200"
-                    onClick={handleLogout} 
-              >
-                🚪 Logout
-              </button>
-            </div>
-          )}
-             {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
+            onClick={handleLogout}
+          >
+            🚪 Logout
+          </button>
         </div>
+      )}
+
+      {/* Profile Modal */}
+      {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
+    </div>
         <div>
           {/* Departments Section */}
           <div className="mb-10 p-6 rounded-lg shadow-md">

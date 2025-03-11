@@ -8,30 +8,26 @@ const Router = express.Router();
 
 const authMiddleware = async (req, res, next) => {
   try {
-    console.log("Cookies received:", req.cookies); // Debugging
-
-    const token = req.cookies.token; // Change authToken → token
+    const token = req.cookies.token; 
     if (!token) return res.status(401).json({ message: "Unauthorized - No Token" });
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("Decoded Token:", decoded); // Debugging
-
     const user = await User.findById(decoded.id);
     if (!user || user.currentToken !== token) {
       return res.status(403).json({ message: "Session expired, please login again" });
     }
-
-    const expiryTime = decoded.exp * 1000;
-    if (Date.now() > expiryTime) {
-      return res.status(403).json({ message: "Session expired, please login again" });
-    }
-
     req.user = user;
     next();
   } catch (err) {
     console.error("❌ Auth Error:", err);
+    
+    // 🔴 Agar token expire ho chuka hai to logout ka response bhejo
+    if (err.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Session expired, please login again" });
+    }
     res.status(403).json({ message: "Invalid session" });
   }
 };
+
 
 
 
@@ -247,32 +243,29 @@ Router.get("/user-profile", authMiddleware, async (req, res) => {
 });
 
 // ✅ Secure Logout Route
-Router.post("/logout", authMiddleware, async (req, res) => {
+Router.post("/logout", async (req, res) => {
   try {
-    console.log("🔍 Finding User with ID:", req.user.id);
+    const token = req.cookies.token;
+    if (!token) return res.status(400).json({ message: "No active session found" });
 
-    const user = await User.findById(req.user.id);
-    console.log("🧐 User Found:", user);
+    const decoded = jwt.decode(token);
+    if (!decoded) return res.status(400).json({ message: "Invalid token" });
 
-    if (!user) {
-      return res.status(403).json({ message: "User not found or session expired" });
-    }
+    const user = await User.findById(decoded.id);
+    if (!user) return res.status(400).json({ message: "User not found" });
 
-    if (user.currentToken !== req.cookies.token) {
-      console.log("❌ Token mismatch. Expected:", user.currentToken, "Received:", req.cookies.token);
-      return res.status(403).json({ message: "Session expired, please login again" });
-    }
-
+    // 🔴 Database me se token hata do
     user.currentToken = null;
     await user.save();
+
     res.clearCookie("token");
-    
     res.json({ message: "Logout successful" });
   } catch (err) {
     console.error("❌ Logout Error:", err);
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 
 
