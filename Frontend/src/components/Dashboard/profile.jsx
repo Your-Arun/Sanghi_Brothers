@@ -16,23 +16,35 @@ const ProfileModal = ({ closeModal }) => {
 
   useEffect(() => {
     const fetchProfile = async () => {
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        toast.error("Session expired. Please log in again.");
+        navigate("/login");
+        return;
+      }
+
       try {
-        const { data } = await axios.get("http://localhost:5500/profile", {
+        const  data  = await axios.get("http://localhost:5500/profile", {
+          headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });
 
         console.log("Profile Data:", data);
-        setProfile(data);
-        setUpdatedProfile(data); // ✅ Pre-fill form with fetched data
+        if (data && data.username) {
+          setProfile(data);
+          setUpdatedProfile({ ...data });
+        } else {
+          throw new Error("Invalid profile data received.");
+        }
       } catch (err) {
         console.error("Error fetching profile:", err);
-        toast.error("Failed to fetch profile data. Please log in again.");
+        toast.error(err.response?.data?.message || "Failed to fetch profile.");
         navigate("/login");
       }
     };
 
     fetchProfile();
-  }, []);
+  }, [navigate]);
 
   const handleProfileSave = async () => {
     const token = localStorage.getItem("authToken");
@@ -40,14 +52,16 @@ const ProfileModal = ({ closeModal }) => {
 
     setLoading(true);
     try {
-      await axios.put("http://localhost:5500/profile", updatedProfile, {
+      const { data } = await axios.put("http://localhost:5500/profile", updatedProfile, {
         headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       });
 
       toast.success("Profile updated successfully!");
-      setProfile(updatedProfile); // ✅ Update UI with new profile data
+      setProfile(data); // Update UI with new profile data
       closeModal();
     } catch (err) {
+      console.error("Error updating profile:", err);
       toast.error(err.response?.data?.message || "Failed to update profile.");
     } finally {
       setLoading(false);
@@ -63,6 +77,7 @@ const ProfileModal = ({ closeModal }) => {
       toast.success("Logged out successfully!");
       navigate("/login");
     } catch (err) {
+      console.error("Logout failed:", err);
       toast.error("Logout failed. Try again.");
     }
   };
@@ -80,7 +95,10 @@ const ProfileModal = ({ closeModal }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm md:max-w-md relative">
-        <button className="absolute top-4 right-4 text-gray-500 hover:text-gray-700" onClick={closeModal}>
+        <button
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+          onClick={closeModal}
+        >
           ❌
         </button>
 
