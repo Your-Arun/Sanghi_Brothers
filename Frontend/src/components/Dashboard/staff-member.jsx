@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { FaMoneyBill, FaTruck, FaExclamationTriangle, FaUser, FaSignOutAlt } from "react-icons/fa";
+import { FaMoneyBill, FaTruck, FaExclamationTriangle, FaUser} from "react-icons/fa";
 import { LuLayoutDashboard } from "react-icons/lu";
 import ProfileModal from "./profile";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import addIcon from "/add.png";
 import axiosInstance from "./axiosInstance";
 
@@ -97,9 +96,7 @@ const StaffDashboard = () => {
           <button onClick={() => setProfileOpen(true)} className="flex items-center gap-2 p-2 w-full bg-blue-700 rounded-lg hover:bg-blue-500">
             <FaUser /> Profile 
           </button>
-          <button onClick={handleLogout} className="flex items-center gap-2 p-2 w-full bg-red-600 rounded-lg hover:bg-red-500 mt-4">
-            <FaSignOutAlt /> Logout
-          </button>
+         
         </nav>
       </aside>
 

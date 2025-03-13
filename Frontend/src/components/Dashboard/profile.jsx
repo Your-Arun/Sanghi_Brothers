@@ -8,8 +8,6 @@ const ProfileModal = ({ closeModal }) => {
   const [profile, setProfile] = useState(null);
   const [updatedProfile, setUpdatedProfile] = useState({
     username: "",
-    email: "",
-    department: "",
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -17,29 +15,31 @@ const ProfileModal = ({ closeModal }) => {
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("authToken");
-  
+
       if (!token) {
         navigate("/login");
         return;
       }
-  
+
       try {
         const { data } = await axios.get("http://localhost:5500/profile", {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });
-  
+
         setProfile(data);
+        setUpdatedProfile({
+          username: data.username, // ✅ Set only username as editable
+        });
       } catch (err) {
         console.error("Profile Fetch Error:", err);
         localStorage.removeItem("authToken"); // ✅ Remove token if invalid
         navigate("/login");
       }
     };
-  
+
     fetchProfile();
   }, []);
-  
 
   const handleProfileSave = async () => {
     const token = localStorage.getItem("authToken");
@@ -47,10 +47,14 @@ const ProfileModal = ({ closeModal }) => {
 
     setLoading(true);
     try {
-      const { data } = await axios.put("http://localhost:5500/profile", updatedProfile, {
-        headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true,
-      });
+      const { data } = await axios.put(
+        "http://localhost:5500/profile",
+        { username: updatedProfile.username }, // ✅ Only username is editable
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
+        }
+      );
 
       toast.success("Profile updated successfully!");
       setProfile(data); // Update UI with new profile data
@@ -100,30 +104,36 @@ const ProfileModal = ({ closeModal }) => {
         <h2 className="text-2xl font-bold mb-4 text-center text-blue-600">Edit Profile</h2>
 
         <form>
-          {[
-            { label: "Name", key: "username", editable: true },
-            { label: "Email", key: "email", editable: false },
-            { label: "Role", key: "department", editable: false },
-          ].map(({ label, key, editable }) => (
-            <div key={key} className="mb-4">
-              <label className="block text-gray-700 font-semibold">{label}:</label>
-              {editable ? (
-                <input
-                  type="text"
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={updatedProfile[key] || ""}
-                  onChange={(e) =>
-                    setUpdatedProfile((prev) => ({ ...prev, [key]: e.target.value }))
-                  }
-                />
-              ) : (
-                <p className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100">
-                  {updatedProfile[key] || "N/A"}
-                </p>
-              )}
-            </div>
-          ))}
+          {/* Username (Editable) */}
+          <div className="mb-4">
+            <label className="block text-gray-700 font-semibold">Name:</label>
+            <input
+              type="text"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={updatedProfile.username || ""}
+              onChange={(e) =>
+                setUpdatedProfile((prev) => ({ ...prev, username: e.target.value }))
+              }
+            />
+          </div>
 
+          {/* Email (Read-Only) */}
+          <div className="mb-4">
+            <label className="block text-gray-700 font-semibold">Email:</label>
+            <p className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100">
+              {profile.email}
+            </p>
+          </div>
+
+          {/* Role/Department (Read-Only) */}
+          <div className="mb-4">
+            <label className="block text-gray-700 font-semibold">Role:</label>
+            <p className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100">
+              {profile.department}
+            </p>
+          </div>
+
+          {/* Buttons */}
           <div className="flex justify-between">
             <button
               type="button"

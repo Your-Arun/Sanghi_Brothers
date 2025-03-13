@@ -179,16 +179,15 @@ Router.get("/departments", async (req, res) => {
 });
 
 
-Router.get("/profile", async (req, res) => {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ message: "Unauthorized" });
-
+Router.get("/profile", authMiddleware, async (req, res) => {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id).select("-password");
+    const user = await User.findById(req.user.id).select("-password -currentToken");
+    if (!user) return res.status(404).json({ message: "User not found" });
+
     res.json(user);
   } catch (error) {
-    res.status(401).json({ message: "Invalid or expired token" });
+    console.error("Profile Fetch Error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
