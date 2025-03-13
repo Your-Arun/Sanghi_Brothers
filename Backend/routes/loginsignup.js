@@ -4,27 +4,35 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const nodemailer = require("nodemailer");
 const Router = express.Router();
+const tokenBlacklist = new Set();
 
-const authMiddleware = async (req, res, next) => {
-  try {
-    const token = req.header("Authorization")?.split(" ")[1];
-    if (!token) return res.status(401).json({ message: "Unauthorized access" });
+// Ensure token isn't reused
+const authMiddleware = (req, res, next) => {
+  const token = req.cookies.authToken;
+  if (!token) return res.status(401).json({ message: "Unauthorized" });
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  jwt.verify(token, "your_jwt_secret", (err, decoded) => {
+    if (err) return res.status(401).json({ message: "Invalid Token" });
 
-    // ✅ Fetch correct user and attach to request
-    req.user = await User.findById(decoded.id).select("-password");
-
-    if (!req.user) return res.status(404).json({ message: "User not found" });
-
+    req.user = decoded;
     next();
-  } catch (err) {
-    console.error("Auth Middleware Error:", err);
-    res.status(401).json({ message: "Invalid token" });
-  }
+  });
+};
+const verifyToken = (req, res, next) => {
+  const token = req.cookies.authToken; // Fetch token from HttpOnly Cookie
+
+  if (!token) return res.status(401).json({ message: "Unauthorized access" });
+
+  jwt.verify(token, "secret_key", (err, decoded) => {
+    if (err) return res.status(403).json({ message: "Invalid token" });
+
+    req.user = decoded; // Attach user info to request
+    next();
+  });
 };
 
 
+module.exports = verifyToken;
 
 
 
@@ -58,26 +66,31 @@ Router.post("/signup", async (req, res) => {
   }
 });
 
+
+
 Router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
 
-  if (!user || user.password !== password) {
+  if (!user || !(await bcrypt.compare(password, user.password))) {
     return res.status(401).json({ message: "Invalid credentials" });
   }
 
-  // 🔥 Always generate a new token for each login
-  const token = jwt.sign(
-    { id: user._id, username: user.username, department: user.department },
-    "yourstrongsecretkey",
-    { expiresIn: "1h" }
-  );
+  // Generate JWT token
+  const token = jwt.sign({ id: user._id, email: user.email }, "secret_key", { expiresIn: "1h" });
 
-  user.tokens = [token]; // 🛑 Store only the latest token
-  await user.save();
+  // Set the token in HttpOnly cookie
+  res.cookie("authToken", token, {
+    httpOnly: true,
+    secure: true, // Use true in production with HTTPS
+    sameSite: "Strict",
+  });
 
-  res.json({ token, user });
+  res.json({ message: "Login successful" });
 });
+
+
+
 
 
 // ✅ Verify Invitation Code
@@ -172,20 +185,15 @@ Router.get("/departments", async (req, res) => {
 });
 
 
-Router.get("/profile", async (req, res) => {
+Router.get("/profile", verifyToken, async (req, res) => {
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    const decoded = jwt.verify(token, "yourSecretKey");
+    const user = await User.findById(req.user.id).select("-password"); // Exclude password
 
-    const user = await User.findById(decoded.id).select("-password");
-
-    if (!user) {
-      return res.status(401).json({ message: "User not found" });
-    }
+    if (!user) return res.status(404).json({ message: "User not found" });
 
     res.json(user);
-  } catch (err) {
-    res.status(401).json({ message: "Invalid token, please log in again" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
   }
 });
 
@@ -256,22 +264,11 @@ Router.get("/user-profile", authMiddleware, async (req, res) => {
 });
 
 // ✅ Secure Logout Route
-Router.post("/logout", authMiddleware, async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id);
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    // ✅ Clear token (Modify if storing multiple tokens)
-    user.tokens = [];
-    await user.save();
-
-    res.json({ message: "Logged out successfully" });
-  } catch (error) {
-    console.error("Logout Error:", error);
-    res.status(500).json({ message: "Server error" });
-  }
+Router.post("/logout", authMiddleware, (req, res) => {
+  tokenBlacklist.add(req.token);
+  res.clearCookie("token");
+  res.json({ message: "Logged out successfully" });
 });
-
 
 
 

@@ -1,9 +1,8 @@
 import React, { useState, useContext } from "react";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import UserContext from "./UserContext";
-import axiosInstance from "../Dashboard/axiosInstance"; // ✅ Common Axios import karo
+import axiosInstance from "../Dashboard/axiosInstance"; // ✅ Common Axios import
 
 const Login = () => {
   const { setUser } = useContext(UserContext);
@@ -19,25 +18,18 @@ const Login = () => {
   
     try {
       const loginResponse = await axiosInstance.post("/login", { email, password });
-
+  
       console.log("✅ Login Response:", loginResponse.data);
   
-      const { user, token } = loginResponse.data;
+      const { user, token } = loginResponse.data; // 🛠️ Ensure token is returned
   
       if (!token) {
-        console.error("❌ No token received from server.");
-        alert("Login failed. No token received.");
-        return; 
+        throw new Error("Token not received");
       }
   
-      // ✅ Token store karo
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("authToken", token); // ✅ Store token in localStorage
   
-      console.log("✅ Token Stored:", token); // 🔍 Debugging
-      console.log("✅ User Stored:", user); // 🔍 Debugging
-  
-      setUser(user);
+      setUser(user); // ✅ Context me user set karo
   
       navigate(user.department?.trim().toLowerCase() === "staff" ? "/staff-dashboard" : "/dashboard");
     } catch (err) {

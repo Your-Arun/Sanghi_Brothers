@@ -51,30 +51,20 @@ import UpdateMeter from './components/Petrol Related/updatemeterclose';
 import Cashier from "./components/Layouts/cashier";
 import CashSlip from "./components/Layouts/cashslip";
 import MergingSbSection from './components/Dashboard/sbbankk/mergingsbsection.jsx';
+import ProtectedRoute from "./components/Dashboard/ProtectedRoute.jsx";
 
-// ✅ Fix Token Storage Key in `isAuthenticated`
-const isAuthenticated = () => {
-  return localStorage.getItem("authToken") ? true : false;
-};
 
-// ✅ Protected Route Component
-const ProtectedRoute = () => {
-  if (!isAuthenticated()) {
-    alert("Please sign up or log in to continue.");
-    return <Navigate to="/login" replace />;
-  }
-  return <Outlet />;
-};
 
 const App = () => {
   return (
-    <UserProvider> {/* ✅ Correct Placement of UserProvider */}
+    <UserProvider> {/* ✅ UserProvider ko Router ke bahar wrap kiya */}
       <Router>
         <AppContent />
       </Router>
     </UserProvider>
   );
 };
+
 
 const AppContent = () => {
   const location = useLocation();

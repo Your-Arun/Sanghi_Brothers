@@ -40,28 +40,24 @@ app.use(
   })
 );
 
-app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 
 
 const verifyToken = (req, res, next) => {
+  const token = req.cookies.authToken; // Fetch token from HttpOnly Cookie
 
-  const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ message: "Unauthorized access" });
 
-  if (!token) {
-    return res.status(403).json({ message: "No token provided" });
-  }
+  jwt.verify(token, "secret_key", (err, decoded) => {
+    if (err) return res.status(403).json({ message: "Invalid token" });
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-     next();
-  } catch (err) {
-    return res.status(401).json({ message: "Invalid token" });
-  }
+    req.user = decoded; // Attach user info to request
+    next();
+  });
 };
 
 
