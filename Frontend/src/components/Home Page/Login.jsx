@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import UserContext from "./UserContext";
-import axiosInstance from "../Dashboard/axiosInstance"; // ✅ Common Axios import
+import axiosInstance from "../Dashboard/axiosInstance"; // ✅ Common Axios instance
 
 const Login = () => {
   const { setUser } = useContext(UserContext);
@@ -15,22 +15,17 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-  
+
     try {
       const loginResponse = await axiosInstance.post("/login", { email, password });
-  
+
       console.log("✅ Login Response:", loginResponse.data);
-  
-      const { user, token } = loginResponse.data; // 🛠️ Ensure token is returned
-  
-      if (!token) {
-        throw new Error("Token not received");
-      }
-  
-      localStorage.setItem("authToken", token); // ✅ Store token in localStorage
-  
+
+      const { user } = loginResponse.data; // 🔹 No need to fetch token manually
+
       setUser(user); // ✅ Context me user set karo
-  
+
+      // ✅ Redirect user based on role
       navigate(user.department?.trim().toLowerCase() === "staff" ? "/staff-dashboard" : "/dashboard");
     } catch (err) {
       console.error("❌ Login Error:", err.response?.data || err);
@@ -39,8 +34,6 @@ const Login = () => {
       setLoading(false);
     }
   };
-  
-  
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">

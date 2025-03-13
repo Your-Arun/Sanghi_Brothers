@@ -77,13 +77,13 @@ Router.post("/login", async (req, res) => {
   }
 
   // Generate JWT token
-  const token = jwt.sign({ id: user._id, email: user.email }, "secret_key", { expiresIn: "1h" });
+  const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
-  // Set the token in HttpOnly cookie
+  // ✅ Set token in HttpOnly cookie
   res.cookie("authToken", token, {
     httpOnly: true,
-    secure: true, // Use true in production with HTTPS
-    sameSite: "Strict",
+    secure: false, // ✅ Set true in production (HTTPS required)
+    sameSite: "Lax", // ✅ Helps with CSRF protection
   });
 
   res.json({ message: "Login successful" });
@@ -185,15 +185,19 @@ Router.get("/departments", async (req, res) => {
 });
 
 
-Router.get("/profile", verifyToken, async (req, res) => {
+Router.get("/profile", async (req, res) => {
+  const token = req.cookies.authToken; // ✅ Read token from cookies
+  if (!token) return res.status(401).json({ message: "Unauthorized" });
+
   try {
-    const user = await User.findById(req.user.id).select("-password"); // Exclude password
+    const decoded = jwt.verify(token, "secret_key");
+    const user = await User.findById(decoded.id).select("-password"); // ✅ Exclude password
 
     if (!user) return res.status(404).json({ message: "User not found" });
 
     res.json(user);
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    res.status(401).json({ message: "Invalid token" });
   }
 });
 
