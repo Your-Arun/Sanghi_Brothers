@@ -17,13 +17,11 @@ const Login = () => {
     setLoading(true);
   
     try {
-      const loginResponse = await axiosInstance.post("/login", { email, password }, { withCredentials: true });
+      const loginResponse = await axiosInstance.post("/login", { email, password }, { withCredentials: true }); // ✅ Cookies allow karo
   
       console.log("✅ Login Response:", loginResponse.data);
+      setUser(loginResponse.data.user); // ✅ Set user in context
   
-      setUser(loginResponse.data.user); // ✅ Store user details in Context
-  
-      // ✅ Navigate based on user department
       navigate(loginResponse.data.user.department === "staff" ? "/staff-dashboard" : "/dashboard");
     } catch (err) {
       console.error("❌ Login Error:", err.response?.data || err);
@@ -32,6 +30,7 @@ const Login = () => {
       setLoading(false);
     }
   };
+  
   
 
   return (

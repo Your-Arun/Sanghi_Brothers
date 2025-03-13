@@ -8,20 +8,21 @@ const tokenBlacklist = new Set();
 
 // Ensure token isn't reused
 const authMiddleware = (req, res, next) => {
-  const token = req.cookies.authToken; // ✅ Read token from Cookie
-
+  const token = req.cookies.authToken; // ✅ Get token from cookies
   if (!token) {
-    return res.status(401).json({ message: "Unauthorized, please log in" });
+    return res.status(401).json({ message: "Unauthorized: No Token Provided" });
   }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // ✅ Attach user data to request object
+    req.user = decoded; // ✅ Attach user info to request
     next();
-  } catch (err) {
-    res.status(401).json({ message: "Invalid token, please log in again" });
+  } catch (error) {
+    return res.status(401).json({ message: "Invalid or Expired Token" });
   }
 };
+
+
 const verifyToken = (req, res, next) => {
   const token = req.cookies.authToken; // Fetch token from HttpOnly Cookie
 
@@ -74,29 +75,32 @@ Router.post("/signup", async (req, res) => {
 
 Router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
 
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    return res.status(401).json({ message: "Invalid credentials" });
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+
+    const token = jwt.sign(
+      { id: user._id, username: user.username, department: user.department },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" } // ✅ Token will expire in 1 hour
+    );
+
+    res.cookie("authToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // ✅ Secure in production
+      sameSite: "Strict",
+      maxAge: 3600000, // ✅ 1 Hour
+    });
+
+    res.json({ message: "Login successful", user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
   }
-
-  // Generate JWT token
-  const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "1h" });
-
-
-  
-    // ✅ Store session in database
-    user.tokens.push({ token });
-    await user.save();
-    
-  // ✅ Set token in HttpOnly cookie
-  res.cookie("authToken", token, {
-    httpOnly: true,
-    secure: false, // ✅ Set true in production (HTTPS required)
-    sameSite: "Lax", // ✅ Helps with CSRF protection
-  });
-
-  res.json({ message: "Login successful" ,user});
 });
 
 
@@ -197,12 +201,13 @@ Router.get("/departments", async (req, res) => {
 
 Router.get("/profile", authMiddleware, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("-password -tokens");
+    const user = await User.findById(req.user.id).select("-password");
     if (!user) return res.status(404).json({ message: "User not found" });
 
     res.json(user);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching profile" });
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
   }
 });
 
@@ -273,13 +278,9 @@ Router.get("/user-profile", authMiddleware, async (req, res) => {
 });
 
 // ✅ Secure Logout Route
-Router.post("/logout", authMiddleware, async (req, res) => {
-  try {
-    res.clearCookie("authToken"); // ✅ Destroy Session Cookie
-    res.json({ message: "Logged out successfully" });
-  } catch (error) {
-    res.status(500).json({ message: "Logout failed" });
-  }
+Router.post("/logout", (req, res) => {
+  res.clearCookie("authToken");
+  res.json({ message: "Logged out successfully" });
 });
 
 

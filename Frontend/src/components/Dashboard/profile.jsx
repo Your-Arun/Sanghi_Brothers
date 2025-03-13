@@ -47,15 +47,14 @@ const ProfileModal = ({ closeModal }) => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:5500/logout", {}, { withCredentials: true });
-  
-      setUser(null); // ✅ Clear Context
+      await axiosInstance.post("/logout", {}, { withCredentials: true });
+      setUser(null);
       navigate("/login");
     } catch (error) {
-      console.error("Logout failed:", error);
-      toast.error("Logout failed! Please try again.");
+      console.error("Logout Error:", error);
     }
   };
+  
   
 
   if (!profile) {

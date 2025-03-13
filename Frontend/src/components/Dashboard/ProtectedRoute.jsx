@@ -3,15 +3,16 @@ import { useEffect, useState } from "react";
 import axiosInstance from "../Dashboard/axiosInstance";
 
 const ProtectedRoute = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        await axiosInstance.get("/profile", { withCredentials: true });
+        const { data } = await axiosInstance.get("/profile", { withCredentials: true }); // ✅ Cookies ke sath request
         setIsAuthenticated(true);
       } catch (err) {
+        console.error("🚨 Not Authenticated:", err.response?.data || err);
         setIsAuthenticated(false);
       } finally {
         setLoading(false);
@@ -21,7 +22,7 @@ const ProtectedRoute = () => {
     checkAuth();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p className="text-center mt-10">🔄 Checking session...</p>;
 
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
 };
