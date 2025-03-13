@@ -28,10 +28,37 @@ const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
   const [isOpen3, setIsOpen3] = useState(false);
-  
+  const [user, setUser] = useState(null);
   const [isProfileOpen, setProfileOpen] = useState(false);
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("authToken");
 
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      try {
+        // ✅ Fetch only the logged-in user
+        const { data } = await axios.get("http://localhost:5500/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
+        });
+
+        console.log("✅ Logged-in User Data:", data);
+        setUser(data);
+      } catch (err) {
+        console.error("Profile Fetch Error:", err);
+        toast.error("Failed to load user data. Please log in again.");
+        localStorage.removeItem("authToken");
+        navigate("/login");
+      }
+    };
+
+    fetchUser();
+  }, [navigate]);
  
   //reportfile ke lie
   useEffect(() => {
@@ -46,25 +73,6 @@ const Dashboard = () => {
     fetchRepoFile();
   }, []);
 
-
-  // ✅ Logout user
-  const handleLogout = async () => {
-    try {
-      console.log("🔥 Sending logout request...");
-  
-      const response = await axios.post("http://localhost:5500/logout", {}, { withCredentials: true });
-  
-      if (response.status === 200) {
-        console.log("✅ Logout success");
-        localStorage.removeItem("userData");
-        alert("Logout Successfully");
-        navigate("/login");
-      }
-    } catch (err) {
-      console.error("❌ Logout failed:", err.response?.data?.message || err.message);
-      alert(err.response?.data?.message || "Logout failed. Please try again.");
-    }
-  };
   
   
    // ✅ Fetch all required data
@@ -168,49 +176,6 @@ const Dashboard = () => {
       alert("Please select a department!");
     }
   };
-  <div className="relative mb-4 user-menu">
-      {/* Profile Icon */}
-      <div className="flex items-center justify-end pr-6">
-        <img
-          src="/user.png"
-          alt="User"
-          className="w-12 h-12 rounded-full border-2 border-gray-400 shadow-md cursor-pointer
-                  hover:scale-105 transition-transform duration-300"
-          onClick={(e) => {
-            e.stopPropagation();
-            setShowUserMenu(!showUserMenu);
-          }}
-        />
-      </div>
-
-      {/* Dropdown Menu */}
-      {showUserMenu && (
-        <div className="absolute right-6 top-14 w-44 bg-white rounded-lg shadow-lg border border-gray-200
-                      transition-all duration-300 ease-in-out z-50">
-          <button
-            className="block px-4 py-2 text-left w-full text-gray-700 font-medium hover:bg-gray-100 
-                    transition-all duration-200"
-            onClick={() => {
-              setProfileOpen(true);
-              setShowUserMenu(false);
-            }}
-          >
-            👤 Profile
-          </button>
-          <button
-            className="block px-4 py-2 text-left w-full text-red-500 font-medium hover:bg-red-100 
-                    transition-all duration-200"
-            onClick={handleLogout}
-          >
-            🚪 Logout
-          </button>
-        </div>
-      )}
-
-      {/* Profile Modal */}
-      {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
-    </div>
-
   return (
     <>
       <div className="relative p-6 dashboard  min-h-screen">
@@ -227,39 +192,13 @@ const Dashboard = () => {
           alt="User"
           className="w-12 h-12 rounded-full border-2 border-gray-400 shadow-md cursor-pointer
                   hover:scale-105 transition-transform duration-300"
-          onClick={(e) => {
-            e.stopPropagation();
-            setShowUserMenu(!showUserMenu);
-          }}
+                  onClick={() => setProfileOpen(true)}
         />
-      </div>
-
-      {/* Dropdown Menu */}
-      {showUserMenu && (
-        <div className="absolute right-6 top-14 w-44 bg-white rounded-lg shadow-lg border border-gray-200
-                      transition-all duration-300 ease-in-out z-50">
-          <button
-            className="block px-4 py-2 text-left w-full text-gray-700 font-medium hover:bg-gray-100 
-                    transition-all duration-200"
-            onClick={() => {
-              setProfileOpen(true);
-              setShowUserMenu(false);
-            }}
-          >
-            👤 Profile
-          </button>
-          <button
-            className="block px-4 py-2 text-left w-full text-red-500 font-medium hover:bg-red-100 
-                    transition-all duration-200"
-            onClick={handleLogout}
-          >
-            🚪 Logout
-          </button>
-        </div>
-      )}
-
       {/* Profile Modal */}
       {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
+      </div>
+
+     
     </div>
         <div>
           {/* Departments Section */}

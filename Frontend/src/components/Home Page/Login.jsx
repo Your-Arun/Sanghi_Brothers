@@ -31,7 +31,7 @@ const Login = () => {
       }
   
       // ✅ Token store karo
-      localStorage.setItem("authToken", token);
+      localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
   
       console.log("✅ Token Stored:", token); // 🔍 Debugging

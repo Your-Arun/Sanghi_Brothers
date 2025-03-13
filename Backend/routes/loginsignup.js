@@ -5,27 +5,22 @@ const User = require("../models/user");
 const nodemailer = require("nodemailer");
 const Router = express.Router();
 
-
 const authMiddleware = async (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ message: "Unauthorized: No token provided" });
-    }
+    const token = req.header("Authorization")?.split(" ")[1];
+    if (!token) return res.status(401).json({ message: "Unauthorized access" });
 
-    const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    const user = await User.findById(decoded.id).select("-password");
-    if (!user) {
-      return res.status(401).json({ message: "Unauthorized: User not found" });
-    }
+    // ✅ Fetch correct user and attach to request
+    req.user = await User.findById(decoded.id).select("-password");
 
-    req.user = user; // Attach user to request
+    if (!req.user) return res.status(404).json({ message: "User not found" });
+
     next();
-  } catch (error) {
-    console.error("Auth Middleware Error:", error);
-    return res.status(401).json({ message: "Unauthorized: Invalid or expired token" });
+  } catch (err) {
+    console.error("Auth Middleware Error:", err);
+    res.status(401).json({ message: "Invalid token" });
   }
 };
 
@@ -64,33 +59,24 @@ Router.post("/signup", async (req, res) => {
 });
 
 Router.post("/login", async (req, res) => {
-  try {
-   const { email, password } = req.body;
-    const user = await User.findOne({ email });
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
 
-    if (!user) return res.status(400).json({ message: "Invalid credentials" });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
-
-    const token = jwt.sign(
-      { id: user._id, username: user.username }, 
-      process.env.JWT_SECRET, 
-      { expiresIn: "1d" }
-    );
-    res.cookie("authToken", token, { // "token" ki jagah "authToken"
-      httpOnly: true,
-      secure: false, // HTTPS me true rakho
-      sameSite: "lax",
-    });
-    // 🔴 Yahan Token Save Karna Zaroori Hai
-    user.currentToken = token;
-    await user.save(); // Token DB me store hoga
-    
-    return res.json({ user, token }); // ✅ Ensure token is in response
-  } catch (err) {
-    return res.status(500).json({ message: "Server error" });
+  if (!user || user.password !== password) {
+    return res.status(401).json({ message: "Invalid credentials" });
   }
+
+  // 🔥 Always generate a new token for each login
+  const token = jwt.sign(
+    { id: user._id, username: user.username, department: user.department },
+    "yourstrongsecretkey",
+    { expiresIn: "1h" }
+  );
+
+  user.tokens = [token]; // 🛑 Store only the latest token
+  await user.save();
+
+  res.json({ token, user });
 });
 
 
@@ -118,8 +104,10 @@ Router.post("/forgot-password", async (req, res) => {
     if (!user) return res.status(404).json({ message: "User not found" });
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const hashedOtp = await bcrypt.hash(otp, 10); // ✅ Hash the OTP
+    const hashedOtp = await bcrypt.hash(otp, 10);
+
     user.otp = hashedOtp;
+    user.otpExpires = Date.now() + 10 * 60 * 1000; // ✅ OTP valid for 10 minutes
     await user.save();
 
     const transporter = nodemailer.createTransport({
@@ -133,16 +121,16 @@ Router.post("/forgot-password", async (req, res) => {
     await transporter.sendMail({
       to: email,
       subject: "Password Reset OTP",
-      text: `Your OTP for password reset is: ${otp}`,
+      text: `Your OTP for password reset is: ${otp} (valid for 10 minutes)`,
     });
 
     res.json({ message: "OTP sent to your email" });
-
   } catch (error) {
     console.error("Error sending OTP:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 // ✅ Verify OTP & Reset Password
 Router.post("/reset-password", async (req, res) => {
@@ -151,7 +139,10 @@ Router.post("/reset-password", async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    // ✅ Compare hashed OTP
+    if (!user.otpExpires || user.otpExpires < Date.now()) {
+      return res.status(400).json({ message: "OTP expired. Request a new one." });
+    }
+
     const isOtpValid = await bcrypt.compare(otp, user.otp);
     if (!isOtpValid) {
       return res.status(400).json({ message: "Invalid OTP" });
@@ -160,6 +151,7 @@ Router.post("/reset-password", async (req, res) => {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
     user.otp = null;
+    user.otpExpires = null;
     await user.save();
 
     res.json({ message: "Password has been reset successfully." });
@@ -168,6 +160,7 @@ Router.post("/reset-password", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 Router.get("/departments", async (req, res) => {
   try {
@@ -179,38 +172,63 @@ Router.get("/departments", async (req, res) => {
 });
 
 
-Router.get("/profile", authMiddleware, async (req, res) => {
+Router.get("/profile", async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("-password -currentToken");
-    if (!user) return res.status(404).json({ message: "User not found" });
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, "yourSecretKey");
+
+    const user = await User.findById(decoded.id).select("-password");
+
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
 
     res.json(user);
-  } catch (error) {
-    console.error("Profile Fetch Error:", error);
-    res.status(500).json({ message: "Server error" });
+  } catch (err) {
+    res.status(401).json({ message: "Invalid token, please log in again" });
   }
 });
 
 Router.put("/profile", authMiddleware, async (req, res) => {
   try {
-    const { username } = req.body;
+    const { name, username, email, department } = req.body;
+
     if (!username) {
       return res.status(400).json({ message: "Username is required" });
     }
 
+    // ✅ Check if the username or email is already taken
+    const existingUser = await User.findOne({ 
+      $or: [{ username }, { email }], 
+      _id: { $ne: req.user._id } // Exclude current user
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ message: "Username or email already in use." });
+    }
+
+    // ✅ Only update fields that are provided
+    const updatedFields = {};
+    if (name) updatedFields.name = name.trim();
+    if (username) updatedFields.username = username.trim();
+    if (email) updatedFields.email = email.trim();
+    if (department) updatedFields.department = department.toLowerCase();
+
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
-      { $set: { username } },
+      { $set: updatedFields },
       { new: true, select: "-password -currentToken" }
     );
 
     if (!updatedUser) return res.status(404).json({ message: "User not found" });
-    res.json(updatedUser);
+
+    res.json({ message: "Profile updated successfully", user: updatedUser });
   } catch (err) {
     console.error("Profile Update Error:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
+
 Router.get("/users", async (req, res) => {
   try {
     const users = await User.find({}, "id username email department"); // ✅ Sirf important fields fetch karo
@@ -238,11 +256,21 @@ Router.get("/user-profile", authMiddleware, async (req, res) => {
 });
 
 // ✅ Secure Logout Route
-Router.post("/logout", (req, res) => {
-  res.clearCookie("authToken", { httpOnly: true, secure: false, sameSite: "lax" }); // ✅ Secure logout
-  res.status(200).json({ message: "Logged out successfully" });
-});
+Router.post("/logout", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: "User not found" });
 
+    // ✅ Clear token (Modify if storing multiple tokens)
+    user.tokens = [];
+    await user.save();
+
+    res.json({ message: "Logged out successfully" });
+  } catch (error) {
+    console.error("Logout Error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 
 

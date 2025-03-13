@@ -6,9 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const ProfileModal = ({ closeModal }) => {
   const [profile, setProfile] = useState(null);
-  const [updatedProfile, setUpdatedProfile] = useState({
-    username: "",
-  });
+  const [updatedProfile, setUpdatedProfile] = useState({ username: "" });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -22,24 +20,34 @@ const ProfileModal = ({ closeModal }) => {
       }
 
       try {
+        // Fetch only the logged-in user's profile
         const { data } = await axios.get("http://localhost:5500/profile", {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });
 
+        if (!data || !data.username) {
+          throw new Error("Invalid user data received.");
+        }
+
+        console.log("✅ Fetched Profile:", data);
         setProfile(data);
-        setUpdatedProfile({
-          username: data.username, // ✅ Set only username as editable
-        });
+        setUpdatedProfile({ username: data.username });
       } catch (err) {
         console.error("Profile Fetch Error:", err);
-        localStorage.removeItem("authToken"); // ✅ Remove token if invalid
-        navigate("/login");
+
+        if (err.response && err.response.status === 401) {
+          // Ensure logout on invalid session
+          localStorage.removeItem("authToken");
+          navigate("/login");
+        } else {
+          toast.error("Failed to fetch profile. Please try again.");
+        }
       }
     };
 
     fetchProfile();
-  }, []);
+  }, [navigate]);
 
   const handleProfileSave = async () => {
     const token = localStorage.getItem("authToken");
@@ -49,16 +57,20 @@ const ProfileModal = ({ closeModal }) => {
     try {
       const { data } = await axios.put(
         "http://localhost:5500/profile",
-        { username: updatedProfile.username }, // ✅ Only username is editable
+        { username: updatedProfile.username },
         {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         }
       );
 
-      toast.success("Profile updated successfully!");
-      setProfile(data); // Update UI with new profile data
+      if (!data || !data.username) {
+        throw new Error("Failed to update profile.");
+      }
+
+      setProfile(data);
       closeModal();
+      toast.success("Profile updated successfully!");
     } catch (err) {
       console.error("Error updating profile:", err);
       toast.error(err.response?.data?.message || "Failed to update profile.");
@@ -68,16 +80,28 @@ const ProfileModal = ({ closeModal }) => {
   };
 
   const handleLogout = async () => {
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+      console.error("No token found, user might already be logged out.");
+      return;
+    }
+
     try {
-      await axios.post("http://localhost:5500/logout", {}, { withCredentials: true });
+      await axios.post(
+        "http://localhost:5500/logout",
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
+        }
+      );
 
       localStorage.removeItem("authToken");
-      setProfile(null);
-      toast.success("Logged out successfully!");
       navigate("/login");
-    } catch (err) {
-      console.error("Logout failed:", err);
-      toast.error("Logout failed. Try again.");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      toast.error("Logout failed! Please try again.");
     }
   };
 
@@ -104,7 +128,6 @@ const ProfileModal = ({ closeModal }) => {
         <h2 className="text-2xl font-bold mb-4 text-center text-blue-600">Edit Profile</h2>
 
         <form>
-          {/* Username (Editable) */}
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold">Name:</label>
             <input
@@ -117,7 +140,6 @@ const ProfileModal = ({ closeModal }) => {
             />
           </div>
 
-          {/* Email (Read-Only) */}
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold">Email:</label>
             <p className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100">
@@ -125,7 +147,6 @@ const ProfileModal = ({ closeModal }) => {
             </p>
           </div>
 
-          {/* Role/Department (Read-Only) */}
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold">Role:</label>
             <p className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100">
@@ -133,7 +154,6 @@ const ProfileModal = ({ closeModal }) => {
             </p>
           </div>
 
-          {/* Buttons */}
           <div className="flex justify-between">
             <button
               type="button"
