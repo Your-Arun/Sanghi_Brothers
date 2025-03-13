@@ -8,15 +8,19 @@ const tokenBlacklist = new Set();
 
 // Ensure token isn't reused
 const authMiddleware = (req, res, next) => {
-  const token = req.cookies.authToken;
-  if (!token) return res.status(401).json({ message: "Unauthorized" });
+  const token = req.cookies.authToken; // ✅ Read token from Cookie
 
-  jwt.verify(token, "your_jwt_secret", (err, decoded) => {
-    if (err) return res.status(401).json({ message: "Invalid Token" });
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized, please log in" });
+  }
 
-    req.user = decoded;
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; // ✅ Attach user data to request object
     next();
-  });
+  } catch (err) {
+    res.status(401).json({ message: "Invalid token, please log in again" });
+  }
 };
 const verifyToken = (req, res, next) => {
   const token = req.cookies.authToken; // Fetch token from HttpOnly Cookie
@@ -79,6 +83,12 @@ Router.post("/login", async (req, res) => {
   // Generate JWT token
   const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
+
+  
+    // ✅ Store session in database
+    user.tokens.push({ token });
+    await user.save();
+    
   // ✅ Set token in HttpOnly cookie
   res.cookie("authToken", token, {
     httpOnly: true,
@@ -86,7 +96,7 @@ Router.post("/login", async (req, res) => {
     sameSite: "Lax", // ✅ Helps with CSRF protection
   });
 
-  res.json({ message: "Login successful" });
+  res.json({ message: "Login successful" ,user});
 });
 
 
@@ -185,19 +195,14 @@ Router.get("/departments", async (req, res) => {
 });
 
 
-Router.get("/profile", async (req, res) => {
-  const token = req.cookies.authToken; // ✅ Read token from cookies
-  if (!token) return res.status(401).json({ message: "Unauthorized" });
-
+Router.get("/profile", authMiddleware, async (req, res) => {
   try {
-    const decoded = jwt.verify(token, "secret_key");
-    const user = await User.findById(decoded.id).select("-password"); // ✅ Exclude password
-
+    const user = await User.findById(req.user.id).select("-password -tokens");
     if (!user) return res.status(404).json({ message: "User not found" });
 
     res.json(user);
   } catch (error) {
-    res.status(401).json({ message: "Invalid token" });
+    res.status(500).json({ message: "Error fetching profile" });
   }
 });
 
@@ -268,10 +273,13 @@ Router.get("/user-profile", authMiddleware, async (req, res) => {
 });
 
 // ✅ Secure Logout Route
-Router.post("/logout", authMiddleware, (req, res) => {
-  tokenBlacklist.add(req.token);
-  res.clearCookie("token");
-  res.json({ message: "Logged out successfully" });
+Router.post("/logout", authMiddleware, async (req, res) => {
+  try {
+    res.clearCookie("authToken"); // ✅ Destroy Session Cookie
+    res.json({ message: "Logged out successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Logout failed" });
+  }
 });
 
 

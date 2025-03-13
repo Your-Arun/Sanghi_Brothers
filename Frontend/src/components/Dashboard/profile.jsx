@@ -12,20 +12,22 @@ const ProfileModal = ({ closeModal }) => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const { data } = await axios.get("/profile"); // Automatically includes credentials
-
+        const { data } = await axios.get("http://localhost:5500/profile", {
+          withCredentials: true, // ✅ Session-based request
+        });
+  
         console.log("Fetched Profile:", data);
         setProfile(data);
         setUpdatedProfile({ username: data.username });
       } catch (err) {
         console.error("Profile Fetch Error:", err);
-        if (err.response?.status === 401) navigate("/login"); // Redirect if not authorized
-        else toast.error("Failed to fetch profile.");
+        toast.error("Failed to fetch profile.");
       }
     };
-
+  
     fetchProfile();
-  }, [navigate]);
+  }, []);
+  
 
   const handleProfileSave = async () => {
     setLoading(true);
@@ -45,13 +47,16 @@ const ProfileModal = ({ closeModal }) => {
 
   const handleLogout = async () => {
     try {
-      await axios.post("/logout"); // Logout API
+      await axios.post("http://localhost:5500/logout", {}, { withCredentials: true });
+  
+      setUser(null); // ✅ Clear Context
       navigate("/login");
     } catch (error) {
       console.error("Logout failed:", error);
       toast.error("Logout failed! Please try again.");
     }
   };
+  
 
   if (!profile) {
     return (

@@ -15,18 +15,16 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+  
     try {
-      const loginResponse = await axiosInstance.post("/login", { email, password });
-
+      const loginResponse = await axiosInstance.post("/login", { email, password }, { withCredentials: true });
+  
       console.log("✅ Login Response:", loginResponse.data);
-
-      const { user } = loginResponse.data; // 🔹 No need to fetch token manually
-
-      setUser(user); // ✅ Context me user set karo
-
-      // ✅ Redirect user based on role
-      navigate(user.department?.trim().toLowerCase() === "staff" ? "/staff-dashboard" : "/dashboard");
+  
+      setUser(loginResponse.data.user); // ✅ Store user details in Context
+  
+      // ✅ Navigate based on user department
+      navigate(loginResponse.data.user.department === "staff" ? "/staff-dashboard" : "/dashboard");
     } catch (err) {
       console.error("❌ Login Error:", err.response?.data || err);
       alert(err.response?.data?.message || "Invalid credentials, please try again.");
@@ -34,6 +32,7 @@ const Login = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
