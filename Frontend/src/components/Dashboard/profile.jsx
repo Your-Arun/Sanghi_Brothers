@@ -20,25 +20,20 @@ const ProfileModal = ({ closeModal }) => {
       }
 
       try {
-        // Fetch only the logged-in user's profile
+        // ✅ Fetch only logged-in user's data
         const { data } = await axios.get("http://localhost:5500/profile", {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });
 
-        if (!data || !data.username) {
-          throw new Error("Invalid user data received.");
-        }
-
-        console.log("✅ Fetched Profile:", data);
+        console.log("Fetched Profile:", data);
         setProfile(data);
         setUpdatedProfile({ username: data.username });
       } catch (err) {
         console.error("Profile Fetch Error:", err);
 
         if (err.response && err.response.status === 401) {
-          // Ensure logout on invalid session
-          localStorage.removeItem("authToken");
+          localStorage.removeItem("authToken"); // ✅ Ensure logout on invalid session
           navigate("/login");
         } else {
           toast.error("Failed to fetch profile. Please try again.");
@@ -63,10 +58,6 @@ const ProfileModal = ({ closeModal }) => {
           withCredentials: true,
         }
       );
-
-      if (!data || !data.username) {
-        throw new Error("Failed to update profile.");
-      }
 
       setProfile(data);
       closeModal();
