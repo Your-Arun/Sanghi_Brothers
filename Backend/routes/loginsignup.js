@@ -8,24 +8,28 @@ const Router = express.Router();
 
 const authMiddleware = async (req, res, next) => {
   try {
-    const token = req.cookies.token; 
-    if (!token) return res.status(401).json({ message: "Unauthorized - No Token" });
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ message: "Unauthorized: No token provided" });
+    }
+
+    const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id);
-    if (!user || user.currentToken !== token) {
-      return res.status(403).json({ message: "Session expired, please login again" });
+
+    const user = await User.findById(decoded.id).select("-password");
+    if (!user) {
+      return res.status(401).json({ message: "Unauthorized: User not found" });
     }
-    req.user = user;
+
+    req.user = user; // Attach user to request
     next();
-  } catch (err) {
-    
-    // 🔴 Agar token expire ho chuka hai to logout ka response bhejo
-    if (err.name === "TokenExpiredError") {
-      return res.status(401).json({ message: "Session expired, please login again" });
-    }
-    res.status(403).json({ message: "Invalid session" });
+  } catch (error) {
+    console.error("Auth Middleware Error:", error);
+    return res.status(401).json({ message: "Unauthorized: Invalid or expired token" });
   }
 };
+
+
 
 
 
@@ -175,14 +179,16 @@ Router.get("/departments", async (req, res) => {
 });
 
 
-Router.get("/profile", authMiddleware, async (req, res) => {
+Router.get("/profile", async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ message: "Unauthorized" });
+
   try {
-    const user = await User.findById(req.user._id, { password: 0, currentToken: 0 });
-    if (!user) return res.status(404).json({ message: "User not found" });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id).select("-password");
     res.json(user);
-  } catch (err) {
-    console.error("Profile Fetch Error:", err);
-    res.status(500).json({ message: "Server error" });
+  } catch (error) {
+    res.status(401).json({ message: "Invalid or expired token" });
   }
 });
 
@@ -234,9 +240,10 @@ Router.get("/user-profile", authMiddleware, async (req, res) => {
 
 // ✅ Secure Logout Route
 Router.post("/logout", (req, res) => {
-  res.clearCookie("authToken"); // Clear session/token cookie
-  res.status(200).json({ message: "Logged out successfully" }); // Always return 200
+  res.clearCookie("authToken", { httpOnly: true, secure: false, sameSite: "lax" }); // ✅ Secure logout
+  res.status(200).json({ message: "Logged out successfully" });
 });
+
 
 
 

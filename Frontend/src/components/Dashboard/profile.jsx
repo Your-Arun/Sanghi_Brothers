@@ -17,34 +17,29 @@ const ProfileModal = ({ closeModal }) => {
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("authToken");
+  
       if (!token) {
-        toast.error("Session expired. Please log in again.");
         navigate("/login");
         return;
       }
-
+  
       try {
-        const  data  = await axios.get("http://localhost:5500/profile", {
+        const { data } = await axios.get("http://localhost:5500/profile", {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });
-
-        console.log("Profile Data:", data);
-        if (data && data.username) {
-          setProfile(data);
-          setUpdatedProfile({ ...data });
-        } else {
-          throw new Error("Invalid profile data received.");
-        }
+  
+        setProfile(data);
       } catch (err) {
-        console.error("Error fetching profile:", err);
-        toast.error(err.response?.data?.message || "Failed to fetch profile.");
+        console.error("Profile Fetch Error:", err);
+        localStorage.removeItem("authToken"); // ✅ Remove token if invalid
         navigate("/login");
       }
     };
-
+  
     fetchProfile();
-  }, [navigate]);
+  }, []);
+  
 
   const handleProfileSave = async () => {
     const token = localStorage.getItem("authToken");

@@ -44,6 +44,7 @@ const StaffDashboard = () => {
       if (response.status === 200) {
         console.log("✅ Logout success");
         localStorage.removeItem("userData");
+        localStorage.removeItem("authToken"); // ✅ Remove token from storage
         alert("Logout Successfully");
         navigate("/login");
       }
