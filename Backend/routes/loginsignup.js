@@ -133,28 +133,23 @@ Router.get("/profile", verifyToken, async (req, res) => {
 // ✅ Update Profile Route (Fixed userId usage)
 Router.put("/profile", authenticateUser, async (req, res) => {
   try {
-    const { name, username, email, department } = req.body;
+    const { name, username } = req.body;
 
     if (!username) {
       return res.status(400).json({ message: "Username is required" });
     }
 
-    // ✅ Check if the username or email is already taken
-    const existingUser = await User.findOne({
-      $or: [{ username }, { email }],
-      _id: { $ne: req.userId }, // Exclude current user
-    });
+    // ✅ Check for existing username
+    const existingUser = await User.findOne({ username, _id: { $ne: req.userId } });
 
     if (existingUser) {
-      return res.status(400).json({ message: "Username or email already in use." });
+      return res.status(400).json({ message: "Username already in use." });
     }
 
-    // ✅ Only update fields that are provided
+    // ✅ Update fields only if provided
     const updatedFields = {};
     if (name) updatedFields.name = name.trim();
     if (username) updatedFields.username = username.trim();
-    if (email) updatedFields.email = email.trim();
-    if (department) updatedFields.department = department.toLowerCase();
 
     const updatedUser = await User.findByIdAndUpdate(
       req.userId,
@@ -166,10 +161,12 @@ Router.put("/profile", authenticateUser, async (req, res) => {
 
     res.json({ message: "Profile updated successfully", user: updatedUser });
   } catch (err) {
-    console.error("Profile Update Error:", err);
+    console.error("❌ Profile Update Error:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
+
+
 
 // ✅ Secure Logout Route (Fixed session destroy)
 Router.post("/logout", (req, res) => {

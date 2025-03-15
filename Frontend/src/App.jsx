@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate, Outlet, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import { UserProvider } from "./components/Home Page/UserContext.jsx";
 import "./index.css";
 import Navbar from "./components/Home Page/Navbar";
@@ -52,16 +52,20 @@ import Cashier from "./components/Layouts/cashier";
 import CashSlip from "./components/Layouts/cashslip";
 import MergingSbSection from './components/Dashboard/sbbankk/mergingsbsection.jsx';
 import ProtectedRoute from "./components/Dashboard/ProtectedRoute.jsx";
-
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const App = () => {
   return (
-    <UserProvider> {/* ✅ UserProvider ko Router ke bahar wrap kiya */}
-      <Router>
-        <AppContent />
-      </Router>
-    </UserProvider>
+    <> 
+    <ToastContainer position="top-right" autoClose={3000} />
+      <UserProvider> {/* ✅ UserProvider ko Router ke bahar wrap kiya */}
+        <Router>
+          <AppContent />
+        </Router>
+      </UserProvider>
+    </>
   );
 };
 

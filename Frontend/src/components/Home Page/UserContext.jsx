@@ -1,8 +1,10 @@
 import { createContext, useState, useEffect } from "react";
 
+
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
+
   const [user, setUser] = useState(() => {
     const sessionKey = sessionStorage.getItem("activeSession");
     return sessionKey ? JSON.parse(sessionStorage.getItem(sessionKey)) : null;
@@ -12,8 +14,12 @@ export const UserProvider = ({ children }) => {
     sessionStorage.removeItem("authToken");
     sessionStorage.removeItem("activeSession");
     setUser(null);
+    toast.info("👋 Logged out successfully!"); // ✅ Toast should work here
+    setTimeout(() => {
+      window.location.href = "/login";
+    }, 1500); // ✅ Delay redirect so toast is visible
   };
-  
+
 
   useEffect(() => {
     const sessionKey = sessionStorage.getItem("activeSession");

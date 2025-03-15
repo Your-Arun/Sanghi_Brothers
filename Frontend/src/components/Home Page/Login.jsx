@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import UserContext from "./UserContext";
 import axiosInstance from "../Dashboard/axiosInstance"; // ✅ Common Axios instance
+import { toast } from "react-toastify";
+
 
 const Login = () => {
   const { user, setUser } = useContext(UserContext);
@@ -46,7 +48,7 @@ const Login = () => {
 
       console.log("✅ Login Response:", data);
       setUser(data.user);
-
+      toast.success("Login Successful");
       // ✅ Redirect based on role
       navigate(data.user.department === "staff" ? "/staff-dashboard" : "/dashboard");
     } catch (err) {

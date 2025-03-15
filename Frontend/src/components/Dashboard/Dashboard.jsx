@@ -31,27 +31,6 @@ const Dashboard = () => {
   const [user, setUser] = useState(null);
   const [isProfileOpen, setProfileOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-
-    
-      try {
-        // ✅ Fetch only the logged-in user
-        const { data } = await axios.get("http://localhost:5500/profile", {
-          withCredentials: true,
-        });
-
-        console.log("✅ Logged-in User Data:", data);
-        setUser(data);
-      } catch (err) {
-        console.error("Profile Fetch Error:", err);
-        toast.error("Failed to load user data. Please log in again.");
-        navigate("/login");
-      }
-    };
-
-    fetchUser();
-  }, [navigate]);
  
   //reportfile ke lie
   useEffect(() => {

@@ -1,18 +1,15 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5500", // Change according to your API URL
-  headers: {
-    "Content-Type": "application/json",
-  },
+  baseURL: "http://localhost:5500",
 });
 
-// Attach Authorization token automatically to every request
+// Add Authorization token in headers for every request
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = sessionStorage.getItem("authToken");
+    const token = sessionStorage.getItem("authToken"); // Get token from sessionStorage
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`; // Attach token
     }
     return config;
   },
