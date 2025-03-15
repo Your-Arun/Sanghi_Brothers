@@ -1,30 +1,41 @@
-import { Navigate, Outlet } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import axiosInstance from "../Dashboard/axiosInstance";
+import UserContext from "../Home Page/UserContext";
 
 const ProtectedRoute = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { user, setUser } = useContext(UserContext);
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const fetchUser = async () => {
       try {
-        const { data } = await axiosInstance.get("/profile", { withCredentials: true }); // ✅ Cookies ke sath request
-        setIsAuthenticated(true);
+        const { data } = await axiosInstance.get("/profile", { withCredentials: true });
+
+        if (data?.user) {
+          setUser(data.user);
+        } else {
+          throw new Error("Session expired");
+        }
       } catch (err) {
-        console.error("🚨 Not Authenticated:", err.response?.data || err);
-        setIsAuthenticated(false);
+        console.error("❌ Profile Fetch Error:", err.response?.data || err.message);
+        setUser(null);
+        localStorage.removeItem("user"); // ✅ Local storage se bhi user remove karo
+        navigate("/login"); // ❌ Session expire hone par login page pe redirect
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
-    checkAuth();
-  }, []);
+    fetchUser();
+  }, [setUser, navigate]);
 
-  if (loading) return <p className="text-center mt-10">🔄 Checking session...</p>;
+  if (isLoading) return <h3 className="text-center mt-20">Loading...</h3>;
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+  if (!user) return <Navigate to="/login" />;
+
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

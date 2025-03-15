@@ -1,17 +1,15 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
-const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
 require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
+const cookieParser = require("cookie-parser");
 
 const app = express();
-app.use(cookieParser());
-// 🛡️ Session Configuration
-app.use(bodyParser.json());
+
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // 🛡️ CORS Configuration
 app.use(
@@ -21,6 +19,20 @@ app.use(
   })
 );
 
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({ 
+    mongoUrl: process.env.MONGODB_URI, 
+    collectionName: "sessions" 
+  }),
+  cookie: {
+    httpOnly: true, 
+    secure: false, // ❗ Set `true` in production with HTTPS
+    maxAge: 1000 * 60 * 60 * 24, // 1 Day
+  }
+}));
 
 
 

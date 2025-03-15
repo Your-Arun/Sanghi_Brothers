@@ -6,7 +6,6 @@ const userSchema = new mongoose.Schema({
   email: String,
   password: String,
   department: String,
-  tokens: [{ token: String, createdAt: { type: Date, default: Date.now } }], // ✅ Multiple tokens
 }, { timestamps: true });
 
 

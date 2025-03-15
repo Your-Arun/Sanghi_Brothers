@@ -1,37 +1,49 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import UserContext from "./UserContext";
 import axiosInstance from "../Dashboard/axiosInstance"; // ✅ Common Axios instance
 
 const Login = () => {
-  const { setUser } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext); // ✅ User context
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // ✅ Check if session exists on page load
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const { data } = await axiosInstance.get("/profile", { withCredentials: true });
+        setUser(data.user);
+      } catch (error) {
+        console.log("Session expired or not found");
+      }
+    };
+    fetchUser();
+  }, [setUser]);
+
+  // ✅ Handle Login
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-  
+
     try {
-      const loginResponse = await axiosInstance.post("/login", { email, password }, { withCredentials: true }); // ✅ Cookies allow karo
-  
-      console.log("✅ Login Response:", loginResponse.data);
-      setUser(loginResponse.data.user); // ✅ Set user in context
-  
-      navigate(loginResponse.data.user.department === "staff" ? "/staff-dashboard" : "/dashboard");
+      const { data } = await axiosInstance.post("/login", { email, password }, { withCredentials: true });
+
+      console.log("✅ Login Response:", data);
+      setUser(data.user); // ✅ Store session user
+
+      navigate(data.user.department === "staff" ? "/staff-dashboard" : "/dashboard");
     } catch (err) {
       console.error("❌ Login Error:", err.response?.data || err);
-      alert(err.response?.data?.message || "Invalid credentials, please try again.");
+      alert(err.response?.data?.message || " Login ka ....Invalid credentials, please try again.");
     } finally {
       setLoading(false);
     }
   };
-  
-  
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">

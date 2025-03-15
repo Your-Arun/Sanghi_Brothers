@@ -33,17 +33,11 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const token = localStorage.getItem("authToken");
 
-      if (!token) {
-        navigate("/login");
-        return;
-      }
-
+    
       try {
         // ✅ Fetch only the logged-in user
         const { data } = await axios.get("http://localhost:5500/profile", {
-          headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });
 
@@ -52,7 +46,6 @@ const Dashboard = () => {
       } catch (err) {
         console.error("Profile Fetch Error:", err);
         toast.error("Failed to load user data. Please log in again.");
-        localStorage.removeItem("authToken");
         navigate("/login");
       }
     };

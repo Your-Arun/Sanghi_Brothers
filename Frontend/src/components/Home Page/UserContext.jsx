@@ -1,27 +1,26 @@
-import React, { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
+import axiosInstance from "../Dashboard/axiosInstance";
 
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    // ✅ Persist User from Local Storage
-    const savedUser = localStorage.getItem("user");
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
-    } else {
-      localStorage.removeItem("user");
-    }
-  }, [user]);
+    const fetchUser = async () => {
+      try {
+        const { data } = await axiosInstance.get("/profile", { withCredentials: true });
+        console.log("✅ User Data Fetched in Context:", data.user);
+        setUser(data.user);
+      } catch (err) {
+        console.error("❌ Error fetching user in Context:", err);
+      }
+    };
 
-  return (
-    <UserContext.Provider value={{ user, setUser }}>
-      {children}
-    </UserContext.Provider>
-  );
+    fetchUser();
+  }, []);
+
+  return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>;
 };
 
 export default UserContext;

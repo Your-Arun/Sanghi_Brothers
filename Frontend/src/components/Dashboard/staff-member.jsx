@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { FaMoneyBill, FaTruck, FaExclamationTriangle, FaUser } from "react-icons/fa";
 import { LuLayoutDashboard } from "react-icons/lu";
 import ProfileModal from "./profile";
@@ -6,8 +6,10 @@ import { useNavigate } from "react-router-dom";
 import addIcon from "/add.png";
 import axiosInstance from "./axiosInstance";
 import { toast } from "react-toastify";
+import UserContext from "../Home Page/UserContext"; // ✅ Import UserContext
 
 const StaffDashboard = () => {
+  const { user, setUser } = useContext(UserContext); // ✅ Get user from context
   const [activeTab, setActiveTab] = useState("dashboard");
   const [isProfileOpen, setProfileOpen] = useState(false);
   const [reports, setReports] = useState([]);
@@ -15,55 +17,49 @@ const StaffDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [showModal2, setShowModal2] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState("");
-  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
+  // ✅ Fetch user on mount
   useEffect(() => {
     const fetchUser = async () => {
-      const token = localStorage.getItem("authToken");
-
-      if (!token) {
-        navigate("/login");
-        return;
-      }
-
       try {
-        const { data } = await axiosInstance.get("/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true,
-        });
-
-        console.log("✅ Logged-in User Data:", data);
-        setUser(data);
+        const { data } = await axiosInstance.get("/profile", { withCredentials: true });
+        console.log("✅ User Data:", data);
+        if (data?.user) {
+          setUser(data.user); // ✅ Store correct user data
+        } else {
+          throw new Error("Session expired");
+        }
       } catch (err) {
-        console.error("Profile Fetch Error:", err);
-        toast.error("Failed to load user data. Please log in again.");
-        localStorage.removeItem("authToken");
+        console.error("❌ Profile Fetch Error:", err.response?.data || err.message);
+        toast.error("Session expired. Please log in again.");
         navigate("/login");
+      } finally {
+        setLoading(false); // ✅ Ensure loading state is updated
       }
     };
-
     fetchUser();
-  }, [navigate]);
+  }, [setUser, navigate]);
 
+
+  // ✅ Fetch all required data
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [reportsResponse, departmentResponse] = await Promise.all([
-          axiosInstance.get("/reports"),
-          axiosInstance.get("/departments"),
+        const [departmentRes, reportRes, ] = await Promise.all([
+          axiosInstance.get("/departments", { withCredentials: true }),
+          axiosInstance.get("/reports", { withCredentials: true }),
         ]);
-        setReports(reportsResponse.data || []);
-        setDepartments(departmentResponse.data || []);
+
+        setDepartments(departmentRes.data);
+        setReports(reportRes.data);
       } catch (err) {
         console.error("Error fetching data:", err);
-      } finally {
-        setLoading(false);
+        alert("Failed to fetch data.");
       }
     };
     fetchData();
   }, []);
-
   const openReportPage = () => {
     if (!selectedDepartment) {
       toast.warn("Please select a department!");
@@ -79,6 +75,10 @@ const StaffDashboard = () => {
     { id: "shifting", label: "Shifting Arrangement", icon: <FaTruck /> },
     { id: "complaint", label: "Complaints", icon: <FaExclamationTriangle /> },
   ];
+
+  // ✅ Prevent blank screen by checking user & loading
+  if (loading) return <h3 className="text-center mt-20">Loading...</h3>;
+  if (!user) return <Navigate to="/login" />;
 
   return (
     <div className="flex min-h-screen bg-gray-100">

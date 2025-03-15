@@ -3,43 +3,22 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const nodemailer = require("nodemailer");
-const Router = express.Router();
-const tokenBlacklist = new Set();
 
-// Ensure token isn't reused
-const authMiddleware = (req, res, next) => {
-  const token = req.cookies.authToken; // ✅ Get token from cookies
-  if (!token) {
-    return res.status(401).json({ message: "Unauthorized: No Token Provided" });
-  }
+const Router = express.Router();
+
+// ✅ Middleware to verify token
+const authenticateUser = (req, res, next) => {
+  const token = req.cookies.token; // Consistent token usage
+  if (!token) return res.status(401).json({ message: "Unauthorized: No token" });
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // ✅ Attach user info to request
+    req.userId = decoded.id; // ✅ Ensure userId is set correctly
     next();
-  } catch (error) {
-    return res.status(401).json({ message: "Invalid or Expired Token" });
+  } catch (err) {
+    return res.status(403).json({ message: "Forbidden: Invalid token" });
   }
 };
-
-
-const verifyToken = (req, res, next) => {
-  const token = req.cookies.authToken; // Fetch token from HttpOnly Cookie
-
-  if (!token) return res.status(401).json({ message: "Unauthorized access" });
-
-  jwt.verify(token, "secret_key", (err, decoded) => {
-    if (err) return res.status(403).json({ message: "Invalid token" });
-
-    req.user = decoded; // Attach user info to request
-    next();
-  });
-};
-
-
-module.exports = verifyToken;
-
-
 
 // ✅ Secure Signup Route
 Router.post("/signup", async (req, res) => {
@@ -71,56 +50,18 @@ Router.post("/signup", async (req, res) => {
   }
 });
 
-
-
-Router.post("/login", async (req, res) => {
+// ✅ Login Route (Fixed double response issue)
+Router.post('/login', async (req, res) => {
   const { email, password } = req.body;
+  const user = await User.findOne({ email });
 
-  try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: "User not found" });
+  if (!user) return res.status(400).json({ message: 'User not found' });
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
-    const token = jwt.sign(
-      { id: user._id, username: user.username, department: user.department },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" } // ✅ Token will expire in 1 hour
-    );
-
-    res.cookie("authToken", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // ✅ Secure in production
-      sameSite: "Strict",
-      maxAge: 3600000, // ✅ 1 Hour
-    });
-
-    res.json({ message: "Login successful", user });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server Error" });
-  }
-});
-
-
-
-
-
-// ✅ Verify Invitation Code
-Router.post("/verify-invite", (req, res) => {
-  const { invitationCode } = req.body;
-
-  const validCodes = process.env.VALID_INVITATION_CODES;
-  const staffCodes = process.env.VALID_INVITATION_CODES_FOR_STAFF;
-
-  if (validCodes.includes(invitationCode)) {
-    res.json({ valid: true, department: "members" });
-  } else if (staffCodes.includes(invitationCode)) {
-    res.json({ valid: true, staff: true, department: "staff" });
-  } else {
-    res.json({ valid: false });
-  }
+  req.session.user = { id: user._id, name:user.name,username:user.username, email: user.email, department: user.department };
+  res.json({ message: 'Login successful', user: req.session.user });
 });
 
 // ✅ Forgot Password - Send OTP
@@ -158,6 +99,67 @@ Router.post("/forgot-password", async (req, res) => {
   }
 });
 
+// ✅ Profile Route (Fixed missing token validation)
+Router.get('/profile', (req, res) => {
+  if (!req.session.user) {
+      return res.status(401).json({ message: 'Unauthorized: No session found' });
+  }
+  res.json({ user: req.session.user });
+});
+
+// ✅ Update Profile Route (Fixed userId usage)
+Router.put("/profile", authenticateUser, async (req, res) => {
+  try {
+    const { name, username, email, department } = req.body;
+
+    if (!username) {
+      return res.status(400).json({ message: "Username is required" });
+    }
+
+    // ✅ Check if the username or email is already taken
+    const existingUser = await User.findOne({
+      $or: [{ username }, { email }],
+      _id: { $ne: req.userId }, // Exclude current user
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ message: "Username or email already in use." });
+    }
+
+    // ✅ Only update fields that are provided
+    const updatedFields = {};
+    if (name) updatedFields.name = name.trim();
+    if (username) updatedFields.username = username.trim();
+    if (email) updatedFields.email = email.trim();
+    if (department) updatedFields.department = department.toLowerCase();
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.userId,
+      { $set: updatedFields },
+      { new: true, select: "-password" }
+    );
+
+    if (!updatedUser) return res.status(404).json({ message: "User not found" });
+
+    res.json({ message: "Profile updated successfully", user: updatedUser });
+  } catch (err) {
+    console.error("Profile Update Error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// ✅ Secure Logout Route (Fixed session destroy)
+Router.post("/logout", (req, res) => {
+  res.clearCookie("token"); // ✅ Ensure cookie is removed
+  req.session.destroy((err) => {
+    if (err) {
+      console.error("Logout Error:", err);
+      return res.status(500).json({ message: "Failed to log out" });
+    }
+    console.log("✅ Session Destroyed");
+    res.json({ message: "Logged out successfully" });
+  });
+});
 
 // ✅ Verify OTP & Reset Password
 Router.post("/reset-password", async (req, res) => {
@@ -197,93 +199,6 @@ Router.get("/departments", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
-
-Router.get("/profile", authMiddleware, async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id).select("-password");
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    res.json(user);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server Error" });
-  }
-});
-
-Router.put("/profile", authMiddleware, async (req, res) => {
-  try {
-    const { name, username, email, department } = req.body;
-
-    if (!username) {
-      return res.status(400).json({ message: "Username is required" });
-    }
-
-    // ✅ Check if the username or email is already taken
-    const existingUser = await User.findOne({ 
-      $or: [{ username }, { email }], 
-      _id: { $ne: req.user._id } // Exclude current user
-    });
-
-    if (existingUser) {
-      return res.status(400).json({ message: "Username or email already in use." });
-    }
-
-    // ✅ Only update fields that are provided
-    const updatedFields = {};
-    if (name) updatedFields.name = name.trim();
-    if (username) updatedFields.username = username.trim();
-    if (email) updatedFields.email = email.trim();
-    if (department) updatedFields.department = department.toLowerCase();
-
-    const updatedUser = await User.findByIdAndUpdate(
-      req.user._id,
-      { $set: updatedFields },
-      { new: true, select: "-password -currentToken" }
-    );
-
-    if (!updatedUser) return res.status(404).json({ message: "User not found" });
-
-    res.json({ message: "Profile updated successfully", user: updatedUser });
-  } catch (err) {
-    console.error("Profile Update Error:", err);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-Router.get("/users", async (req, res) => {
-  try {
-    const users = await User.find({}, "id username email department"); // ✅ Sirf important fields fetch karo
-
-    if (!users.length) {
-      return res.status(404).json({ message: "No users found" });
-    }
-
-    res.json({ success: true, users });
-  } catch (err) {
-    console.error("❌ Error fetching users:", err);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
-Router.get("/user-profile", authMiddleware, async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    res.json({ user });
-  } catch (err) {
-    res.status(500).json({ message: "Error fetching user profile" });
-  }
-});
-
-// ✅ Secure Logout Route
-Router.post("/logout", (req, res) => {
-  res.clearCookie("authToken");
-  res.json({ message: "Logged out successfully" });
-});
-
-
 
 
 module.exports = Router;
