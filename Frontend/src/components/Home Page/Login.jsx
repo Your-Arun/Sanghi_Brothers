@@ -12,22 +12,26 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // ✅ Generate a unique session key for each tab
+  const sessionKey = sessionStorage.getItem("activeSession") || `userSession_${Math.random().toString(36).substr(2, 9)}`;
+  sessionStorage.setItem("activeSession", sessionKey);
+
   // ✅ Check if session exists on page load
   useEffect(() => {
     const fetchUser = async () => {
-      const token = sessionStorage.getItem("authToken");
-      if (!token) return; // No token, no need to fetch
+      const sessionData = sessionStorage.getItem(sessionKey);
+      if (!sessionData) return; // No session, no need to fetch
 
       try {
         const { data } = await axiosInstance.get("/profile");
         setUser(data.user);
       } catch (error) {
         console.log("Session expired or not found");
-        sessionStorage.removeItem("authToken"); // Clear invalid session
+        sessionStorage.removeItem(sessionKey); // Clear invalid session
       }
     };
     fetchUser();
-  }, [setUser]);
+  }, [setUser, sessionKey]);
 
   // ✅ Handle Login
   const handleSubmit = async (e) => {
@@ -37,8 +41,8 @@ const Login = () => {
     try {
       const { data } = await axiosInstance.post("/login", { email, password });
 
-      sessionStorage.setItem("authToken", data.token); // ✅ Store token in sessionStorage
-      sessionStorage.setItem("currentUser", JSON.stringify(data.user)); // ✅ Store user session
+      sessionStorage.setItem(sessionKey, JSON.stringify(data.user)); // ✅ Store user session per tab
+      sessionStorage.setItem("authToken", data.token); // ✅ Store token securely
 
       console.log("✅ Login Response:", data);
       setUser(data.user);

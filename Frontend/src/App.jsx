@@ -57,11 +57,11 @@ import ProtectedRoute from "./components/Dashboard/ProtectedRoute.jsx";
 
 const App = () => {
   return (
-    <Router>
-      <UserProvider> {/* ✅ UserProvider ko Router ke bahar wrap kiya */}
+    <UserProvider> {/* ✅ UserProvider ko Router ke bahar wrap kiya */}
+      <Router>
         <AppContent />
-      </UserProvider>
-    </Router>
+      </Router>
+    </UserProvider>
   );
 };
 

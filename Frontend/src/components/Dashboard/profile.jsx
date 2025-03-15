@@ -6,46 +6,50 @@ import UserContext from "../Home Page/UserContext";
 
 const ProfileModal = ({ closeModal }) => {
   const { user, setUser, handleLogout } = useContext(UserContext);
-  const [profile, setProfile] = useState(user || null);
-  const [updatedProfile, setUpdatedProfile] = useState({ username: user?.username || "" });
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [profile, setProfile] = useState(user || null); // Load from context/session
+  const [username, setUsername] = useState(user?.username || "");
+  const [loading, setLoading] = useState(false);
+  const [isChanged, setIsChanged] = useState(false); // Track if changes are made
 
+  // Fetch profile only if not available in context
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const { data } = await axiosInstance.get("/profile");
-
-        if (!data.user) {
-          console.error("❌ No user data received!");
+    if (!profile) {
+      const fetchProfile = async () => {
+        try {
+          const { data } = await axiosInstance.get("/profile");
+          if (!data.user) {
+            console.error("❌ No user data received!");
+            handleLogout();
+            return;
+          }
+          setProfile(data.user);
+          setUsername(data.user.username);
+          setUser(data.user);
+          sessionStorage.setItem("activeSession", JSON.stringify(data.user));
+        } catch (err) {
+          console.error("❌ Profile Fetch Error:", err);
+          toast.error("Session expired. Please log in again.");
           handleLogout();
-          return;
         }
+      };
+      fetchProfile();
+    }
+  }, [profile, handleLogout, setUser]);
 
-        setProfile(data.user);
-        setUser(data.user);
-        sessionStorage.setItem("currentUser", JSON.stringify(data.user)); // ✅ Store user per tab session
-      } catch (err) {
-        console.error("❌ Profile Fetch Error:", err);
-        toast.error("Session expired. Please log in again.");
-        handleLogout();
-      }
-    };
-
-    if (!profile) fetchProfile();
-  }, []);
-
+  // Handle profile update
   const handleProfileSave = async (e) => {
     e.preventDefault();
+    if (!isChanged) return; // Prevent unnecessary API calls
+
     setLoading(true);
     try {
-      const { data } = await axiosInstance.put("/profile", { username: updatedProfile.username });
-
+      const { data } = await axiosInstance.put("/profile", { username });
       setProfile(data.user);
       setUser(data.user);
-      sessionStorage.setItem("currentUser", JSON.stringify(data.user));
-      closeModal();
+      sessionStorage.setItem("activeSession", JSON.stringify(data.user)); // ✅ Save updated user session
       toast.success("Profile updated successfully!");
+      closeModal();
     } catch (err) {
       console.error("❌ Profile Update Error:", err);
       toast.error("Failed to update profile.");
@@ -53,6 +57,19 @@ const ProfileModal = ({ closeModal }) => {
       setLoading(false);
     }
   };
+
+  // Logout function
+  const handleUserLogout = () => {
+    handleLogout();
+    sessionStorage.removeItem("authToken");
+    sessionStorage.removeItem("activeSession");
+    navigate("/login");
+  };
+
+  // Track changes in username
+  useEffect(() => {
+    setIsChanged(username !== profile?.username);
+  }, [username, profile]);
 
   if (!profile) {
     return (
@@ -79,8 +96,8 @@ const ProfileModal = ({ closeModal }) => {
             <input
               type="text"
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-              value={updatedProfile.username}
-              onChange={(e) => setUpdatedProfile({ ...updatedProfile, username: e.target.value })}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
 
@@ -95,14 +112,20 @@ const ProfileModal = ({ closeModal }) => {
           </div>
 
           <div className="flex justify-between">
-            <button type="button" className="px-4 py-2 bg-red-500 text-white rounded-lg" onClick={handleLogout}>
+            <button type="button" className="px-4 py-2 bg-red-500 text-white rounded-lg" onClick={handleUserLogout}>
               Logout
             </button>
             <div>
               <button type="button" className="px-4 py-2 bg-gray-300 text-black rounded-lg mr-2" onClick={closeModal}>
                 Cancel
               </button>
-              <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-lg" disabled={loading}>
+              <button
+                type="submit"
+                className={`px-4 py-2 rounded-lg ${
+                  isChanged ? "bg-blue-500 text-white" : "bg-gray-400 text-gray-700 cursor-not-allowed"
+                }`}
+                disabled={!isChanged || loading}
+              >
                 {loading ? "Saving..." : "Save"}
               </button>
             </div>
