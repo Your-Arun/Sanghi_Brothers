@@ -2,51 +2,48 @@ import React, { useState, useEffect, useContext } from "react";
 import axiosInstance from "./axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import UserContext from "../Home Page/UserContext"; // ✅ Import User Context
+import UserContext from "../Home Page/UserContext";
 
 const ProfileModal = ({ closeModal }) => {
-  const { user, setUser } = useContext(UserContext); // ✅ User context  
-  const [profile, setProfile] = useState(null);
-  const [updatedProfile, setUpdatedProfile] = useState({ username: "" });
+  const { user, setUser, handleLogout } = useContext(UserContext);
+  const [profile, setProfile] = useState(user || null);
+  const [updatedProfile, setUpdatedProfile] = useState({ username: user?.username || "" });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const { data } = await axiosInstance.get("/profile", { withCredentials: true });
-        console.log("✅ Profile Response:", data);
+        const { data } = await axiosInstance.get("/profile");
 
         if (!data.user) {
           console.error("❌ No user data received!");
+          handleLogout();
           return;
         }
 
         setProfile(data.user);
-        setUser(data.user); // ✅ Context Update
-        setUpdatedProfile({ username: data.user.username || "" });
+        setUser(data.user);
+        sessionStorage.setItem("currentUser", JSON.stringify(data.user)); // ✅ Store user per tab session
       } catch (err) {
         console.error("❌ Profile Fetch Error:", err);
-        toast.error("Session expired! Please login again.");
-        handleLogout(); // ✅ Logout if session expired
+        toast.error("Session expired. Please log in again.");
+        handleLogout();
       }
     };
 
-    fetchProfile();
-  }, [setUser]); // ✅ Ensure context updates properly
+    if (!profile) fetchProfile();
+  }, []);
 
   const handleProfileSave = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const { data } = await axiosInstance.put(
-        "/profile",
-        { username: updatedProfile.username },
-        { withCredentials: true }
-      );
+      const { data } = await axiosInstance.put("/profile", { username: updatedProfile.username });
 
       setProfile(data.user);
-      setUser(data.user); // ✅ Ensure context is updated
+      setUser(data.user);
+      sessionStorage.setItem("currentUser", JSON.stringify(data.user));
       closeModal();
       toast.success("Profile updated successfully!");
     } catch (err) {
@@ -54,17 +51,6 @@ const ProfileModal = ({ closeModal }) => {
       toast.error("Failed to update profile.");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await axiosInstance.post("/logout", {}, { withCredentials: true });
-      setUser(null); // ✅ Reset context
-      setProfile(null);
-      navigate("/login");
-    } catch (err) {
-      console.error("❌ Logout Failed:", err);
     }
   };
 

@@ -20,24 +20,12 @@ app.use(
 );
 
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.JWT_SECRET,
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({ 
-    mongoUrl: process.env.MONGODB_URI, 
-    collectionName: "sessions" 
-  }),
-  cookie: {
-    httpOnly: true, 
-    secure: false, // ❗ Set `true` in production with HTTPS
-    maxAge: 1000 * 60 * 60 * 24, // 1 Day
-  }
+  store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }), // ✅ Session per user alag hoga
+  cookie: { secure: false, httpOnly: true, maxAge: 1000 * 60 * 60 } // 1 hour session
 }));
-
-
-
-
-
 // ✅ Import Routes
 const FlowRoute = require("./routes/flowroutes");
 const Monthlyfundflow = require("./routes/sbo3flow");

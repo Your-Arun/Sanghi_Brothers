@@ -1,26 +1,43 @@
 import { createContext, useState, useEffect } from "react";
 import axiosInstance from "../Dashboard/axiosInstance";
+import { useNavigate } from "react-router-dom";
 
-const UserContext = createContext();
+const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+  const [user, setUser] = useState(() => {
+    return JSON.parse(sessionStorage.getItem("currentUser")) || null;
+  });
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const checkSession = async () => {
       try {
-        const { data } = await axiosInstance.get("/profile", { withCredentials: true });
-        console.log("✅ User Data Fetched in Context:", data.user);
+        const { data } = await axiosInstance.get("/profile");
         setUser(data.user);
+        sessionStorage.setItem("currentUser", JSON.stringify(data.user)); // ✅ Store per tab session
       } catch (err) {
-        console.error("❌ Error fetching user in Context:", err);
+        console.error("❌ Session Expired:", err.response?.data);
+        handleLogout();
       }
     };
 
-    fetchUser();
+    if (user) checkSession();
   }, []);
 
-  return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>;
+  const handleLogout = async () => {
+    await axiosInstance.post("/logout");
+    sessionStorage.removeItem("authToken"); // ✅ Use sessionStorage instead of localStorage
+    sessionStorage.removeItem("currentUser");
+    setUser(null);
+    navigate("/login");
+  };
+
+  return (
+    <UserContext.Provider value={{ user, setUser, handleLogout }}>
+      {children}
+    </UserContext.Provider>
+  );
 };
 
 export default UserContext;

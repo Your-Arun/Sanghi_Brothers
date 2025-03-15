@@ -5,7 +5,7 @@ import UserContext from "./UserContext";
 import axiosInstance from "../Dashboard/axiosInstance"; // ✅ Common Axios instance
 
 const Login = () => {
-  const { user, setUser } = useContext(UserContext); // ✅ User context
+  const { user, setUser } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -15,11 +15,15 @@ const Login = () => {
   // ✅ Check if session exists on page load
   useEffect(() => {
     const fetchUser = async () => {
+      const token = sessionStorage.getItem("authToken");
+      if (!token) return; // No token, no need to fetch
+
       try {
-        const { data } = await axiosInstance.get("/profile", { withCredentials: true });
+        const { data } = await axiosInstance.get("/profile");
         setUser(data.user);
       } catch (error) {
         console.log("Session expired or not found");
+        sessionStorage.removeItem("authToken"); // Clear invalid session
       }
     };
     fetchUser();
@@ -31,15 +35,19 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const { data } = await axiosInstance.post("/login", { email, password }, { withCredentials: true });
+      const { data } = await axiosInstance.post("/login", { email, password });
+
+      sessionStorage.setItem("authToken", data.token); // ✅ Store token in sessionStorage
+      sessionStorage.setItem("currentUser", JSON.stringify(data.user)); // ✅ Store user session
 
       console.log("✅ Login Response:", data);
-      setUser(data.user); // ✅ Store session user
+      setUser(data.user);
 
+      // ✅ Redirect based on role
       navigate(data.user.department === "staff" ? "/staff-dashboard" : "/dashboard");
     } catch (err) {
       console.error("❌ Login Error:", err.response?.data || err);
-      alert(err.response?.data?.message || " Login ka ....Invalid credentials, please try again.");
+      alert(err.response?.data?.message || "Invalid credentials, please try again.");
     } finally {
       setLoading(false);
     }

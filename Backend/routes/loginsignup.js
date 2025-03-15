@@ -20,6 +20,21 @@ const authenticateUser = (req, res, next) => {
   }
 };
 
+// ✅ Middleware to Verify JWT
+const verifyToken = (req, res, next) => {
+  const token = req.cookies.token || req.headers.authorization?.split(" ")[1]; // ✅ Check both header & cookies
+
+  if (!token) return res.status(401).json({ message: "Unauthorized: No session found" });
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; // ✅ Store user data in request
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: "Session expired" });
+  }
+};
+
 // ✅ Secure Signup Route
 Router.post("/signup", async (req, res) => {
   try {
@@ -51,17 +66,23 @@ Router.post("/signup", async (req, res) => {
 });
 
 // ✅ Login Route (Fixed double response issue)
-Router.post('/login', async (req, res) => {
+Router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
 
-  if (!user) return res.status(400).json({ message: 'User not found' });
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(401).json({ message: "Invalid email" });
 
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ message: "Wrong password" });
 
-  req.session.user = { id: user._id, name:user.name,username:user.username, email: user.email, department: user.department };
-  res.json({ message: 'Login successful', user: req.session.user });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "4h" });
+
+    res.cookie("token", token, { httpOnly: true, secure: false, sameSite: "lax" });
+    res.json({ user, token });
+  } catch (err) {
+    res.status(500).json({ message: "Login failed" });
+  }
 });
 
 // ✅ Forgot Password - Send OTP
@@ -100,11 +121,13 @@ Router.post("/forgot-password", async (req, res) => {
 });
 
 // ✅ Profile Route (Fixed missing token validation)
-Router.get('/profile', (req, res) => {
-  if (!req.session.user) {
-      return res.status(401).json({ message: 'Unauthorized: No session found' });
+Router.get("/profile", verifyToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId).select("-password");
+    res.json({ user });
+  } catch {
+    res.status(500).json({ message: "User not found" });
   }
-  res.json({ user: req.session.user });
 });
 
 // ✅ Update Profile Route (Fixed userId usage)
@@ -150,16 +173,10 @@ Router.put("/profile", authenticateUser, async (req, res) => {
 
 // ✅ Secure Logout Route (Fixed session destroy)
 Router.post("/logout", (req, res) => {
-  res.clearCookie("token"); // ✅ Ensure cookie is removed
-  req.session.destroy((err) => {
-    if (err) {
-      console.error("Logout Error:", err);
-      return res.status(500).json({ message: "Failed to log out" });
-    }
-    console.log("✅ Session Destroyed");
-    res.json({ message: "Logged out successfully" });
-  });
+  res.clearCookie("token");
+  res.json({ message: "Logged out" });
 });
+
 
 // ✅ Verify OTP & Reset Password
 Router.post("/reset-password", async (req, res) => {
