@@ -24,7 +24,7 @@ const StaffDashboard = () => {
     const fetchUser = async () => {
       try {
         const { data } = await axiosInstance.get("/profile", { withCredentials: true });
-        console.log("✅ User Data:", data);
+        
         if (data?.user) {
           setUser(data.user); // ✅ Store correct user data
         } else {

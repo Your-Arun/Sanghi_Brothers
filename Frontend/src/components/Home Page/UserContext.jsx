@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-
+import { toast } from "react-toastify";
 
 const UserContext = createContext();
 
@@ -15,9 +15,9 @@ export const UserProvider = ({ children }) => {
     sessionStorage.removeItem("activeSession");
     setUser(null);
     toast.info("👋 Logged out successfully!"); // ✅ Toast should work here
-    setTimeout(() => {
+   
       window.location.href = "/login";
-    }, 1500); // ✅ Delay redirect so toast is visible
+ 
   };
 
 
