@@ -2,6 +2,9 @@ import axios from "axios";
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:5500",
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 // Add Authorization token in headers for every request
@@ -13,7 +16,6 @@ axiosInstance.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
 );
 
 export default axiosInstance;

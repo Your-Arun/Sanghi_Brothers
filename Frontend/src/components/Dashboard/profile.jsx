@@ -23,7 +23,7 @@ const ProfileModal = ({ closeModal }) => {
 
     setLoading(true);
     try {
-      const { data } = await axiosInstance.put("/profile", { username });
+      const { data } = await axiosInstance.put("/profile", {name, username });
       setUser(data.user);
       sessionStorage.setItem("activeSession", JSON.stringify(data.user)); // ✅ Save updated user session
       toast.success("Profile updated successfully!");
