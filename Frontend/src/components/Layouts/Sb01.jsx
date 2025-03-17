@@ -4,40 +4,34 @@ import saveImage from "/save.png";
 import previousImage from "/previous.png";
 import { Link } from "react-router-dom";
 
+import axiosInstance from "../Dashboard/axiosInstance";
 const Sb01 = () => {
   const date = new Date().toLocaleDateString();
   const [SelectedDepartment, setSelectedDepartment] = useState("");
-  const [departments, setDepartments] = useState("");
+  const [departments, setDepartments] = useState([]);
   const [username, setUserName] = useState('');
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          alert("No valid token found. Please log in.");
-          return; // Exit early if no token
-        }
-        const departmentResponse = await axios.get(
-          "http://localhost:5500/departments",
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        console.log("Departments data:", departmentResponse.data);
-        setDepartments(departmentResponse.data);
 
-        const userresp = await axios.get(
-          "http://localhost:5500/profile",
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setUserName(userresp.data.username);
-        console.log(userresp.data.username);
 
-      } catch (err) {
-        console.error("Error fetching data:");
-        alert("Failed to fetch data.");
-      }
-    };
-    fetchData();
-  }, []);
+// ✅ Fetch all required data
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const [departmentRes, reportRes, ] = await Promise.all([
+        axiosInstance.get("/departments", { withCredentials: true }),
+        axiosInstance.get("/profile", { withCredentials: true }),
+      ]);
+
+      setDepartments(departmentRes.data);
+      setUserName(reportRes.data);
+    
+    } catch (err) {
+      console.error("Error fetching data:", err);
+      alert("Failed to fetch data.");
+    }
+  };
+  fetchData();
+}, []);
+
 
   const [inputs, setInputs] = useState({
     c6: 0,
@@ -162,9 +156,9 @@ const Sb01 = () => {
     };
 
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("authToken"); // ✅ Use sessionStorage
       if (!token) {
-        alert("No authentication token found. Please log in.");
+        alert("No valid session found. Please log in.");
         return;
       }
       const response = await axios.post(
@@ -173,7 +167,7 @@ const Sb01 = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       alert("Data saved successfully");
-      console.log(response.data);
+   
     } catch (error) {
       console.error(error);
       alert("Save nhh hora...");
