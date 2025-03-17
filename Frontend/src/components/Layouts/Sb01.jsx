@@ -133,6 +133,52 @@ const Sb01 = () => {
       [id]: value === "" ? 0 : parseFloat(value) || 0, // Set to 0 if empty, otherwise parse
     });
   };
+
+   // handle save
+   const handleSave = async (e) => {
+    e.preventDefault();
+    const saveData = {
+      username: username,
+      Department: SelectedDepartment,
+      Balance_Evening: balenv,
+      Total_Fund_Stock: c34result,
+      Working_Cappital: workingcap,
+      CalculatedValue: {
+        totalsum,
+        j6result,
+        j7result,
+        j8result,
+        j9result,
+        j12result,
+        e16result,
+        balenv,
+        c34result,
+        workingcap,
+        e39result,
+      },
+      inputs: {
+        ...inputs,
+      },
+    };
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("No authentication token found. Please log in.");
+        return;
+      }
+      const response = await axios.post(
+        "http://localhost:5500/fundposition",
+        saveData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert("Data saved successfully");
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+      alert("Save nhh hora...");
+    }
+  };
   const totalsum =
     inputs.c6 +
     inputs.c7 +
@@ -185,51 +231,7 @@ const Sb01 = () => {
     +c34result - inputs.c35 - inputs.c36 - inputs.c37 - inputs.c38 - inputs.c39;
   const e39result =
     +inputs.c35 + inputs.c36 + inputs.c37 + inputs.c38 + inputs.c39;
-  // handle save
-  const handleSave = async (e) => {
-    e.preventDefault();
-    const saveData = {
-      username: username,
-      Department: SelectedDepartment,
-      Balance_Evening: balenv,
-      Total_Fund_Stock: c34result,
-      Working_Cappital: workingcap,
-      CalculatedValue: {
-        totalsum,
-        j6result,
-        j7result,
-        j8result,
-        j9result,
-        j12result,
-        e16result,
-        balenv,
-        c34result,
-        workingcap,
-        e39result,
-      },
-      inputs: {
-        ...inputs,
-      },
-    };
-
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("No authentication token found. Please log in.");
-        return;
-      }
-      const response = await axios.post(
-        "http://localhost:5500/fundposition",
-        saveData,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      alert("Data saved successfully");
-      console.log(response.data);
-    } catch (error) {
-      console.error(error);
-      alert("Save nhh hora...");
-    }
-  };
+ 
 
   return (
     <>      <div>

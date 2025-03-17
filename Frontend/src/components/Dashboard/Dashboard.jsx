@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import add from "/add.png";
 import { FaTimes, FaTrash, FaUniversity } from "react-icons/fa";
 import ProfileModal from "./profile";
 import axiosInstance from './axiosInstance'
+import UserContext from '../Home Page/UserContext'
 const Dashboard = () => {
   const [departments, setDepartments] = useState([]);
-  const [showUserMenu, setShowUserMenu] = useState(false);
-  const [userName, setUserName] = useState("");
   const [reports, setReports] = useState([]); // State to hold reports
   const [showModal, setShowModal] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
@@ -17,10 +15,7 @@ const Dashboard = () => {
   const [isEditing, setIsEditing] = useState(false); // Control edit modal
   const [updatedContent, setUpdatedContent] = useState(""); // Content for editing
   const [updatedTitle, setUpdatedTitle] = useState(""); // Content for editing
-  const [showProfileModal, setShowProfileModal] = useState(false); // Toggle profile modal
-  const [profile, setProfile] = useState({}); // Profile data
-  const [updatedProfile, setUpdatedProfile] = useState({});
-  const navigate = useNavigate();
+    const navigate = useNavigate();
   const [reportfile, setReportFile] = useState([]);
   const [sb3update, setSb3Update] = useState([]);
   const [cashier, setCashier] = useState([]);
@@ -28,34 +23,20 @@ const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
   const [isOpen3, setIsOpen3] = useState(false);
-  const [user, setUser] = useState(null);
   const [isProfileOpen, setProfileOpen] = useState(false);
-
-
-  //reportfile ke lie
-  useEffect(() => {
-    const fetchRepoFile = async () => {
-      try {
-        const response = await axiosInstance.get("/reportfile", { withCredentials: true });
-        setReportFile(response.data);
-      } catch (error) {
-        console.error("Error fetching report files:", error);
-      }
-    };
-    fetchRepoFile();
-  }, []);
-
-
+  const { user } = useContext(UserContext); // 👈 Getting user from context
+  
 
   // ✅ Fetch all required data
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [departmentRes, reportRes, sb3Res, cashierRes] = await Promise.all([
+        const [departmentRes, reportRes, sb3Res, cashierRes, reportfilee] = await Promise.all([
           axiosInstance.get("/departments", { withCredentials: true }),
           axiosInstance.get("/reports", { withCredentials: true }),
           axiosInstance.get("/bank/monthlyfundflow", { withCredentials: true }),
-          axiosInstance.get("/cashier", { withCredentials: true })
+          axiosInstance.get("/cashier", { withCredentials: true }),
+          axiosInstance.get("/reportfile", { withCredentials: true })
         ]);
 
         setDepartments(departmentRes.data);
@@ -63,6 +44,7 @@ const Dashboard = () => {
         setSb3Update(sb3Res.data);
         setCashier(cashierRes.data);
         setCashierTotal(cashierRes.data.totalamount);
+        setReportFile(reportfilee.data);
       } catch (err) {
         console.error("Error fetching data:", err);
         alert("Failed to fetch data.");
@@ -128,11 +110,11 @@ const Dashboard = () => {
 
   // ✅ Handle viewing department reports securely
   const viewReports = (department) => {
-    if (!userDepartment) {
+    if (!user || !user.department) {
       alert("Could not determine your access level. Please try again.");
       return;
     }
-
+    const userDepartment= user.department.toLowerCase();
     const departmentNormalized = department.toLowerCase();
     if (userDepartment === "manager" || userDepartment === departmentNormalized) {
       navigate(`/department-reports?department=${department}`);
@@ -140,6 +122,7 @@ const Dashboard = () => {
       alert("You are not authorized to view reports for this department.");
     }
   };
+
   const openReportPage = () => {
     if (selectedDepartment) {
       navigate(`/report?department=${selectedDepartment}`);
@@ -148,6 +131,9 @@ const Dashboard = () => {
       alert("Please select a department!");
     }
   };
+
+
+
   return (
     <>
       <div className="relative p-6 dashboard  min-h-screen">
@@ -179,17 +165,17 @@ const Dashboard = () => {
               <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">
                 🏢 Departments
               </h2>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                {["Manager", "Accounts/Finance", "Backoffice"].map((dept) => (
-                  <div
-                    key={dept}
-                    className="p-6 border bg-yellow-200 rounded-xl shadow-md hover:bg-yellow-300 cursor-pointer transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg"
-                    onClick={() => viewReports(dept.toLowerCase())} // ✅ Fix
-                  >
-                    <h3 className="text-xl font-bold text-orange-700 uppercase">{dept}</h3>
-                  </div>
-                ))}
-              </div>
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                  {["Manager", "Accounts/Finance", "Backoffice"].map((dept) => (
+                    <div
+                      key={dept}
+                      className="p-6 border bg-yellow-200 rounded-xl shadow-md hover:bg-yellow-300 cursor-pointer transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg"
+                      onClick={() => viewReports(dept.toLowerCase())} // ✅ Fix
+                    >
+                      <h3 className="text-xl font-bold text-orange-700 uppercase">{dept}</h3>
+                    </div>
+                  ))}
+                </div>
             </div>
           </div>
         </div>

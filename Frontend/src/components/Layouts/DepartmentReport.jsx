@@ -1,37 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { Link,  useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import UserContext from "../Home Page/UserContext"; // Import User Context
 
 const DepartmentReports = () => {
+  const { user } = useContext(UserContext); // Get logged-in user from context
   const [reports, setReports] = useState([]);
-  const [userName, setUserName] = useState("");
   const [reportFile, setReportFile] = useState([]);
-  const [userDepartment, setUserDepartment] = useState("");
-
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const department = localStorage.getItem("userDepartment")?.toLowerCase();
-
-    if (!token) {
+    if (!user) {
       alert("You are not authorized. Please login first.");
       navigate("/login");
       return;
     }
-    setUserDepartment(department);
 
-    const fetchUserProfile = async () => {
-      try {
-        const response = await axios.get("http://localhost:5500/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUserName(response.data.username);
-      } catch (error) {
-        console.error("Error fetching user profile:", error);
-        alert("Failed to fetch user profile.");
-      }
-    };
+    const token = sessionStorage.getItem("authToken"); // ✅ Use sessionStorage
+    const userDepartment = user.department.toLowerCase(); // ✅ Get department from session
 
     const fetchData = async () => {
       try {
@@ -44,17 +30,20 @@ const DepartmentReports = () => {
           }),
         ]);
 
-        // ✅ Manager ko saare reports aur files dikhane hain
-        if (department === "manager") {
+        // ✅ Manager sees all reports, others see only their department's reports
+        if (userDepartment === "manager") {
           setReports(reportsResponse.data);
           setReportFile(reportFilesResponse.data);
         } else {
-          // ✅ Accounts/Finance wale ko sirf apne department ka dikhana hai
           setReports(
-            reportsResponse.data.filter((report) => report.department.toLowerCase() === department)
+            reportsResponse.data.filter(
+              (report) => report.department.toLowerCase() === userDepartment
+            )
           );
           setReportFile(
-            reportFilesResponse.data.filter((file) => file.department.toLowerCase() === department)
+            reportFilesResponse.data.filter(
+              (file) => file.department.toLowerCase() === userDepartment
+            )
           );
         }
       } catch (error) {
@@ -63,23 +52,20 @@ const DepartmentReports = () => {
       }
     };
 
-    fetchUserProfile();
     fetchData();
-  }, []);
+  }, [user, navigate]);
 
   return (
     <div className="h-screen-min bg-gray-100 flex flex-col items-center">
-      {/* Header Section */}
       <div className="w-full bg-teal-700 text-white py-6 text-center shadow-lg">
-        {userName && (
+        {user && (
           <h2 className="text-3xl font-semibold">
-            Welcome, <span className="text-yellow-300">{userName.toUpperCase()}!</span>
+            Welcome, <span className="text-yellow-300">{user.username.toUpperCase()}!</span>
           </h2>
         )}
-        <h1 className="text-xl mt-2">Department: {userDepartment.toUpperCase()}</h1>
+        <h1 className="text-xl mt-2">Department: {user?.department.toUpperCase()}</h1>
       </div>
 
-      {/* Report Files Section */}
       <div className="container mx-auto p-6">
         <h2 className="text-2xl font-semibold text-teal-800 mb-4">📂 Report Files</h2>
         <div className="grid gap-6 md:grid-cols-5">
@@ -104,7 +90,6 @@ const DepartmentReports = () => {
         </div>
       </div>
 
-      {/* Complaints Section */}
       <div className="container mx-auto p-6">
         <h2 className="text-2xl font-semibold text-red-600 mb-4">⚠️ Complaints</h2>
         <div className="grid gap-6 md:grid-cols-5">
@@ -122,7 +107,6 @@ const DepartmentReports = () => {
         </div>
       </div>
 
-      {/* Back Button */}
       <div className="my-6">
         <Link to="/dashboard">
           <button className="flex items-center px-6 py-2 bg-teal-600 text-white rounded-lg shadow-md hover:bg-teal-700 transition">

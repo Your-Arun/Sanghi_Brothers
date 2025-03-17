@@ -9,7 +9,6 @@ const ShiftManagementSystem = () => {
   const [absentMembers, setAbsentMembers] = useState([]);
   const [morningOvertimeMembers, setMorningOvertimeMembers] = useState([]);
   const [eveningOvertimeMembers, setEveningOvertimeMembers] = useState([]);
-  const [showShiftDetails, setShowShiftDetails] = useState(false);
   const [shifts, setShifts] = useState([
     {
       id: "1",
@@ -101,7 +100,7 @@ const ShiftManagementSystem = () => {
   };
 
   const handleAssignShiftsAndOvertime = () => {
-    setShowShiftDetails(true);
+
     if (members.length === 0) {
       alert("Please add team members first");
       return;
@@ -148,7 +147,7 @@ const ShiftManagementSystem = () => {
       morningMembers.free = !morningMembers;
       setShifts([morningShift, eveningShift]);
     }
-    
+
   };
 
   const handleRoleChange = (id, newRole) => {
@@ -260,9 +259,9 @@ const ShiftManagementSystem = () => {
 
                   {/* Availability Toggle */}
                   <label class="relative inline-flex items-center cursor-pointer">
-                    <input class="sr-only peer" value="" type="checkbox" 
-                      checked={member.available === "present"}   onChange={() => handleUpdateAvailability(member._id, member.available === "present" ? "absent" : "present", null)}
-                      />
+                    <input class="sr-only peer" value="" type="checkbox"
+                      checked={member.available === "present"} onChange={() => handleUpdateAvailability(member._id, member.available === "present" ? "absent" : "present", null)}
+                    />
                     <div class="peer rounded-full outline-none duration-100 after:duration-500
                      w-20 h-8 bg-sky-500 peer-focus:outline-none peer-focus:ring-4 
                      peer-focus:ring-blue-500  after:content-['A'] after:absolute 
@@ -368,6 +367,8 @@ const ShiftManagementSystem = () => {
           Assign Shifts
         </button>
       </div>
+
+      {/* handelassingg */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5 mb-2 ">
         {shifts.map((shift) => (
           <div key={shift.id} className="bg-gray-100 rounded-lg p-4">
@@ -404,6 +405,7 @@ const ShiftManagementSystem = () => {
           </div>
         ))}
       </div>
+      
       <div>
         <BackButton previousImage="/public/previous.png" />
       </div>

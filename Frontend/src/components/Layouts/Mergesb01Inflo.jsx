@@ -3,28 +3,43 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa"; // Using React Icons
 
-const Mergesb01Inflo = () => {
-  const [sbiupdate, setSbiUpdate] = useState([]);
-  const [inoutflow, setInOutFlow] = useState([]);
+const MergeSBInflo = () => {
+  const [sbiUpdate, setSbiUpdate] = useState([]);
+  const [inOutFlow, setInOutFlow] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("token");
-      const sbiupdate = await axios.get("http://localhost:5500/fundposition", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setSbiUpdate(sbiupdate.data);
-      const flowww = await axios.get("http://localhost:5500/bank/monthlyflow", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setInOutFlow(flowww.data);
+      try {
+        const token = sessionStorage.getItem("authToken"); // ✅ Use sessionStorage
+        if (!token) {
+          alert("No valid session found. Please log in.");
+          return;
+        }
+
+        // Fetch Fund Position Data
+        const sbiResponse = await axios.get("http://localhost:5500/fundposition", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setSbiUpdate(sbiResponse.data);
+
+        // Fetch Monthly Flow Data
+        const flowResponse = await axios.get("http://localhost:5500/bank/monthlyflow", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setInOutFlow(flowResponse.data);
+
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        alert("Failed to fetch data. Please try again.");
+      }
     };
     fetchData();
   }, []);
+
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-gray-100 ">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-gray-100">
         {/* SB Bank Report Section */}
         <div className="bg-white p-6 rounded-lg shadow-lg">
           <h2 className="text-2xl font-semibold mb-4 text-center text-blue-600">
@@ -39,22 +54,21 @@ const Mergesb01Inflo = () => {
             </Link>
 
             <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 justify-center">
-              {sbiupdate.length > 0 ? (
-                sbiupdate.map((sbii) => (
+              {sbiUpdate.length > 0 ? (
+                sbiUpdate.map((sbii) => (
                   <Link
                     to={`/fundposition/${sbii._id}`}
                     key={sbii._id}
                     className="p-4 border bg-gray-200 text-xl rounded-lg shadow-md hover:bg-blue-200 transition duration-300 hover:scale-105 text-center"
                   >
                     <h1 className="text-2xl text-gray-800 font-semibold">{sbii.username}</h1>
-
-                    <h3 className="text-lg font-medium text-gray-700"> {new Date(sbii.createdAt).toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                    })}</h3>
-
-
+                    <h3 className="text-lg font-medium text-gray-700">
+                      {new Date(sbii.createdAt).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })}
+                    </h3>
                   </Link>
                 ))
               ) : (
@@ -80,19 +94,22 @@ const Mergesb01Inflo = () => {
             </Link>
 
             <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 justify-center">
-              {inoutflow.length > 0 ? (
-                inoutflow.map((flo) => (
+              {inOutFlow.length > 0 ? (
+                inOutFlow.map((flow) => (
                   <div
-                    onClick={() => navigate(`/bank/monthlyflow/${flo._id}`)}
-                    key={flo._id}
+                    onClick={() => navigate(`/bank/monthlyflow/${flow._id}`)}
+                    key={flow._id}
                     className="p-4 border bg-gray-200 rounded-lg shadow-md hover:bg-green-200 transition duration-300 hover:scale-105 cursor-pointer text-center"
                   >
-                    <h1 className="text-2xl text-gray-800 font-semibold">{flo.User}</h1>
-                    <h3 className="text-lg font-medium text-gray-700"> {new Date(flo.createdAt).toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                    })}</h3> </div>
+                    <h1 className="text-2xl text-gray-800 font-semibold">{flow.User}</h1>
+                    <h3 className="text-lg font-medium text-gray-700">
+                      {new Date(flow.createdAt).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })}
+                    </h3>
+                  </div>
                 ))
               ) : (
                 <p className="text-gray-600 font-bold text-center">Not available.</p>
@@ -113,4 +130,4 @@ const Mergesb01Inflo = () => {
   );
 };
 
-export default Mergesb01Inflo;
+export default MergeSBInflo;
