@@ -12,25 +12,25 @@ const Sb01 = () => {
   const [username, setUserName] = useState('');
 
 
-// ✅ Fetch all required data
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const [departmentRes, reportRes, ] = await Promise.all([
-        axiosInstance.get("/departments", { withCredentials: true }),
-        axiosInstance.get("/profile", { withCredentials: true }),
-      ]);
+  // ✅ Fetch all required data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [departmentRes, reportRes,] = await Promise.all([
+          axiosInstance.get("/departments", { withCredentials: true }),
+          axiosInstance.get("/profile", { withCredentials: true }),
+        ]);
 
-      setDepartments(departmentRes.data);
-      setUserName(reportRes.data);
-    
-    } catch (err) {
-      console.error("Error fetching data:", err);
-      alert("Failed to fetch data.");
-    }
-  };
-  fetchData();
-}, []);
+        setDepartments(departmentRes.data);
+        setUserName(reportRes.data);
+
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        alert("Failed to fetch data.");
+      }
+    };
+    fetchData();
+  }, []);
 
 
   const [inputs, setInputs] = useState({
@@ -128,8 +128,8 @@ useEffect(() => {
     });
   };
 
-   // handle save
-   const handleSave = async (e) => {
+  // handle save
+  const handleSave = async (e) => {
     e.preventDefault();
     const saveData = {
       username: username,
@@ -164,10 +164,10 @@ useEffect(() => {
       const response = await axios.post(
         "http://localhost:5500/fundposition",
         saveData,
-        { headers: { Authorization: `Bearer ${token}` } }
+
       );
       alert("Data saved successfully");
-   
+
     } catch (error) {
       console.error(error);
       alert("Save nhh hora...");
@@ -225,11 +225,11 @@ useEffect(() => {
     +c34result - inputs.c35 - inputs.c36 - inputs.c37 - inputs.c38 - inputs.c39;
   const e39result =
     +inputs.c35 + inputs.c36 + inputs.c37 + inputs.c38 + inputs.c39;
- 
+
 
   return (
-    <>      <div>
-
+    <>      
+    <div>
       <form onSubmit={handleSave}>
         <div>
           <div className="text-center text-3xl p-4">
