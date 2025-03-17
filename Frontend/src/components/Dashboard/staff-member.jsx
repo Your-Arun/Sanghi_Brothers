@@ -52,7 +52,7 @@ const StaffDashboard = () => {
           axiosInstance.get("/reports", { withCredentials: true }),
           axiosInstance.get("/Cashslip", { withCredentials: true })
 
-        ]); 
+        ]);  
 
         setDepartments(departmentRes.data);
         setReports(reportRes.data);
