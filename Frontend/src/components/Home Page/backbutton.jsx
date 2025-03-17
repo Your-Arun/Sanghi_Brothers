@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
+import UserContext from "../Home Page/UserContext"; // ✅ Import User Context
 
 const BackButton = ({ previousImage }) => {
+  const { user } = useContext(UserContext); // ✅ Get logged-in user
   const [showButton, setShowButton] = useState(false);
 
   useEffect(() => {
@@ -19,9 +21,12 @@ const BackButton = ({ previousImage }) => {
 
   if (!showButton) return null; // Hide button when not at bottom
 
+  // ✅ Role-based redirection
+  const backPath = user?.department === "staff" ? "/staff-dashboard" : "/dashboard";
+
   return (
     <div className="fixed bottom-6 left-6 p-4 rounded-full">
-      <Link to="/dashboard" className="hidden md:block">
+      <Link to={backPath} className="hidden md:block">
         <img src={previousImage} alt="Back" width={50} className="rounded-full" />
       </Link>
     </div>

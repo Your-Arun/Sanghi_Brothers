@@ -31,7 +31,7 @@ const Dashboard = () => {
   const [user, setUser] = useState(null);
   const [isProfileOpen, setProfileOpen] = useState(false);
 
- 
+
   //reportfile ke lie
   useEffect(() => {
     const fetchRepoFile = async () => {
@@ -45,10 +45,10 @@ const Dashboard = () => {
     fetchRepoFile();
   }, []);
 
-  
-  
-   // ✅ Fetch all required data
-   useEffect(() => {
+
+
+  // ✅ Fetch all required data
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const [departmentRes, reportRes, sb3Res, cashierRes] = await Promise.all([
@@ -70,8 +70,8 @@ const Dashboard = () => {
     };
     fetchData();
   }, []);
-   // ✅ Handle report selection for editing
-   const handleReportClick = (report) => {
+  // ✅ Handle report selection for editing
+  const handleReportClick = (report) => {
     setSelectedReport(report);
     setUpdatedTitle(report.title);
     setUpdatedContent(report.content);
@@ -88,14 +88,14 @@ const Dashboard = () => {
       alert("Failed to delete report. Please try again.");
     }
   };
-  
+
   const handleUpdateReport = async () => {
     try {
       if (!selectedReport || !selectedReport._id) {
         alert("No report selected for update.");
         return;
       }
-      const token = localStorage.getItem("token");  
+      const token = localStorage.getItem("token");
       if (!token) {
         alert("Unauthorized: Please log in again.");
         return;
@@ -125,9 +125,9 @@ const Dashboard = () => {
       alert("Failed to update report. Please try again.");
     }
   };
-  
-   // ✅ Handle viewing department reports securely
-   const viewReports = (department) => {
+
+  // ✅ Handle viewing department reports securely
+  const viewReports = (department) => {
     if (!userDepartment) {
       alert("Could not determine your access level. Please try again.");
       return;
@@ -157,21 +157,21 @@ const Dashboard = () => {
           Dashboard
         </h1>
         <div className="relative mb-4 user-menu">
-      {/* Profile Icon */}
-      <div className="flex items-center justify-end pr-6">
-        <img
-          src="/user.png"
-          alt="User"
-          className="w-12 h-12 rounded-full border-2 border-gray-400 shadow-md cursor-pointer
+          {/* Profile Icon */}
+          <div className="flex items-center justify-end pr-6">
+            <img
+              src="/user.png"
+              alt="User"
+              className="w-12 h-12 rounded-full border-2 border-gray-400 shadow-md cursor-pointer
                   hover:scale-105 transition-transform duration-300"
-                  onClick={() => setProfileOpen(true)}
-        />
-      {/* Profile Modal */}
-      {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
-      </div>
+              onClick={() => setProfileOpen(true)}
+            />
+            {/* Profile Modal */}
+            {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
+          </div>
 
-     
-    </div>
+
+        </div>
         <div>
           {/* Departments Section */}
           <div className="mb-10 p-6 rounded-lg shadow-md">
@@ -567,8 +567,6 @@ const Dashboard = () => {
             </button>
           </div>
         </div>
-       
-       
         {/* Edit Modal */}
         {isEditing && (
           <div

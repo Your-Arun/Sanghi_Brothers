@@ -9,6 +9,7 @@ const ShiftManagementSystem = () => {
   const [absentMembers, setAbsentMembers] = useState([]);
   const [morningOvertimeMembers, setMorningOvertimeMembers] = useState([]);
   const [eveningOvertimeMembers, setEveningOvertimeMembers] = useState([]);
+  const [showShiftDetails, setShowShiftDetails] = useState(false);
   const [shifts, setShifts] = useState([
     {
       id: "1",
@@ -100,6 +101,7 @@ const ShiftManagementSystem = () => {
   };
 
   const handleAssignShiftsAndOvertime = () => {
+    setShowShiftDetails(true);
     if (members.length === 0) {
       alert("Please add team members first");
       return;
@@ -146,6 +148,7 @@ const ShiftManagementSystem = () => {
       morningMembers.free = !morningMembers;
       setShifts([morningShift, eveningShift]);
     }
+    
   };
 
   const handleRoleChange = (id, newRole) => {

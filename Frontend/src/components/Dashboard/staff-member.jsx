@@ -8,7 +8,7 @@ import axiosInstance from "./axiosInstance";
 import { toast } from "react-toastify";
 import UserContext from "../Home Page/UserContext"; // ✅ Import UserContext
 
-const StaffDashboard = () => {
+const StaffDashboard = ({ showShiftDetails }) => {
   const { user, setUser } = useContext(UserContext); // ✅ Get user from context
   const [activeTab, setActiveTab] = useState("dashboard");
   const [isProfileOpen, setProfileOpen] = useState(false);
@@ -17,6 +17,7 @@ const StaffDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [showModal2, setShowModal2] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState("");
+  const [cashslip, setCashslip] = useState([]);
   const navigate = useNavigate();
 
   // ✅ Fetch user on mount
@@ -24,7 +25,7 @@ const StaffDashboard = () => {
     const fetchUser = async () => {
       try {
         const { data } = await axiosInstance.get("/profile", { withCredentials: true });
-        
+
         if (data?.user) {
           setUser(data.user); // ✅ Store correct user data
         } else {
@@ -46,13 +47,16 @@ const StaffDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [departmentRes, reportRes, ] = await Promise.all([
+        const [departmentRes, reportRes, cashierRes,] = await Promise.all([
           axiosInstance.get("/departments", { withCredentials: true }),
           axiosInstance.get("/reports", { withCredentials: true }),
+          axiosInstance.get("/Cashslip", { withCredentials: true })
+
         ]);
 
         setDepartments(departmentRes.data);
         setReports(reportRes.data);
+        setCashslip(cashierRes.data);
       } catch (err) {
         console.error("Error fetching data:", err);
         alert("Failed to fetch data.");
@@ -89,9 +93,8 @@ const StaffDashboard = () => {
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`flex items-center gap-2 p-2 w-full rounded-lg transition ${
-                activeTab === item.id ? "bg-blue-700" : "hover:bg-blue-500"
-              }`}
+              className={`flex items-center gap-2 p-2 w-full rounded-lg transition ${activeTab === item.id ? "bg-blue-700" : "hover:bg-blue-500"
+                }`}
             >
               {item.icon} {item.label}
             </button>
@@ -107,16 +110,21 @@ const StaffDashboard = () => {
 
       <main className="flex-1 p-6">
         {activeTab === "dashboard" && (
-          <div className="bg-white p-6 rounded-lg shadow-md text-center text-3xl">
-            DASHBOARD
-          </div>
+          <>
+            <div className="bg-white p-6 rounded-lg shadow-md text-center text-3xl">
+              <h1> DASHBOARD</h1>
+              <h3 className="text-xl">Welcome , <span className="text-red-500">{user.username}</span></h3>
+            </div>
+            <div>
+            </div>
+          </>
         )}
 
         {activeTab === "complaint" && (
           <div className="bg-white p-6 rounded-lg shadow-md">
             <div className="flex items-center justify-center">
               <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">
-                🚨 Complaints
+                🚨 COMPLAINTS
               </h2>
               <img
                 src={addIcon}
@@ -153,6 +161,114 @@ const StaffDashboard = () => {
             )}
           </div>
         )}
+
+        {activeTab === "cashslip" && (
+          <>
+            {/* Title */}
+            <div className="bg-white p-6 rounded-lg shadow-md text-center text-3xl font-bold text-gray-800">
+              💵 CASH SLIPS
+            </div>
+
+            {/* Navigation Button */}
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => navigate("/Cashslip")}
+                className="bg-purple-500 text-white flex items-center px-6 py-3 rounded-lg shadow-lg hover:bg-purple-600 transform hover:scale-105 transition-all ease-in-out"
+                aria-label="Cash Slip"
+              >
+                <span className="text-xl">💵</span>
+                <span className="ml-2 text-lg font-semibold">Submit Cash Slip</span>
+              </button>
+            </div>
+
+            {/* Cash Slip Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
+              {cashslip.map((cashSlip, index) => (
+                <div
+                  key={index}
+                  className="bg-white shadow-md p-6 rounded-lg border border-gray-200 hover:shadow-lg transition-all"
+                >
+                  <h3 className="text-xl font-semibold text-blue-600 mb-2">{cashSlip.name}</h3>
+                  <p className="text-gray-700">
+                    <strong className="text-gray-900">Shift:</strong> {cashSlip.shift}
+                  </p>
+                  <p className="text-gray-700">
+                    <strong className="text-gray-900">Nozzle No:</strong> {cashSlip.nozzleNo}
+                  </p>
+                  <p className="text-gray-700">
+                    <strong className="text-gray-900">Opening:</strong> {cashSlip.openingReading}
+                  </p>
+                  <p className="text-gray-700">
+                    <strong className="text-gray-900">Closing:</strong> {cashSlip.closingReading}
+                  </p>
+                  <p className="text-gray-700">
+                    <strong className="text-gray-900">Sales:</strong> {cashSlip.salesInLtr} L
+                  </p>
+                  <p className="text-gray-900 text-lg font-semibold mt-2">
+                    <strong>Total:</strong> ₹{cashSlip.total}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {activeTab === "shifting" && (
+          <>
+            <div className="bg-white p-6 rounded-lg shadow-md text-center text-3xl">
+              SHIFTS ARRANGEMENT
+            </div>
+            <div>
+              {/* ✅ Conditional Rendering */}
+              {showShiftDetails && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5 mb-2">
+                  {shifts.map((shift) => (
+                    <div key={shift.id} className="bg-gray-100 rounded-lg p-4">
+                      <h3 className="text-3xl mb-2 font-semibold text-center">{shift.name}</h3>
+                      <h3 className="text-xl mb-2 mt-[-10px] font-semibold text-center">Date: {date}</h3>
+                      <h3 className="text-[1.2rem] mb-2 mt-[-10px] font-semibold text-center">
+                        {shift.startTime}A.M - {shift.endTime}P.M
+                      </h3>
+                      <strong className="flex justify-evenly">
+                        {shift.supervisor && <span>Supervisor: {shift.supervisor.name.toUpperCase()}</span>}
+                        <div className="text-center">
+                          {shift.airBoy && <span>Air Boy: {shift.airBoy.name.toUpperCase()}</span>}
+                        </div>
+                      </strong>
+                      <table className="w-full mt-2">
+                        <thead>
+                          <tr>
+                            <th className="text-center border-b">Nozzle</th>
+                            <th className="text-center border-b">Member</th>
+                            <th className="text-center border-b">Overtime</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {shift.nozzles.map((nozzle, index) => (
+                            <tr key={index}>
+                              <td className="py-1">{nozzle}</td>
+                              <td className="py-1">{shift.members[index]?.name || "Unassigned"}</td>
+                              <td className="py-1">
+                                {shift.members[index] &&
+                                  (shift.name === "Morning Shift"
+                                    ? morningOvertimeMembers.includes(shift.members[index]._id)
+                                    : eveningOvertimeMembers.includes(shift.members[index]._id))
+                                  ? "🟢"
+                                  : "🔴"}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+          </>
+        )}
+
       </main>
 
       {showModal2 && (
