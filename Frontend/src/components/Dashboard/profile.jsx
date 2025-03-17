@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import axiosInstance from "./axiosInstance";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import UserContext from "../Home Page/UserContext";
 
 const ProfileModal = ({ closeModal }) => {
   const { user, setUser, handleLogout } = useContext(UserContext);
-  const navigate = useNavigate();
+
   const [username, setUsername] = useState(user?.username || "");
   const [loading, setLoading] = useState(false);
   const [isChanged, setIsChanged] = useState(false); // Track if name is changed
@@ -23,7 +22,7 @@ const ProfileModal = ({ closeModal }) => {
 
     setLoading(true);
     try {
-      const { data } = await axiosInstance.put("/profile", {name, username });
+      const { data } = await axiosInstance.put("/profile", { username });
       setUser(data.user);
       sessionStorage.setItem("activeSession", JSON.stringify(data.user)); // ✅ Save updated user session
       toast.success("Profile updated successfully!");
@@ -44,18 +43,14 @@ const ProfileModal = ({ closeModal }) => {
         </button>
 
         <h2 className="text-2xl font-bold mb-4 text-center text-blue-600">Edit Profile</h2>
+        <h2 className="text-xl font-bold mb-2 mt-[-20px] text-center text-red-600">Only amdin can edit profile</h2>
 
         <form onSubmit={handleProfileSave}>
           {/* Editable Name Field */}
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold">Name:</label>
-            <input
-              type="text"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
+            <p className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100">{user.username}</p>
+            </div>
 
           {/* Non-Editable Email */}
           <div className="mb-4">

@@ -78,7 +78,7 @@ const StaffDashboard = () => {
 
   // ✅ Prevent blank screen by checking user & loading
   if (loading) return <h3 className="text-center mt-20">Loading...</h3>;
-  if (!user) return <Navigate to="/login" />;
+  if (!user) return <navigate to="/login" />;
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -176,8 +176,8 @@ const StaffDashboard = () => {
                 -- Choose a Department --
               </option>
               {departments.map((dept) => (
-                <option key={dept._id} value={dept.name}>
-                  {dept.name}
+                <option key={dept} value={dept}>
+                  {dept}
                 </option>
               ))}
             </select>
