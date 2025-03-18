@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useContext } from "react";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import binImage from "/bin.png";
+import UserContext from "../Home Page/UserContext"
 
 const UpdateReportFile = () => {
   const { id } = useParams();
+  const { user } = useContext(UserContext);
   const [upreportfile, setUpReportfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [userDepartment, setUserDepartment] = useState("");
   const navigate = useNavigate();
   const date = new Date();
   const getNextDay = () => {
@@ -25,28 +26,12 @@ const UpdateReportFile = () => {
         const response = await axios.get(`http://localhost:5500/reportfile/${id}`);
         setUpReportfile(response.data);
       } catch (error) {
-        console.error("Error fetching report:", error);
         alert("update api kaam nhh krrha.................");
       } finally {
         setLoading(false);
       }
     };
-
-    const Profile = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:5500/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUserDepartment(response.data.department);
-      } catch (error) {
-        console.error("Error fetching user profile:", error);
-        alert("Failed to fetch user profile.");
-      }
-    };
-
     fetchReport();
-    Profile();
   }, [id]);
 
   if (loading) {
@@ -62,7 +47,6 @@ const UpdateReportFile = () => {
       </div>
     );
   }
-
   if (!upreportfile) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -70,17 +54,13 @@ const UpdateReportFile = () => {
       </div>
     );
   }
-
-  const canEdit = userDepartment === upreportfile.department;
-
+  const canEdit =user?.department==='manager';
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
     if (!canEdit) {
-      alert("You do not have permission to edit this report.");
+      alert("Only manager can edit");
       return;
     }
-
     const numericValue = value === "" ? "" : Number(value);
     setUpReportfile((prev) => ({
       ...prev,

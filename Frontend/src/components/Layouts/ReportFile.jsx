@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState ,useContext} from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
+import UserContext from "../Home Page/UserContext"
 
 
 function ReportFile() {
@@ -12,10 +13,8 @@ function ReportFile() {
     nextDay.setDate(date.getDate() + 1);
     return nextDay.toLocaleTimeString;
   };
-  const navigate = useNavigate();
+  const { user } = useContext(UserContext);
   const [entryDate, setEntryDate] = useState("");
-  const [selectedDepartment, setSelectedDepartment] = useState("");
-  const [departments, setDepartments] = useState([]);
   const [inputs, setInputs] = useState({
     b3: 0,
     c4: 0,
@@ -99,20 +98,6 @@ function ReportFile() {
     heighteen: 0,
   });
 
-  useEffect(() => {
-    const fetchDepartments = async () => {
-      const token = localStorage.getItem("token");
-      try {
-        const response = await axios.get("http://localhost:5500/departments", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setDepartments(response.data);
-      } catch (error) {
-        console.error("Failed to fetch departments:", error);
-      }
-    };
-    fetchDepartments();
-  }, [navigate]);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -153,11 +138,10 @@ function ReportFile() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     // Ensure all required data is available
     if (
       !entryDate ||
-      !selectedDepartment ||
+      !user?.department ||
       Object.keys(inputs).length === 0 ||
       Object.keys(reports).length === 0
     ) {
@@ -167,7 +151,7 @@ function ReportFile() {
 
     const reportData = {
       entryDate,
-      department: selectedDepartment,
+      department: user?.department,
       reports: {
         b4result,
         b5result,
@@ -198,23 +182,17 @@ function ReportFile() {
     };
 
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("authToken"); // ✅ Use sessionStorage
       if (!token) {
-        alert("No authentication token found. Please log in.");
+        alert("No valid session found. Please log in.");
         return;
       }
       const resp = await axios.post(
         "http://localhost:5500/reportfile",
         reportData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
       );
-
       alert("Data saved successfully");
-      console.log(resp.data);
     } catch (error) {
-      console.error("Error saving report:", error);
       alert("kaam nhhh kr rha h");
     }
   };
@@ -233,24 +211,7 @@ function ReportFile() {
                   <img src={previousImage} width={50} alt="Back" />
                 </div>
               </Link>
-              <div className="flex flex-col justify-center items-center">
-                <label className="block mb-2 text-gray-700">Select Department:</label>
-                <select
-                  className="w-full p-2 border rounded mb-4"
-                  value={selectedDepartment}
-                  required
-                  onChange={(e) => setSelectedDepartment(e.target.value)}
-                >
-                  <option value="" disabled>
-                    -- Choose a Department --
-                  </option>
-                  {departments.map((dept) => (
-                    <option key={dept} value={dept}>
-                      {dept.toUpperCase()}
-                    </option>
-                  ))}
-                </select>
-              </div>
+             
               <div className="flex flex-col justify-center items-center">
                 <label className="block mb-2 text-gray-700">Select Date:</label>
                 <input

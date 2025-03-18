@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
-const { findByIdAndDelete } = require('../sbi01');
 
 const fin = new mongoose.Schema({
-  date: {
+  dat2: {
     type: Date,
     required: true,
   },

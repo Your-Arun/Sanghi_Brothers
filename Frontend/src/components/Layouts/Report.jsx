@@ -13,7 +13,7 @@ const Report = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const token = sessionStorage.getItem("authToken"); // ✅ Use sessionStorage
         const role = await axios.get('http://localhost:5500/departments')
         console.log(role.data)
         setRole(role.data)

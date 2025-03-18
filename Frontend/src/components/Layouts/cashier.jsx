@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import BackButton from "../Home Page/backbutton";
-
-
-
 const CashierDeposit = ({ token }) => {
     const [amount, setAmount] = useState("");
     const [selectedBank, setSelectedBank] = useState("");
@@ -11,10 +8,8 @@ const CashierDeposit = ({ token }) => {
     const [deposits, setDeposits] = useState([]);
     const [totalAmount, setTotalAmount] = useState(0);
     const [todayDate, setTodayDate] = useState("");
-
     // List of banks
     const banks = ["HDFC Bank", "ICICI Bank", "SBI Bank", "SBI Bank (Current Account)", "UCO Bank", "Axis Bank", "IDBI Bank", "Punjab National Bank", "Bank of Baroda", "Indus Valley Bank",];
-
     // Fetch deposits on mount
     useEffect(() => {
         fetchDeposits();
@@ -32,12 +27,12 @@ const CashierDeposit = ({ token }) => {
     const fetchDeposits = async () => {
         try {
             const response = await axios.get("http://localhost:5500/cashier", {
-                headers: { Authorization: `Bearer ${token}` },
+                
             });
             setDeposits(response.data);
             calculateTotal(response.data);
         } catch (error) {
-            console.error("Error fetching deposits:", error);
+            alert("Error fetching deposits:");
         }
     };
 
@@ -72,7 +67,6 @@ const CashierDeposit = ({ token }) => {
             const response = await axios.post(
                 "http://localhost:5500/cashier",
                 depositData,
-                { headers: { Authorization: `Bearer ${token}` } }
             );
 
             setMessage(`✅ ${response.data.message}`);
@@ -165,7 +159,7 @@ const CashierDeposit = ({ token }) => {
                 </div>
             </div>
             <div>
-     <BackButton previousImage="/public/previous.png" />
+     <BackButton previousImage="/previous.png" />
      </div>
         </div>
 

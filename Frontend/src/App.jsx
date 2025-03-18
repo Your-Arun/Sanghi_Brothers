@@ -117,15 +117,16 @@ const AppContent = () => {
           <Route path="/mastersheet/bpcl&statutory/:id" element={<Updatebpcl />} />
           <Route path="/mastersheet/staffmanagement" element={<Staffmngment />} />
           <Route path="/mastersheet/staffmanagement/:id" element={<StaffUpdate />} />
-
-
-          <Route path="/report" element={<Report />} />
-          <Route path="/reportfile" element={<ReportFile />} />
-          <Route path="/reportfile/:id" element={<UpdateReportFile />} />
-          <Route path="/department-reports" element={<DepartmentReports />} />
-          <Route path="/shifting" element={<ShiftingProgram />} />
           <Route path="/mastersheet/finance" element={<Finance />} />
           <Route path="/mastersheet/finance/:id" element={<UpdateFin />} />
+          <Route path="/reportfile" element={<ReportFile />} />
+          <Route path="/reportfile/:id" element={<UpdateReportFile />} />
+          <Route path="/cashier" element={<Cashier />} />
+          <Route path="/report" element={<Report />} />
+
+
+          <Route path="/department-reports" element={<DepartmentReports />} />
+          <Route path="/shifting" element={<ShiftingProgram />} />
           <Route path="/lekhajokha" element={<LekhaBox />} />
           <Route path="/newlekhajokha" element={<Lekhajokha />} />
           <Route path="/newlekhajokha/:id" element={<Lekhajokhaupdate />} />
@@ -133,7 +134,6 @@ const AppContent = () => {
           <Route path="/createmeterclose" element={<MeterBox />} />
           <Route path="/meterclose" element={<MeterClose />} />
           <Route path="/meterclose/:id" element={<UpdateMeter />} />
-          <Route path="/cashier" element={<Cashier />} />
           <Route path="/Cashslip" element={<CashSlip />} />
         </Route>
       </Routes>
