@@ -18,7 +18,6 @@ const Report = () => {
         console.log(role.data)
         setRole(role.data)
       } catch (err) {
-        console.error("Error fetching profile:", err);
         alert("Failed to fetch profile data.");
       }
     };
@@ -30,15 +29,12 @@ const Report = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("authToken"); // ✅ Use sessionStorage
       await axios.post(
         "http://localhost:5500/report",
         { title, department, content },
-        { headers: { Authorization: `Bearer ${token}` } }
       );
-
       alert("Report created successfully!");
-
       // Redirect based on user role
       if (role === "staff") {
         navigate("/staff-dashboard");
@@ -46,7 +42,6 @@ const Report = () => {
         navigate("/dashboard");
       }
     } catch (err) {
-      console.error(err);
       alert("Failed to create the report. Please try again.");
     }
   };
