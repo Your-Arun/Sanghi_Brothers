@@ -15,19 +15,17 @@ const InOutFlowUpdate = () => {
   useEffect(() => {
     const fetchflow = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const token = sessionStorage.getItem("authToken"); // ✅ Use sessionStorage
         if (!token) {
-          alert("No valid token found. Please log in.");
-          return; // Exit early if no token
+          alert("No valid session found. Please log in.");
+          return;
         }
         const response = await axios.get(
           `http://localhost:5500/bank/monthlyflow/${id}`
         );
 
         setfloww(response.data);
-        console.log(response.data);
       } catch (error) {
-        console.log(error);
         alert("An error occurred. Please try again.");
       } finally {
         setLoading(false); // Set loading to false after fetching
@@ -122,7 +120,6 @@ const InOutFlowUpdate = () => {
   //save data to data
   const handleSavee = async (e) => {
     e.preventDefault();
-
     const saveData = {
       ...floww,
       Profit: floww.profit,
@@ -131,9 +128,6 @@ const InOutFlowUpdate = () => {
       Outflow: floww.outflowTotal,
       NetFlow: floww.netFlowww,
     };
-
-    console.log("Data to be saved:", saveData); // Log the data to be saved
-
     try {
       const response = await axios.put(
         `http://localhost:5500/bank/monthlyflow/${id}`,
@@ -141,7 +135,6 @@ const InOutFlowUpdate = () => {
       );
       alert("Data saved successfully");
       setIsEditing(false);
-      console.log("Response from server:", response.data);
     } catch (error) {
       console.log(
         "Error saving data:",
@@ -158,7 +151,6 @@ const InOutFlowUpdate = () => {
         navigate("/sbbank"); // Redirect to dashboard or another page
         alert("Report deleted successfully!");
       } catch (error) {
-        console.error("Error deleting report:", error);
         alert("Failed to delete report.");
       }
     }

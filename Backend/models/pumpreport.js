@@ -1,10 +1,31 @@
 const mongoose = require('mongoose');
 
 const pumpReportSchema = new mongoose.Schema({
-    date: {
+    dat1: {
         type: String,
         required: true,
     },
+    dat2: {
+        type: String,
+        required: true,
+    },
+    dat3: {
+        type: String,
+        required: true,
+    },
+    dat4: {
+        type: String,
+        required: true,
+    },
+    dat5: {
+        type: String,
+        required: true,
+    },
+    dat6: {
+        type: String,
+        required: true,
+    },
+
     a1: {
         type: Number,
         default: 0,

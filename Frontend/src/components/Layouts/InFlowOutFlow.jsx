@@ -1,41 +1,12 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useContext } from "react";
 import { Link } from "react-router-dom";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
+import UserContext from "../Home Page/UserContext"
 
 const InFlowOutFlow = () => {
-  const [SelectedDepartment, setSelectedDepartment] = useState("");
-
-  const [departments, setDepartments] = useState("");
-  const [username, setUserName] = useState("");
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          alert("No valid token found. Please log in.");
-          return; // Exit early if no token
-        }
-
-        const departmentResponse = await axios.get(
-          "http://localhost:5500/departments",
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setDepartments(departmentResponse.data);
-
-        const response = await axios.get("http://localhost:5500/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUserName(response.data.username);
-      } catch (err) {
-        alert("Failed to fetch data.");
-      }
-    };
-    fetchData();
-  }, []);
-
+  const { user } = useContext(UserContext);
   const date = new Date().toDateString();
   const [inputs, setInputs] = useState({
     c46: 0,
@@ -98,7 +69,6 @@ const InFlowOutFlow = () => {
     g59: "",
   
   });
-
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setInputs({
@@ -106,7 +76,6 @@ const InFlowOutFlow = () => {
       [id]: value === "" ? 0 : isNaN(value) ? value : parseFloat(value), // Set to 0 if input is empty, otherwise parse
     });
   };
-
   const inflowTotal =
     +inputs.c46 +
     inputs.c47 +
@@ -148,8 +117,8 @@ const InFlowOutFlow = () => {
     const saveData = {
       Profit: profit,
       Loss: loss,
-      User: username,
-      Department: SelectedDepartment,
+      User: user?.username,
+      Department: user?.department,
       Inflow: inflowTotal,
       Outflow: outflowTotal,
       NetFlow: netFlowww,
@@ -158,18 +127,16 @@ const InFlowOutFlow = () => {
       },
     };
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("authToken"); // ✅ Use sessionStorage
       if (!token) {
-        alert("No authentication token found. Please log in.");
+        alert("No valid session found. Please log in.");
         return;
       }
       const response = await axios.post(
         "http://localhost:5500/bank/monthlyflow",
         saveData,
-        { headers: { Authorization: `Bearer ${token}` } }
       );
       alert("Data Save Successfully ");
-      console.log(response.data);
     } catch (error) {
       console.log(error);
       alert("Error !");
@@ -195,28 +162,8 @@ const InFlowOutFlow = () => {
                 <img src={previousImage} width={50} alt="Back" />
               </div>
             </Link>
-            <div> <div className="flex justify-center">
-            <select
-              className="text-2xl bg-blue-400 p-4  rounded-[20px]   border-none outline-none"
-              value={SelectedDepartment}
-              onChange={(e) => setSelectedDepartment(e.target.value)}
-            >
-              <option value="" disabled>
-                -- Choose a Department --
-              </option>
-              {departments.length > 0 ? (
-                departments.map((dept) => (
-                  <option key={dept} value={dept}>
-                    {dept.toUpperCase()}
-                  </option>
-                ))
-              ) : (
-                <option value="" disabled>
-                  No departments available
-                </option>
-              )}
-            </select>
-          </div>
+            <div> 
+             
             </div>
             <div>
               <button type="submit">

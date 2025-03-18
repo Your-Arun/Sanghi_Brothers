@@ -21,10 +21,13 @@ const ChekList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const headers = { Authorization: `Bearer ${token}` };
+        const token = sessionStorage.getItem("authToken"); // ✅ Use sessionStorage
+        if (!token) {
+          alert("No valid session found. Please log in.");
+          return;
+        }
         const responses = await Promise.all(
-          sections.map((section) => axios.get(`http://localhost:5500/mastersheet/${section.route}`, { headers }))
+          sections.map((section) => axios.get(`http://localhost:5500/mastersheet/${section.route}`))
         );
         
         const newData = sections.reduce((acc, section, index) => {

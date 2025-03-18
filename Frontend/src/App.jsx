@@ -94,19 +94,22 @@ const AppContent = () => {
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/staff-dashboard" element={<Staffmember />} />
-          <Route path="/report" element={<Report />} />
-          <Route path="/reportfile" element={<ReportFile />} />
-          <Route path="/reportfile/:id" element={<UpdateReportFile />} />
-          <Route path="/department-reports" element={<DepartmentReports />} />
+          <Route path="/bankreport" element={<MergingSbSection />} />
+          <Route path="/sbbank" element={<Mergesb01Inflo />} />
           <Route path="/fundposition" element={<Sb01 />} />
           <Route path="/fundposition/:id" element={<SBI01Update />} />
           <Route path="/bank/monthlyflow" element={<InFlowOutFlow />} />
           <Route path="/bank/monthlyflow/:id" element={<InOutFlowUpdate />} />
           <Route path="/bank/monthlyfundflow" element={<SB03_Monthly />} />
           <Route path="/bank/monthlyfundflow/:id" element={<Sb03Update />} />
-          <Route path="/sbbank" element={<Mergesb01Inflo />} />
           <Route path="/mastersheet" element={<ChekList />} />
           <Route path="/mastersheet/pumpsheet" element={<MasterChecklist />} />
+
+
+          <Route path="/report" element={<Report />} />
+          <Route path="/reportfile" element={<ReportFile />} />
+          <Route path="/reportfile/:id" element={<UpdateReportFile />} />
+          <Route path="/department-reports" element={<DepartmentReports />} />
           <Route path="/mastersheet/pumpsheet/:id" element={<UpdatePumpSheet />} />
           <Route path="/shifting" element={<ShiftingProgram />} />
           <Route path="/mastersheet/salesmanagementsheet" element={<SalesManagement />} />
@@ -132,7 +135,6 @@ const AppContent = () => {
           <Route path="/meterclose/:id" element={<UpdateMeter />} />
           <Route path="/cashier" element={<Cashier />} />
           <Route path="/Cashslip" element={<CashSlip />} />
-          <Route path="/bankreport" element={<MergingSbSection />} />
         </Route>
       </Routes>
     </>

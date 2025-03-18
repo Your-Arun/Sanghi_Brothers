@@ -1,34 +1,15 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
+import UserContext from "../Home Page/UserContext"
 const SB03_Monthly = () => {
-  const [username, setUserName] = useState("");
-  const [department, setDepartment] = useState([]);
+  const { user } = useContext(UserContext);
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 0; // 1-indexed (1 = January, 12 = December)
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:5500/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUserName(response.data.username); // Pre-fill editable fields
-        const departmentResponse = await axios.get(
-          "http://localhost:5500/departments",
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setDepartment(departmentResponse.data);
-      } catch (err) {
-        alert("Failed to fetch profile data.");
-      }
-    };
-    fetchProfile();
-  }, []);
 
   // Initialize state for inputs
   const [inputs, setInputs] = useState(
@@ -165,8 +146,8 @@ const SB03_Monthly = () => {
 
     try {
       const data = {
-        Department: department,
-        UserName: username,
+        Department: user?.department,
+        UserName: user?.username,
         Date: datee,
         year: new Date().getFullYear(),
         month: new Date().getMonth() + 1,
@@ -239,9 +220,9 @@ const SB03_Monthly = () => {
         "http://localhost:5500/bank/monthlyfundflow",
         data
       );
-      alert("Save Horii hai");
+      alert("Data Succussfully");
     } catch (error) {
-      alert("save button kaam nhi kr rha");
+      alert("Failed to send data");
     }
   };
 

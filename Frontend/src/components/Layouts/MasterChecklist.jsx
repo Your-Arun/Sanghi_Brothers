@@ -5,19 +5,14 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 const MasterChecklist = () => {
-  const predate = new Date();
-  predate.setDate(predate.getDate() - 1);
-  const daybck = new Date();
-  daybck.setDate(daybck.getDate() - 2);
-  const daytoback = new Date();
-  daytoback.setDate(daytoback.getDate() - 3);
-  const date = new Date();
+
   const [inputValues, setInputValues] = useState({
-    date: `${daybck.getDate().toString().padStart(2, "0")}-${(
-      daybck.getMonth() + 1
-    )
-      .toString()
-      .padStart(2, "0")}-${daybck.getFullYear()}`,
+    dat1:0,
+    dat2:0,
+    dat3:0,
+    dat4:0,
+    dat5:0,
+    dat6:0,
     a1: 0,
     a2: 0,
     a3: 0,
@@ -60,6 +55,8 @@ const MasterChecklist = () => {
     j4: 0,
   });
 
+
+
   const handleInputChange = (event) => {
     const { id, value } = event.target;
     setInputValues((prevInputValues) => ({
@@ -78,7 +75,6 @@ const MasterChecklist = () => {
         "http://localhost:5500/mastersheet/pumpsheet",
         datasheet
       );
-      console.log(response); // Check the response from the server
       alert("Save successful");
     } catch (error) {
       alert("Error saving data");
@@ -86,21 +82,26 @@ const MasterChecklist = () => {
   };
   return (
     <div>
-      <h1 className="text-center mt-[-30px] text-xl p-4">PUMP REPORT SHEET</h1>
+      <h1 className="text-center  text-xl p-4">PUMP REPORT SHEET</h1>
       <form onSubmit={handlesave}>
-      <div className="text-center mt-[-20px] text-xl p-4">
-            <h1>
-              Exceptional Report of{" "}
-              {daytoback.getDate().toString().padStart(2, "0")}-
-              {(daytoback.getMonth() + 1).toString().padStart(2, "0")}-
-              {daytoback.getFullYear()}{" "}
-            </h1>
-            <h2>
-              Reported on {daybck.getDate().toString().padStart(2, "0")}-
-              {(daybck.getMonth() + 1).toString().padStart(2, "0")}-
-              {daybck.getFullYear()}
-            </h2>
-          </div>
+        <div className="text-center mt-[-20px] text-xl p-4">
+          <h1>
+            Exceptional Report of{" "}
+            <input
+                  type="date"
+                  id="dat1"
+                  value={inputValues.dat1}
+                  onChange={handleInputChange}
+                /> </h1>
+          <h2>
+            Reported on <input
+                  type="date"
+                  id="dat2"
+                  value={inputValues.dat2}
+                  onChange={handleInputChange}
+                />
+          </h2>
+        </div>
         <div className="flex justify-evenly items-center  p-4">
           <Link to={"/mastersheet"}>
             <div className="">
@@ -350,16 +351,21 @@ const MasterChecklist = () => {
               <td colSpan={6}>
                 After all payments to bpcl (including dues and stock in hand
                 morning) till today pur.{" "}
-                {predate.getDate().toString().padStart(2, "0")}-
-                {(predate.getMonth() + 1).toString().padStart(2, "0")}-
-                {predate.getFullYear()}
-              </td>
+                <input
+                  type="date"
+                  id="dat3"
+                  value={inputValues.dat3}
+                  onChange={handleInputChange}
+                />  </td>
             </tr>
             <tr>
               <td>
-                Stock on {daybck.getDate().toString().padStart(2, "0")}-
-                {(daybck.getMonth() + 1).toString().padStart(2, "0")}-
-                {daybck.getFullYear()}
+                Stock on    <input
+                  type="date"
+                  id="dat4"
+                  value={inputValues.dat4}
+                  onChange={handleInputChange}
+                />
               </td>
               <td>
                 <input
@@ -400,9 +406,12 @@ const MasterChecklist = () => {
             </tr>
             <tr>
               <td>
-                Indent for {predate.getDate().toString().padStart(2, "0")}-
-                {(predate.getMonth() + 1).toString().padStart(2, "0")}-
-                {predate.getFullYear()}
+                Indent for <input
+                  type="date"
+                  id="dat5"
+                  value={inputValues.dat5}
+                  onChange={handleInputChange}
+                />
               </td>
               <td>
                 <input
@@ -443,9 +452,12 @@ const MasterChecklist = () => {
             </tr>
             <tr>
               <td>
-                Indent for {date.getDate().toString().padStart(2, "0")}-
-                {(date.getMonth() + 1).toString().padStart(2, "0")}-
-                {date.getFullYear()}
+                Indent for <input
+                  type="date"
+                  id="dat6"
+                  value={inputValues.dat6}
+                  onChange={handleInputChange}
+                />
               </td>
               <td>
                 <input

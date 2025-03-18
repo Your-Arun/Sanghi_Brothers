@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import binImage from "/bin.png";
@@ -97,7 +96,6 @@ const Sb03Update = () => {
           setDaysInMonth(daysInMonth);
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
         alert("Error fetching data. Please try again.");
       } finally {
         setLoading(false);
@@ -111,7 +109,7 @@ const Sb03Update = () => {
       try {
         await axios.delete(`http://localhost:5500/bank/monthlyfundflow/${id}`);
         alert("Report deleted successfully!");
-        navigate("/dashboard"); // Redirect to dashboard or another page
+        navigate("/bankreport"); // Redirect to dashboard or another page
       } catch (error) {
         console.error("Error deleting report:", error);
         alert("Failed to delete report.");
@@ -332,9 +330,8 @@ const Sb03Update = () => {
         `http://localhost:5500/bank/monthlyfundflow/${id}`,
         upddt
       );
-      console.log(response);
-      alert("andr jaara h");
-      navigate("/dashboard"); // Redirect after saving
+      alert("Save Successfully");
+      navigate("/bankreport"); // Redirect after saving
     } catch (error) {
       console.error("Error updating report:", error);
       alert("Andar nhh jara");
@@ -357,7 +354,7 @@ const Sb03Update = () => {
               .replace(/\//g, "/")}
           </h2>
           <div className="flex justify-evenly p-4">
-            <Link to={"/dashboard"}>
+            <Link to={"/bankreport"}>
               <div>
                 <img src={previousImage} width={50} alt="Back" />
               </div>

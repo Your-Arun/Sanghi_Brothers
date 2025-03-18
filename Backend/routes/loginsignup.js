@@ -139,6 +139,8 @@ Router.get("/profile", verifyToken, async (req, res) => {
   }
 });
 
+
+
 // ✅ Update Profile Route (Fixed userId usage)
 Router.put("/profile", authenticateUser, async (req, res) => {
   try {

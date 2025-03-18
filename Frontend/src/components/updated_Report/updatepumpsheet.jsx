@@ -86,13 +86,6 @@ const UpdatePumpSheet = () => {
     }
   };
 
-  pumpSheetData.predate = new Date();
-  pumpSheetData.predate.setDate(pumpSheetData.predate.getDate() - 1);
-  pumpSheetData.daybck = new Date();
-  pumpSheetData.daybck.setDate(pumpSheetData.daybck.getDate() - 2);
-  pumpSheetData.daytoback = new Date();
-  pumpSheetData.daytoback.setDate(pumpSheetData.daytoback.getDate() - 3);
-  pumpSheetData.date = new Date();
   return (
     <div>
       <h1 className="text-center mt-[-30px] text-xl p-4">PUMP REPORT SHEET</h1>
@@ -100,17 +93,11 @@ const UpdatePumpSheet = () => {
         <div className="text-center mt-[-20px] text-xl p-4">
           <h1>
             Exceptional Report of{" "}
-            {pumpSheetData.daytoback.getDate().toString().padStart(2, "0")}-
-            {(pumpSheetData.daytoback.getMonth() + 1)
-              .toString()
-              .padStart(2, "0")}
-            -{pumpSheetData.daytoback.getFullYear()}{" "}
+            {pumpSheetData.dat1}
           </h1>
           <h2>
             Reported on{" "}
-            {pumpSheetData.daybck.getDate().toString().padStart(2, "0")}-
-            {(pumpSheetData.daybck.getMonth() + 1).toString().padStart(2, "0")}-
-            {pumpSheetData.daybck.getFullYear()}
+            {pumpSheetData.dat2}
           </h2>
         </div>
         <div className="flex justify-evenly items-center  p-4">
@@ -368,21 +355,13 @@ const UpdatePumpSheet = () => {
               <td colSpan={6}>
                 After all payments to bpcl (including dues and stock in hand
                 morning) till today pur.{" "}
-                {pumpSheetData.predate.getDate().toString().padStart(2, "0")}-
-                {(pumpSheetData.predate.getMonth() + 1)
-                  .toString()
-                  .padStart(2, "0")}
-                -{pumpSheetData.predate.getFullYear()}
+                {pumpSheetData.dat3}
               </td>
             </tr>
             <tr>
               <td>
                 Stock on{" "}
-                {pumpSheetData.daybck.getDate().toString().padStart(2, "0")}-
-                {(pumpSheetData.daybck.getMonth() + 1)
-                  .toString()
-                  .padStart(2, "0")}
-                -{pumpSheetData.daybck.getFullYear()}
+                {pumpSheetData.dat4}
               </td>
               <td>
                 <input
@@ -424,11 +403,7 @@ const UpdatePumpSheet = () => {
             <tr>
               <td>
                 Indent for{" "}
-                {pumpSheetData.predate.getDate().toString().padStart(2, "0")}-
-                {(pumpSheetData.predate.getMonth() + 1)
-                  .toString()
-                  .padStart(2, "0")}
-                -{pumpSheetData.predate.getFullYear()}
+                {pumpSheetData.dat5}
               </td>
               <td>
                 <input
@@ -470,11 +445,7 @@ const UpdatePumpSheet = () => {
             <tr>
               <td>
                 Indent for{" "}
-                {pumpSheetData.date.getDate().toString().padStart(2, "0")}-
-                {(pumpSheetData.date.getMonth() + 1)
-                  .toString()
-                  .padStart(2, "0")}
-                -{pumpSheetData.date.getFullYear()}
+                {pumpSheetData.dat6}
               </td>
               <td>
                 <input

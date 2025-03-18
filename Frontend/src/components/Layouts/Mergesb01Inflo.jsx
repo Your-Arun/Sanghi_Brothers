@@ -16,21 +16,15 @@ const MergeSBInflo = () => {
           alert("No valid session found. Please log in.");
           return;
         }
-
         // Fetch Fund Position Data
         const sbiResponse = await axios.get("http://localhost:5500/fundposition", {
-          headers: { Authorization: `Bearer ${token}` },
         });
         setSbiUpdate(sbiResponse.data);
-
         // Fetch Monthly Flow Data
         const flowResponse = await axios.get("http://localhost:5500/bank/monthlyflow", {
-          headers: { Authorization: `Bearer ${token}` },
         });
         setInOutFlow(flowResponse.data);
-
       } catch (error) {
-        console.error("Error fetching data:", error);
         alert("Failed to fetch data. Please try again.");
       }
     };
