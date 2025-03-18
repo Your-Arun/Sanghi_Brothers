@@ -19,7 +19,7 @@ const tanklorryupdate = () => {
       try {
         const response = await axios.get(`http://localhost:5500/mastersheet/tanklorry/${id}`)
         setLorrymagnmnet(response.data)
-        setDate(response.data.date)
+        setDate(response.data.dat2)
         setLoading(false)
       } catch (err) {
         alert("Fetch nhh hora")
@@ -119,7 +119,7 @@ const tanklorryupdate = () => {
   return (
     <>
       <div>
-        <h1 className="text-center mt-[-30px] text-2xl p-4 font-bold">LUBRICANT MANAGEMENT</h1>
+        <h1 className="text-center text-2xl p-4 font-bold">LUBRICANT MANAGEMENT</h1>
         <form onSubmit={handleSave}>
           <div className="flex justify-evenly items-center p-4">
             <Link to={"/mastersheet"}>
@@ -129,7 +129,7 @@ const tanklorryupdate = () => {
             </Link>
             <div className="col-span-2 text-xl">
               <strong>
-                <input value={handleDate()} readOnly />
+                <input className="bg-transparent" value={handleDate()} readOnly />
               </strong>
             </div>
             <div>

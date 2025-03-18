@@ -19,7 +19,7 @@ const updatesalemanagemnet = () => {
       try {
         const response = await axios.get(`http://localhost:5500/mastersheet/staffmanagement/${id}`)
         setPurchasemagnmnet(response.data)
-        setDate(response.data.date)
+        setDate(response.data.dat2)
         setLoading(false)
       } catch (err) {
         alert("Fetch nhh hora")
@@ -69,9 +69,8 @@ const updatesalemanagemnet = () => {
     }
     try {
       const response = await axios.put(`http://localhost:5500/mastersheet/staffmanagement/${id}`, data)
-      alert("Purchase management sheet updated successfully!")
+      alert("Staff management sheet updated successfully!")
     } catch (error) {
-      console.error(error)
       alert("Error updating staff management sheet!")
     }
   }
@@ -119,7 +118,7 @@ const updatesalemanagemnet = () => {
   return (
     <>
       <div>
-        <h1 className="text-center mt-[-30px] text-2xl p-4 font-bold">STAFF MANAGEMENT</h1>
+        <h1 className="text-center  text-2xl p-4 font-bold">STAFF MANAGEMENT</h1>
         <form onSubmit={handleSave}>
           <div className="flex justify-evenly items-center p-4">
             <Link to={"/mastersheet"}>
@@ -129,7 +128,7 @@ const updatesalemanagemnet = () => {
             </Link>
             <div className="col-span-2 text-xl">
               <strong>
-                <input value={handleDate()} readOnly />
+                <input className="bg-transparent" value={handleDate()} readOnly />
               </strong>
             </div>
             <div>

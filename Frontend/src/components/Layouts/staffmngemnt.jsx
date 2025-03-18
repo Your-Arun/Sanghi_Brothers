@@ -6,7 +6,6 @@ import axios from "axios";
 
 const bpclstatutory = () => {
     const [date, setDate] = useState('');
-
     const [items, setItems] = useState([
         "DSM Schedule done for tomorrow",
         "DSM Attendance done for yesderday",
@@ -27,11 +26,8 @@ const bpclstatutory = () => {
         "",
         "",
         "",
-        "",
-        
+        "",   
     ]);
-
-
     const [inputs, setInputs] = useState({
         points: items.map((item) => ({
             point: "",
@@ -62,7 +58,7 @@ const bpclstatutory = () => {
     const handleSave = async (e) => {
         e.preventDefault();
         const data = {
-            date: new Date(date).toISOString().split('T')[0],
+            dat2: new Date(date).toISOString().split('T')[0],
             points: inputs.points.map((point) => ({
                 ...point,
                 ok: point.ok,
@@ -71,8 +67,6 @@ const bpclstatutory = () => {
         };
         try {
             const response = await axios.post("http://localhost:5500/mastersheet/staffmanagement", data);
-          
-           
             alert("Staff Management sheet saved successfully!");
         } catch (error) {
             alert("Error saving sales management sheet!");
@@ -87,7 +81,7 @@ const bpclstatutory = () => {
     return (
         <>
             <div>
-                <h1 className="text-center mt-[-30px] text-2xl p-4 font-bold">STAFF MANAGEMENT</h1>
+                <h1 className="text-center  text-2xl p-4 font-bold">STAFF MANAGEMENT</h1>
                 <form onSubmit={handleSave}>
                     <div className="flex justify-evenly items-center  p-4">
                         <Link to={"/mastersheet"}>
@@ -95,7 +89,7 @@ const bpclstatutory = () => {
                                 <img src={previousImage} width={50} alt="Back" />
                             </div>
                         </Link>
-                        <div><input type="date" id="date" value={date} onChange={handleDateChange} />
+                        <div><input type="date" id="date" className="bg-transparent" value={date} onChange={handleDateChange} />
                         </div>
                         <div>
                             <button type="submit">

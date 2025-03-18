@@ -56,7 +56,7 @@ const ChekList = () => {
   };
 
   return (
-    <div className="container mx-auto px-6 py-8">
+    <div className="container mx-auto px-6 py-8 mb-20">
       <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">MASTER SHEET</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -82,11 +82,15 @@ const ChekList = () => {
                 >
                   <p className="font-bold text-sm">Update</p>
                   <span className="text-gray-600">
-                    {new Date(item.dat2).toLocaleDateString("en-GB", {
+                    {(new Date(item.dat2).toLocaleDateString("en-GB", {
                       day: "2-digit",
                       month: "2-digit",
                       year: "numeric",
-                    })}
+                    }) )|| (new Date(item.date).toLocaleDateString("en-GB",{
+                      day: "2-digit",
+                      month: "2-digit",
+                      year:"numeric",
+                    }))}
                   </span>
                 </Link>
               ))}

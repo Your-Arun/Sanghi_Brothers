@@ -104,15 +104,8 @@ const AppContent = () => {
           <Route path="/bank/monthlyfundflow/:id" element={<Sb03Update />} />
           <Route path="/mastersheet" element={<ChekList />} />
           <Route path="/mastersheet/pumpsheet" element={<MasterChecklist />} />
-          <Route path="/mastersheet/salesmanagementsheet" element={<SalesManagement />} />
-
-
-          <Route path="/report" element={<Report />} />
-          <Route path="/reportfile" element={<ReportFile />} />
-          <Route path="/reportfile/:id" element={<UpdateReportFile />} />
-          <Route path="/department-reports" element={<DepartmentReports />} />
           <Route path="/mastersheet/pumpsheet/:id" element={<UpdatePumpSheet />} />
-          <Route path="/shifting" element={<ShiftingProgram />} />
+          <Route path="/mastersheet/salesmanagementsheet" element={<SalesManagement />} />
           <Route path="/mastersheet/salesmanagementsheet/:id" element={<UpdatesalesManagement />} />
           <Route path="/mastersheet/purchasemanagement" element={<PurchaseMngmnt />} />
           <Route path="/mastersheet/purchasemanagement/:id" element={<UpdatePurchase />} />
@@ -124,6 +117,13 @@ const AppContent = () => {
           <Route path="/mastersheet/bpcl&statutory/:id" element={<Updatebpcl />} />
           <Route path="/mastersheet/staffmanagement" element={<Staffmngment />} />
           <Route path="/mastersheet/staffmanagement/:id" element={<StaffUpdate />} />
+
+
+          <Route path="/report" element={<Report />} />
+          <Route path="/reportfile" element={<ReportFile />} />
+          <Route path="/reportfile/:id" element={<UpdateReportFile />} />
+          <Route path="/department-reports" element={<DepartmentReports />} />
+          <Route path="/shifting" element={<ShiftingProgram />} />
           <Route path="/mastersheet/finance" element={<Finance />} />
           <Route path="/mastersheet/finance/:id" element={<UpdateFin />} />
           <Route path="/lekhajokha" element={<LekhaBox />} />

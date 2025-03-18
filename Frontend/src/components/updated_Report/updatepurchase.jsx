@@ -19,7 +19,7 @@ const updatesalemanagemnet = () => {
       try {
         const response = await axios.get(`http://localhost:5500/mastersheet/purchasemanagement/${id}`)
         setPurchasemagnmnet(response.data)
-        setDate(response.data.date)
+        setDate(response.data.dat2)
         setLoading(false)
       } catch (err) {
         alert("Fetch nhh hora")
@@ -129,7 +129,7 @@ const updatesalemanagemnet = () => {
             </Link>
             <div className="col-span-2 text-xl">
               <strong>
-                <input value={handleDate()} readOnly />
+                <input value={handleDate()} className="bg-transparent" readOnly />
               </strong>
             </div>
             <div>

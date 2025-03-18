@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const TankLorryManagementSchema = new mongoose.Schema({
-    date: {
+    dat2: {
         type: Date,
         required: true,
     },

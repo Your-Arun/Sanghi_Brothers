@@ -88,7 +88,7 @@ const UpdatePumpSheet = () => {
 
   return (
     <div>
-      <h1 className="text-center mt-[-30px] text-xl p-4">PUMP REPORT SHEET</h1>
+      <h1 className="text-center text-xl p-4">PUMP REPORT SHEET</h1>
       <form>
         <div className="text-center mt-[-20px] text-xl p-4">
           <h1>

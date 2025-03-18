@@ -6,7 +6,6 @@ import axios from "axios";
 
 const LubricantMangement = () => {
     const [date, setDate] = useState('');
-
     const [items, setItems] = useState([
         "All stock available next 7 days",
         "Any goods order given",
@@ -30,8 +29,6 @@ const LubricantMangement = () => {
         "",
         
     ]);
-
-
     const [inputs, setInputs] = useState({
         points: items.map((item) => ({
             point: "",
@@ -44,7 +41,6 @@ const LubricantMangement = () => {
             comment: "",
         })),
     });
-
     const handleInputChnge = (e, index) => {
         const { id, value, checked } = e.target;
         setInputs((prevInputs) => ({
@@ -62,7 +58,7 @@ const LubricantMangement = () => {
     const handleSave = async (e) => {
         e.preventDefault();
         const data = {
-            date: new Date(date).toISOString().split('T')[0],
+            dat2: new Date(date).toISOString().split('T')[0],
             points: inputs.points.map((point) => ({
                 ...point,
                 ok: point.ok,
@@ -70,9 +66,7 @@ const LubricantMangement = () => {
             })),
         };
         try {
-            const response = await axios.post("http://localhost:5500/mastersheet/lubricantmanagement", data);
-          
-           
+            const response = await axios.post("http://localhost:5500/mastersheet/lubricantmanagement", data);       
             alert("Purchase management sheet saved successfully!");
         } catch (error) {
             alert("Error saving sales management sheet!");
@@ -87,7 +81,7 @@ const LubricantMangement = () => {
     return (
         <>
             <div>
-                <h1 className="text-center mt-[-30px] text-2xl p-4 font-bold">LUBRICANT MANAGEMENT</h1>
+                <h1 className="text-center  text-2xl p-4 font-bold">LUBRICANT MANAGEMENT</h1>
                 <form onSubmit={handleSave}>
                     <div className="flex justify-evenly items-center  p-4">
                         <Link to={"/mastersheet"}>
@@ -95,7 +89,7 @@ const LubricantMangement = () => {
                                 <img src={previousImage} width={50} alt="Back" />
                             </div>
                         </Link>
-                        <div><input type="date" id="date" value={date} onChange={handleDateChange} />
+                        <div><input type="date" id="date" value={date} className="bg-transparent" onChange={handleDateChange} />
                         </div>
                         <div>
                             <button type="submit">

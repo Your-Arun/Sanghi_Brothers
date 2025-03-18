@@ -60,7 +60,7 @@ const updatesalemanagemnet = () => {
                     `http://localhost:5500/mastersheet/salesmanagementsheet/${id}`
                 );
                 setSalemagnmnet(response.data);
-                setDate(response.data.date);
+                setDate(response.data.dat2);
                 setPoints(response.data.points);
                 setLoading(false);
             } catch (err) {
@@ -114,10 +114,8 @@ const updatesalemanagemnet = () => {
                 `http://localhost:5500/mastersheet/salesmanagementsheet/${id}`,
                 data
             );
-            console.log(response.data);
             alert("Sales management sheet updated successfully!");
         } catch (error) {
-            console.error(error);
             alert("Error updating sales management sheet!");
         }
     };
@@ -157,7 +155,7 @@ const updatesalemanagemnet = () => {
                             </div>
                         </Link>
                         <div className='col-span-2'>
-                            <input className='text-center' type="date" id="date" value={date} readOnly />
+                            <input className='text-center bg-transparent' type="date" id="date" value={date} readOnly />
 
                         </div>
                         <div><img src={binImage} onClick={handleDelete} width={50} height={50} className=" " alt="Bin" /></div>

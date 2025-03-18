@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const Staff = new mongoose.Schema({
-  date: {
+  dat2: {
     type: Date,
     required: true,
   },

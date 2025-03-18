@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const salesManagementSheetSchema = new mongoose.Schema({
-    date: {
+    dat2: {
         type: String,
         required: true,
     },

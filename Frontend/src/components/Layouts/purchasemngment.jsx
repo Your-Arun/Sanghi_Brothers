@@ -6,7 +6,6 @@ import axios from "axios";
 
 const PurchaseMangement = () => {
     const [date, setDate] = useState('');
-
     const [items, setItems] = useState([
         "Stock & sale up date in app. Morning",
         "MS Received on Time",
@@ -25,8 +24,6 @@ const PurchaseMangement = () => {
         "",
         
     ]);
-
-
     const [inputs, setInputs] = useState({
         points: items.map((item) => ({
             point: "",
@@ -57,7 +54,7 @@ const PurchaseMangement = () => {
     const handleSave = async (e) => {
         e.preventDefault();
         const data = {
-            date: new Date(date).toISOString().split('T')[0],
+            dat2: new Date(date).toISOString().split('T')[0],
             points: inputs.points.map((point) => ({
                 ...point,
                 ok: point.ok,
@@ -66,8 +63,6 @@ const PurchaseMangement = () => {
         };
         try {
             const response = await axios.post("http://localhost:5500/mastersheet/purchasemanagement", data);
-          
-           
             alert("Purchase management sheet saved successfully!");
         } catch (error) {
             alert("Error saving sales management sheet!");
@@ -82,7 +77,7 @@ const PurchaseMangement = () => {
     return (
         <>
             <div>
-                <h1 className="text-center mt-[-30px] text-2xl p-4 font-bold">PURCHASE MANAGEMENT</h1>
+                <h1 className="text-center  text-2xl p-4 font-bold">PURCHASE MANAGEMENT</h1>
                 <form onSubmit={handleSave}>
                     <div className="flex justify-evenly items-center  p-4">
                         <Link to={"/mastersheet"}>
@@ -90,7 +85,7 @@ const PurchaseMangement = () => {
                                 <img src={previousImage} width={50} alt="Back" />
                             </div>
                         </Link>
-                        <div><input type="date" id="date" value={date} onChange={handleDateChange} />
+                        <div><input type="date" id="date" value={date} className="bg-transparent" onChange={handleDateChange} />
                         </div>
                         <div>
                             <button type="submit">

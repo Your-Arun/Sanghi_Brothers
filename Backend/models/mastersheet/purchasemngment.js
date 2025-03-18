@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const PurchaseManagementSchema = new mongoose.Schema({
-  date: {
+  dat2: {
     type: Date,
     required: true,
   },

@@ -75,7 +75,7 @@ const salesMangemnesheet = () => {
   const handleSave = async (e) => {
     e.preventDefault();
     const data = {
-      date: new Date(date).toISOString().split('T')[0],
+      dat2: new Date(date).toISOString().split('T')[0],
       points: inputs.points.map((point) => ({
         ...point,
         ok: point.ok,
@@ -102,7 +102,7 @@ const salesMangemnesheet = () => {
                 <img src={previousImage} width={50} alt="Back" />
               </div>
             </Link>
-            <div><input type="date" id="date" value={date} onChange={handleDateChange} />
+            <div><input type="date" id="date" value={date} className="bg-transparent" onChange={handleDateChange} />
             </div>
             <div>
               <button type="submit">
