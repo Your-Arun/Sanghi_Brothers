@@ -82,7 +82,7 @@ const ChekList = () => {
                 >
                   <p className="font-bold text-sm">Update</p>
                   <span className="text-gray-600">
-                    {new Date(item.date).toLocaleDateString("en-GB", {
+                    {new Date(item.dat2).toLocaleDateString("en-GB", {
                       day: "2-digit",
                       month: "2-digit",
                       year: "numeric",
