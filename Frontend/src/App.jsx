@@ -54,6 +54,7 @@ import MergingSbSection from './components/Dashboard/sbbankk/mergingsbsection.js
 import ProtectedRoute from "./components/Dashboard/ProtectedRoute.jsx";
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import AdminPanel from "./components/Dashboard/adminPanel.jsx";
 
 
 
@@ -90,6 +91,7 @@ const AppContent = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/admin-panel" element={<AdminPanel />} />
 
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>

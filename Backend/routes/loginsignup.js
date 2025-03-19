@@ -225,5 +225,40 @@ Router.get("/departments", async (req, res) => {
   }
 });
 
+//admin
+
+// ✅ Fetch all users
+Router.get("/users",  async (req, res) => {
+  try {
+    const users = await User.find().select("-password"); // Exclude passwords
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
+});
+// ✅ Update user details
+Router.put("/users/:id",  async (req, res) => {
+  try {
+    const { username, email, role } = req.body;
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { username, email, role },
+      { new: true }
+    );
+    res.json(updatedUser);
+  } catch (err) {
+    res.status(500).json({ error: "Update failed" });
+  }
+});
+
+// ✅ Delete a user
+Router.delete("/users/:id",  async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.json({ message: "User deleted" });
+  } catch (err) {
+    res.status(500).json({ error: "Delete failed" });
+  }
+});
 
 module.exports = Router;
