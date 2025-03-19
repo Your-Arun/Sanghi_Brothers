@@ -60,8 +60,8 @@ import AdminPanel from "./components/Dashboard/adminPanel.jsx";
 
 const App = () => {
   return (
-    <> 
-    <ToastContainer position="top-right" autoClose={3000} />
+    <>
+      <ToastContainer position="top-right" autoClose={3000} />
       <UserProvider> {/* ✅ UserProvider ko Router ke bahar wrap kiya */}
         <Router>
           <AppContent />
@@ -91,7 +91,7 @@ const AppContent = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/admin-panel" element={<AdminPanel />} />
+        <Route path="/admin-panel" element={<AdminPanel />} />
 
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
