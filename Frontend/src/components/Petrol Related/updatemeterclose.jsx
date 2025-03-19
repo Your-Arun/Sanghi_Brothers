@@ -62,7 +62,7 @@ const UpdateMeterclose = () => {
                 setRate(fetchedData.rate);
                 setInputs(fetchedData);
             } catch (error) {
-                console.error(error);
+                alert("Error");
             }
         };
         fetchData();

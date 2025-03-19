@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import BackButton from "../Home Page/backbutton";
+import previousImage from "/previous.png"; // ✅ Fixed import
 
-function UploadExcel({ token }) {
+function UploadExcel() {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [savedFiles, setSavedFiles] = useState([]);
 
   const handleFileChange = (event) => {
@@ -13,59 +14,69 @@ function UploadExcel({ token }) {
 
   const handleSaveToDB = async () => {
     if (!selectedFile) {
-      setMessage('❌ Please select a file');
-      clearMessageAfterDelay(); // Auto-clear after delay
+      setMessage("❌ Please select a file");
+      clearMessageAfterDelay();
       return;
     }
 
-    setMessage('⏳ Uploading file...'); // Show uploading message
+    setMessage("⏳ Uploading file...");
 
     const formData = new FormData();
-    formData.append('excelFile', selectedFile);
+    formData.append("excelFile", selectedFile);
 
     try {
-      const response = await axios.post('http://localhost:5500/exceluploader', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`
-        }
+      const response = await axios.post("http://localhost:5500/exceluploader", formData, {
       });
-
       setMessage(`✅ ${response.data.message}`);
-      setSelectedFile(null);  // Reset file input
-      fetchSavedFiles();  // Refresh file list
+      setSelectedFile(null);
+      fetchSavedFiles();
     } catch (error) {
-      setMessage('❌ Error saving file');
+      setMessage("❌ Error saving file");
     }
 
-    clearMessageAfterDelay(); // Auto-clear message
+    clearMessageAfterDelay();
   };
 
-  // **Message Auto-Clear Function**
   const clearMessageAfterDelay = () => {
-    setTimeout(() => {
-      setMessage('');
-    }, 3000); // Clear after 3 seconds
+    setTimeout(() => setMessage(""), 3000);
   };
-
 
   const fetchSavedFiles = async () => {
     try {
-      const response = await axios.get('http://localhost:5500/exceluploader', {
-        headers: { 'Authorization': `Bearer ${token}` }
+      const response = await axios.get("http://localhost:5500/exceluploader", {
       });
       setSavedFiles(response.data);
     } catch (error) {
-      console.error('Error fetching files:', error);
+      alert("Error fetching files:", error);
     }
   };
 
   useEffect(() => {
-    fetchSavedFiles(); // Initial fetch
+    fetchSavedFiles();
     const interval = setInterval(fetchSavedFiles, 5000);
-    return () => clearInterval(interval); // Cleanup on unmount
+    return () => clearInterval(interval);
   }, []);
 
+  const handleDownload = async (filename) => {
+    try {
+      const encodedFilename = encodeURIComponent(filename); // ✅ Encode filename
+      const response = await axios.get(`http://localhost:5500/exceluploader/${encodedFilename}`, {
+        responseType: "blob",
+        
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", filename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("❌ Download failed:", error);
+    }
+  };
+  
+  
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-6">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-lg">
@@ -74,7 +85,9 @@ function UploadExcel({ token }) {
         <label className="w-full flex flex-col items-center justify-center border-2 border-dashed border-gray-300 p-6 rounded-lg cursor-pointer hover:border-blue-500">
           <input type="file" accept=".xlsx, .xls" className="hidden" onChange={handleFileChange} />
           <div className="text-center">
-            <span className="text-gray-600">{selectedFile ? selectedFile.name : 'Click or Drag & Drop File Here'}</span>
+            <span className="text-gray-600">
+              {selectedFile ? selectedFile.name : "Click or Drag & Drop File Here"}
+            </span>
           </div>
         </label>
 
@@ -85,13 +98,13 @@ function UploadExcel({ token }) {
           💾 Save to Database
         </button>
 
-        {/* Status Message */}
         {message && (
-          <p className={`mt-4 text-center text-sm font-medium ${message.startsWith('✅') ? 'text-green-600' : 'text-red-600'}`}>
+          <p className={`mt-4 text-center text-sm font-medium ${message.startsWith("✅") ? "text-green-600" : "text-red-600"}`}>
             {message}
           </p>
         )}
       </div>
+
       <div className="mt-8 bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl">
         <h3 className="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
           📄 Saved Files
@@ -106,16 +119,17 @@ function UploadExcel({ token }) {
                 key={index}
                 className="bg-gray-100 p-4 rounded-lg shadow-md flex flex-col items-center transition hover:scale-105 hover:shadow-lg"
               >
-                <div className="text-4xl">📄</div> {/* File Icon */}
+                <div className="text-4xl">📄</div>
                 <p className="text-sm text-gray-700 font-medium mt-2 text-center">
                   {file.filename.length > 20 ? file.filename.slice(0, 20) + "..." : file.filename}
                 </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Size: {(file.chunkSize / 1024).toFixed(2)} KB
+                </p>
+                <p className="text-xs text-gray-500">
+                  Uploaded: {new Date(file.uploadDate).toLocaleDateString("en-GB")}
+                </p>
 
-                {/* File Info */}
-                <p className="text-xs text-gray-500 mt-1">Size: {(file.chunkSize)/1024} KB</p>
-                <p className="text-xs text-gray-500">Uploaded: {new Date(file.uploadDate).toLocaleDateString()}</p>
-
-                {/* Download Button */}
                 <button
                   onClick={() => handleDownload(file.filename)}
                   className="mt-3 bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 transition"
@@ -127,10 +141,11 @@ function UploadExcel({ token }) {
           </div>
         )}
       </div>
-      <div>
-        <BackButton previousImage="/public/previous.png" />
-      </div>
 
+      {/* Back Button */}
+      <div className="fixed bottom-6 left-6">
+        <BackButton previousImage={previousImage} />
+      </div>
     </div>
   );
 }

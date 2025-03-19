@@ -9,9 +9,7 @@ const ChekList = () => {
     useEffect(() => {
         const fetchPumpSheetData = async () => {
             try {
-                const token = localStorage.getItem("token");
                 const response = await axios.get("http://localhost:5500/meterclose", {
-                    headers: { Authorization: `Bearer ${token}` },
                 });
                 setPumpSheetData(response.data);
             } catch (error) {

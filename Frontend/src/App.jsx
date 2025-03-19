@@ -130,12 +130,12 @@ const AppContent = () => {
           <Route path="/newlekhajokha" element={<Lekhajokha />} />
           <Route path="/newlekhajokha/:id" element={<Lekhajokhaupdate />} />
           <Route path="/exceluploader" element={<ExcelUploader />} />
-
-
           <Route path="/createmeterclose" element={<MeterBox />} />
           <Route path="/meterclose" element={<MeterClose />} />
           <Route path="/meterclose/:id" element={<UpdateMeter />} />
           <Route path="/Cashslip" element={<CashSlip />} />
+
+
         </Route>
       </Routes>
     </>
