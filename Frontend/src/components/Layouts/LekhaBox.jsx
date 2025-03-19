@@ -9,9 +9,8 @@ const ChekList = () => {
     useEffect(() => {
         const fetchPumpSheetData = async () => {
             try {
-                const token = localStorage.getItem("token");
+                const token = sessionStorage.getItem("authToken"); // ✅ Use sessionStorage
                 const response = await axios.get("http://localhost:5500/newlekhajokha", {
-                    headers: { Authorization: `Bearer ${token}` },
                 });
                 setPumpSheetData(response.data);
             } catch (error) {

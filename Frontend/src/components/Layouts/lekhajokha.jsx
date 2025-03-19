@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import previousImage from "/previous.png";
-import saveImage from "/public/save.png";
+import saveImage from "/save.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
@@ -85,7 +85,6 @@ const Lekhajokha = () => {
         };
         try {
             const response = await axios.post("http://localhost:5500/newlekhajokha", data);
-            console.log(response.data);
             alert("Lekha Jokha saved successfully!");
         } catch (error) {
             alert("Error saving Lekha Jokha!");

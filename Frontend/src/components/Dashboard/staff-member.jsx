@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { FaMoneyBill, FaTruck, FaExclamationTriangle, FaUser } from "react-icons/fa";
 import { LuLayoutDashboard } from "react-icons/lu";
+import { BsOpencollective } from "react-icons/bs";
+import { IoCreateSharp } from "react-icons/io5";
 import ProfileModal from "./profile";
 import { useNavigate } from "react-router-dom";
 import addIcon from "/add.png";
@@ -78,6 +80,7 @@ const StaffDashboard = () => {
     { id: "cashslip", label: "Cash Slip", icon: <FaMoneyBill /> },
     { id: "shifting", label: "Shifting Arrangement", icon: <FaTruck /> },
     { id: "complaint", label: "Complaints", icon: <FaExclamationTriangle /> },
+    { id: "lekhajokha", label: "Lekha Jokha", icon: <BsOpencollective/>},
   ];
 
   // ✅ Prevent blank screen by checking user & loading
@@ -220,6 +223,16 @@ const StaffDashboard = () => {
             </div>
             <div></div>
 
+          </>
+        )}
+
+        {activeTab==="lekhajokha" &&(
+          <>
+          <div className="bg-white p-6 rounded-lg shadow-md text-center text-3xl font-bold text-gray-800">
+          ⛽Lekha Jokha 
+        </div>
+
+         <div><IoCreateSharp /> </div>
           </>
         )}
 

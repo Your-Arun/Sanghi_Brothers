@@ -56,6 +56,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
 
+
 const App = () => {
   return (
     <> 
@@ -125,10 +126,10 @@ const AppContent = () => {
           <Route path="/report" element={<Report />} />
           <Route path="/department-reports" element={<DepartmentReports />} />
           <Route path="/shifting" element={<ShiftingProgram />} />
-
-
           <Route path="/lekhajokha" element={<LekhaBox />} />
           <Route path="/newlekhajokha" element={<Lekhajokha />} />
+
+
           <Route path="/newlekhajokha/:id" element={<Lekhajokhaupdate />} />
           <Route path="/exceluploader" element={<ExcelUploader />} />
           <Route path="/createmeterclose" element={<MeterBox />} />

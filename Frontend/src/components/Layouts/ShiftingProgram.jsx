@@ -29,11 +29,10 @@ const ShiftManagementSystem = () => {
   ]);
   const [newMember, setNewMember] = useState({
     name: "",
-    role: "operator",
+    role: "operator🔫",
     shift: '',
     available: '',
   });
-
   useEffect(() => {
     const fetchMembers = async () => {
       try {
@@ -41,12 +40,11 @@ const ShiftManagementSystem = () => {
         setMembers(response.data);
         setAbsentMembers(response.data.filter((m) => m.available === "absent"));
       } catch (error) {
-        console.error("Error fetching members:", error);
+        alert("Error fetching members:");
       }
     };
     fetchMembers();
   }, []);
-
   const handleAddMember = async (e) => {
     e.preventDefault();
     if (newMember.name.trim()) {
@@ -56,41 +54,32 @@ const ShiftManagementSystem = () => {
         setMembers([...members, savedMember]);
         setNewMember({ name: "", role: "", shift: "", available: "" });
       } catch (error) {
-        console.error("Error saving member:", error);
         alert("Failed to save member. Please try again.");
       }
     }
   };
-
   const handleRemoveMember = async (id) => {
-    if (id === undefined) {
-      console.error("Error: id is undefined");
-      return;
-    }
-
+    if (!id) return;
     try {
       await axios.delete(`http://localhost:5500/shifting/${id}`);
-      setMembers(members.filter((m) => m._id !== id)); // Use _id instead of id
+      setMembers(members.filter((m) => m._id !== id));
     } catch (error) {
-      console.error("Error deleting member:", error);
-      alert("Failed to delete member. Please try again.");
+      alert("Failed to delete member.");
     }
   };
-
-  const handleUpdateAvailability = async (id, status, newRole) => {
+  const handleUpdateAvailability = async (id, status) => {
     try {
-      await axios.put(`http://localhost:5500/shifting/${id}`, { available: status, role: newRole });
-      setMembers(members.map((m) => (m._id === id ? { ...m, available: status, role: newRole } : m)));
+      await axios.put(`http://localhost:5500/shifting/${id}`, { available: status });
+      setMembers(members.map((m) => (m._id === id ? { ...m, available: status } : m)));
       if (status === "absent") {
-        setAbsentMembers([...absentMembers, members.find((m) => m._id === id)]);
+        setAbsentMembers((prev) => [...prev.filter((m) => m._id !== id), members.find((m) => m._id === id)]);
       } else {
         setAbsentMembers(absentMembers.filter((m) => m._id !== id));
       }
     } catch (error) {
-      console.error("Error updating availability:", error);
+      alert("Error updating availability:");
     }
   };
-
   const shuffleArray = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -98,7 +87,6 @@ const ShiftManagementSystem = () => {
     }
     return array;
   };
-
   const handleAssignShiftsAndOvertime = () => {
 
     if (members.length === 0) {
@@ -144,21 +132,25 @@ const ShiftManagementSystem = () => {
       morningShift.airBoy = availableMembers.find(m => m.role === "air boy" && m.shift === "morning");
       eveningShift.airBoy = availableMembers.find(m => m.role === "air boy" && m.shift === "evening");
 
-      morningMembers.free = !morningMembers;
+      morningMembers.forEach(member => member.free = false);
       setShifts([morningShift, eveningShift]);
     }
 
   };
-
-  const handleRoleChange = (id, newRole) => {
-    handleUpdateAvailability(id, null, newRole);
+  const handleRoleChange = async (id, newRole) => {
+    try {
+      await axios.put(`http://localhost:5500/shifting/${id}`, { role: newRole });
+      setMembers(members.map((m) => (m._id === id ? { ...m, role: newRole } : m)));
+    } catch (error) {
+      alert("Error updating role");
+    }
   };
   const handleUpdateShift = async (id, shift) => {
     try {
       await axios.put(`http://localhost:5500/shifting/${id}`, { shift });
       setMembers(members.map((m) => (m._id === id ? { ...m, shift } : m)));
     } catch (error) {
-      console.error("Error updating shift:", error);
+      alert("Error updating shift:", error);
     }
   };
   useEffect(() => {
@@ -207,9 +199,9 @@ const ShiftManagementSystem = () => {
                 className="border p-2 rounded flex-1 min-w-[130px]"
               >
                 <option value="">Select Role</option>
-                <option value="operator">Operator</option>
-                <option value="supervisor">Supervisor</option>
-                <option value="air boy">Air Boy</option>
+                <option value="operator">Operator🔫</option>
+                <option value="supervisor">Supervisor🧑‍💼</option>
+                <option value="air boy">Air Boy🌀</option>
               </select>
               <select
                 value={newMember.shift}
@@ -217,8 +209,8 @@ const ShiftManagementSystem = () => {
                 className="border p-2 rounded flex-1 min-w-[130px]"
               >
                 <option value="">Select Shift</option>
-                <option value="morning">Morning</option>
-                <option value="evening">Evening</option>
+                <option value="morning">Morning🌄</option>
+                <option value="evening">Evening🌆</option>
               </select>
               <select
                 value={newMember.available}
@@ -226,8 +218,8 @@ const ShiftManagementSystem = () => {
                 className="border p-2 rounded flex-1 min-w-[130px]"
               >
                 <option value="">Select Availability</option>
-                <option value="present">Present</option>
-                <option value="absent">Absent</option>
+                <option value="present">Present🟢</option>
+                <option value="absent">Absent🔴</option>
               </select>
               <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded flex items-center gap-1 min-w-[80px]">
                 <FaPlus /> Add
@@ -405,9 +397,9 @@ const ShiftManagementSystem = () => {
           </div>
         ))}
       </div>
-      
+
       <div>
-        <BackButton previousImage="/public/previous.png" />
+        <BackButton previousImage="/previous.png" />
       </div>
     </div>
   );
