@@ -121,6 +121,29 @@ const StaffDashboard = () => {
               <h3 className="text-xl">Welcome , <span className="text-red-500">{user.username}</span></h3>
             </div>
             <div>
+              {/* Dashboard Stats */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+                <div className="bg-blue-500 text-white p-6 rounded-lg shadow-md flex flex-col items-center">
+                  <FaExclamationTriangle size={40} />
+                  <h3 className="text-xl font-bold">Complaints</h3>
+                  <p className="text-3xl font-semibold">{reports.length}</p>
+                </div>
+                <div className="bg-green-500 text-white p-6 rounded-lg shadow-md flex flex-col items-center">
+                  <FaMoneyBill size={40} />
+                  <h3 className="text-xl font-bold">Cash Slips</h3>
+                  <p className="text-3xl font-semibold">{cashslip.length}</p>
+                </div>
+                <div className="bg-yellow-500 text-white p-6 rounded-lg shadow-md flex flex-col items-center">
+                  <FaTruck size={40} />
+                  <h3 className="text-xl font-bold">Shifting Arrangements</h3>
+                  <p className="text-3xl font-semibold">{0}</p> {/* Replace with actual count if available */}
+                </div>
+                <div className="bg-purple-500 text-white p-6 rounded-lg shadow-md flex flex-col items-center">
+                  <BsOpencollective size={40} />
+                  <h3 className="text-xl font-bold">Lekha Jokha</h3>
+                  <p className="text-3xl font-semibold">{lekha.length}</p>
+                </div>
+              </div>
             </div>
           </>
         )}
