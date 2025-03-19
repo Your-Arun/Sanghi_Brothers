@@ -9,7 +9,6 @@ const ChekList = () => {
     useEffect(() => {
         const fetchPumpSheetData = async () => {
             try {
-                const token = sessionStorage.getItem("authToken"); // ✅ Use sessionStorage
                 const response = await axios.get("http://localhost:5500/newlekhajokha", {
                 });
                 setPumpSheetData(response.data);

@@ -5,6 +5,14 @@ const lekha = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  username: {
+    type: String,
+    required: true,
+  },
+  department: {
+    type: String,
+    required: true,
+  },
   rate: {
     type: Number,
   },

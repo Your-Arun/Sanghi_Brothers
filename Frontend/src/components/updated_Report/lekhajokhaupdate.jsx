@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import binImage from "/bin.png";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
+import BackButton from "../Home Page/backbutton";
 
 const UpdateSaleManagement = () => {
     const { id } = useParams();
@@ -148,15 +149,11 @@ const UpdateSaleManagement = () => {
         <div className="relative p-6 dashboard bg-gray-100">
             <form onSubmit={handleSubmit}>
                 <div>
+                    <h1 className="text-4xl mb-10 font-bold text-center">Lekha Jokha</h1>
                     <div className="flex justify-evenly items-center p-4">
-                        <Link to={"/lekhajokha"}>
-                            <div className="">
-                                <img src={previousImage} width={50} alt="Back" />
-                            </div>
-                        </Link>
                         <div className="grid grid-row-2">
                             <div>
-                                <h1 className="text-4xl mb-10 font-bold text-center">Lekha Jokha</h1>
+                                <h1 className="text-2xl mb-10  mt-[-40px] font-bold text-center">{purchaseManagement.username}</h1>
                             </div>
                             <div className="cursor-pointer mx-auto">
                                 <img src={binImage} onClick={handleDelete} width={50} alt="Delete" />
@@ -331,6 +328,7 @@ const UpdateSaleManagement = () => {
                     </table>
                 </div>
             </form>
+            <BackButton previousImage="/previous.png" />
         </div>
     );
 };

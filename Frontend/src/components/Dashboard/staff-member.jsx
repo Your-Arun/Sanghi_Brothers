@@ -20,6 +20,7 @@ const StaffDashboard = () => {
   const [showModal2, setShowModal2] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [cashslip, setCashslip] = useState([]);
+  const [lekha, setLekha] = useState([]);
   const navigate = useNavigate();
 
   // ✅ Fetch user on mount
@@ -49,18 +50,19 @@ const StaffDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [departmentRes, reportRes, cashierRes,] = await Promise.all([
+        const [departmentRes, reportRes, cashierRes, lekhajokha] = await Promise.all([
           axiosInstance.get("/departments", { withCredentials: true }),
           axiosInstance.get("/reports", { withCredentials: true }),
-          axiosInstance.get("/Cashslip", { withCredentials: true })
+          axiosInstance.get("/Cashslip", { withCredentials: true }),
+          axiosInstance.get("/newlekhajokha", { withCredentials: true })
 
-        ]);  
+        ]);
 
         setDepartments(departmentRes.data);
         setReports(reportRes.data);
         setCashslip(cashierRes.data);
+        setLekha(lekhajokha.data);
       } catch (err) {
-        console.error("Error fetching data:", err);
         alert("Failed to fetch data.");
       }
     };
@@ -80,7 +82,7 @@ const StaffDashboard = () => {
     { id: "cashslip", label: "Cash Slip", icon: <FaMoneyBill /> },
     { id: "shifting", label: "Shifting Arrangement", icon: <FaTruck /> },
     { id: "complaint", label: "Complaints", icon: <FaExclamationTriangle /> },
-    { id: "lekhajokha", label: "Lekha Jokha", icon: <BsOpencollective/>},
+    { id: "lekhajokha", label: "Lekha Jokha", icon: <BsOpencollective /> },
   ];
 
   // ✅ Prevent blank screen by checking user & loading
@@ -226,13 +228,34 @@ const StaffDashboard = () => {
           </>
         )}
 
-        {activeTab==="lekhajokha" &&(
+        {activeTab === "lekhajokha" && (
           <>
-          <div className="bg-white p-6 rounded-lg shadow-md text-center text-3xl font-bold text-gray-800">
-          ⛽Lekha Jokha 
-        </div>
+            <div className="bg-white flex p-6 rounded-lg shadow-md text-center text-3xl font-bold text-gray-800 justify-center gap-4">
+              <div>⛽Lekha Jokha</div> <div className="cursor-pointer" onClick={() => (navigate("/newlekhajokha"))}><IoCreateSharp /> </div>
+            </div>
+            <div>
+              {/* Reports Grid */}
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-4xl">
+                {lekha.map((item) => (
+                  <div
+                    key={item.id}
+                    className="bg-white shadow-md p-4 rounded-lg border border-gray-200 hover:shadow-lg transition-all text-center"
+                  >
+                    <h3 className="text-lg font-bold text-blue-600">{item.username}</h3>
+                    <p className="text-md font-medium text-red-500">{item.department}</p>
+                    <p className="text-md font-medium text-gray-700">
+                      {new Date(item.date).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })}
+                    </p>
+                  </div>
+                ))}
+              </div>
 
-         <div><IoCreateSharp /> </div>
+            </div>
+
           </>
         )}
 

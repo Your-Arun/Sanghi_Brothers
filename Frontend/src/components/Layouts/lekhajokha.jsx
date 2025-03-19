@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import previousImage from "/previous.png";
+import React, { useState, useContext } from "react";
 import saveImage from "/save.png";
-import { Link } from "react-router-dom";
 import axios from "axios";
+import UserContext from "../Home Page/UserContext"
+import BackButton from "../Home Page/backbutton";
 
 const Lekhajokha = () => {
     const [date, setDate] = useState('');
+    const { user } = useContext(UserContext);
     const [rate, setrate] = useState('');
     const [sale, setSale] = useState('');
     const [paytm, setPaytm] = useState('');
@@ -72,6 +73,8 @@ const Lekhajokha = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = {
+            username: user?.username,
+            department: user?.department,
             date: new Date(date).toISOString().split('T')[0],
             rate: rate,
             sale: sale,
@@ -86,7 +89,7 @@ const Lekhajokha = () => {
         try {
             const response = await axios.post("http://localhost:5500/newlekhajokha", data);
             alert("Lekha Jokha saved successfully!");
-        } catch (error) {
+         } catch (error) {
             alert("Error saving Lekha Jokha!");
         }
     };
@@ -107,20 +110,18 @@ const Lekhajokha = () => {
     return (
         <div className="relative p-6 bg-gradient-to-r from-gray-200 to-white min-h-screen">
             <form onSubmit={handleSubmit}>
-                <div className="flex justify-between items-center mb-6">
-                    <Link to={"/lekhajokha"}>
-                        <img src={previousImage} width={50} alt="Back" />
-                    </Link>
-                    <h1 className="text-4xl font-bold text-gray-800 text-center">Lekha Jokha</h1>
+                <h1 className="text-4xl font-bold text-gray-800 text-center">Lekha Jokha</h1>
+                <div className="flex justify-end mb-6">
                     <button type="submit">
                         <img src={saveImage} width={50} alt="Save" />
                     </button>
                 </div>
 
+
                 <div className="bg-white p-6 rounded-lg shadow-md mb-6">
                     <div className="flex justify-between mb-4">
                         <div className="w-1/3">
-                           <label htmlFor="rate">Petrol Rate:  <input
+                            <label htmlFor="rate">Petrol Rate:  <input
 
 
                                 type="number"
@@ -155,7 +156,7 @@ const Lekhajokha = () => {
 
                     <div className="flex justify-between mb-4">
                         <div className="w-1/3">
-                           <label htmlFor="sale">Sale Amount:  <input
+                            <label htmlFor="sale">Sale Amount:  <input
                                 type="number"
                                 id="sale"
                                 placeholder="Sale Amount"
@@ -163,11 +164,11 @@ const Lekhajokha = () => {
                                 onChange={(e) => setSale(e.target.value)}
                                 className="p-3 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                             /></label>
-                        </div> 
+                        </div>
                         <div className="w-1/3">
 
 
-                          <label htmlFor="shift">Shift:  <select
+                            <label htmlFor="shift">Shift:  <select
                                 value={selectedShift}
                                 onChange={handleShiftChange}
                                 className="p-3 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
@@ -177,7 +178,7 @@ const Lekhajokha = () => {
                                 <option value="Evening">Evening</option>
                             </select></label>
                         </div>
-                       
+
                     </div>
                 </div>
 
@@ -285,6 +286,7 @@ const Lekhajokha = () => {
                 </div>
 
             </form>
+            <BackButton previousImage="/previous.png" />
         </div>
     );
 };
