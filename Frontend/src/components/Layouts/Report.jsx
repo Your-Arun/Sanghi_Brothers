@@ -1,42 +1,38 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import UserContext from "../Home Page/UserContext"; // Import UserContext
 
 const Report = () => {
-  const location = useLocation();
+  const navigate = useNavigate();
+  const { user } = useContext(UserContext); // Get user from context
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [role, setRole] = useState("");  // Pre-fill fields with user's role
-  const department = new URLSearchParams(location.search).get("department");
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const token = sessionStorage.getItem("authToken"); // ✅ Use sessionStorage
-        const role = await axios.get('http://localhost:5500/departments')
-        console.log(role.data)
-        setRole(role.data)
-      } catch (err) {
-        alert("Failed to fetch profile data.");
-      }
-    };
-
-    fetchProfile();
-  }, []);
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!user || !user.department) {
+      alert("Error: No department found. Please log in again.");
+      return;
+    }
+
     try {
-      const token = sessionStorage.getItem("authToken"); // ✅ Use sessionStorage
+      const token = sessionStorage.getItem("authToken");
+      if (!token) {
+        alert("No valid session found. Please log in.");
+        return;
+      }
+
       await axios.post(
         "http://localhost:5500/report",
-        { title, department, content },
+        { title, department: user.department, content },
+        { withCredentials: true }
       );
       alert("Report created successfully!");
       // Redirect based on user role
-      if (role === "staff") {
+      if (user.department === "staff") {
         navigate("/staff-dashboard");
       } else {
         navigate("/dashboard");
@@ -48,12 +44,9 @@ const Report = () => {
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
-      <form
-        className="bg-white p-6 rounded shadow-md w-96"
-        onSubmit={handleSubmit}
-      >
+      <form className="bg-white p-6 rounded shadow-md w-96" onSubmit={handleSubmit}>
         <h2 className="text-lg font-bold mb-4">
-          Create Report for {department}
+          Create Report for {user?.department.toUpperCase() || "N/A"}
         </h2>
         <input
           type="text"
@@ -61,6 +54,7 @@ const Report = () => {
           placeholder="Enter report title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          required
         />
         <textarea
           className="w-full p-2 mb-2 border rounded"
@@ -68,11 +62,9 @@ const Report = () => {
           placeholder="Enter report content"
           value={content}
           onChange={(e) => setContent(e.target.value)}
+          required
         ></textarea>
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded"
-        >
+        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
           Create Report
         </button>
       </form>

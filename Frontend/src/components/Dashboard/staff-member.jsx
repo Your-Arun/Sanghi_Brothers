@@ -131,7 +131,7 @@ const StaffDashboard = () => {
                 alt="Create"
                 width={50}
                 className="ml-4 cursor-pointer transform transition hover:scale-110 hover:rotate-12"
-                onClick={() => setShowModal2(true)}
+                onClick={() => (navigate('/report'))}
               />
             </div>
             {loading ? (

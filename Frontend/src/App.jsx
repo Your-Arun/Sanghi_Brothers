@@ -123,10 +123,10 @@ const AppContent = () => {
           <Route path="/reportfile/:id" element={<UpdateReportFile />} />
           <Route path="/cashier" element={<Cashier />} />
           <Route path="/report" element={<Report />} />
-
-
           <Route path="/department-reports" element={<DepartmentReports />} />
           <Route path="/shifting" element={<ShiftingProgram />} />
+
+
           <Route path="/lekhajokha" element={<LekhaBox />} />
           <Route path="/newlekhajokha" element={<Lekhajokha />} />
           <Route path="/newlekhajokha/:id" element={<Lekhajokhaupdate />} />

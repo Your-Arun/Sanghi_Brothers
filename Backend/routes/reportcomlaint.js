@@ -14,7 +14,6 @@ router.post("/report", async (req, res) => {
         title,
         department,
         content,
-        createdBy: req.user.id, // Assuming `req.user` is populated by `authenticate`
       });
   
       await newReport.save();

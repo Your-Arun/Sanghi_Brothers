@@ -15,7 +15,7 @@ const Dashboard = () => {
   const [isEditing, setIsEditing] = useState(false); // Control edit modal
   const [updatedContent, setUpdatedContent] = useState(""); // Content for editing
   const [updatedTitle, setUpdatedTitle] = useState(""); // Content for editing
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [reportfile, setReportFile] = useState([]);
   const [sb3update, setSb3Update] = useState([]);
   const [cashier, setCashier] = useState([]);
@@ -25,7 +25,7 @@ const Dashboard = () => {
   const [isOpen3, setIsOpen3] = useState(false);
   const [isProfileOpen, setProfileOpen] = useState(false);
   const { user } = useContext(UserContext); // 👈 Getting user from context
-  
+
 
   // ✅ Fetch all required data
   useEffect(() => {
@@ -55,9 +55,9 @@ const Dashboard = () => {
   // ✅ Handle report selection for editing
   const handleReportClick = (report) => {
     setSelectedReport(report);
-    setUpdatedTitle(report.title);
-    setUpdatedContent(report.content);
-    setShowModal(true);
+  };
+  const closeModal = () => {
+    setSelectedReport(null); // Close modal
   };
   const handleDeleteReport = async (reportId) => {
     if (!window.confirm("Are you sure you want to delete this report?")) return;
@@ -114,7 +114,7 @@ const Dashboard = () => {
       alert("Could not determine your access level. Please try again.");
       return;
     }
-    const userDepartment= user.department.toLowerCase();
+    const userDepartment = user.department.toLowerCase();
     const departmentNormalized = department.toLowerCase();
     if (userDepartment === "manager" || userDepartment === departmentNormalized) {
       navigate(`/department-reports?department=${department}`);
@@ -122,17 +122,6 @@ const Dashboard = () => {
       alert("You are not authorized to view reports for this department.");
     }
   };
-
-  const openReportPage = () => {
-    if (selectedDepartment) {
-      navigate(`/report?department=${selectedDepartment}`);
-      setShowModal2(false);
-    } else {
-      alert("Please select a department!");
-    }
-  };
-
-
 
   return (
     <>
@@ -165,17 +154,17 @@ const Dashboard = () => {
               <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">
                 🏢 Departments
               </h2>
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                  {["Manager", "Accounts/Finance", "Backoffice"].map((dept) => (
-                    <div
-                      key={dept}
-                      className="p-6 border bg-yellow-200 rounded-xl shadow-md hover:bg-yellow-300 cursor-pointer transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg"
-                      onClick={() => viewReports(dept.toLowerCase())} // ✅ Fix
-                    >
-                      <h3 className="text-xl font-bold text-orange-700 uppercase">{dept}</h3>
-                    </div>
-                  ))}
-                </div>
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                {["Manager", "Accounts/Finance", "Backoffice"].map((dept) => (
+                  <div
+                    key={dept}
+                    className="p-6 border bg-yellow-200 rounded-xl shadow-md hover:bg-yellow-300 cursor-pointer transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg"
+                    onClick={() => viewReports(dept.toLowerCase())} // ✅ Fix
+                  >
+                    <h3 className="text-xl font-bold text-orange-700 uppercase">{dept}</h3>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -360,7 +349,7 @@ const Dashboard = () => {
               alt="Create"
               width={50}
               className="ml-4 cursor-pointer transform transition hover:scale-110 hover:rotate-12"
-              onClick={() => setShowModal2(true)}
+              onClick={() => (navigate('/report'))}
             />
           </div>
 
@@ -373,11 +362,11 @@ const Dashboard = () => {
                   className="min-w-[200px] p-4 border rounded-xl shadow-md bg-white hover:bg-gray-100 cursor-pointer transition duration-300 transform hover:scale-105"
                   onClick={() => handleReportClick(report)}
                 >
-                  <h3 className="text-xl text-green-700 font-bold text-center">{report.title}</h3>
+                  <h3 className="text-xl text-green-700 font-bold text-center">TITLE: {report.title}</h3>
                   <p className="text-md font-semibold text-center text-gray-800 mt-2 flex items-center justify-center gap-1">
-                    📂 {report.department}
+                    DEPARTMENT: {report.department}
                   </p>
-                  <p className="mt-3 text-gray-800 text-center line-clamp-2">{report.content}</p>
+                  <p className="mt-3 text-gray-800 text-center line-clamp-2">CONTENT: {report.content}</p>
                   <button
                     className="mt-2 px-3 py-1 bg-red-500 text-white rounded-lg w-full hover:bg-red-600 flex items-center justify-center gap-2"
                     onClick={(e) => {
@@ -420,7 +409,8 @@ const Dashboard = () => {
                 <h2 className="text-xl font-bold text-center mb-4 text-blue-700">💰 Full Complaints Report</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {reports.map((item) => (
-                    <div key={item._id} className="p-4 border rounded-lg bg-gray-100 cursor-pointer transition duration-300 ease-in-out hover:text-lg hover:scale-110">
+                    <div key={item._id}
+                      onClick={() => handleReportClick(item)} className="p-4 border rounded-lg bg-gray-100 cursor-pointer transition duration-300 ease-in-out hover:text-lg hover:scale-110">
                       <h1 className="text-lg font-bold text-green-700 text-center">{item.title}</h1>
                       <h3 className="text-md font-semibold text-center text-gray-800 flex items-center justify-center gap-1">
                         {item.department}
@@ -437,6 +427,29 @@ const Dashboard = () => {
                     </div>
                   ))}
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* 📌 MODAL */}
+          {selectedReport && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md">
+                <h2 className="text-2xl font-bold text-green-700 text-center">
+                  {selectedReport.title}
+                </h2>
+                <p className="text-md font-semibold text-center text-gray-800 mt-2">
+                  <strong>Department:</strong> {selectedReport.department}
+                </p>
+                <p className="mt-4 text-gray-700 text-center">
+                  {selectedReport.content}
+                </p>
+                <button
+                  onClick={closeModal}
+                  className="mt-4 w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
+                >
+                  Close
+                </button>
               </div>
             </div>
           )}
@@ -556,66 +569,7 @@ const Dashboard = () => {
             </div>
           </div>
         )}
-        {/* Modal for Selecting Department of complaint report */}
-        {showModal2 && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-            role="dialog"
-            aria-labelledby="department-modal-title"
-            onClick={(e) => e.target.id === "modal-overlay" && setShowModal2(false)}
-          >
-            {/* Modal Box */}
-            <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm md:max-w-md relative">
-              {/* Close Button */}
-              <button
-                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-                onClick={() => setShowModal2(false)}
-                aria-label="Close"
-              >
-                ❌
-              </button>
 
-              <h2
-                id="department-modal-title"
-                className="text-2xl font-bold mb-4 text-center text-blue-600"
-              >
-                Select a Department
-              </h2>
-
-              <select
-                className="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={selectedDepartment}
-                onChange={(e) => setSelectedDepartment(e.target.value)}
-              >
-                <option value="" disabled>
-                  -- Choose a Department --
-                </option>
-                {departments.map((dept) => (
-                  <option key={dept} value={dept}>
-                    {dept}
-                  </option>
-                ))}
-              </select>
-
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  className="px-4 py-2 bg-gray-300 text-black rounded-lg mr-2 hover:bg-gray-400 transition"
-                  onClick={() => setShowModal2(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-                  onClick={openReportPage}
-                >
-                  Proceed
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </>
   );
