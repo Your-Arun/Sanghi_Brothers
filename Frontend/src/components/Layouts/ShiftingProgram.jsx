@@ -89,55 +89,62 @@ const ShiftManagementSystem = () => {
     return array;
   };
   const handleAssignShiftsAndOvertime = () => {
-
     if (members.length === 0) {
       alert("Please add team members first");
       return;
     }
-
+  
     const availableMembers = members.filter(
       (m) => m.available === "present" && !absentees.includes(m._id)
     );
-   
+  
     const morningShift = shifts.find((shift) => shift.name === "Morning Shift");
     const eveningShift = shifts.find((shift) => shift.name === "Evening Shift");
-
+  
     if (morningShift && eveningShift) {
-      let morningMembers = availableMembers.filter((m) => m.shift === "morning" && m.role === "operator");
-      let eveningMembers = availableMembers.filter((m) => m.shift === "evening" && m.role === "operator");
-
+      let morningMembers = availableMembers.filter(
+        (m) => m.shift === "morning" && m.role === "operator"
+      );
+      let eveningMembers = availableMembers.filter(
+        (m) => m.shift === "evening" && m.role === "operator"
+      );
+  
       morningMembers = shuffleArray([...morningMembers]);
       eveningMembers = shuffleArray([...eveningMembers]);
-
+  
       morningShift.members = morningMembers;
       eveningShift.members = eveningMembers;
-
+  
       const unassignedMorning = Math.max(0, morningShift.nozzles.length - morningMembers.length);
       const unassignedEvening = Math.max(0, eveningShift.nozzles.length - eveningMembers.length);
-
+  
       let overtimeCandidatesMorning = eveningMembers.filter(m => !eveningOvertimeMembers.includes(m._id));
       let overtimeCandidatesEvening = morningMembers.filter(m => !morningOvertimeMembers.includes(m._id));
-
+  
+      // ✅ Overtime Members ko bhi shuffle kar diya
+      overtimeCandidatesMorning = shuffleArray([...overtimeCandidatesMorning]);
+      overtimeCandidatesEvening = shuffleArray([...overtimeCandidatesEvening]);
+  
       const morningOvertime = overtimeCandidatesMorning.slice(0, unassignedMorning);
       const eveningOvertime = overtimeCandidatesEvening.slice(0, unassignedEvening);
-
+  
       morningShift.members = [...morningShift.members, ...morningOvertime];
       eveningShift.members = [...eveningShift.members, ...eveningOvertime];
-
+  
       setMorningOvertimeMembers(morningOvertime.map(m => m._id));
       setEveningOvertimeMembers(eveningOvertime.map(m => m._id));
-
+  
       morningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && m.shift === "morning");
       eveningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && m.shift === "evening");
-
+  
       morningShift.airBoy = availableMembers.find(m => m.role === "air boy" && m.shift === "morning");
       eveningShift.airBoy = availableMembers.find(m => m.role === "air boy" && m.shift === "evening");
-
+  
       morningMembers.forEach(member => member.free = false);
       setShifts([morningShift, eveningShift]);
     }
-
   };
+  
   const handleRoleChange = async (id, newRole) => {
     try {
       await axiosInstance.put(`/shifting/${id}`, { role: newRole });
@@ -154,15 +161,13 @@ const ShiftManagementSystem = () => {
       alert("Error updating shift:", error);
     }
   };
-
   const [date, setDate] = useState('');
-
   useEffect(() => {
     const todayDate = new Date();
     const year = todayDate.getFullYear();
     const month = String(todayDate.getMonth() + 1).padStart(2, '0');
     const day = String(todayDate.getDate()).padStart(2, '0');
-    setDate(`${year}-${month}-${day}`);
+    setDate(`${day}/${month}/${year}`);
   }, []);
 
 
@@ -352,7 +357,7 @@ const ShiftManagementSystem = () => {
 
       {/* handelassingg */}
       <div className=" md:grid-cols-2 gap-4 mt-5 mb-2">
-        <ShiftList shifts={shifts} morningOvertimeMembers={morningOvertimeMembers} eveningOvertimeMembers={eveningOvertimeMembers} />
+        <ShiftList date={date} shifts={shifts} morningOvertimeMembers={morningOvertimeMembers} eveningOvertimeMembers={eveningOvertimeMembers} />
       </div>
       <div>
         <BackButton previousImage="/previous.png" />

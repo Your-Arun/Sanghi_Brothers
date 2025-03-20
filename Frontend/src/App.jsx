@@ -56,13 +56,12 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import AdminPanel from "./components/Dashboard/adminPanel.jsx";
 
-
 const App = () => {
   return (
     <>
       <ToastContainer position="top-right" autoClose={3000} />
       <UserProvider>
-         <Router>
+          <Router>
             <AppContent />
           </Router>
       </UserProvider>

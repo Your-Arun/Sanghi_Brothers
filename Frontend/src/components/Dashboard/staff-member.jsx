@@ -9,7 +9,6 @@ import addIcon from "/add.png";
 import axiosInstance from "./axiosInstance";
 import { toast } from "react-toastify";
 import UserContext from "../Home Page/UserContext"; // ✅ Import UserContext
-import ShiftList from "../Home Page/ShiftContext";
 
 const StaffDashboard = () => {
   const { user, setUser } = useContext(UserContext); // ✅ Get user from context
@@ -23,6 +22,7 @@ const StaffDashboard = () => {
   const [cashslip, setCashslip] = useState([]);
   const [lekha, setLekha] = useState([]);
   const navigate = useNavigate();
+ 
 
   // ✅ Fetch user on mount
   useEffect(() => {
@@ -247,8 +247,7 @@ const StaffDashboard = () => {
             <div className="bg-white p-6 rounded-lg shadow-md text-center text-3xl">
               SHIFTS ARRANGEMENT
             </div>
-
-            <div>
+             <div>
               {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5 mb-2">
                 <ShiftList shifts={shifts} morningOvertimeMembers={morningOvertimeMembers} eveningOvertimeMembers={eveningOvertimeMembers} />
                 <ShiftList shifts={shifts} morningOvertimeMembers={morningOvertimeMembers} eveningOvertimeMembers={eveningOvertimeMembers} />
