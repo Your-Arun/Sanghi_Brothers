@@ -14,7 +14,7 @@ import UserContext from "../Home Page/UserContext"; // ✅ Import UserContext
 const StaffDashboard = () => {
   const { user, setUser } = useContext(UserContext); // ✅ Get user from context
   const [activeTab, setActiveTab] = useState("dashboard");
-  const { shifts } = useContext(ShiftContext);
+  const { shifts} = useContext(ShiftContext);
   const [isProfileOpen, setProfileOpen] = useState(false);
   const [reports, setReports] = useState([]);
   const [departments, setDepartments] = useState([]);
@@ -248,6 +248,7 @@ const StaffDashboard = () => {
             <div className="bg-white p-6 rounded-lg shadow-md text-center text-3xl">
               SHIFTS ARRANGEMENT
             </div>
+
             <div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5 mb-2 ">
                 {shifts.map((shift) => (

@@ -60,7 +60,44 @@ export const ShiftProvider = ({ children }) => {
       }
     }
   };
-
+  const handleRemoveMember = async (id) => {
+    if (!id) return;
+    try {
+      await axiosInstance.delete(`/shifting/${id}`);
+      setMembers(members.filter((m) => m._id !== id));
+    } catch (error) {
+      alert("Failed to delete member.");
+    }
+  };
+  const handleUpdateAvailability = async (id, status) => {
+    try {
+      await axiosInstance.put(`/shifting/${id}`, { available: status });
+      setMembers(members.map((m) => (m._id === id ? { ...m, available: status } : m)));
+      if (status === "absent") {
+        setAbsentMembers((prev) => [...prev.filter((m) => m._id !== id), members.find((m) => m._id === id)]);
+      } else {
+        setAbsentMembers(absentMembers.filter((m) => m._id !== id));
+      }
+    } catch (error) {
+      alert("Error updating availability:");
+    }
+  };
+  const handleRoleChange = async (id, newRole) => {
+    try {
+      await axiosInstance.put(`/shifting/${id}`, { role: newRole });
+      setMembers(members.map((m) => (m._id === id ? { ...m, role: newRole } : m)));
+    } catch (error) {
+      alert("Error updating role");
+    }
+  };
+  const handleUpdateShift = async (id, shift) => {
+    try {
+      await axiosInstance.put(`/shifting/${id}`, { shift });
+      setMembers(members.map((m) => (m._id === id ? { ...m, shift } : m)));
+    } catch (error) {
+      alert("Error updating shift:", error);
+    }
+  };
   const [date, setDate] = useState('');
 
   useEffect(() => {
