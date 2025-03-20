@@ -1,183 +1,70 @@
-import React, { createContext, useState, useEffect } from 'react';
-import axiosInstance from '../Dashboard/axiosInstance';
-
-
-export const ShiftContext = createContext();
-
-export const ShiftProvider = ({ children }) => {
-  const [morningOvertimeMembers, setMorningOvertimeMembers] = useState([]);
-  const [eveningOvertimeMembers, setEveningOvertimeMembers] = useState([]);
-  const [members, setMembers] = useState([]);
-  const [absentees, setAbsentees] = useState([]);
-  const [absentMembers, setAbsentMembers] = useState([]);
-  const [shifts, setShifts] = useState([
-    {
-      id: "1",
-      name: "Morning Shift",
-      startTime: "06:00",
-      endTime: "14:30",
-      members: [],
-      nozzles: ["Nozzle 1", "Nozzle 2", "Nozzle 3", "Nozzle 4", "Nozzle 5", "Nozzle 6"],
-    },
-    {
-      id: "2",
-      name: "Evening Shift",
-      startTime: "14:30",
-      endTime: "23:00",
-      members: [],
-      nozzles: ["Nozzle 1", "Nozzle 2", "Nozzle 3", "Nozzle 4", "Nozzle 5", "Nozzle 6"],
-    },
-  ]);
-
-  const [newMember, setNewMember] = useState({
-    name: "",
-    role: "operator🔫",
-    shift: '',
-    available: '',
-  });
-  useEffect(() => {
-    const fetchMembers = async () => {
-      try {
-        const response = await axiosInstance.get("/shifting");
-        setMembers(response.data);
-        setAbsentMembers(response.data.filter((m) => m.available === "absent"));
-      } catch (error) {
-        alert("Error fetching members:");
-      }
-    };
-    fetchMembers();
-  }, []);
-  const handleAddMember = async (e) => {
-    e.preventDefault();
-    if (newMember.name.trim()) {
-      try {
-        const response = await axiosInstance.post("/shifting", newMember);
-        const savedMember = response.data;
-        setMembers([...members, savedMember]);
-        setNewMember({ name: "", role: "", shift: "", available: "" });
-      } catch (error) {
-        alert("Failed to save member. Please try again.");
-      }
-    }
-  };
-  const handleRemoveMember = async (id) => {
-    if (!id) return;
-    try {
-      await axiosInstance.delete(`/shifting/${id}`);
-      setMembers(members.filter((m) => m._id !== id));
-    } catch (error) {
-      alert("Failed to delete member.");
-    }
-  };
-  const handleUpdateAvailability = async (id, status) => {
-    try {
-      await axiosInstance.put(`/shifting/${id}`, { available: status });
-      setMembers(members.map((m) => (m._id === id ? { ...m, available: status } : m)));
-      if (status === "absent") {
-        setAbsentMembers((prev) => [...prev.filter((m) => m._id !== id), members.find((m) => m._id === id)]);
-      } else {
-        setAbsentMembers(absentMembers.filter((m) => m._id !== id));
-      }
-    } catch (error) {
-      alert("Error updating availability:");
-    }
-  };
-  const handleRoleChange = async (id, newRole) => {
-    try {
-      await axiosInstance.put(`/shifting/${id}`, { role: newRole });
-      setMembers(members.map((m) => (m._id === id ? { ...m, role: newRole } : m)));
-    } catch (error) {
-      alert("Error updating role");
-    }
-  };
-  const handleUpdateShift = async (id, shift) => {
-    try {
-      await axiosInstance.put(`/shifting/${id}`, { shift });
-      setMembers(members.map((m) => (m._id === id ? { ...m, shift } : m)));
-    } catch (error) {
-      alert("Error updating shift:", error);
-    }
-  };
-  const [date, setDate] = useState('');
-
-  useEffect(() => {
-    const todayDate = new Date();
-    const year = todayDate.getFullYear();
-    const month = String(todayDate.getMonth() + 1).padStart(2, '0');
-    const day = String(todayDate.getDate()).padStart(2, '0');
-    setDate(`${year}-${month}-${day}`);
-  }, []);
-
-
-  const handleAssignShiftsAndOvertime = () => {
-
-    if (members.length === 0) {
-      alert("Please add team members first");
-      return;
-    }
-
-    const availableMembers = members.filter(
-      (m) => m.available === "present" && !absentees.includes(m._id)
-    );
-
-    const morningShift = shifts.find((shift) => shift.name === "Morning Shift");
-    const eveningShift = shifts.find((shift) => shift.name === "Evening Shift");
-
-    if (morningShift && eveningShift) {
-      let morningMembers = availableMembers.filter((m) => m.shift === "morning" && m.role === "operator");
-      let eveningMembers = availableMembers.filter((m) => m.shift === "evening" && m.role === "operator");
-
-      morningMembers = shuffleArray([...morningMembers]);
-      eveningMembers = shuffleArray([...eveningMembers]);
-
-      morningShift.members = morningMembers;
-      eveningShift.members = eveningMembers;
-
-      const unassignedMorning = Math.max(0, morningShift.nozzles.length - morningMembers.length);
-      const unassignedEvening = Math.max(0, eveningShift.nozzles.length - eveningMembers.length);
-
-      let overtimeCandidatesMorning = eveningMembers.filter(m => !eveningOvertimeMembers.includes(m._id));
-      let overtimeCandidatesEvening = morningMembers.filter(m => !morningOvertimeMembers.includes(m._id));
-
-      const morningOvertime = overtimeCandidatesMorning.slice(0, unassignedMorning);
-      const eveningOvertime = overtimeCandidatesEvening.slice(0, unassignedEvening);
-
-      morningShift.members = [...morningShift.members, ...morningOvertime];
-      eveningShift.members = [...eveningShift.members, ...eveningOvertime];
-
-      setMorningOvertimeMembers(morningOvertime.map(m => m._id));
-      setEveningOvertimeMembers(eveningOvertime.map(m => m._id));
-
-      morningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && m.shift === "morning");
-      eveningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && m.shift === "evening");
-
-      morningShift.airBoy = availableMembers.find(m => m.role === "air boy" && m.shift === "morning");
-      eveningShift.airBoy = availableMembers.find(m => m.role === "air boy" && m.shift === "evening");
-
-      morningMembers.forEach(member => member.free = false);
-      setShifts(prevShifts => prevShifts.map(shift => {
-        if (shift.name === "Morning Shift") {
-            return { ...shift, members: morningMembers };
-        } else if (shift.name === "Evening Shift") {
-            return { ...shift, members: eveningMembers };
-        }
-        return shift;
-    }));
-    }
-
-  };
-
-  const shuffleArray = (array) => {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  };
+const ShiftList = ({ shifts, morningOvertimeMembers, eveningOvertimeMembers }) => {
   return (
-    <ShiftContext.Provider value={{ shifts, handleAssignShiftsAndOvertime }}>
-      {children}
-    </ShiftContext.Provider>
+    <div className="flex justify-evenly md:grid-cols-2 gap-6 mt-5 mb-4  ">
+      {shifts.map((shift) => (
+        <div
+          key={shift.id}
+          className="bg-white  shadow-lg rounded-xl p-6 border border-gray-200"
+        >
+          <h3 className="text-3xl font-bold text-gray-800 text-center">{shift.name}</h3>
+          <p className="text-lg text-gray-600 text-center mt-1">📅 {shift.date}</p>
+          <p className="text-lg font-medium text-center text-indigo-600 mt-1">
+            ⏰ {shift.startTime} A.M - {shift.endTime} P.M
+          </p>
+
+          <div className="flex justify-between items-center bg-gray-100 p-3 mt-3 rounded-lg">
+            {shift.supervisor && (
+              <span className="font-semibold text-gray-700 mr-10">
+                👨‍💼 Supervisor: <span className="text-blue-600">{shift.supervisor.name.toUpperCase()}</span>
+              </span>
+            )}
+            {shift.airBoy && (
+              <span className="font-semibold text-gray-700">
+                  Air Boy: <span className="text-green-600">{shift.airBoy.name.toUpperCase()}</span>
+              </span>
+            )}
+          </div>
+
+          <table className="w-full mt-4 border-collapse border border-gray-300">
+            <thead>
+              <tr className="bg-gray-200 text-gray-800">
+                <th className="py-2 px-3 border">Nozzle</th>
+                <th className="py-2 px-3 border">Member</th>
+                <th className="py-2 px-3 border">Overtime</th>
+              </tr>
+            </thead>
+            <tbody>
+              {shift.nozzles.map((nozzle, index) => {
+                const member = shift.members?.[index];
+                const isOvertime =
+                  member &&
+                  ((shift.name === "Morning Shift" && morningOvertimeMembers.includes(member._id)) ||
+                   (shift.name !== "Morning Shift" && eveningOvertimeMembers.includes(member._id)));
+
+                return (
+                  <tr key={index} className="hover:bg-gray-100 transition">
+                    <td className="py-2 px-3 border text-center">{nozzle}</td>
+                    <td className="py-2 px-3 border text-center">
+                      {member?.name || <span className="text-gray-400 italic">Unassigned</span>}
+                    </td>
+                    <td className="py-2 px-3 border text-center">
+                      <span
+                        className={`px-2 py-1 rounded-lg text-xs font-bold ${
+                          isOvertime ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {isOvertime ? "✅" : "❌"}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      ))}
+    </div>
   );
 };
 
+export default ShiftList;

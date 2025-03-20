@@ -55,7 +55,6 @@ import ProtectedRoute from "./components/Dashboard/ProtectedRoute.jsx";
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import AdminPanel from "./components/Dashboard/adminPanel.jsx";
-import { ShiftProvider } from "./components/Home Page/ShiftContext.jsx";
 
 
 const App = () => {
@@ -63,11 +62,9 @@ const App = () => {
     <>
       <ToastContainer position="top-right" autoClose={3000} />
       <UserProvider>
-        <ShiftProvider> {/* ✅ UserProvider ko Router ke bahar wrap kiya */}
-          <Router>
+         <Router>
             <AppContent />
           </Router>
-        </ShiftProvider>
       </UserProvider>
     </>
   );

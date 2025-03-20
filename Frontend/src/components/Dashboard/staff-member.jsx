@@ -8,13 +8,12 @@ import { useNavigate } from "react-router-dom";
 import addIcon from "/add.png";
 import axiosInstance from "./axiosInstance";
 import { toast } from "react-toastify";
-import { ShiftContext } from "../Home Page/ShiftContext";
 import UserContext from "../Home Page/UserContext"; // ✅ Import UserContext
+import ShiftList from "../Home Page/ShiftContext";
 
 const StaffDashboard = () => {
   const { user, setUser } = useContext(UserContext); // ✅ Get user from context
   const [activeTab, setActiveTab] = useState("dashboard");
-  const { shifts} = useContext(ShiftContext);
   const [isProfileOpen, setProfileOpen] = useState(false);
   const [reports, setReports] = useState([]);
   const [departments, setDepartments] = useState([]);
@@ -250,42 +249,11 @@ const StaffDashboard = () => {
             </div>
 
             <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5 mb-2 ">
-                {shifts.map((shift) => (
-                  <div key={shift.id} className="bg-gray-100 rounded-lg p-4">
-                    <h3 className="text-3xl mb-2 font-semibold text-center">{shift.name}</h3>
-                    <h3 className="text-xl mb-2 mt-[-10px] font-semibold text-center">Date: {shift.date}</h3>
-                    <h3 className="text-[1.2rem] mb-2 mt-[-10px] font-semibold text-center">{shift.startTime}A.M - {shift.endTime}P.M</h3>
-                    <strong className="flex justify-evenly"> {shift.supervisor && <span>Supervisor: {shift.supervisor.name.toUpperCase()}</span>}
-                      <div className="text-center">{shift.airBoy && <span>Air Boy: {shift.airBoy.name.toUpperCase()}</span>}</div>
-                    </strong>
-                    <table className="w-full mt-2">
-                      <thead>
-                        <tr className="">
-                          <th className="text-center border-b">Nozzle</th>
-                          <th className="text-center border-b">Member</th>
-                          <th className="text-center border-b">Overtime</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {shift.nozzles.map((nozzle, index) => (
-                          <tr key={index}>
-                            <td className="py-1">{nozzle}</td>
-                            <td className="py-1">
-                              {shift.members[index]?.name || "Unassigned"}
-                            </td>
-                            <td className="py-1">
-                              {shift.members[index] && (shift.name === "Morning Shift" ? morningOvertimeMembers.includes(shift.members[index]._id) : eveningOvertimeMembers.includes(shift.members[index]._id))
-                                ? "🟢"
-                                : "🔴"}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                ))}
-              </div>
+              {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5 mb-2">
+                <ShiftList shifts={shifts} morningOvertimeMembers={morningOvertimeMembers} eveningOvertimeMembers={eveningOvertimeMembers} />
+                <ShiftList shifts={shifts} morningOvertimeMembers={morningOvertimeMembers} eveningOvertimeMembers={eveningOvertimeMembers} />
+              </div> */}
+
             </div>
 
           </>
