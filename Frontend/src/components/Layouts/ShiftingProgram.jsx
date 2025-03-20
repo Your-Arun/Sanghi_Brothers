@@ -35,11 +35,9 @@ const ShiftManagementSystem = () => {
   });
   useEffect(() => {
     if (shifts.length > 0) {
-      console.log("Saving shifts:", shifts);
       saveAssignedShifts();
     }
   }, [shifts]);
-  
   
   useEffect(() => {
     const fetchMembers = async () => {
@@ -135,54 +133,57 @@ const ShiftManagementSystem = () => {
       alert("Please add team members first");
       return;
     }
-  
+
     const availableMembers = members.filter(
       (m) => m.available === "present" && !absentees.includes(m._id)
     );
-  
-    setShifts((prevShifts) => {
-      const morningShift = prevShifts.find((shift) => shift.name === "Morning Shift");
-      const eveningShift = prevShifts.find((shift) => shift.name === "Evening Shift");
-  
-      if (!morningShift || !eveningShift) return prevShifts;
-  
+
+    const morningShift = shifts.find((shift) => shift.name === "Morning Shift");
+    const eveningShift = shifts.find((shift) => shift.name === "Evening Shift");
+
+    if (morningShift && eveningShift) {
       let morningMembers = availableMembers.filter(
         (m) => m.shift === "morning" && m.role === "operator"
       );
       let eveningMembers = availableMembers.filter(
         (m) => m.shift === "evening" && m.role === "operator"
       );
-  
+
       morningMembers = shuffleArray([...morningMembers]);
       eveningMembers = shuffleArray([...eveningMembers]);
-  
+
       morningShift.members = morningMembers;
       eveningShift.members = eveningMembers;
-  
+
       const unassignedMorning = Math.max(0, morningShift.nozzles.length - morningMembers.length);
       const unassignedEvening = Math.max(0, eveningShift.nozzles.length - eveningMembers.length);
-  
+
       let overtimeCandidatesMorning = eveningMembers.filter(m => !eveningOvertimeMembers.includes(m._id));
       let overtimeCandidatesEvening = morningMembers.filter(m => !morningOvertimeMembers.includes(m._id));
-  
+
+
       const morningOvertime = overtimeCandidatesMorning.slice(0, unassignedMorning);
       const eveningOvertime = overtimeCandidatesEvening.slice(0, unassignedEvening);
-  
+
       morningShift.members = [...morningShift.members, ...morningOvertime];
       eveningShift.members = [...eveningShift.members, ...eveningOvertime];
-  
+
+      setMorningOvertimeMembers(morningOvertime.map(m => m._id));
+      setEveningOvertimeMembers(eveningOvertime.map(m => m._id));
+
       morningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && m.shift === "morning");
       eveningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && m.shift === "evening");
-  
+
       morningShift.airBoy = availableMembers.find(m => m.role === "air boy" && m.shift === "morning");
       eveningShift.airBoy = availableMembers.find(m => m.role === "air boy" && m.shift === "evening");
-  
+
       morningMembers.forEach(member => member.free = false);
-  
-      return [morningShift, eveningShift];
-    });
+      setShifts([morningShift, eveningShift]);
+      // Save shifts after assigning
+     // Save shifts after assigning
+    saveAssignedShifts([morningShift, eveningShift]);
+    }
   };
-  
 
   const handleRoleChange = async (id, newRole) => {
     try {

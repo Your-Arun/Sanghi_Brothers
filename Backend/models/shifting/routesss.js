@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const Shift = require('./shifts')
 const Member = mongoose.model("Member", {
   name: String,
   role: String,
@@ -57,15 +56,8 @@ router.put("/:id", async (req, res) => {
     res.status(500).json({ message: "Error updating availability", error });
   }
 });
-router.post("/save", async (req, res) => {
-  try {
-    const shifts = new Shift(req.body);
-    await shifts.save();
-    res.status(201).json(shifts);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-      }
-});
+
+
 
 
 

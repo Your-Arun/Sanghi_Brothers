@@ -48,6 +48,7 @@ const LoginSignup = require("./routes/loginsignup");
 const ReportFile = require("./routes/reportfileroute");
 const FundPosition = require("./routes/fundposition");
 const ReportComplaint = require("./routes/reportcomlaint");
+const shiftApi = require("./models/shifting/shiftsapi");
 
 // ✅ MongoDB Connection
 mongoose
@@ -79,6 +80,7 @@ app.use("/",  DepositRoute);
 app.use("/",  CashSlip);
 app.use("/",  FundPosition);
 app.use("/",  ReportComplaint);
+app.use("/", shiftApi);
 
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;
