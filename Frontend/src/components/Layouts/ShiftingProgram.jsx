@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaPlus } from "react-icons/fa";
-import axios from 'axios';
-import BackButton from "../Home Page/backbutton";
-
+import BackButton from "../Home Page/backbutton"; // Import the context
+import axiosInstance from "../Dashboard/axiosInstance";
 const ShiftManagementSystem = () => {
   const [members, setMembers] = useState([]);
   const [absentees, setAbsentees] = useState([]);
@@ -36,7 +35,7 @@ const ShiftManagementSystem = () => {
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const response = await axios.get("http://localhost:5500/shifting");
+        const response = await axiosInstance.get("/shifting");
         setMembers(response.data);
         setAbsentMembers(response.data.filter((m) => m.available === "absent"));
       } catch (error) {
@@ -49,7 +48,7 @@ const ShiftManagementSystem = () => {
     e.preventDefault();
     if (newMember.name.trim()) {
       try {
-        const response = await axios.post("http://localhost:5500/shifting", newMember);
+        const response = await axiosInstance.post("/shifting", newMember);
         const savedMember = response.data;
         setMembers([...members, savedMember]);
         setNewMember({ name: "", role: "", shift: "", available: "" });
@@ -61,7 +60,7 @@ const ShiftManagementSystem = () => {
   const handleRemoveMember = async (id) => {
     if (!id) return;
     try {
-      await axios.delete(`http://localhost:5500/shifting/${id}`);
+      await axiosInstance.delete(`/shifting/${id}`);
       setMembers(members.filter((m) => m._id !== id));
     } catch (error) {
       alert("Failed to delete member.");
@@ -69,7 +68,7 @@ const ShiftManagementSystem = () => {
   };
   const handleUpdateAvailability = async (id, status) => {
     try {
-      await axios.put(`http://localhost:5500/shifting/${id}`, { available: status });
+      await axiosInstance.put(`/shifting/${id}`, { available: status });
       setMembers(members.map((m) => (m._id === id ? { ...m, available: status } : m)));
       if (status === "absent") {
         setAbsentMembers((prev) => [...prev.filter((m) => m._id !== id), members.find((m) => m._id === id)]);
@@ -139,7 +138,7 @@ const ShiftManagementSystem = () => {
   };
   const handleRoleChange = async (id, newRole) => {
     try {
-      await axios.put(`http://localhost:5500/shifting/${id}`, { role: newRole });
+      await axiosInstance.put(`/shifting/${id}`, { role: newRole });
       setMembers(members.map((m) => (m._id === id ? { ...m, role: newRole } : m)));
     } catch (error) {
       alert("Error updating role");
@@ -147,24 +146,13 @@ const ShiftManagementSystem = () => {
   };
   const handleUpdateShift = async (id, shift) => {
     try {
-      await axios.put(`http://localhost:5500/shifting/${id}`, { shift });
+      await axiosInstance.put(`/shifting/${id}`, { shift });
       setMembers(members.map((m) => (m._id === id ? { ...m, shift } : m)));
     } catch (error) {
       alert("Error updating shift:", error);
     }
   };
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      const currentTime = new Date();
-      const hours = currentTime.getHours();
 
-      if (hours === 4 || hours === 13) {
-        handleAssignShiftsAndOvertime();
-      }
-    }, 60000); // 60000 milliseconds = 1 minute
-
-    return () => clearInterval(intervalId);
-  }, []);
   const [date, setDate] = useState('');
 
   useEffect(() => {
@@ -412,55 +400,3 @@ export default ShiftManagementSystem;
 
 
 
-
-import React, { useContext, useEffect, useState } from "react";
-import { FaPlus } from "react-icons/fa";
-import axios from 'axios';
-import BackButton from "../Home Page/backbutton";
-import { ShiftContext } from './ShiftContext'; // Import the context
-
-const ShiftManagementSystem = () => {
-  const { shifts, handleAssignShiftsAndOvertime } = useContext(ShiftContext);
-  const [members, setMembers] = useState([]);
-  const [absentMembers, setAbsentMembers] = useState([]);
-
-  useEffect(() => {
-    const fetchMembers = async () => {
-      try {
-        const response = await axios.get("http://localhost:5500/shifting");
-        setMembers(response.data);
-        setAbsentMembers(response.data.filter((m) => m.available === "absent"));
-      } catch (error) {
-        alert("Error fetching members:");
-      }
-    };
-    fetchMembers();
-  }, []);
-
-  // Other functions remain the same...
-
-  return (
-    <div className="h-[90%] w-full bg-transparent p-5 ">
-      <h1 className="text-3xl font-bold text-center mb-5">SHIFT MANAGEMENT SYSTEM</h1>
-      {/* Your existing JSX code... */}
-      <div className="flex justify-center mt-5">
-        <button onClick={() => handleAssignShiftsAndOvertime(members)} className="bg-green-500 text-white px-4 py-2 rounded">
-          Assign Shifts
-        </button>
-      </div>
-      {/* Render shifts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5 mb-2 ">
-        {shifts.map((shift) => (
-          <div key={shift.id} className="bg-gray-100 rounded-lg p-4">
-            {/* Shift details... */}
-          </div>
-        ))}
-      </div>
-      <div>
-        <BackButton previousImage="/previous.png" />
-      </div>
-    </div>
-  );
-};
-
-export default ShiftManagementSystem;
