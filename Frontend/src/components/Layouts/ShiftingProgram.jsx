@@ -406,3 +406,61 @@ const ShiftManagementSystem = () => {
 };
 
 export default ShiftManagementSystem;
+
+
+
+
+
+
+
+import React, { useContext, useEffect, useState } from "react";
+import { FaPlus } from "react-icons/fa";
+import axios from 'axios';
+import BackButton from "../Home Page/backbutton";
+import { ShiftContext } from './ShiftContext'; // Import the context
+
+const ShiftManagementSystem = () => {
+  const { shifts, handleAssignShiftsAndOvertime } = useContext(ShiftContext);
+  const [members, setMembers] = useState([]);
+  const [absentMembers, setAbsentMembers] = useState([]);
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const response = await axios.get("http://localhost:5500/shifting");
+        setMembers(response.data);
+        setAbsentMembers(response.data.filter((m) => m.available === "absent"));
+      } catch (error) {
+        alert("Error fetching members:");
+      }
+    };
+    fetchMembers();
+  }, []);
+
+  // Other functions remain the same...
+
+  return (
+    <div className="h-[90%] w-full bg-transparent p-5 ">
+      <h1 className="text-3xl font-bold text-center mb-5">SHIFT MANAGEMENT SYSTEM</h1>
+      {/* Your existing JSX code... */}
+      <div className="flex justify-center mt-5">
+        <button onClick={() => handleAssignShiftsAndOvertime(members)} className="bg-green-500 text-white px-4 py-2 rounded">
+          Assign Shifts
+        </button>
+      </div>
+      {/* Render shifts */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5 mb-2 ">
+        {shifts.map((shift) => (
+          <div key={shift.id} className="bg-gray-100 rounded-lg p-4">
+            {/* Shift details... */}
+          </div>
+        ))}
+      </div>
+      <div>
+        <BackButton previousImage="/previous.png" />
+      </div>
+    </div>
+  );
+};
+
+export default ShiftManagementSystem;
