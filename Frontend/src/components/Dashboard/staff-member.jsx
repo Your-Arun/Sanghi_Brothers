@@ -248,10 +248,7 @@ const StaffDashboard = () => {
               SHIFTS ARRANGEMENT
             </div>
              <div>
-              {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5 mb-2">
-                <ShiftList shifts={shifts} morningOvertimeMembers={morningOvertimeMembers} eveningOvertimeMembers={eveningOvertimeMembers} />
-                <ShiftList shifts={shifts} morningOvertimeMembers={morningOvertimeMembers} eveningOvertimeMembers={eveningOvertimeMembers} />
-              </div> */}
+             {/* <ShiftList/> */}
 
             </div>
 

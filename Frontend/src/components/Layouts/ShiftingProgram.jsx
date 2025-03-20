@@ -127,7 +127,7 @@ const ShiftManagementSystem = () => {
   
       const morningOvertime = overtimeCandidatesMorning.slice(0, unassignedMorning);
       const eveningOvertime = overtimeCandidatesEvening.slice(0, unassignedEvening);
-  
+    
       morningShift.members = [...morningShift.members, ...morningOvertime];
       eveningShift.members = [...eveningShift.members, ...eveningOvertime];
   
