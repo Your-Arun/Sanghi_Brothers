@@ -95,36 +95,30 @@ const ShiftManagementSystem = () => {
         const nozzles = shift.nozzles || [1, 2, 3, 4, 5, 6]; // Ensure nozzle sequence
         const members = shift.members || []; // Use members directly, no shuffle
   
-        // Identify overtime members properly
-        const overtimeMembers = members
-          .filter(member => 
-            (shift.name === "Morning Shift" && morningOvertimeMembers.includes(member._id)) ||
-            (shift.name === "Evening Shift" && eveningOvertimeMembers.includes(member._id))
-          )
-          .map(member => member._id); // Store IDs
-  
         return {
           date: date,
           shiftType: shift.name,
           startTime: shift.startTime,
           endTime: shift.endTime,
-          supervisor: shift.supervisor ? { id: shift.supervisor._id, name: shift.supervisor.name } : null,
-          airBoy: shift.airBoy ? { id: shift.airBoy._id, name: shift.airBoy.name } : null,
+          supervisor: shift.supervisor ? shift.supervisor.name : "Not Assigned",
+          airBoy: shift.airBoy ? shift.airBoy.name : "Not Assigned",
           nozzles: nozzles.map((nozzle, index) => {
             const assignedMember = members[index] || null;
-            const isOvertime = assignedMember && overtimeMembers.includes(assignedMember._id);
+            const isOvertime =
+              assignedMember &&
+              ((shift.name === "Morning Shift" && morningOvertimeMembers.includes(assignedMember._id)) ||
+                (shift.name === "Evening Shift" && eveningOvertimeMembers.includes(assignedMember._id)));
   
             return {
-              nozzleNumber: nozzle,
-              member: assignedMember ? { id: assignedMember._id, name: assignedMember.name } : null,
-              overtime: isOvertime,
+              nozzleNumber: `Nozzle ${index + 1}`, // Ensure proper naming
+              member: assignedMember ? assignedMember.name : "Unassigned",
+              overtime: isOvertime ? true : false, // ✅ Ensure correct boolean value
             };
           }),
-          overtimeMembers: overtimeMembers, // 🔥 Store overtime members properly
         };
       });
   
-      console.log("Shift data to save:", shiftData); // Debugging log
+      console.log("Shift data to save:", JSON.stringify(shiftData, null, 2)); // Debugging log
   
       await axiosInstance.post("/shiftingsavee", shiftData);
       alert("Shift data saved successfully!");
@@ -133,6 +127,8 @@ const ShiftManagementSystem = () => {
       alert("Failed to save shift data.");
     }
   };
+  
+  
   
    const handleAssignShiftsAndOvertime = () => {
     if (members.length === 0) {
