@@ -1,20 +1,31 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const NozzleSchema = new mongoose.Schema({
-  nozzleNumber: { type: String, required: true }, // Example: "Nozzle 1"
-  member: { type: String, required: true }, // Assigned Member Name
-  overtime: { type: Boolean, default: false } // Overtime status
+const shiftSchema = new mongoose.Schema({
+  date: { type: String, required: true },
+  shiftType: { type: String, required: true },
+  startTime: { type: String, required: true },
+  endTime: { type: String, required: true },
+  supervisor: { 
+    id: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, 
+    name: { type: String } 
+  },
+  airBoy: { 
+    id: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, 
+    name: { type: String } 
+  },
+  nozzles: [
+    {
+      nozzleNumber: { type: String },
+      member: {
+        id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        name: { type: String }
+      },
+      overtime: { type: Boolean }
+    }
+  ],
+  overtimeMembers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }] // 🔥 Added Overtime Members
 });
 
-const ShiftSchema = new mongoose.Schema({
-  date: { type: String, required: true }, // "21/03/2025"
-  shiftType: { type: String, enum: ["Morning Shift", "Evening Shift"], required: true },
-  startTime: { type: String, required: true }, // "06:00"
-  endTime: { type: String, required: true }, // "14:30"
-  supervisor: { type: String, default: "Not Assigned" },
-  airBoy: { type: String, default: "Not Assigned" },
-  nozzles: [NozzleSchema] // Array of nozzle assignments
-});
+const Shift = mongoose.model('Shift', shiftSchema);
 
-const Shift = mongoose.model("Shift", ShiftSchema);
 module.exports = Shift;

@@ -33,12 +33,7 @@ const ShiftManagementSystem = () => {
     shift: '',
     available: '',
   });
-  useEffect(() => {
-    if (shifts.length > 0) {
-      saveAssignedShifts();
-    }
-  }, [shifts]);
-  
+
   useEffect(() => {
     const fetchMembers = async () => {
       try {
@@ -86,7 +81,6 @@ const ShiftManagementSystem = () => {
       alert("Error updating availability:");
     }
   };
-
   const shuffleArray = (array) => {
     let shuffled = [...array];
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -96,30 +90,43 @@ const ShiftManagementSystem = () => {
     return shuffled;
   };
   const saveAssignedShifts = async () => {
-    console.log("Saving shifts...");
-  
     try {
-      const shiftData = shifts.map((shift) => ({
-        date: date, // Ensure `date` is available in your state
-        shiftType: shift.name,
-        startTime: shift.startTime,
-        endTime: shift.endTime,
-        supervisor: shift.supervisor ? shift.supervisor.name : "Not Assigned",
-        airBoy: shift.airBoy ? shift.airBoy.name : "Not Assigned",
-        nozzles: shift.nozzles.map((nozzle, index) => ({
-          nozzleNumber: nozzle,
-          member: shift.members[index] ? shift.members[index].name : "Unassigned",
-          overtime: shift.members[index]
-            ? morningOvertimeMembers.includes(shift.members[index]._id) || eveningOvertimeMembers.includes(shift.members[index]._id)
-            : false,
-        })),
-      }));
+      const shiftData = shifts.map((shift) => {
+        const nozzles = shift.nozzles || [1, 2, 3, 4, 5, 6]; // Ensure nozzle sequence
+        const members = shift.members || []; // Use members directly, no shuffle
   
-      console.log("Shift data to save:", shiftData);
+        // Identify overtime members properly
+        const overtimeMembers = members
+          .filter(member => 
+            (shift.name === "Morning Shift" && morningOvertimeMembers.includes(member._id)) ||
+            (shift.name === "Evening Shift" && eveningOvertimeMembers.includes(member._id))
+          )
+          .map(member => member._id); // Store IDs
   
-      // API call to save shift assignments
-      await axiosInstance.post("/shifting/save", { shifts: shiftData });
+        return {
+          date: date,
+          shiftType: shift.name,
+          startTime: shift.startTime,
+          endTime: shift.endTime,
+          supervisor: shift.supervisor ? { id: shift.supervisor._id, name: shift.supervisor.name } : null,
+          airBoy: shift.airBoy ? { id: shift.airBoy._id, name: shift.airBoy.name } : null,
+          nozzles: nozzles.map((nozzle, index) => {
+            const assignedMember = members[index] || null;
+            const isOvertime = assignedMember && overtimeMembers.includes(assignedMember._id);
   
+            return {
+              nozzleNumber: nozzle,
+              member: assignedMember ? { id: assignedMember._id, name: assignedMember.name } : null,
+              overtime: isOvertime,
+            };
+          }),
+          overtimeMembers: overtimeMembers, // 🔥 Store overtime members properly
+        };
+      });
+  
+      console.log("Shift data to save:", shiftData); // Debugging log
+  
+      await axiosInstance.post("/shiftingsavee", shiftData);
       alert("Shift data saved successfully!");
     } catch (error) {
       console.error("Error saving shift data:", error);
@@ -127,20 +134,19 @@ const ShiftManagementSystem = () => {
     }
   };
   
-
-  const handleAssignShiftsAndOvertime = () => {
+   const handleAssignShiftsAndOvertime = () => {
     if (members.length === 0) {
       alert("Please add team members first");
       return;
     }
-
+  
     const availableMembers = members.filter(
       (m) => m.available === "present" && !absentees.includes(m._id)
     );
-
+  
     const morningShift = shifts.find((shift) => shift.name === "Morning Shift");
     const eveningShift = shifts.find((shift) => shift.name === "Evening Shift");
-
+  
     if (morningShift && eveningShift) {
       let morningMembers = availableMembers.filter(
         (m) => m.shift === "morning" && m.role === "operator"
@@ -148,43 +154,56 @@ const ShiftManagementSystem = () => {
       let eveningMembers = availableMembers.filter(
         (m) => m.shift === "evening" && m.role === "operator"
       );
-
+  
+      // Members ko shuffle karna sahi hai taaki fair allocation ho
       morningMembers = shuffleArray([...morningMembers]);
       eveningMembers = shuffleArray([...eveningMembers]);
-
-      morningShift.members = morningMembers;
-      eveningShift.members = eveningMembers;
-
+  
+      morningShift.members = [...morningMembers]; 
+      eveningShift.members = [...eveningMembers];
+  
       const unassignedMorning = Math.max(0, morningShift.nozzles.length - morningMembers.length);
       const unassignedEvening = Math.max(0, eveningShift.nozzles.length - eveningMembers.length);
-
+  
       let overtimeCandidatesMorning = eveningMembers.filter(m => !eveningOvertimeMembers.includes(m._id));
       let overtimeCandidatesEvening = morningMembers.filter(m => !morningOvertimeMembers.includes(m._id));
-
-
+  
       const morningOvertime = overtimeCandidatesMorning.slice(0, unassignedMorning);
       const eveningOvertime = overtimeCandidatesEvening.slice(0, unassignedEvening);
-
-      morningShift.members = [...morningShift.members, ...morningOvertime];
-      eveningShift.members = [...eveningShift.members, ...eveningOvertime];
-
+  
+      // Ensure no duplicate members
+      morningShift.members = [...new Set([...morningShift.members, ...morningOvertime])];
+      eveningShift.members = [...new Set([...eveningShift.members, ...eveningOvertime])];
+  
       setMorningOvertimeMembers(morningOvertime.map(m => m._id));
       setEveningOvertimeMembers(eveningOvertime.map(m => m._id));
-
-      morningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && m.shift === "morning");
-      eveningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && m.shift === "evening");
-
-      morningShift.airBoy = availableMembers.find(m => m.role === "air boy" && m.shift === "morning");
-      eveningShift.airBoy = availableMembers.find(m => m.role === "air boy" && m.shift === "evening");
-
-      morningMembers.forEach(member => member.free = false);
-      setShifts([morningShift, eveningShift]);
+  
+      // Assign supervisors and air boys if available
+      if (!morningShift.supervisor) {
+        morningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && m.shift === "morning");
+      }
+      if (!eveningShift.supervisor) {
+        eveningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && m.shift === "evening");
+      }
+      
+      if (!morningShift.airBoy) {
+        morningShift.airBoy = availableMembers.find(m => m.role === "air boy" && m.shift === "morning");
+      }
+      if (!eveningShift.airBoy) {
+        eveningShift.airBoy = availableMembers.find(m => m.role === "air boy" && m.shift === "evening");
+      }
+  
+      // Mark assigned members as busy
+      morningShift.members.forEach(member => (member.free = false));
+      eveningShift.members.forEach(member => (member.free = false));
+  
+      // Update shifts correctly
+      setShifts([...shifts]); 
+  
       // Save shifts after assigning
-     // Save shifts after assigning
-    saveAssignedShifts([morningShift, eveningShift]);
+      saveAssignedShifts([morningShift, eveningShift]);
     }
   };
-
   const handleRoleChange = async (id, newRole) => {
     try {
       await axiosInstance.put(`/shifting/${id}`, { role: newRole });
@@ -209,7 +228,6 @@ const ShiftManagementSystem = () => {
     const day = String(todayDate.getDate()).padStart(2, '0');
     setDate(`${day}/${month}/${year}`);
   }, []);
-
   const ShiftRow = ({ nozzle, member, isOvertime }) => (
     <tr className="hover:bg-gray-100 transition">
       <td className="py-2 px-3 border text-center">{nozzle}</td>
@@ -218,14 +236,16 @@ const ShiftManagementSystem = () => {
       </td>
       <td className="py-2 px-3 border text-center">
         <span
-          className={`px-2 py-1 rounded-lg text-xs font-bold ${isOvertime ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-            }`}
+          className={`px-2 py-1 rounded-lg text-xs font-bold ${
+            isOvertime ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+          }`}
         >
           {isOvertime ? "Overtime ✅" : "❌ Overtime"}
         </span>
       </td>
     </tr>
   );
+  
 
   return (
     <div className="h-[90%] w-full bg-transparent p-5 ">
@@ -350,9 +370,9 @@ const ShiftManagementSystem = () => {
                       viewBox="0 0 39 7"
                       class="origin-right duration-500 group-hover:rotate-90"
                     >
-                      <line stroke-width="4" stroke="white" y2="5" x2="39" y1="5"></line>
+                      <line stroke="white" y2="5" x2="39" y1="5"></line>
                       <line
-                        stroke-width="3"
+
                         stroke="white"
                         y2="1.5"
                         x2="26.0357"
@@ -371,8 +391,8 @@ const ShiftManagementSystem = () => {
                         fill="white"
                         d="M0 0H33H0ZM37 35C37 39.4183 33.4183 43 29 43H4C-0.418278 43 -4 39.4183 -4 35H4H29H37ZM4 43C-0.418278 43 -4 39.4183 -4 35V0H4V35V43ZM37 0V35C37 39.4183 33.4183 43 29 43V35V0H37Z"
                       ></path>
-                      <path stroke-width="4" stroke="white" d="M12 6L12 29"></path>
-                      <path stroke-width="4" stroke="white" d="M21 6V29"></path>
+                      <path stroke="white" d="M12 6L12 29"></path>
+                      <path stroke="white" d="M21 6V29"></path>
                     </svg>
                   </button>
 
@@ -412,64 +432,61 @@ const ShiftManagementSystem = () => {
 
 
       <div>
-        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 mt-5 mb-4">
-          {shifts.map((shift) => {
-            const nozzles = shift.nozzles || [1, 2, 3, 4, 5, 6]; // Nozzles sequence fix
-            const shuffledMembers = shuffleArray(shift.members || []);
+      <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 mt-5 mb-4">
+      {shifts.map((shift) => {
+        const nozzles = shift.nozzles || [1, 2, 3, 4, 5, 6];
+        const members = shift.members || [];
 
-            return (
-              <div
-                key={shift.id}
-                className="bg-white shadow-lg rounded-xl p-6 border border-gray-200"
-              >
-                <h3 className="text-3xl font-bold text-gray-800 text-center">{shift.name}</h3>
-                <p className="text-lg text-gray-600 text-center mt-1">
-                  📅 {date || "Not Assigned"}
-                </p>
-                <p className="text-lg font-medium text-center text-indigo-600 mt-1">
-                  ⏰ {shift.startTime} A.M - {shift.endTime} P.M
-                </p>
+        return (
+          <div
+            key={shift.id}
+            className="bg-white shadow-lg rounded-xl p-6 border border-gray-200"
+          >
+            <h3 className="text-3xl font-bold text-gray-800 text-center">{shift.name}</h3>
+            <p className="text-lg text-gray-600 text-center mt-1">📅 {date || "Not Assigned"}</p>
+            <p className="text-lg font-medium text-center text-indigo-600 mt-1">
+              ⏰ {shift.startTime} A.M - {shift.endTime} P.M
+            </p>
 
-                <div className="flex justify-between items-center bg-gray-100 p-3 mt-3 rounded-lg">
-                  {shift?.supervisor && (
-                    <span className="font-semibold text-gray-700 mr-10">
-                      👨‍💼 Supervisor:{" "}
-                      <span className="text-blue-600">{shift.supervisor.name.toUpperCase()}</span>
-                    </span>
-                  )}
-                  {shift?.airBoy && (
-                    <span className="font-semibold text-gray-700">
-                      Air Boy: <span className="text-green-600">{shift.airBoy.name.toUpperCase()}</span>
-                    </span>
-                  )}
-                </div>
+            <div className="flex justify-between items-center bg-gray-100 p-3 mt-3 rounded-lg">
+              {shift?.supervisor && (
+                <span className="font-semibold text-gray-700 mr-10">
+                  👨‍💼 Supervisor: <span className="text-blue-600">{shift.supervisor.name.toUpperCase()}</span>
+                </span>
+              )}
+              {shift?.airBoy && (
+                <span className="font-semibold text-gray-700">
+                  Air Boy: <span className="text-green-600">{shift.airBoy.name.toUpperCase()}</span>
+                </span>
+              )}
+            </div>
 
-                <div className="overflow-x-auto">
-                  <table className="w-full mt-4 border-collapse border border-gray-300">
-                    <thead>
-                      <tr className="bg-gray-200 text-gray-800">
-                        <th scope="col" className="py-2 px-3 border">Nozzle</th>
-                        <th scope="col" className="py-2 px-3 border">Member</th>
-                        <th scope="col" className="py-2 px-3 border">Overtime</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {nozzles.map((nozzle, index) => {
-                        const member = shuffledMembers[index] || null;
-                        const isOvertime =
-                          member &&
-                          ((shift.name === "Morning Shift" && morningOvertimeMembers.includes(member._id)) ||
-                            (shift.name === "Evening Shift" && eveningOvertimeMembers.includes(member._id)));
+            <div className="overflow-x-auto">
+              <table className="w-full mt-4 border-collapse border border-gray-300">
+                <thead>
+                  <tr className="bg-gray-200 text-gray-800">
+                    <th className="py-2 px-3 border">Nozzle</th>
+                    <th className="py-2 px-3 border">Member</th>
+                    <th className="py-2 px-3 border">Overtime</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {nozzles.map((nozzle, index) => {
+                    const member = members[index] || null;
+                    const isOvertime =
+                      member &&
+                      ((shift.name === "Morning Shift" && morningOvertimeMembers.includes(member._id)) ||
+                        (shift.name === "Evening Shift" && eveningOvertimeMembers.includes(member._id)));
 
-                        return <ShiftRow key={index} nozzle={nozzle} member={member} isOvertime={isOvertime} />;
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                    return <ShiftRow key={index} nozzle={nozzle} member={member} isOvertime={isOvertime} />;
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        );
+      })}
+    </div>
       </div>
 
       <div>

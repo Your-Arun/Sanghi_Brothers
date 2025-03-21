@@ -27,7 +27,7 @@ router.get("", async (req, res) => {
   }
 });
 
-router.put("/save", async (req, res) => {
+router.put("/", async (req, res) => {
   try {
     const member = await Member.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.status(200).json(member);
