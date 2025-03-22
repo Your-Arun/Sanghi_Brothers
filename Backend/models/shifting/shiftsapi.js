@@ -21,18 +21,6 @@ router.post("/shiftingsavee", async (req, res) => {
     }
 });
 
-router.get('/shiftingsave', async (req, res) => {
-    try {
-        const shifts = await Shift.find();
-        res.json(shifts);
-    } catch (error) {
-        console.error("Error fetching shifts:", error);
-        res.status(500).json({ error: "Failed to fetch shift data" });
-    }
-
-})
-
-// Get shift data by date
 // 📌 GET API to fetch shifts by date
 router.get("/getshifts", async (req, res) => {
     let { date } = req.query;
