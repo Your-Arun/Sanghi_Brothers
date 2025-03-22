@@ -24,26 +24,6 @@ const Dashboard = () => {
   const [isProfileOpen, setProfileOpen] = useState(false);
   const { user,setUser } = useContext(UserContext); // 👈 Getting user from context
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const { data } = await axiosInstance.get("/profile", { withCredentials: true });
-
-        if (data?.user) {
-          setUser(data.user); // ✅ Store correct user data
-        } else {
-          throw new Error("Session expired");
-        }
-      } catch (err) {
-        console.error("❌ Profile Fetch Error:", err.response?.data || err.message);
-        toast.error("Session expired. Please log in again.");
-        navigate("/login");
-      } finally {
-        setLoading(false); // ✅ Ensure loading state is updated
-      }
-    };
-    fetchUser();
-  }, [setUser, navigate]);
 
   // ✅ Fetch all required data
   useEffect(() => {
