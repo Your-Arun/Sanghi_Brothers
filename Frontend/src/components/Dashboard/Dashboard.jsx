@@ -9,8 +9,6 @@ const Dashboard = () => {
   const [departments, setDepartments] = useState([]);
   const [reports, setReports] = useState([]); // State to hold reports
   const [showModal, setShowModal] = useState(false);
-  const [showModal2, setShowModal2] = useState(false);
-  const [selectedDepartment, setSelectedDepartment] = useState("");
   const [selectedReport, setSelectedReport] = useState(null); // Selected report for editing
   const [isEditing, setIsEditing] = useState(false); // Control edit modal
   const [updatedContent, setUpdatedContent] = useState(""); // Content for editing
@@ -24,8 +22,28 @@ const Dashboard = () => {
   const [isOpen2, setIsOpen2] = useState(false);
   const [isOpen3, setIsOpen3] = useState(false);
   const [isProfileOpen, setProfileOpen] = useState(false);
-  const { user } = useContext(UserContext); // 👈 Getting user from context
+  const { user,setUser } = useContext(UserContext); // 👈 Getting user from context
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const { data } = await axiosInstance.get("/profile", { withCredentials: true });
+
+        if (data?.user) {
+          setUser(data.user); // ✅ Store correct user data
+        } else {
+          throw new Error("Session expired");
+        }
+      } catch (err) {
+        console.error("❌ Profile Fetch Error:", err.response?.data || err.message);
+        toast.error("Session expired. Please log in again.");
+        navigate("/login");
+      } finally {
+        setLoading(false); // ✅ Ensure loading state is updated
+      }
+    };
+    fetchUser();
+  }, [setUser, navigate]);
 
   // ✅ Fetch all required data
   useEffect(() => {
