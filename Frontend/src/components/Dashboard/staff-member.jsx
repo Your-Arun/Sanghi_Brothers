@@ -255,25 +255,7 @@ const formattedDate = dates.toLocaleDateString('en-GB', { day: '2-digit', month:
               SHIFTS ARRANGEMENT
             </div>
             <div>
-
-              <div className="container mx-auto p-6">
-                <h1 className="text-2xl font-bold text-center">Shift Details</h1>
-                <div className="grid grid-cols-4 justify-center">
-                  {shiftDta.map((shift) => {
-                    return (
-                      <div key={shift.id} className=" text-center shadow-md p-6 rounded-lg bordercsharpborder-gray-200 hover:shadow-lg transition-all">
-                        <h3 className="text-2xl font-bold text-black-600 mb-2">{formattedDate}</h3>
-                        <h3 className="text-xl font-semibold text-green-600 mb-2">{shift.shiftType}</h3>
-                        <h3 className="text-.5xl font-semibold text-red-600 mb-2">{shift.supervisor}</h3>
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-
               <div> <ShiftComponent/> </div>
-
-
             </div>
 
           </>

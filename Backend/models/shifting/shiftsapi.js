@@ -35,23 +35,21 @@ router.get('/shiftingsave', async (req, res) => {
 // Get shift data by date
 // 📌 GET API to fetch shifts by date
 router.get("/getshifts", async (req, res) => {
+    let { date } = req.query;
+
+    if (!date) {
+      return res.status(400).json({ error: "Date is required" });
+    }
+  
+    // Convert "YYYY-MM-DD" to "DD/MM/YYYY" format
+    const formattedDate = date.split("-").reverse().join("/");
+  
     try {
-      const { date } = req.query; // Date from frontend (YYYY-MM-DD)
-      
-      if (!date) {
-        return res.status(400).json({ error: "Date is required" });
-      }
-  
-      // Convert any non-ISO date to YYYY-MM-DD
-      const formattedDate = new Date(date).toISOString().split("T")[0];
-  
-      // Fetch shifts where date matches exactly
-      const shifts = await Shift.find({ date: formattedDate });
-  
-      res.status(200).json(shifts);
+      const shifts = await Shift.find({ date: formattedDate }); // Match database format
+      res.json({ shifts });
     } catch (error) {
       console.error("Error fetching shifts:", error);
-      res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json({ error: "Internal server error" });
     }
   });
   
