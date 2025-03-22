@@ -55,6 +55,7 @@ import ProtectedRoute from "./components/Dashboard/ProtectedRoute.jsx";
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import AdminPanel from "./components/Dashboard/adminPanel.jsx";
+import AllShifts from "./components/Dashboard/ShiftDisplay.jsx";
 
 const App = () => {
   return (
@@ -126,6 +127,7 @@ const AppContent = () => {
           <Route path="/report" element={<Report />} />
           <Route path="/department-reports" element={<DepartmentReports />} />
           <Route path="/shifting" element={<ShiftingProgram />} />
+          <Route path="/allshifting" element={<AllShifts />} />
           <Route path="/lekhajokha" element={<LekhaBox />} />
           <Route path="/newlekhajokha" element={<Lekhajokha />} />
           <Route path="/newlekhajokha/:id" element={<Lekhajokhaupdate />} />

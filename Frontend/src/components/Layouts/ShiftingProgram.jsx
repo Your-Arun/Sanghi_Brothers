@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { FaPlus } from "react-icons/fa";
 import BackButton from "../Home Page/backbutton"; // Import the context
 import axiosInstance from "../Dashboard/axiosInstance";
+import { useNavigate } from "react-router-dom";
 
 const ShiftManagementSystem = () => {
+  const navigate = useNavigate();
   const [date, setDate] = useState('');
   const [members, setMembers] = useState([]);
   const [absentees, setAbsentees] = useState([]);
@@ -228,259 +230,266 @@ const ShiftManagementSystem = () => {
 
 
   return (
-    <div className="h-[90%] w-full bg-transparent p-5 ">
-      <h1 className="text-3xl font-bold text-center mb-5">SHIFT MANAGEMENT SYSTEM</h1>
-      <div className=" md:grid-cols-2 gap-4">
-        <div className="bg-white rounded-lg p-3 shadow-md">
-          <h2 className="text-lg md:text-xl font-semibold text-center mb-2">Add Member</h2>
+    <>
+      <div className="h-[90%] w-full bg-transparent p-5 ">
+        <h1 className="text-3xl font-bold text-center mb-5">SHIFT MANAGEMENT SYSTEM</h1>
+        <div className=" md:grid-cols-2 gap-4">
+          <div className="bg-white rounded-lg p-3 shadow-md">
+            <h2 className="text-lg md:text-xl font-semibold text-center mb-2">Add Member</h2>
 
-          <form onSubmit={handleAddMember} className="mb-4">
-            <div className="flex flex-wrap gap-2">
-              <input
-                type="text"
-                placeholder="Enter member name"
-                value={newMember.name}
-                onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
-                className="border p-2 rounded flex-1 min-w-[150px]"
-              />
-              <select
-                value={newMember.role}
-                onChange={(e) => setNewMember({ ...newMember, role: e.target.value })}
-                className="border p-2 rounded flex-1 min-w-[130px]"
-              >
-                <option value="">Select Role</option>
-                <option value="operator">Operator🔫</option>
-                <option value="supervisor">Supervisor🧑‍💼</option>
-                <option value="air boy">Air Boy🌀</option>
-              </select>
-              <select
-                value={newMember.shift}
-                onChange={(e) => setNewMember({ ...newMember, shift: e.target.value })}
-                className="border p-2 rounded flex-1 min-w-[130px]"
-              >
-                <option value="">Select Shift</option>
-                <option value="morning">Morning🌄</option>
-                <option value="evening">Evening🌆</option>
-              </select>
-              <select
-                value={newMember.available}
-                onChange={(e) => setNewMember({ ...newMember, available: e.target.value })}
-                className="border p-2 rounded flex-1 min-w-[130px]"
-              >
-                <option value="">Select Availability</option>
-                <option value="present">Present🟢</option>
-                <option value="absent">Absent🔴</option>
-              </select>
-              <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded flex items-center gap-1 min-w-[80px]">
-                <FaPlus /> Add
-              </button>
-            </div>
-          </form>
-        </div>
+            <form onSubmit={handleAddMember} className="mb-4">
+              <div className="flex flex-wrap gap-2">
+                <input
+                  type="text"
+                  placeholder="Enter member name"
+                  value={newMember.name}
+                  onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
+                  className="border p-2 rounded flex-1 min-w-[150px]"
+                />
+                <select
+                  value={newMember.role}
+                  onChange={(e) => setNewMember({ ...newMember, role: e.target.value })}
+                  className="border p-2 rounded flex-1 min-w-[130px]"
+                >
+                  <option value="">Select Role</option>
+                  <option value="operator">Operator🔫</option>
+                  <option value="supervisor">Supervisor🧑‍💼</option>
+                  <option value="air boy">Air Boy🌀</option>
+                </select>
+                <select
+                  value={newMember.shift}
+                  onChange={(e) => setNewMember({ ...newMember, shift: e.target.value })}
+                  className="border p-2 rounded flex-1 min-w-[130px]"
+                >
+                  <option value="">Select Shift</option>
+                  <option value="morning">Morning🌄</option>
+                  <option value="evening">Evening🌆</option>
+                </select>
+                <select
+                  value={newMember.available}
+                  onChange={(e) => setNewMember({ ...newMember, available: e.target.value })}
+                  className="border p-2 rounded flex-1 min-w-[130px]"
+                >
+                  <option value="">Select Availability</option>
+                  <option value="present">Present🟢</option>
+                  <option value="absent">Absent🔴</option>
+                </select>
+                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded flex items-center gap-1 min-w-[80px]">
+                  <FaPlus /> Add
+                </button>
+              </div>
+            </form>
+          </div>
 
-        <div className="bg-white rounded-lg p-3 shadow-md mt-5">
-          <h2 className="text-lg md:text-xl font-semibold text-center mb-2">Member List</h2>
+          <div className="bg-white rounded-lg p-3 shadow-md mt-5">
+            <h2 className="text-lg md:text-xl font-semibold text-center mb-2">Member List</h2>
 
-          <div className="overflow-x-auto">
-            <ul className="w-full max-w-3xl mx-auto">
-              {members.map((member, index) => (
-                <li key={member._id} className="flex flex-wrap items-center justify-between gap-2 border-b pb-2 mb-2">
-                  {/* Name */}
-                  <span className="text-sm md:text-base w-[15%]">{index + 1}. {member.name.toUpperCase()}</span>
+            <div className="overflow-x-auto">
+              <ul className="w-full max-w-3xl mx-auto">
+                {members.map((member, index) => (
+                  <li key={member._id} className="flex flex-wrap items-center justify-between gap-2 border-b pb-2 mb-2">
+                    {/* Name */}
+                    <span className="text-sm md:text-base w-[15%]">{index + 1}. {member.name.toUpperCase()}</span>
 
-                  {/* Role Dropdown */}
-                  <select
-                    value={member.role}
-                    onChange={(e) => handleRoleChange(member._id, e.target.value)}
-                    className="border p-1 rounded text-sm w-[15%]"
-                  >
-                    <option value="operator">Operator</option>
-                    <option value="supervisor">Supervisor</option>
-                    <option value="air boy">Air Boy</option>
-                  </select>
+                    {/* Role Dropdown */}
+                    <select
+                      value={member.role}
+                      onChange={(e) => handleRoleChange(member._id, e.target.value)}
+                      className="border p-1 rounded text-sm w-[15%]"
+                    >
+                      <option value="operator">Operator</option>
+                      <option value="supervisor">Supervisor</option>
+                      <option value="air boy">Air Boy</option>
+                    </select>
 
-                  {/* Availability Toggle */}
-                  <label class="relative inline-flex items-center cursor-pointer">
-                    <input class="sr-only peer" value="" type="checkbox"
-                      checked={member.available === "present"} onChange={() => handleUpdateAvailability(member._id, member.available === "present" ? "absent" : "present", null)}
-                    />
-                    <div class="peer rounded-full outline-none duration-100 after:duration-500
+                    {/* Availability Toggle */}
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input class="sr-only peer" value="" type="checkbox"
+                        checked={member.available === "present"} onChange={() => handleUpdateAvailability(member._id, member.available === "present" ? "absent" : "present", null)}
+                      />
+                      <div class="peer rounded-full outline-none duration-100 after:duration-500
                      w-20 h-8 bg-sky-500 peer-focus:outline-none peer-focus:ring-4 
                      peer-focus:ring-blue-500  after:content-['A'] after:absolute 
                      after:outline-none after:rounded-full after:h-6 after:w-6 after:bg-white 
                      after:top-1 after:left-1 after:flex after:justify-center after:items-center  
                      after:text-sky-800 after:font-bold peer-checked:after:translate-x-10
                       peer-checked:after:content-['P'] peer-checked:after:border-white ">
-                    </div>
-                  </label>
+                      </div>
+                    </label>
 
-                  {/* Shift Dropdown */}
-                  <select
-                    value={member.shift}
-                    onChange={(e) => handleUpdateShift(member._id, e.target.value)}
-                    className="border p-1 rounded text-sm w-[15%]"
-                  >
-                    <option value="morning">Morning</option>
-                    <option value="evening">Evening</option>
-                  </select>
-
-                  {/* Delete Button */}
-                  <button onClick={() => handleRemoveMember(member._id)}
-                    class="group relative flex h-10 w-10 flex-col items-center justify-center overflow-hidden rounded-xl border-2 border-red-800 bg-red-400 hover:bg-red-600"
-                  >
-                    <svg
-                      viewBox="0 0 1.625 1.625"
-                      class="absolute -top-7 fill-white delay-100 group-hover:top-6 group-hover:animate-[spin_1.4s] group-hover:duration-1000"
-                      height="15"
-                      width="15"
+                    {/* Shift Dropdown */}
+                    <select
+                      value={member.shift}
+                      onChange={(e) => handleUpdateShift(member._id, e.target.value)}
+                      className="border p-1 rounded text-sm w-[15%]"
                     >
-                      <path
-                        d="M.471 1.024v-.52a.1.1 0 0 0-.098.098v.618c0 .054.044.098.098.098h.487a.1.1 0 0 0 .098-.099h-.39c-.107 0-.195 0-.195-.195"
-                      ></path>
-                      <path
-                        d="M1.219.601h-.163A.1.1 0 0 1 .959.504V.341A.033.033 0 0 0 .926.309h-.26a.1.1 0 0 0-.098.098v.618c0 .054.044.098.098.098h.487a.1.1 0 0 0 .098-.099v-.39a.033.033 0 0 0-.032-.033"
-                      ></path>
-                      <path
-                        d="m1.245.465-.15-.15a.02.02 0 0 0-.016-.006.023.023 0 0 0-.023.022v.108c0 .036.029.065.065.065h.107a.023.023 0 0 0 .023-.023.02.02 0 0 0-.007-.016"
-                      ></path>
-                    </svg>
-                    <svg
-                      width="16"
-                      fill="none"
-                      viewBox="0 0 39 7"
-                      class="origin-right duration-500 group-hover:rotate-90"
-                    >
-                      <line stroke="white" y2="5" x2="39" y1="5"></line>
-                      <line
+                      <option value="morning">Morning</option>
+                      <option value="evening">Evening</option>
+                    </select>
 
-                        stroke="white"
-                        y2="1.5"
-                        x2="26.0357"
-                        y1="1.5"
-                        x1="12"
-                      ></line>
-                    </svg>
-                    <svg width="16" fill="none" viewBox="0 0 33 39" class="">
-                      <mask fill="white" id="path-1-inside-1_8_19">
+                    {/* Delete Button */}
+                    <button onClick={() => handleRemoveMember(member._id)}
+                      class="group relative flex h-10 w-10 flex-col items-center justify-center overflow-hidden rounded-xl border-2 border-red-800 bg-red-400 hover:bg-red-600"
+                    >
+                      <svg
+                        viewBox="0 0 1.625 1.625"
+                        class="absolute -top-7 fill-white delay-100 group-hover:top-6 group-hover:animate-[spin_1.4s] group-hover:duration-1000"
+                        height="15"
+                        width="15"
+                      >
                         <path
-                          d="M0 0H33V35C33 37.2091 31.2091 39 29 39H4C1.79086 39 0 37.2091 0 35V0Z"
+                          d="M.471 1.024v-.52a.1.1 0 0 0-.098.098v.618c0 .054.044.098.098.098h.487a.1.1 0 0 0 .098-.099h-.39c-.107 0-.195 0-.195-.195"
                         ></path>
-                      </mask>
-                      <path
-                        mask="url(#path-1-inside-1_8_19)"
-                        fill="white"
-                        d="M0 0H33H0ZM37 35C37 39.4183 33.4183 43 29 43H4C-0.418278 43 -4 39.4183 -4 35H4H29H37ZM4 43C-0.418278 43 -4 39.4183 -4 35V0H4V35V43ZM37 0V35C37 39.4183 33.4183 43 29 43V35V0H37Z"
-                      ></path>
-                      <path stroke="white" d="M12 6L12 29"></path>
-                      <path stroke="white" d="M21 6V29"></path>
-                    </svg>
-                  </button>
+                        <path
+                          d="M1.219.601h-.163A.1.1 0 0 1 .959.504V.341A.033.033 0 0 0 .926.309h-.26a.1.1 0 0 0-.098.098v.618c0 .054.044.098.098.098h.487a.1.1 0 0 0 .098-.099v-.39a.033.033 0 0 0-.032-.033"
+                        ></path>
+                        <path
+                          d="m1.245.465-.15-.15a.02.02 0 0 0-.016-.006.023.023 0 0 0-.023.022v.108c0 .036.029.065.065.065h.107a.023.023 0 0 0 .023-.023.02.02 0 0 0-.007-.016"
+                        ></path>
+                      </svg>
+                      <svg
+                        width="16"
+                        fill="none"
+                        viewBox="0 0 39 7"
+                        class="origin-right duration-500 group-hover:rotate-90"
+                      >
+                        <line stroke="white" y2="5" x2="39" y1="5"></line>
+                        <line
 
-                </li>
-              ))}
-            </ul>
+                          stroke="white"
+                          y2="1.5"
+                          x2="26.0357"
+                          y1="1.5"
+                          x1="12"
+                        ></line>
+                      </svg>
+                      <svg width="16" fill="none" viewBox="0 0 33 39" class="">
+                        <mask fill="white" id="path-1-inside-1_8_19">
+                          <path
+                            d="M0 0H33V35C33 37.2091 31.2091 39 29 39H4C1.79086 39 0 37.2091 0 35V0Z"
+                          ></path>
+                        </mask>
+                        <path
+                          mask="url(#path-1-inside-1_8_19)"
+                          fill="white"
+                          d="M0 0H33H0ZM37 35C37 39.4183 33.4183 43 29 43H4C-0.418278 43 -4 39.4183 -4 35H4H29H37ZM4 43C-0.418278 43 -4 39.4183 -4 35V0H4V35V43ZM37 0V35C37 39.4183 33.4183 43 29 43V35V0H37Z"
+                        ></path>
+                        <path stroke="white" d="M12 6L12 29"></path>
+                        <path stroke="white" d="M21 6V29"></path>
+                      </svg>
+                    </button>
+
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Absent Members Section */}
+            <div className="mt-4">
+              <h2 className="text-lg md:text-xl font-semibold text-center mb-2">Absent Members</h2>
+
+              <ul className="list-none p-0 m-0 w-full max-w-3xl mx-auto">
+                {absentMembers.map((member) => (
+                  <li key={member._id} className="flex flex-wrap items-center justify-between gap-2 border p-2 rounded mb-1">
+                    <div className="text-sm w-[20%] text-center">{member.name.toUpperCase()}</div>
+                    <div className="text-sm w-[20%] text-center">Role: {member.role}</div>
+                    <div className="text-sm w-[20%] text-center">Shift: {member.shift}</div>
+                    <button
+                      onClick={() => handleUpdateAvailability(member._id, "present", null)}
+                      className="bg-green-500 text-white px-2 py-1 rounded text-sm hover:bg-green-600 transition w-[20%]"
+                    >
+                      Mark as Present
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
-          {/* Absent Members Section */}
-          <div className="mt-4">
-            <h2 className="text-lg md:text-xl font-semibold text-center mb-2">Absent Members</h2>
+        </div>
 
-            <ul className="list-none p-0 m-0 w-full max-w-3xl mx-auto">
-              {absentMembers.map((member) => (
-                <li key={member._id} className="flex flex-wrap items-center justify-between gap-2 border p-2 rounded mb-1">
-                  <div className="text-sm w-[20%] text-center">{member.name.toUpperCase()}</div>
-                  <div className="text-sm w-[20%] text-center">Role: {member.role}</div>
-                  <div className="text-sm w-[20%] text-center">Shift: {member.shift}</div>
-                  <button
-                    onClick={() => handleUpdateAvailability(member._id, "present", null)}
-                    className="bg-green-500 text-white px-2 py-1 rounded text-sm hover:bg-green-600 transition w-[20%]"
-                  >
-                    Mark as Present
-                  </button>
-                </li>
-              ))}
-            </ul>
+        <div className="flex justify-evenly mt-5">
+          <div >
+            <button className="bg-green-500 text-white px-4 py-2 rounded">
+              <input type="date" className="bg-transparent border-none p-0" value={date} onChange={handleDateChange} />
+            </button>
+          </div>
+          <div >
+            <button onClick={handleAssignShiftsAndOvertime} className="bg-green-500 text-white px-4 py-2 rounded">
+              Assign Shifts
+            </button>
+          </div>
+          <div>
+            <button onClick={() => navigate('/allshifting')}className="bg-green-500 text-white px-4 py-2 rounded">
+            All Shifts
+          </button>
           </div>
         </div>
 
-      </div>
 
-      <div className="flex justify-evenly mt-5">
-        <div >
-          <button className="bg-green-500 text-white px-4 py-2 rounded">
-            <input type="date" className="bg-transparent border-none p-0" value={date} onChange={handleDateChange}/>
-          </button>
-        </div>
-        <div >
-          <button onClick={handleAssignShiftsAndOvertime} className="bg-green-500 text-white px-4 py-2 rounded">
-            Assign Shifts
-          </button>
-        </div>
-      </div>
+        <div>
+          <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 mt-5 mb-4">
+            {shifts.map((shift) => {
+              const nozzles = shift.nozzles || [1, 2, 3, 4, 5, 6];
+              const members = shift.members || [];
 
+              return (
+                <div
+                  key={shift.id}
+                  className="bg-white shadow-lg rounded-xl p-6 border border-gray-200"
+                >
+                  <h3 className="text-3xl font-bold text-gray-800 text-center">{shift.name}</h3>
+                  <p className="text-lg text-gray-600 text-center mt-1">📅 {date || "Not Assigned"}</p>
+                  <p className="text-lg font-medium text-center text-indigo-600 mt-1">
+                    ⏰ {shift.startTime} A.M - {shift.endTime} P.M
+                  </p>
 
-      <div>
-        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 mt-5 mb-4">
-          {shifts.map((shift) => {
-            const nozzles = shift.nozzles || [1, 2, 3, 4, 5, 6];
-            const members = shift.members || [];
+                  <div className="flex justify-between items-center bg-gray-100 p-3 mt-3 rounded-lg">
+                    {shift?.supervisor && (
+                      <span className="font-semibold text-gray-700 mr-10">
+                        👨‍💼 Supervisor: <span className="text-blue-600">{shift.supervisor.name.toUpperCase()}</span>
+                      </span>
+                    )}
+                    {shift?.airBoy && (
+                      <span className="font-semibold text-gray-700">
+                        Air Boy: <span className="text-green-600">{shift.airBoy.name.toUpperCase()}</span>
+                      </span>
+                    )}
+                  </div>
 
-            return (
-              <div
-                key={shift.id}
-                className="bg-white shadow-lg rounded-xl p-6 border border-gray-200"
-              >
-                <h3 className="text-3xl font-bold text-gray-800 text-center">{shift.name}</h3>
-                <p className="text-lg text-gray-600 text-center mt-1">📅 {date || "Not Assigned"}</p>
-                <p className="text-lg font-medium text-center text-indigo-600 mt-1">
-                  ⏰ {shift.startTime} A.M - {shift.endTime} P.M
-                </p>
+                  <div className="overflow-x-auto">
+                    <table className="w-full mt-4 border-collapse border border-gray-300">
+                      <thead>
+                        <tr className="bg-gray-200 text-gray-800">
+                          <th className="py-2 px-3 border">Nozzle</th>
+                          <th className="py-2 px-3 border">Member</th>
+                          <th className="py-2 px-3 border">Overtime</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {nozzles.map((nozzle, index) => {
+                          const member = members[index] || null;
+                          const isOvertime =
+                            member &&
+                            ((shift.name === "Morning Shift" && morningOvertimeMembers.includes(member._id)) ||
+                              (shift.name === "Evening Shift" && eveningOvertimeMembers.includes(member._id)));
 
-                <div className="flex justify-between items-center bg-gray-100 p-3 mt-3 rounded-lg">
-                  {shift?.supervisor && (
-                    <span className="font-semibold text-gray-700 mr-10">
-                      👨‍💼 Supervisor: <span className="text-blue-600">{shift.supervisor.name.toUpperCase()}</span>
-                    </span>
-                  )}
-                  {shift?.airBoy && (
-                    <span className="font-semibold text-gray-700">
-                      Air Boy: <span className="text-green-600">{shift.airBoy.name.toUpperCase()}</span>
-                    </span>
-                  )}
+                          return <ShiftRow key={index} nozzle={nozzle} member={member} isOvertime={isOvertime} />;
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
+              );
+            })}
+          </div>
+        </div>
 
-                <div className="overflow-x-auto">
-                  <table className="w-full mt-4 border-collapse border border-gray-300">
-                    <thead>
-                      <tr className="bg-gray-200 text-gray-800">
-                        <th className="py-2 px-3 border">Nozzle</th>
-                        <th className="py-2 px-3 border">Member</th>
-                        <th className="py-2 px-3 border">Overtime</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {nozzles.map((nozzle, index) => {
-                        const member = members[index] || null;
-                        const isOvertime =
-                          member &&
-                          ((shift.name === "Morning Shift" && morningOvertimeMembers.includes(member._id)) ||
-                            (shift.name === "Evening Shift" && eveningOvertimeMembers.includes(member._id)));
-
-                        return <ShiftRow key={index} nozzle={nozzle} member={member} isOvertime={isOvertime} />;
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            );
-          })}
+        <div>
+          <BackButton previousImage="/previous.png" />
         </div>
       </div>
-
-      <div>
-        <BackButton previousImage="/previous.png" />
-      </div>
-    </div>
+    </>
   );
 };
 

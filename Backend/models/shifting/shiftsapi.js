@@ -50,6 +50,33 @@ router.get("/getshifts", async (req, res) => {
     }
   });
 
+// ✅ API to Fetch All Saved Shifts
+router.get("/allshifts", async (req, res) => {
+  try {
+    const shifts = await Shift.find().sort({ date: -1 }); // ✅ Latest shifts first
+    res.json({ success: true, shifts });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error fetching shifts", error });
+  }
+});
+
+
+router.delete("/shift/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedShift = await Shift.findByIdAndDelete(id);
+
+    if (!deletedShift) {
+      return res.status(404).json({ success: false, message: "Shift not found" });
+    }
+
+    res.json({ success: true, message: "Shift deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error deleting shift", error });
+  }
+});
+
+
 
 
 module.exports = router;

@@ -15,13 +15,15 @@ const ShiftList = () => {
         try {
             // Convert selectedDate to "YYYY-MM-DD"
             const formattedDate = selectedDate.toISOString().split("T")[0];
-
             const response = await axios.get(`http://localhost:5500/getshifts?date=${formattedDate}`);
-            setShifts(Array.isArray(response.data.shifts) ? response.data.shifts : []);
+            // Ensure response is an array and get last 2 shifts
+            const latestShifts = Array.isArray(response.data.shifts) ? response.data.shifts.slice(-2) : [];
+            setShifts(latestShifts);
         } catch (error) {
             setShifts([]); // Ensure empty array on error
         }
     };
+    
 
     return (
         <div className="container mx-auto p-5">
