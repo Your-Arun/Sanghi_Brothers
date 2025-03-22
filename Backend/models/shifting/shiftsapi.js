@@ -41,18 +41,14 @@ router.get("/getshifts", async (req, res) => {
       return res.status(400).json({ error: "Date is required" });
     }
   
-    // Convert "YYYY-MM-DD" to "DD/MM/YYYY" format
-    const formattedDate = date.split("-").reverse().join("/");
-  
     try {
-      const shifts = await Shift.find({ date: formattedDate }); // Match database format
+      const shifts = await Shift.find({ date }); // Directly match "YYYY-MM-DD" format
       res.json({ shifts });
     } catch (error) {
       console.error("Error fetching shifts:", error);
       res.status(500).json({ error: "Internal server error" });
     }
   });
-  
 
 
 

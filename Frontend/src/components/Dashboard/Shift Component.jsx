@@ -13,16 +13,12 @@ const ShiftList = () => {
 
   const fetchShifts = async () => {
     try {
-      // Convert selectedDate to "DD/MM/YYYY" format
-      const formattedDate = selectedDate.toLocaleDateString("en-GB"); // "22/03/2025"
-      
-      const response = await axios.get(`http://localhost:5500/getshifts?date=${formattedDate}`);
-      
-      console.log("API Response:", response.data);
-      
+      // Convert selectedDate to "YYYY-MM-DD"
+      const formattedDate = selectedDate.toISOString().split("T")[0];
+  
+      const response = await axios.get(`http://localhost:5500/getshifts?date=${formattedDate}`);   
       setShifts(Array.isArray(response.data.shifts) ? response.data.shifts : []);
     } catch (error) {
-      console.error("Error fetching shifts:", error);
       setShifts([]); // Ensure empty array on error
     }
   };
