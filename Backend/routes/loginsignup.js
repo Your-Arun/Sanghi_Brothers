@@ -239,10 +239,10 @@ Router.get("/users",  async (req, res) => {
 // ✅ Update user details
 Router.put("/users/:id",  async (req, res) => {
   try {
-    const { username, email, role } = req.body;
+    const { username, email, department } = req.body;
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
-      { username, email, role },
+      { username, email, department },
       { new: true }
     );
     res.json(updatedUser);

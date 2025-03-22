@@ -5,7 +5,11 @@ import { toast } from "react-toastify";
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
-  const [formData, setFormData] = useState({ username: "", email: "", role: "" });
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    department: "",
+  });
 
   useEffect(() => {
     fetchUsers();
@@ -22,7 +26,11 @@ const AdminPanel = () => {
 
   const handleEditClick = (user) => {
     setEditingUser(user._id);
-    setFormData({ username: user.username, email: user.email, role: user.role });
+    setFormData({
+      username: user.username,
+      email: user.email,
+      department: user.department || "", // Ensure department is not undefined
+    });
   };
 
   const handleChange = (e) => {
@@ -53,6 +61,7 @@ const AdminPanel = () => {
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
+      
       <h1 className="text-3xl font-bold text-blue-600 text-center mb-6">Admin Panel - Manage Users</h1>
       <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
         <table className="w-full border-collapse">
@@ -60,7 +69,7 @@ const AdminPanel = () => {
             <tr className="bg-blue-500 text-white">
               <th className="p-2">Username</th>
               <th className="p-2">Email</th>
-              <th className="p-2">Role</th>
+              <th className="p-2">Department</th>
               <th className="p-2">Actions</th>
             </tr>
           </thead>
@@ -69,29 +78,69 @@ const AdminPanel = () => {
               <tr key={user._id} className="border-b text-center">
                 <td className="p-2">{user.username}</td>
                 <td className="p-2">{user.email}</td>
-                <td className="p-2">{user.department}</td>
+                <td className="p-2">{user.department || "N/A"}</td>
                 <td className="p-2">
-                  <button onClick={() => handleEditClick(user)} className="bg-yellow-500 text-white px-2 py-1 mr-2 rounded">Edit</button>
-                  <button onClick={() => handleDeleteUser(user._id)} className="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
+                  <button
+                    onClick={() => handleEditClick(user)}
+                    className="bg-yellow-500 text-white px-2 py-1 mr-2 rounded"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeleteUser(user._id)}
+                    className="bg-red-500 text-white px-2 py-1 rounded"
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
       {editingUser && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-md w-96">
             <h2 className="text-xl font-bold mb-4 text-center">Edit User</h2>
-            <input type="text" name="username" value={formData.username} onChange={handleChange} className="w-full p-2 border rounded mb-2" placeholder="Username" />
-            <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full p-2 border rounded mb-2" placeholder="Email" />
-            <select name="role" value={formData.role} onChange={handleChange} className="w-full p-2 border rounded mb-2">
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </select>
+            <input
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              className="w-full p-2 border rounded mb-2"
+              placeholder="Username"
+            />
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full p-2 border rounded mb-2"
+              placeholder="Email"
+            />
+           
+            <input
+              type="text"
+              name="department"
+              value={formData.department}
+              onChange={handleChange}
+              className="w-full p-2 border rounded mb-2"
+              placeholder="Department"
+            />
             <div className="flex justify-between mt-4">
-              <button onClick={() => setEditingUser(null)} className="bg-gray-400 text-white px-4 py-2 rounded">Cancel</button>
-              <button onClick={handleUpdateUser} className="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
+              <button
+                onClick={() => setEditingUser(null)}
+                className="bg-gray-400 text-white px-4 py-2 rounded"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleUpdateUser}
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                Save
+              </button>
             </div>
           </div>
         </div>

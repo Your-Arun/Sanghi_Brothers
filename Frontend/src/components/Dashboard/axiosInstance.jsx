@@ -7,7 +7,7 @@ const axiosInstance = axios.create({
   },
 });
 
-// Add Authorization token in headers for every request
+// ✅ Add Authorization token in headers for every request
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = sessionStorage.getItem("authToken"); // Get token from sessionStorage
@@ -16,6 +16,19 @@ axiosInstance.interceptors.request.use(
     }
     return config;
   },
+);
+
+// ✅ Handle session expiration (Auto logout on 401 error)
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      console.log("🚨 Session expired! Logging out...");
+      sessionStorage.removeItem("authToken"); // Clear token
+      window.location.href = "/login"; // Redirect to login page
+    }
+    return Promise.reject(error);
+  }
 );
 
 export default axiosInstance;

@@ -56,6 +56,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import AdminPanel from "./components/Dashboard/adminPanel.jsx";
 import AllShifts from "./components/Dashboard/ShiftDisplay.jsx";
+import SessionTimeout from "./components/Home Page/SessionTimeout.jsx";
 
 const App = () => {
   return (
@@ -63,6 +64,7 @@ const App = () => {
       <ToastContainer position="top-right" autoClose={3000} />
       <UserProvider>
           <Router>
+          <SessionTimeout timeout={240 * 60 * 1000} /> {/* 10 min session timeout */}
             <AppContent />
           </Router>
       </UserProvider>
