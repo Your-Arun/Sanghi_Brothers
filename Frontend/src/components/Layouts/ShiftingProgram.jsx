@@ -4,6 +4,7 @@ import BackButton from "../Home Page/backbutton"; // Import the context
 import axiosInstance from "../Dashboard/axiosInstance";
 
 const ShiftManagementSystem = () => {
+  const [date, setDate] = useState('');
   const [members, setMembers] = useState([]);
   const [absentees, setAbsentees] = useState([]);
   const [absentMembers, setAbsentMembers] = useState([]);
@@ -33,6 +34,9 @@ const ShiftManagementSystem = () => {
     shift: '',
     available: '',
   });
+  const handleDateChange = (event) => {
+    setDate(event.target.value);
+  };
 
   useEffect(() => {
     const fetchMembers = async () => {
@@ -205,14 +209,6 @@ const ShiftManagementSystem = () => {
       alert("Error updating shift:", error);
     }
   };
-  const [date, setDate] = useState('');
-  useEffect(() => {
-    const todayDate = new Date();
-    const year = todayDate.getFullYear();
-    const month = String(todayDate.getMonth() + 1).padStart(2, '0');
-    const day = String(todayDate.getDate()).padStart(2, '0');
-    setDate(`${day}/${month}/${year}`);
-  }, []);
   const ShiftRow = ({ nozzle, member, isOvertime }) => (
     <tr className="hover:bg-gray-100 transition">
       <td className="py-2 px-3 border text-center">{nozzle}</td>
@@ -408,10 +404,18 @@ const ShiftManagementSystem = () => {
         </div>
 
       </div>
-      <div className="flex justify-center mt-5">
-        <button onClick={handleAssignShiftsAndOvertime} className="bg-green-500 text-white px-4 py-2 rounded">
-          Assign Shifts
-        </button>
+
+      <div className="flex justify-evenly mt-5">
+        <div >
+          <button className="bg-green-500 text-white px-4 py-2 rounded">
+            <input type="date" className="bg-transparent border-none p-0" value={date} onChange={handleDateChange}/>
+          </button>
+        </div>
+        <div >
+          <button onClick={handleAssignShiftsAndOvertime} className="bg-green-500 text-white px-4 py-2 rounded">
+            Assign Shifts
+          </button>
+        </div>
       </div>
 
 

@@ -9,6 +9,7 @@ import addIcon from "/add.png";
 import axiosInstance from "./axiosInstance";
 import { toast } from "react-toastify";
 import UserContext from "../Home Page/UserContext"; // ✅ Import UserContext
+import ShiftComponent from '../Dashboard/Shift Component'
 
 const StaffDashboard = () => {
   const { user, setUser } = useContext(UserContext); // ✅ Get user from context
@@ -21,9 +22,9 @@ const StaffDashboard = () => {
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [cashslip, setCashslip] = useState([]);
   const [lekha, setLekha] = useState([]);
+  const [shiftDta, setShiftData] = useState([]);
+  const [shiftDate, setShiftDate] = useState([]);
   const navigate = useNavigate();
- 
-
   // ✅ Fetch user on mount
   useEffect(() => {
     const fetchUser = async () => {
@@ -45,17 +46,16 @@ const StaffDashboard = () => {
     };
     fetchUser();
   }, [setUser, navigate]);
-
-
   // ✅ Fetch all required data
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [departmentRes, reportRes, cashierRes, lekhajokha] = await Promise.all([
+        const [departmentRes, reportRes, cashierRes, lekhajokha, shiftdata] = await Promise.all([
           axiosInstance.get("/departments", { withCredentials: true }),
           axiosInstance.get("/reports", { withCredentials: true }),
           axiosInstance.get("/Cashslip", { withCredentials: true }),
-          axiosInstance.get("/newlekhajokha", { withCredentials: true })
+          axiosInstance.get("/newlekhajokha", { withCredentials: true }),
+          axiosInstance.get("/shiftingsave", { withCredentials: true })
 
         ]);
 
@@ -63,12 +63,19 @@ const StaffDashboard = () => {
         setReports(reportRes.data);
         setCashslip(cashierRes.data);
         setLekha(lekhajokha.data);
+        setShiftData(shiftdata.data);
+        setShiftDate(shiftdata.data);
       } catch (err) {
         alert("Failed to fetch data.");
       }
     };
     fetchData();
   }, []);
+
+const dates= new Date(shiftDate);
+const formattedDate = dates.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' });
+
+
   const openReportPage = () => {
     if (!selectedDepartment) {
       toast.warn("Please select a department!");
@@ -247,8 +254,25 @@ const StaffDashboard = () => {
             <div className="bg-white p-6 rounded-lg shadow-md text-center text-3xl">
               SHIFTS ARRANGEMENT
             </div>
-             <div>
-             {/* <ShiftList/> */}
+            <div>
+
+              <div className="container mx-auto p-6">
+                <h1 className="text-2xl font-bold text-center">Shift Details</h1>
+                <div className="grid grid-cols-4 justify-center">
+                  {shiftDta.map((shift) => {
+                    return (
+                      <div key={shift.id} className=" text-center shadow-md p-6 rounded-lg bordercsharpborder-gray-200 hover:shadow-lg transition-all">
+                        <h3 className="text-2xl font-bold text-black-600 mb-2">{formattedDate}</h3>
+                        <h3 className="text-xl font-semibold text-green-600 mb-2">{shift.shiftType}</h3>
+                        <h3 className="text-.5xl font-semibold text-red-600 mb-2">{shift.supervisor}</h3>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+
+              <div> <ShiftComponent/> </div>
+
 
             </div>
 

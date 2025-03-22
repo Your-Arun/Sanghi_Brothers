@@ -1,51 +1,61 @@
 const express = require("express");
 const router = express.Router();
-const Shift = require("./shifts"); // Ensure the correct path
+const Shift = require("./shifts");
 
-// Save shifts
+// Save Shift Data API
 router.post("/shiftingsavee", async (req, res) => {
-  try {
-    const shiftData = req.body;
+    try {
+        const shiftsData = req.body; // Array of shifts
 
-    // Ensure shiftData is an array
-    if (!Array.isArray(shiftData)) {
-      return res.status(400).json({ message: "Invalid data format" });
+        if (!Array.isArray(shiftsData) || shiftsData.length === 0) {
+            return res.status(400).json({ error: "Invalid shift data" });
+        }
+
+        // Save all shift data in the database
+        const savedShifts = await Shift.insertMany(shiftsData);
+
+        res.status(201).json({ message: "Shifts saved successfully", shifts: savedShifts });
+    } catch (error) {
+        console.error("Error saving shifts:", error);
+        res.status(500).json({ error: "Failed to save shift data" });
     }
-
-    // Extract date (assuming all shifts have the same date)
-    const shiftDate = shiftData[0]?.date;
-    if (!shiftDate) {
-      return res.status(400).json({ message: "Date is required" });
-    }
-
-    // Remove old shifts for the same date before inserting new ones
-    await Shift.deleteMany({ date: shiftDate });
-
-    // Ensure overtime members are included
-    const formattedShifts = shiftData.map(shift => ({
-      ...shift,
-      overtimeMembers: shift.overtimeMembers || [] // Ensure empty array if missing
-    }));
-
-    // Insert new shifts with proper structure
-    await Shift.insertMany(formattedShifts);
-
-    res.json({ message: "Shift data saved successfully" });
-  } catch (error) {
-    console.error("Error saving shift data:", error);
-    res.status(500).json({ message: "Error saving shift data" });
-  }
 });
 
-// Fetch shifts by date
-router.get("/:date", async (req, res) => {
-  try {
-    const shifts = await Shift.find({ date: req.params.date }).lean(); // Convert to plain JS object
-    res.json(shifts);
-  } catch (error) {
-    console.error("Error fetching shifts:", error);
-    res.status(500).json({ message: "Error fetching shifts" });
-  }
-});
+router.get('/shiftingsave', async (req, res) => {
+    try {
+        const shifts = await Shift.find();
+        res.json(shifts);
+    } catch (error) {
+        console.error("Error fetching shifts:", error);
+        res.status(500).json({ error: "Failed to fetch shift data" });
+    }
+
+})
+
+// Get shift data by date
+// 📌 GET API to fetch shifts by date
+router.get("/getshifts", async (req, res) => {
+    try {
+      const { date } = req.query; // Date from frontend (YYYY-MM-DD)
+      
+      if (!date) {
+        return res.status(400).json({ error: "Date is required" });
+      }
+  
+      // Convert any non-ISO date to YYYY-MM-DD
+      const formattedDate = new Date(date).toISOString().split("T")[0];
+  
+      // Fetch shifts where date matches exactly
+      const shifts = await Shift.find({ date: formattedDate });
+  
+      res.status(200).json(shifts);
+    } catch (error) {
+      console.error("Error fetching shifts:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  });
+  
+
+
 
 module.exports = router;

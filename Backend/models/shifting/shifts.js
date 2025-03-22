@@ -1,31 +1,28 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const shiftSchema = new mongoose.Schema({
-  date: { type: String, required: true },
-  shiftType: { type: String, required: true },
-  startTime: { type: String, required: true },
-  endTime: { type: String, required: true },
-  supervisor: { 
-    id: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, 
-    name: { type: String } 
-  },
-  airBoy: { 
-    id: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, 
-    name: { type: String } 
-  },
-  nozzles: [
-    {
-      nozzleNumber: { type: String },
-      member: {
-        id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-        name: { type: String }
-      },
-      overtime: { type: Boolean }
-    }
-  ],
-  overtimeMembers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }] // 🔥 Added Overtime Members
+const NozzleSchema = new mongoose.Schema({
+  nozzleNumber: { type: String, required: true },
+  member: { type: String, default: "Unassigned" },
+  overtime: { type: Boolean, default: false },
 });
 
-const Shift = mongoose.model('Shift', shiftSchema);
+const ShiftSchema = new mongoose.Schema({
+  date: { type: String, required: true },
+  shiftType: { type: String, enum: ["Morning Shift", "Evening Shift"], required: true },
+  startTime: { type: String, required: true },
+  endTime: { type: String, required: true },
+  supervisor: { type: String, default: "Not Assigned" },
+  airBoy: { type: String, default: "Not Assigned" },
+  nozzles: [NozzleSchema], // Array of nozzle objects
+});
 
+// Middleware to standardize date format before saving
+ShiftSchema.pre("save", function (next) {
+  if (this.date instanceof Date) {
+    this.date = this.date.toISOString().split("T")[0]; // Convert to YYYY-MM-DD
+  }
+  next();
+});
+
+const Shift = mongoose.model("Shift", ShiftSchema);
 module.exports = Shift;
