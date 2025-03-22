@@ -22,8 +22,6 @@ const StaffDashboard = () => {
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [cashslip, setCashslip] = useState([]);
   const [lekha, setLekha] = useState([]);
-  const [shiftDta, setShiftData] = useState([]);
-  const [shiftDate, setShiftDate] = useState([]);
   const navigate = useNavigate();
   // ✅ Fetch user on mount
   useEffect(() => {
@@ -50,31 +48,24 @@ const StaffDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [departmentRes, reportRes, cashierRes, lekhajokha, shiftdata] = await Promise.all([
+        const [departmentRes, reportRes, cashierRes, lekhajokha] = await Promise.all([
           axiosInstance.get("/departments", { withCredentials: true }),
           axiosInstance.get("/reports", { withCredentials: true }),
           axiosInstance.get("/Cashslip", { withCredentials: true }),
           axiosInstance.get("/newlekhajokha", { withCredentials: true }),
-          axiosInstance.get("/shiftingsave", { withCredentials: true })
-
+       
         ]);
 
         setDepartments(departmentRes.data);
         setReports(reportRes.data);
         setCashslip(cashierRes.data);
         setLekha(lekhajokha.data);
-        setShiftData(shiftdata.data);
-        setShiftDate(shiftdata.data);
       } catch (err) {
         alert("Failed to fetch data.");
       }
     };
     fetchData();
   }, []);
-
-const dates= new Date(shiftDate);
-const formattedDate = dates.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' });
-
 
   const openReportPage = () => {
     if (!selectedDepartment) {
@@ -141,10 +132,10 @@ const formattedDate = dates.toLocaleDateString('en-GB', { day: '2-digit', month:
                   <h3 className="text-xl font-bold">Cash Slips</h3>
                   <p className="text-3xl font-semibold">{cashslip.length}</p>
                 </div>
-                <div className="bg-yellow-500 text-white p-6 rounded-lg shadow-md flex flex-col items-center">
+                <div  className="bg-yellow-500 text-white p-6 rounded-lg shadow-md flex flex-col items-center">
                   <FaTruck size={40} />
                   <h3 className="text-xl font-bold">Shifting Arrangements</h3>
-                  <p className="text-3xl font-semibold">{0}</p> {/* Replace with actual count if available */}
+                  <p className="text-3xl font-semibold"></p> {/* Replace with actual count if available */}
                 </div>
                 <div className="bg-purple-500 text-white p-6 rounded-lg shadow-md flex flex-col items-center">
                   <BsOpencollective size={40} />
