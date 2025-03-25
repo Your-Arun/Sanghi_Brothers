@@ -47,10 +47,11 @@ const verifyToken = (req, res, next) => {
 // ✅ Secure Signup Route
 Router.post("/signup", async (req, res) => {
   try {
-    let { name, username, email, password, department } = req.body;
+    let { name, username, email,phone, password, department } = req.body;
     name = name.trim();
     username = username.trim();
     email = email.trim();
+    phone =phone.trim()
     department = department.toLowerCase();
 
     const validDepartments = ["manager", "backoffice", "accounts/finance", "staff"];
@@ -64,7 +65,7 @@ Router.post("/signup", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ name, username, email, password: hashedPassword, department });
+    const newUser = new User({ name, username, email,phone, password: hashedPassword, department });
     await newUser.save();
 
     res.status(201).json({ message: "User registered successfully" });

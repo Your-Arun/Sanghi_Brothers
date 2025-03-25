@@ -5,7 +5,6 @@ import UserContext from "../Home Page/UserContext";
 
 const ProfileModal = ({ closeModal }) => {
   const { user, setUser, handleLogout } = useContext(UserContext);
-
   const [username, setUsername] = useState(user?.username || "");
   const [loading, setLoading] = useState(false);
   const [isChanged, setIsChanged] = useState(false); // Track if name is changed
@@ -62,6 +61,10 @@ const ProfileModal = ({ closeModal }) => {
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold">Role:</label>
             <p className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100">{user.department}</p>
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 font-semibold">Mobile Number:</label>
+            <p className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100">{user.phone}</p>
           </div>
 
           <div className="flex justify-between">
