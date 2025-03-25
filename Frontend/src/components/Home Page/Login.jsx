@@ -28,7 +28,6 @@ const Login = () => {
         const { data } = await axiosInstance.get("/profile");
         setUser(data.user);
       } catch (error) {
-        console.log("Session expired or not found");
         sessionStorage.removeItem(sessionKey); // Clear invalid session
       }
     };
@@ -46,13 +45,11 @@ const Login = () => {
       sessionStorage.setItem(sessionKey, JSON.stringify(data.user)); // ✅ Store user session per tab
       sessionStorage.setItem("authToken", data.token); // ✅ Store token securely
 
-      console.log("✅ Login Response:", data);
       setUser(data.user);
       toast.success("Login Successful");
       // ✅ Redirect based on role
       navigate(data.user.department === "staff" ? "/staff-dashboard" : "/dashboard");
     } catch (err) {
-      console.error("❌ Login Error:", err.response?.data || err);
       alert(err.response?.data?.message || "Invalid credentials, please try again.");
     } finally {
       setLoading(false);

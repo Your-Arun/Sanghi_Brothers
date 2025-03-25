@@ -9,6 +9,7 @@ const AdminPanel = () => {
     username: "",
     email: "",
     department: "",
+    phone:""
   });
 
   useEffect(() => {
@@ -30,6 +31,7 @@ const AdminPanel = () => {
       username: user.username,
       email: user.email,
       department: user.department || "", // Ensure department is not undefined
+      phone:user.phone
     });
   };
 
@@ -71,6 +73,7 @@ const AdminPanel = () => {
               <th className="p-2">Username</th>
               <th className="p-2">Email</th>
               <th className="p-2">Department</th>
+              <th className="p-2">Phone</th>
               <th className="p-2">Actions</th>
             </tr>
           </thead>
@@ -80,6 +83,7 @@ const AdminPanel = () => {
                 <td className="p-2">{user.username}</td>
                 <td className="p-2">{user.email}</td>
                 <td className="p-2">{user.department || "N/A"}</td>
+                <td className="p-2">{user.phone || "N/A"}</td>
                 <td className="p-2">
                   <button
                     onClick={() => handleEditClick(user)}
@@ -128,6 +132,14 @@ const AdminPanel = () => {
               onChange={handleChange}
               className="w-full p-2 border rounded mb-2"
               placeholder="Department"
+            />
+            <input
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              className="w-full p-2 border rounded mb-2"
+              placeholder="Phone Number"
             />
             <div className="flex justify-between mt-4">
               <button

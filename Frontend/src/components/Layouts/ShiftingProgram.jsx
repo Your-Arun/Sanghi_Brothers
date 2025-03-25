@@ -126,7 +126,9 @@ const ShiftManagementSystem = () => {
           }),
         };
       });
-
+        if(!date){
+          alert('Please select Date')
+        }
       console.log("Shift data to save:", JSON.stringify(shiftData, null, 2)); // Debugging log
 
       await axiosInstance.post("/shiftingsavee", shiftData);
@@ -489,6 +491,7 @@ const ShiftManagementSystem = () => {
           <BackButton previousImage="/previous.png" />
         </div>
       </div>
+
     </>
   );
 };
