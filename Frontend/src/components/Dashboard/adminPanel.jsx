@@ -5,11 +5,13 @@ import { toast } from "react-toastify";
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
+  const [isAddingUser, setIsAddingUser] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     email: "",
-    department: "",
-    phone:""
+    department: "manager",
+    phone: "",
+    password: "",
   });
 
   useEffect(() => {
@@ -30,8 +32,8 @@ const AdminPanel = () => {
     setFormData({
       username: user.username,
       email: user.email,
-      department: user.department || "", // Ensure department is not undefined
-      phone:user.phone
+      department: user.department || "",
+      phone: user.phone || "",
     });
   };
 
@@ -61,12 +63,36 @@ const AdminPanel = () => {
     }
   };
 
+  const handleAddUser = async () => {
+    try {
+      if (!formData.password) {
+        return toast.error("Password is required for new user");
+      }
+      await axiosInstance.post("/signup", formData);
+      toast.success("User added successfully");
+      fetchUsers();
+      setIsAddingUser(false);
+      setFormData({ username: "", email: "", department: "manager", phone: "", password: "" });
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to add user");
+    }
+  };
+
   return (
-    <>
     <div className="p-6 bg-gray-100 min-h-screen">
-      
       <h1 className="text-3xl font-bold text-blue-600 text-center mb-6">Admin Panel - Manage Users</h1>
+      
       <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+        <div className="flex justify-between mb-4">
+          <h2 className="text-xl font-bold">Users List</h2>
+          <button
+            onClick={() => setIsAddingUser(true)}
+            className="bg-green-500 text-white px-3 py-2 rounded"
+          >
+            + Add Member
+          </button>
+        </div>
+
         <table className="w-full border-collapse">
           <thead>
             <tr className="bg-blue-500 text-white">
@@ -104,6 +130,7 @@ const AdminPanel = () => {
         </table>
       </div>
 
+      {/* Edit User Modal */}
       {editingUser && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-md w-96">
@@ -124,7 +151,6 @@ const AdminPanel = () => {
               className="w-full p-2 border rounded mb-2"
               placeholder="Email"
             />
-           
             <input
               type="text"
               name="department"
@@ -142,25 +168,40 @@ const AdminPanel = () => {
               placeholder="Phone Number"
             />
             <div className="flex justify-between mt-4">
-              <button
-                onClick={() => setEditingUser(null)}
-                className="bg-gray-400 text-white px-4 py-2 rounded"
-              >
+              <button onClick={() => setEditingUser(null)} className="bg-gray-400 text-white px-4 py-2 rounded">
                 Cancel
               </button>
-              <button
-                onClick={handleUpdateUser}
-                className="bg-blue-500 text-white px-4 py-2 rounded"
-              >
+              <button onClick={handleUpdateUser} className="bg-blue-500 text-white px-4 py-2 rounded">
                 Save
               </button>
             </div>
           </div>
         </div>
       )}
+
+      {/* Add User Modal */}
+      {isAddingUser && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-md w-96">
+            <h2 className="text-xl font-bold mb-4 text-center">Add Member</h2>
+            <input type="text" name="username" value={formData.username} onChange={handleChange} className="w-full p-2 border rounded mb-2" placeholder="Username" />
+            <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full p-2 border rounded mb-2" placeholder="Email" />
+            <select name="department" value={formData.department} onChange={handleChange} className="w-full p-2 border rounded mb-2">
+              <option value="manager">Manager</option>
+              <option value="accounts/finance">Accounts/Finance</option>
+              <option value="backoffice">Back Office</option>
+              <option value="staff">Staff</option>
+            </select>
+            <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className="w-full p-2 border rounded mb-2" placeholder="Phone Number" />
+            <input type="password" name="password" value={formData.password} onChange={handleChange} className="w-full p-2 border rounded mb-2" placeholder="Password" />
+            <div className="flex justify-between mt-4">
+              <button onClick={() => setIsAddingUser(false)} className="bg-gray-400 text-white px-4 py-2 rounded">Cancel</button>
+              <button onClick={handleAddUser} className="bg-green-500 text-white px-4 py-2 rounded">Add</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
-    <div> // profile me dalva hai hint </div>
-    </>
   );
 };
 
