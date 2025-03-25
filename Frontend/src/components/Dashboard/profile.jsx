@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import axiosInstance from "./axiosInstance";
 import { toast } from "react-toastify";
 import UserContext from "../Home Page/UserContext";
 
 const ProfileModal = ({ closeModal }) => {
+  const navigate = useNavigate();
   const { user, setUser, handleLogout } = useContext(UserContext);
   const [username, setUsername] = useState(user?.username || "");
   const [loading, setLoading] = useState(false);
@@ -42,14 +44,14 @@ const ProfileModal = ({ closeModal }) => {
         </button>
 
         <h2 className="text-2xl font-bold mb-4 text-center text-blue-600">Edit Profile</h2>
-        <h2 className="text-xl font-bold mb-2 mt-[-20px] text-center text-red-600">Only amdin can edit profile</h2>
+        <h2 className="text-xl font-bold mb-2 mt-[-20px] text-center text-red-600">Only admin can edit profile</h2>
 
         <form onSubmit={handleProfileSave}>
           {/* Editable Name Field */}
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold">Name:</label>
             <p className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100">{user.username}</p>
-            </div>
+          </div>
 
           {/* Non-Editable Email */}
           <div className="mb-4">
@@ -66,6 +68,18 @@ const ProfileModal = ({ closeModal }) => {
             <label className="block text-gray-700 font-semibold">Mobile Number:</label>
             <p className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100">{user.phone}</p>
           </div>
+
+          {/* Show Admin Panel Button only for Managers */}
+          {user.department === "manager" && (
+            <div className="mb-4 text-center">
+              <button
+                onClick={() => navigate("/admin-panel")}
+                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+              >
+                Go to Admin Panel
+              </button>
+            </div>
+          )}
 
           <div className="flex justify-between">
             <button type="button" className="px-4 py-2 bg-red-500 text-white rounded-lg" onClick={handleLogout}>

@@ -92,11 +92,11 @@ const AppContent = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/admin-panel" element={<AdminPanel />} />
 
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/admin-panel" element={<AdminPanel />} />
           <Route path="/staff-dashboard" element={<Staffmember />} />
           <Route path="/bankreport" element={<MergingSbSection />} />
           <Route path="/sbbank" element={<Mergesb01Inflo />} />
