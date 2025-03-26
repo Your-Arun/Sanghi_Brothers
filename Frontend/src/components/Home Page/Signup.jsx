@@ -8,9 +8,10 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [department, setDepartment] = useState("manager");
+  const [department, setDepartment] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [inviteCode, setInviteCode] = useState("");
+  const [inviteCode, setInviteCode] = useState("");  
+  const [type, setType] = useState("");  
   const [isValidInviteCode, setIsValidInviteCode] = useState(false);
   const navigate = useNavigate();
 
@@ -23,8 +24,9 @@ const Signup = () => {
         invitecode: inviteCode,
       });
 
-      if (response.data.valid) {
-        setIsValidInviteCode(true);
+      if (response.data) {
+        setIsValidInviteCode(response.data.valid);
+        setType(response.data.type);
       } else {
         alert("Invalid invitation code");
       }
@@ -53,17 +55,12 @@ const Signup = () => {
       });
 
       if (response.data.token) {
-        localSession.setItem("token", response.data.token);
+        localStorage.setItem("token", response.data.token);
       }
 
       alert(response.data.message || "User registered successfully");
+      navigate("/login");
 
-      // Navigate based on department
-      if (department === "staff") {
-        navigate("/staff-dashboard");
-      } else {
-        navigate("/dashboard");
-      }
     } catch (err) {
       alert(err.response?.data?.message || "Signup failed");
     }
@@ -72,38 +69,40 @@ const Signup = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
       <form
-        className="bg-white p-6 md:p-8 rounded-lg shadow-lg w-full max-w-md md:max-w-lg lg:max-w-xl"
+        className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md"
         onSubmit={isValidInviteCode ? handleSubmit : handleInviteCodeVerification}
       >
-        <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center text-blue-600">
+        <h2 className="text-3xl font-bold text-center text-blue-600 mb-6">
           Signup
         </h2>
 
-        {!isValidInviteCode && (
+        {!isValidInviteCode ? (
           <div>
             <input
               type="text"
-              placeholder="Invitation Code"
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg"
+              placeholder="Enter Invitation Code"
+              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               value={inviteCode}
               onChange={(e) => setInviteCode(e.target.value)}
               required
             />
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition duration-300"
+              className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-300"
             >
               Verify Invitation Code
             </button>
           </div>
-        )}
-
-        {isValidInviteCode && (
+        ) : (
           <div>
+            <h1 className="text-xl font-semibold text-green-600 text-center mb-4">
+              Welcome as <span className="uppercase text-red-600">{type}❗</span>
+            </h1>
+
             <input
               type="text"
-              placeholder="Name"
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg"
+              placeholder="Full Name"
+              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -112,7 +111,7 @@ const Signup = () => {
             <input
               type="text"
               placeholder="Username"
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg"
+              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -121,7 +120,7 @@ const Signup = () => {
             <input
               type="email"
               placeholder="Email"
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg"
+              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -130,7 +129,7 @@ const Signup = () => {
             <input
               type="tel"
               placeholder="Phone"
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg"
+              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               required
@@ -140,7 +139,7 @@ const Signup = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
-                className="w-full p-3 border border-gray-300 rounded-lg"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -155,11 +154,12 @@ const Signup = () => {
             </div>
 
             <select
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg"
+              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               value={department}
               onChange={(e) => setDepartment(e.target.value)}
               required
             >
+              <option value="">Select Department</option>
               <option value="manager">MANAGER</option>
               <option value="accounts/finance">ACCOUNTS/FINANCE</option>
               <option value="backoffice">BACK OFFICE</option>
@@ -168,7 +168,7 @@ const Signup = () => {
 
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition duration-300"
+              className="w-full bg-green-500 text-white p-3 rounded-lg hover:bg-green-600 transition duration-300"
             >
               Signup
             </button>
@@ -176,7 +176,7 @@ const Signup = () => {
         )}
 
         <p className="mt-4 text-center text-gray-600">
-          Already have an account?{' '}
+          Already have an account?{" "}
           <Link to="/login" className="text-blue-500 hover:underline">
             Login
           </Link>

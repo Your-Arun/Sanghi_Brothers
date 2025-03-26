@@ -92,40 +92,6 @@ Router.post("/login", async (req, res) => {
     res.status(500).json({ message: "Login failed" });
   }
 });
-// ✅ Forgot Password - Send OTP
-Router.post("/forgot-password", async (req, res) => {
-  const { email } = req.body;
-  try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const hashedOtp = await bcrypt.hash(otp, 10);
-
-    user.otp = hashedOtp;
-    user.otpExpires = Date.now() + 10 * 60 * 1000; // ✅ OTP valid for 10 minutes
-    await user.save();
-
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    await transporter.sendMail({
-      to: email,
-      subject: "Password Reset OTP",
-      text: `Your OTP for password reset is: ${otp} (valid for 10 minutes)`,
-    });
-
-    res.json({ message: "OTP sent to your email" });
-  } catch (error) {
-    console.error("Error sending OTP:", error);
-    res.status(500).json({ message: "Server error" });
-  }
-});
 // ✅ Profile Route (Fixed missing token validation)
 Router.get("/profile", verifyToken, async (req, res) => {
   try {
@@ -175,34 +141,6 @@ Router.post("/logout", (req, res) => {
   res.clearCookie("token");
   res.json({ message: "Logged out" });
 });
-// ✅ Verify OTP & Reset Password
-Router.post("/reset-password", async (req, res) => {
-  const { email, otp, newPassword } = req.body;
-  try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    if (!user.otpExpires || user.otpExpires < Date.now()) {
-      return res.status(400).json({ message: "OTP expired. Request a new one." });
-    }
-
-    const isOtpValid = await bcrypt.compare(otp, user.otp);
-    if (!isOtpValid) {
-      return res.status(400).json({ message: "Invalid OTP" });
-    }
-
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    user.password = hashedPassword;
-    user.otp = null;
-    user.otpExpires = null;
-    await user.save();
-
-    res.json({ message: "Password has been reset successfully." });
-  } catch (error) {
-    console.error("Error resetting password:", error);
-    res.status(500).json({ message: "Server error" });
-  }
-});
 Router.get("/departments", async (req, res) => {
   try {
     const departments = await User.distinct("department");
@@ -243,26 +181,100 @@ Router.delete("/users/:id",  async (req, res) => {
     res.status(500).json({ error: "Delete failed" });
   }
 });
-
-
 //verify-invite
-const Invitecodemembers = process.env.VALID_INVITATION_CODES.split(',').filter(code => code !== '');
-const Invitecodestaff = process.env.VALID_INVITATION_CODES_FOR_STAFF.split(',').filter(code => code !== '');
-Router.post('/verify-invite', async (req, res) => {
+const Invitecodemembers = (process.env.VALID_INVITATION_CODES || "")
+  .split(",")
+  .map(code => code.trim())
+  .filter(code => code !== "");
+
+const Invitecodestaff = (process.env.VALID_INVITATION_CODES_FOR_STAFF || "")
+  .split(",")
+  .map(code => code.trim())
+  .filter(code => code !== "");
+
+Router.post("/verify-invite", async (req, res) => {
   const { invitecode } = req.body;
 
-  if (!invitecode) {
-    return res.json({ valid: false, department: null });
-  }
-
   if (Invitecodemembers.includes(invitecode)) {
-    return res.json({ valid: true, department: 'member' });
+    return res.json({ valid: true, type: "member" });
   } else if (Invitecodestaff.includes(invitecode)) {
-    return res.json({ valid: true, department: 'staff' });
+    return res.json({ valid: true, type: "staff" });
   } else {
-    return res.json({ valid: false, department: null });
+    return res.json({ valid: false });
   }
 });
+// ✅ Forgot Password - Send OTP
+Router.post("/forgot-password", async (req, res) => {
+  const { email, otp, newPassword } = req.body;
+
+  try {
+    if (!email) return res.status(400).json({ message: "Email is required." });
+
+    const user = await User.findOne({ email: email.toLowerCase() });
+    if (!user) return res.status(404).json({ message: "User not found." });
+
+    // ✅ Step 1: Generate and send OTP
+    if (!otp && !newPassword) {
+      const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+      const hashedOtp = await bcrypt.hash(generatedOtp, 10);
+
+      user.otp = hashedOtp;
+      user.otpExpires = new Date(Date.now() + 10 * 60 * 1000); // FIXED ✅ Ensure proper Date format
+      await user.save();
+
+      // Email Transporter Setup
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      });
+
+      // Send OTP Email
+      await transporter.sendMail({
+        to: email,
+        subject: "Password Reset OTP",
+        text: `Your OTP for password reset is: ${generatedOtp} (valid for 10 minutes). If you did not request this, ignore this email.`,
+      });
+
+      return res.status(200).json({ message: "OTP sent to your email." });
+    }
+
+    // ✅ Step 2: Verify OTP and reset password
+    if (otp && newPassword) {
+    
+      // Check if OTP is expired
+      if (!user.otp || !user.otpExpires || new Date(user.otpExpires) < new Date()) {
+      
+        user.otp = null;
+        user.otpExpires = null;
+        await user.save();
+        return res.status(400).json({ message: "OTP expired. Request a new one." });
+      }
+
+      // Verify OTP
+      const isOtpValid = await bcrypt.compare(otp, user.otp);
+      if (!isOtpValid) return res.status(400).json({ message: "Invalid OTP." });
+
+      // Hash new password and update user record
+      const hashedPassword = await bcrypt.hash(newPassword, 12);
+      user.password = hashedPassword;
+      user.otp = null;
+      user.otpExpires = null;
+      await user.save();
+
+      return res.status(200).json({ message: "Password has been reset successfully." });
+    }
+
+    res.status(400).json({ message: "Invalid request." });
+  } catch (error) {
+    console.error("Error in forgot-password API:", error);
+    res.status(500).json({ message: "Server error. Try again later." });
+  }
+});
+
+
 
 
 module.exports = Router;

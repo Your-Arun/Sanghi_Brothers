@@ -8,6 +8,8 @@ const userSchema = new mongoose.Schema(
     phone: { type: String,  required: true, trim: true },
     password: { type: String, required: true },
     department: { type: String, trim: true },
+    otp: { type: String },
+    otpExpires: { type: Date }, // ✅ Make sure this is defined
   },
   { timestamps: true }
 );
