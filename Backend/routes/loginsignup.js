@@ -3,8 +3,9 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const nodemailer = require("nodemailer");
-
 const Router = express.Router();
+require("dotenv").config();
+
 
 // ✅ Middleware to verify token
 const authenticateUser = async(req, res, next) => {
@@ -28,7 +29,6 @@ const authenticateUser = async(req, res, next) => {
     return res.status(401).json({ message: "Unauthorized: Invalid token" });
   }
 };
-
 // ✅ Middleware to Verify JWT
 const verifyToken = (req, res, next) => {
   const token = req.cookies.token || req.headers.authorization?.split(" ")[1]; // ✅ Check both header & cookies
@@ -43,7 +43,6 @@ const verifyToken = (req, res, next) => {
     return res.status(401).json({ message: "Session expired" });
   }
 };
-
 // ✅ Secure Signup Route
 Router.post("/signup", async (req, res) => {
   try {
@@ -74,7 +73,6 @@ Router.post("/signup", async (req, res) => {
     res.status(500).json({ message: "Internal server error. Please try again later." });
   }
 });
-
 // ✅ Login Route (Fixed double response issue)
 Router.post("/login", async (req, res) => {
   const { email, password } = req.body;
@@ -94,7 +92,6 @@ Router.post("/login", async (req, res) => {
     res.status(500).json({ message: "Login failed" });
   }
 });
-
 // ✅ Forgot Password - Send OTP
 Router.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
@@ -129,7 +126,6 @@ Router.post("/forgot-password", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
 // ✅ Profile Route (Fixed missing token validation)
 Router.get("/profile", verifyToken, async (req, res) => {
   try {
@@ -139,9 +135,6 @@ Router.get("/profile", verifyToken, async (req, res) => {
     res.status(500).json({ message: "User not found" });
   }
 });
-
-
-
 // ✅ Update Profile Route (Fixed userId usage)
 Router.put("/profile", authenticateUser, async (req, res) => {
   try {
@@ -177,16 +170,11 @@ Router.put("/profile", authenticateUser, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
-
-
 // ✅ Secure Logout Route (Fixed session destroy)
 Router.post("/logout", (req, res) => {
   res.clearCookie("token");
   res.json({ message: "Logged out" });
 });
-
-
 // ✅ Verify OTP & Reset Password
 Router.post("/reset-password", async (req, res) => {
   const { email, otp, newPassword } = req.body;
@@ -215,8 +203,6 @@ Router.post("/reset-password", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
-
 Router.get("/departments", async (req, res) => {
   try {
     const departments = await User.distinct("department");
@@ -225,9 +211,6 @@ Router.get("/departments", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
-//admin
-
 // ✅ Fetch all users
 Router.get("/users",  async (req, res) => {
   try {
@@ -251,7 +234,6 @@ Router.put("/users/:id",  async (req, res) => {
     res.status(500).json({ error: "Update failed" });
   }
 });
-
 // ✅ Delete a user
 Router.delete("/users/:id",  async (req, res) => {
   try {
@@ -261,5 +243,26 @@ Router.delete("/users/:id",  async (req, res) => {
     res.status(500).json({ error: "Delete failed" });
   }
 });
+
+
+//verify-invite
+const Invitecodemembers = process.env.VALID_INVITATION_CODES.split(',').filter(code => code !== '');
+const Invitecodestaff = process.env.VALID_INVITATION_CODES_FOR_STAFF.split(',').filter(code => code !== '');
+Router.post('/verify-invite', async (req, res) => {
+  const { invitecode } = req.body;
+
+  if (!invitecode) {
+    return res.json({ valid: false, department: null });
+  }
+
+  if (Invitecodemembers.includes(invitecode)) {
+    return res.json({ valid: true, department: 'member' });
+  } else if (Invitecodestaff.includes(invitecode)) {
+    return res.json({ valid: true, department: 'staff' });
+  } else {
+    return res.json({ valid: false, department: null });
+  }
+});
+
 
 module.exports = Router;
