@@ -77,7 +77,7 @@ const AppContent = () => {
   const location = useLocation();
 
   // ✅ Show Navbar Only on These Routes
-  const showNavbarRoutes = ["/", "/contact-us", "/services", "/about", "/login", "/signup"];
+  const showNavbarRoutes = ["/", "/contact", "/services", "/about", "/login", "/signup"];
   const shouldShowNavbar = showNavbarRoutes.includes(location.pathname);
 
   return (
@@ -86,7 +86,7 @@ const AppContent = () => {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
-        <Route path="/contact-us" element={<ContactUs />} />
+        <Route path="/contact" element={<ContactUs />} />
         <Route path="/services" element={<Services />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/login" element={<Login />} />

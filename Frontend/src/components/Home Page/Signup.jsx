@@ -10,14 +10,16 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [department, setDepartment] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [inviteCode, setInviteCode] = useState("");  
-  const [type, setType] = useState("");  
+  const [inviteCode, setInviteCode] = useState("");
+  const [type, setType] = useState("");
   const [isValidInviteCode, setIsValidInviteCode] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   // Handle Invitation Code Verification
   const handleInviteCodeVerification = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const response = await axios.post("http://localhost:5500/verify-invite", {
@@ -32,6 +34,8 @@ const Signup = () => {
       }
     } catch (err) {
       alert("Error verifying invitation code");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -43,6 +47,7 @@ const Signup = () => {
       alert("Please verify your invitation code first");
       return;
     }
+    setLoading(true);
 
     try {
       const response = await axios.post("http://localhost:5500/signup", {
@@ -60,19 +65,20 @@ const Signup = () => {
 
       alert(response.data.message || "User registered successfully");
       navigate("/login");
-
     } catch (err) {
       alert(err.response?.data?.message || "Signup failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
       <form
-        className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md"
+        className="bg-white p-6 md:p-8 rounded-lg shadow-lg w-full max-w-sm md:max-w-md lg:max-w-lg"
         onSubmit={isValidInviteCode ? handleSubmit : handleInviteCodeVerification}
       >
-        <h2 className="text-3xl font-bold text-center text-blue-600 mb-6">
+        <h2 className="text-2xl md:text-3xl font-bold text-center text-blue-600 mb-6">
           Signup
         </h2>
 
@@ -81,16 +87,17 @@ const Signup = () => {
             <input
               type="text"
               placeholder="Enter Invitation Code"
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               value={inviteCode}
               onChange={(e) => setInviteCode(e.target.value)}
               required
             />
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-300"
+              className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-200 disabled:opacity-50"
+              disabled={loading}
             >
-              Verify Invitation Code
+              {loading ? "Verifying..." : "Verify Invitation Code"}
             </button>
           </div>
         ) : (
@@ -102,7 +109,7 @@ const Signup = () => {
             <input
               type="text"
               placeholder="Full Name"
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -111,7 +118,7 @@ const Signup = () => {
             <input
               type="text"
               placeholder="Username"
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -120,7 +127,7 @@ const Signup = () => {
             <input
               type="email"
               placeholder="Email"
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -129,7 +136,7 @@ const Signup = () => {
             <input
               type="tel"
               placeholder="Phone"
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               required
@@ -139,7 +146,7 @@ const Signup = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -154,7 +161,7 @@ const Signup = () => {
             </div>
 
             <select
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               value={department}
               onChange={(e) => setDepartment(e.target.value)}
               required
@@ -168,9 +175,10 @@ const Signup = () => {
 
             <button
               type="submit"
-              className="w-full bg-green-500 text-white p-3 rounded-lg hover:bg-green-600 transition duration-300"
+              className="w-full bg-green-500 text-white p-3 rounded-lg hover:bg-green-600 transition duration-200 disabled:opacity-50"
+              disabled={loading}
             >
-              Signup
+              {loading ? "Signing up..." : "Signup"}
             </button>
           </div>
         )}

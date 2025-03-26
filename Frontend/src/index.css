@@ -17,6 +17,8 @@ body {
   display: none; /* Hides scrollbar in WebKit browsers */
 }
 
+
+
 body {
   -ms-overflow-style: none;  /* Hides scrollbar in IE and Edge */
   scrollbar-width: none; /* Hides scrollbar in Firefox */
