@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../Dashboard/axiosInstance";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
@@ -13,7 +14,7 @@ const AdminPanel = () => {
     phone: "",
     password: "",
   });
-
+const navigate=useNavigate();
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -80,8 +81,13 @@ const AdminPanel = () => {
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
+      <button
+        className="bg-gray-800 text-white px-4 py-2 rounded-lg mb-4 hover:bg-gray-700 transition"
+        onClick={() => navigate(-1)} // 👈 Pichhle page pe jaane ka function
+      >
+        ← Back
+      </button>
       <h1 className="text-3xl font-bold text-blue-600 text-center mb-6">Admin Panel - Manage Users</h1>
-      
       <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
         <div className="flex justify-between mb-4">
           <h2 className="text-xl font-bold">Users List</h2>

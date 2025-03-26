@@ -53,7 +53,7 @@ const StaffDashboard = () => {
           axiosInstance.get("/reports", { withCredentials: true }),
           axiosInstance.get("/Cashslip", { withCredentials: true }),
           axiosInstance.get("/newlekhajokha", { withCredentials: true }),
-       
+
         ]);
 
         setDepartments(departmentRes.data);
@@ -90,7 +90,7 @@ const StaffDashboard = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <aside className="w-64 bg-blue-600 text-white p-6 space-y-4">
+      <aside className="w-64 md:w-1/4 lg:w-1/5 xl:w-1/6 bg-blue-600 text-white p-6 space-y-4">
         <h2 className="text-2xl font-bold">Staff Dashboard</h2>
         <nav className="space-y-3">
           {navItems.map((item) => (
@@ -112,7 +112,7 @@ const StaffDashboard = () => {
         </nav>
       </aside>
 
-      <main className="flex-1 p-6">
+      <main className="flex-1 p-4">
         {activeTab === "dashboard" && (
           <>
             <div className="bg-white p-6 rounded-lg shadow-md text-center text-3xl">
@@ -121,7 +121,7 @@ const StaffDashboard = () => {
             </div>
             <div>
               {/* Dashboard Stats */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
                 <div className="bg-blue-500 text-white p-6 rounded-lg shadow-md flex flex-col items-center">
                   <FaExclamationTriangle size={40} />
                   <h3 className="text-xl font-bold">Complaints</h3>
@@ -132,7 +132,7 @@ const StaffDashboard = () => {
                   <h3 className="text-xl font-bold">Cash Slips</h3>
                   <p className="text-3xl font-semibold">{cashslip.length}</p>
                 </div>
-                <div  className="bg-yellow-500 text-white p-6 rounded-lg shadow-md flex flex-col items-center">
+                <div className="bg-yellow-500 text-white p-6 rounded-lg shadow-md flex flex-col items-center">
                   <FaTruck size={40} />
                   <h3 className="text-xl font-bold">Shifting Arrangements</h3>
                   <p className="text-3xl font-semibold"></p> {/* Replace with actual count if available */}
@@ -246,7 +246,7 @@ const StaffDashboard = () => {
               SHIFTS ARRANGEMENT
             </div>
             <div>
-              <div> <ShiftComponent/> </div>
+              <div> <ShiftComponent /> </div>
             </div>
 
           </>

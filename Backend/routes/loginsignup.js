@@ -47,10 +47,10 @@ const verifyToken = (req, res, next) => {
 Router.post("/signup", async (req, res) => {
   try {
     let { name, username, email,phone, password, department } = req.body;
-    name = name.trim();
-    username = username.trim();
-    email = email.trim();
-    phone =phone.trim()
+    name = name;
+    username = username;
+    email = email;
+    phone =phone;
     department = department.toLowerCase();
 
     const validDepartments = ["manager", "backoffice", "accounts/finance", "staff"];
