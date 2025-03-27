@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { FaMoneyBill, FaTruck, FaExclamationTriangle, FaUser } from "react-icons/fa";
+import { FaMoneyBill, FaTruck, FaExclamationTriangle, FaUser,FaBars, FaTimes } from "react-icons/fa";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { BsOpencollective } from "react-icons/bs";
 import { IoCreateSharp } from "react-icons/io5";
@@ -23,6 +23,7 @@ const StaffDashboard = () => {
   const [cashslip, setCashslip] = useState([]);
   const [lekha, setLekha] = useState([]);
   const navigate = useNavigate();
+const [isSidebarOpen, setSidebarOpen] = useState(false); // ✅ Sidebar state
   // ✅ Fetch user on mount
   useEffect(() => {
     const fetchUser = async () => {
@@ -75,7 +76,7 @@ const StaffDashboard = () => {
     navigate(`/report?department=${selectedDepartment}`);
     setShowModal2(false);
   };
-
+  
   const navItems = [
     { id: "dashboard", label: "Dashboard", icon: <LuLayoutDashboard /> },
     { id: "cashslip", label: "Cash Slip", icon: <FaMoneyBill /> },
@@ -90,15 +91,29 @@ const StaffDashboard = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <aside className="w-64 md:w-1/4 lg:w-1/5 xl:w-1/6 bg-blue-600 text-white p-6 space-y-4">
+       {/* ✅ Sidebar Toggle Button */}
+       <button
+        className="md:hidden fixed top-12 left-4 text-blue-600 text-3xl z-50"
+        onClick={() => setSidebarOpen(!isSidebarOpen)}
+      >
+        {isSidebarOpen ? <FaTimes /> : <FaBars />}
+      </button>
+
+      {/* ✅ Sidebar */}
+      <aside
+        className={`fixed inset-y-0 left-0 bg-blue-600 text-white p-6 w-64 md:w-1/4 lg:w-1/5 xl:w-1/6 transition-transform duration-300 ease-in-out z-40 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } md:relative md:translate-x-0`}
+      >
         <h2 className="text-2xl font-bold">Staff Dashboard</h2>
         <nav className="space-y-3">
           {navItems.map((item) => (
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`flex items-center gap-2 p-2 w-full rounded-lg transition ${activeTab === item.id ? "bg-blue-700" : "hover:bg-blue-500"
-                }`}
+              className={`flex items-center gap-2 p-2 w-full rounded-lg transition ${
+                activeTab === item.id ? "bg-blue-700" : "hover:bg-blue-500"
+              }`}
             >
               {item.icon} {item.label}
             </button>
