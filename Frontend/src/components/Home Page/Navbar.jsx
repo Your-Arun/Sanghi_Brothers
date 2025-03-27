@@ -30,7 +30,7 @@ const Navbar = () => {
                 {/* Mobile Menu Toggle Button */}
                 <button
                     onClick={toggleMobileMenu}
-                    className="md:hidden text-white focus:outline-none absolute top-4 right-4"
+                    className="md:hidden text-white focus:outline-none absolute top-20 right-2"
                 >
                     <CiBoxList className="text-4xl" />
                 </button>
