@@ -14,66 +14,76 @@ const Navbar = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
     };
 
+    const closeMobileMenu = () => {
+        setIsMobileMenuOpen(false);
+    };
+
+
     return (
         <nav className="bg-gradient-to-r from-blue-500 to-purple-600 p-4 shadow-lg">
             <div className="container mx-auto flex justify-between items-center">
-            <div className="text-white text-6xl md:text-4xl sm:text-3xl xs:text-2xl mb-8 font-sm font-serif" style={{ fontSize: '6vw' }}>SANGHI BROTHERS</div>
-             <ul className={`md:flex text-2xl space-x-8 ${isDesktopMenuOpen ? 'flex' : 'hidden'} md:items-center`}>
-                    <li>
-                        <NavLink
-                            to="/"
-                            className={({ isActive }) =>
-                                `text-blue hover:bg-gray-300  hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
-                            }
-                        >
-                            Home
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            to="/about"
-                            className={({ isActive }) =>
-                                `text-blue hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
-                            }
-                        >
-                            About
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            to="/services"
-                            className={({ isActive }) =>
-                                `text-blue hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
-                            }
-                        >
-                            Services
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            to="/contact"
-                            className={({ isActive }) =>
-                                `text-blue hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
-                            }
-                        >
-                            Contact
-                        </NavLink>
-                    </li>
-                </ul>
-                {/* Mobile Menu Button (Visible only on small screens) */}
+                {/* Heading */}
+                <div className="text-white text-4xl md:text-3xl font-serif flex-1 text-center md:text-left">
+                    SANGHI BROTHERS
+                </div>
+
+                {/* Mobile Menu Toggle Button */}
                 <button
                     onClick={toggleMobileMenu}
-                    className="md:hidden text-white focus:outline-none ml-auto mr-4"
+                    className="md:hidden text-white focus:outline-none absolute top-4 right-4"
                 >
-                    <CiBoxList className="text-3xl" />
+                    <CiBoxList className="text-4xl" />
                 </button>
             </div>
+            <ul className={`md:flex text-2xl space-x-8 justify-center ${isDesktopMenuOpen ? 'flex' : 'hidden'} md:items-center`}>
+                <li>
+                    <NavLink
+                        to="/"
+                        className={({ isActive }) =>
+                            `text-blue hover:bg-gray-300  hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
+                        }
+                    >
+                        Home
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink
+                        to="/about"
+                        className={({ isActive }) =>
+                            `text-blue hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
+                        }
+                    >
+                        About
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink
+                        to="/services"
+                        className={({ isActive }) =>
+                            `text-blue hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
+                        }
+                    >
+                        Services
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink
+                        to="/contact"
+                        className={({ isActive }) =>
+                            `text-blue hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
+                        }
+                    >
+                        Contact
+                    </NavLink>
+                </li>
+            </ul>
             {/* Mobile Menu */}
             <div className={`md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'}`}>
-                <ul className="flex flex-col space-y-2 mt-4">
+                <ul className="flex flex-col">
                     <li>
                         <NavLink
                             to="/"
+                            onClick={closeMobileMenu}
                             className={({ isActive }) =>
                                 `block text-white hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
                             }
@@ -84,6 +94,7 @@ const Navbar = () => {
                     <li>
                         <NavLink
                             to="/about"
+                            onClick={closeMobileMenu}
                             className={({ isActive }) =>
                                 `block text-white hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
                             }
@@ -94,6 +105,7 @@ const Navbar = () => {
                     <li>
                         <NavLink
                             to="/services"
+                            onClick={closeMobileMenu}
                             className={({ isActive }) =>
                                 `block text-white hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
                             }
@@ -104,6 +116,7 @@ const Navbar = () => {
                     <li>
                         <NavLink
                             to="/contact"
+                            onClick={closeMobileMenu}
                             className={({ isActive }) =>
                                 `block text-white hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
                             }
@@ -113,7 +126,7 @@ const Navbar = () => {
                     </li>
                 </ul>
             </div>
-        </nav>
+        </nav >
     );
 };
 
