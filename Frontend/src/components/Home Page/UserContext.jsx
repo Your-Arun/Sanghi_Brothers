@@ -11,13 +11,11 @@ export const UserProvider = ({ children }) => {
   });
 
   const handleLogout = () => {
+    toast.info("👋 Logged out successfully!"); // ✅ Toast should work here
     sessionStorage.removeItem("authToken");
     sessionStorage.removeItem("activeSession");
     setUser(null);
-    toast.info("👋 Logged out successfully!"); // ✅ Toast should work here
-   
       window.location.href = "/login";
- 
   };
 
 

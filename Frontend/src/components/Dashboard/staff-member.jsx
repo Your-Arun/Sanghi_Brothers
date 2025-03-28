@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { FaMoneyBill, FaTruck, FaExclamationTriangle, FaUser,FaBars, FaTimes } from "react-icons/fa";
+import { FaMoneyBill, FaTruck, FaExclamationTriangle, FaUser, FaBars, FaTimes } from "react-icons/fa";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { BsOpencollective } from "react-icons/bs";
 import { IoCreateSharp } from "react-icons/io5";
@@ -23,7 +23,10 @@ const StaffDashboard = () => {
   const [cashslip, setCashslip] = useState([]);
   const [lekha, setLekha] = useState([]);
   const navigate = useNavigate();
-const [isSidebarOpen, setSidebarOpen] = useState(false); // ✅ Sidebar state
+  const [isSidebarOpen, setSidebarOpen] = useState(false); // ✅ Sidebar state
+  const [showToggleButton, setShowToggleButton] = useState(true); // ✅ Toggle button visibility
+  const [lastScrollY, setLastScrollY] = useState(window.scrollY);
+
   // ✅ Fetch user on mount
   useEffect(() => {
     const fetchUser = async () => {
@@ -76,13 +79,29 @@ const [isSidebarOpen, setSidebarOpen] = useState(false); // ✅ Sidebar state
     navigate(`/report?department=${selectedDepartment}`);
     setShowModal2(false);
   };
-  
+  // ✅ Detect Scroll Direction
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > lastScrollY) {
+        // Scrolling down, hide button
+        setShowToggleButton(false);
+      } else {
+        // Scrolling up, show button
+        setShowToggleButton(true);
+      }
+      setLastScrollY(window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
   const navItems = [
-    { id: "dashboard", label: "Dashboard", icon: <LuLayoutDashboard /> },
-    { id: "cashslip", label: "Cash Slip", icon: <FaMoneyBill /> },
-    { id: "shifting", label: "Shifting Arrangement", icon: <FaTruck /> },
-    { id: "complaint", label: "Complaints", icon: <FaExclamationTriangle /> },
-    { id: "lekhajokha", label: "Lekha Jokha", icon: <BsOpencollective /> },
+    { id: "dashboard", label: "Dashboard", icon: <LuLayoutDashboard />, route: '/dashboard' },
+    { id: "cashslip", label: "Cash Slip", icon: <FaMoneyBill />, route: '/cashslip' },
+    { id: "shifting", label: "Shifting Arrangement", icon: <FaTruck />, route: '/shifting' },
+    { id: "complaint", label: "Complaints", icon: <FaExclamationTriangle />, route: '/complaint' },
+    { id: "lekhajokha", label: "Lekha Jokha", icon: <BsOpencollective />, route: '/lekhajokha' },
   ];
 
   // ✅ Prevent blank screen by checking user & loading
@@ -91,39 +110,47 @@ const [isSidebarOpen, setSidebarOpen] = useState(false); // ✅ Sidebar state
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-       {/* ✅ Sidebar Toggle Button */}
-       <button
-        className="md:hidden fixed top-12 left-4 text-blue-600 text-3xl z-50"
-        onClick={() => setSidebarOpen(!isSidebarOpen)}
-      >
-        {isSidebarOpen ? <FaTimes /> : <FaBars />}
-      </button>
+      {/* ✅ Sidebar Toggle Button (Only visible when scrolling up) */}
+      {showToggleButton && (
+        <button
+          className="md:hidden fixed top-12 left-4 text-blue-600 text-3xl z-50 transition-opacity duration-300"
+          onClick={() => setSidebarOpen(!isSidebarOpen)}
+        >
+          {isSidebarOpen ? <FaTimes className="invisible" /> : <FaBars />}
+        </button>
+      )}
 
       {/* ✅ Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 bg-blue-600 text-white p-6 w-64 md:w-1/4 lg:w-1/5 xl:w-1/6 transition-transform duration-300 ease-in-out z-40 ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:relative md:translate-x-0`}
+        className={`fixed inset-y-0 left-0 bg-blue-600 text-white p-6 w-64 md:w-1/4 lg:w-1/5 xl:w-1/6 transition-transform duration-300 ease-in-out z-40 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } md:relative md:translate-x-0`}
       >
         <h2 className="text-2xl font-bold">Staff Dashboard</h2>
         <nav className="space-y-3">
           {navItems.map((item) => (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
-              className={`flex items-center gap-2 p-2 w-full rounded-lg transition ${
-                activeTab === item.id ? "bg-blue-700" : "hover:bg-blue-500"
-              }`}
+              onClick={() => {
+                setActiveTab(item.id);
+                setSidebarOpen(false); // Hide sidebar after navigation
+              }}
+              className={`flex items-center gap-2 p-2 w-full rounded-lg transition ${activeTab === item.id ? "bg-blue-700" : "hover:bg-blue-500"
+                }`}
             >
               {item.icon} {item.label}
             </button>
           ))}
+
           <button
-            onClick={() => setProfileOpen(true)}
+            onClick={() => {
+              setProfileOpen(true);
+              setSidebarOpen(false); // Hide sidebar after opening profile
+            }}
             className="flex items-center gap-2 p-2 w-full bg-blue-700 rounded-lg hover:bg-blue-500"
           >
             <FaUser /> Profile
           </button>
+
         </nav>
       </aside>
 
@@ -137,22 +164,23 @@ const [isSidebarOpen, setSidebarOpen] = useState(false); // ✅ Sidebar state
             <div>
               {/* Dashboard Stats */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
-                <div className="bg-blue-500 text-white p-6 rounded-lg shadow-md flex flex-col items-center">
+                <div onClick={() => setActiveTab("complaint")} // 👈 Complaint tab open hoga
+                  className="bg-blue-500 text-white p-6 rounded-lg shadow-md flex flex-col items-center">
                   <FaExclamationTriangle size={40} />
-                  <h3 className="text-xl font-bold">Complaints</h3>
+                  <h3 className="text-xl font-bold"  >Complaints</h3>
                   <p className="text-3xl font-semibold">{reports.length}</p>
                 </div>
-                <div className="bg-green-500 text-white p-6 rounded-lg shadow-md flex flex-col items-center">
+                <div onClick={() => setActiveTab("cashslip")} className="bg-green-500 text-white p-6 rounded-lg shadow-md flex flex-col items-center">
                   <FaMoneyBill size={40} />
                   <h3 className="text-xl font-bold">Cash Slips</h3>
                   <p className="text-3xl font-semibold">{cashslip.length}</p>
                 </div>
-                <div className="bg-yellow-500 text-white p-6 rounded-lg shadow-md flex flex-col items-center">
+                <div onClick={() => setActiveTab("shifting")} className="bg-yellow-500 text-white p-6 rounded-lg shadow-md flex flex-col items-center">
                   <FaTruck size={40} />
                   <h3 className="text-xl font-bold">Shifting Arrangements</h3>
                   <p className="text-3xl font-semibold"></p> {/* Replace with actual count if available */}
                 </div>
-                <div className="bg-purple-500 text-white p-6 rounded-lg shadow-md flex flex-col items-center">
+                <div onClick={() => setActiveTab("lekhajokha")} className="bg-purple-500 text-white p-6 rounded-lg shadow-md flex flex-col items-center">
                   <BsOpencollective size={40} />
                   <h3 className="text-xl font-bold">Lekha Jokha</h3>
                   <p className="text-3xl font-semibold">{lekha.length}</p>
@@ -163,51 +191,55 @@ const [isSidebarOpen, setSidebarOpen] = useState(false); // ✅ Sidebar state
         )}
 
         {activeTab === "complaint" && (
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="flex items-center justify-center">
-              <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">
-                🚨 COMPLAINTS
-              </h2>
-              <img
+          <div className="bg-white p-6 rounded-lg shadow-md ">
+            <div className="flex flex-col items-center justify-center sm:flex-row">
+              <div>
+                <h2 className="text-3xl font-bold mb-4 mt-4 text-blue-700">
+                  COMPLAINTS
+                </h2>
+              </div>
+              <div><img
                 src={addIcon}
                 alt="Create"
                 width={50}
                 className="ml-4 cursor-pointer transform transition hover:scale-110 hover:rotate-12"
                 onClick={() => (navigate('/report'))}
-              />
+              /></div>
             </div>
-            {loading ? (
-              <p className="text-gray-500 text-center mt-4">
-                Loading complaints...
-              </p>
-            ) : reports.length > 0 ? (
-              <div className="flex flex-wrap justify-center gap-4 pb-3">
-                {reports.map((report) => (
-                  <div
-                    key={report._id}
-                    className="w-48 p-4 border rounded-xl shadow-md bg-white hover:bg-gray-100 cursor-pointer transform hover:scale-105"
-                  >
-                    <h3 className="text-xl text-green-700 font-bold text-center">
-                      {report.title}
-                    </h3>
-                    <p className="text-md font-semibold text-center text-gray-800">
-                      📂 {report.department}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-gray-500 text-center mt-4 italic">
-                No complaints available.
-              </p>
-            )}
+            <div>
+              {loading ? (
+                <p className="text-gray-500 text-center mt-4">
+                  Loading complaints...
+                </p>
+              ) : reports.length > 0 ? (
+                <div className="flex flex-wrap justify-center gap-4 pb-3">
+                  {reports.map((report) => (
+                    <div
+                      key={report._id}
+                      className="w-48 p-4 border rounded-xl shadow-md bg-white hover:bg-gray-100 cursor-pointer transform hover:scale-105"
+                    >
+                      <h3 className="text-xl text-green-700 font-bold text-center">
+                        {report.title}
+                      </h3>
+                      <p className="text-md font-semibold text-center text-gray-800">
+                        📂 {report.department}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500 text-center mt-4 italic">
+                  No complaints available.
+                </p>
+              )}
+            </div>
           </div>
         )}
 
         {activeTab === "cashslip" && (
           <>
             {/* Title */}
-            <div className="bg-white p-6 rounded-lg shadow-md text-center text-3xl font-bold text-gray-800">
+            <div className="bg-white p-4 rounded-lg shadow-md text-center text-3xl font-bold text-gray-800 mt-4 md:mt-0">
               💵 CASH SLIPS
             </div>
 
@@ -257,7 +289,7 @@ const [isSidebarOpen, setSidebarOpen] = useState(false); // ✅ Sidebar state
 
         {activeTab === "shifting" && (
           <>
-            <div className="bg-white p-6 rounded-lg shadow-md text-center text-3xl">
+            <div className="bg-white p-6 rounded-lg shadow-md text-center text-3xl font-bold">
               SHIFTS ARRANGEMENT
             </div>
             <div>
@@ -269,8 +301,12 @@ const [isSidebarOpen, setSidebarOpen] = useState(false); // ✅ Sidebar state
 
         {activeTab === "lekhajokha" && (
           <>
-            <div className="bg-white flex p-6 rounded-lg shadow-md text-center text-3xl font-bold text-gray-800 justify-center gap-4">
-              <div>⛽Lekha Jokha</div> <div className="cursor-pointer" onClick={() => (navigate("/newlekhajokha"))}><IoCreateSharp /> </div>
+            <div className="bg-white flex p-6 rounded-lg shadow-md text-center text-3xl font-bold text-gray-800 justify-center gap-8">
+              <div className="flex flex-col mt-4 gap-4 items-center justify-center sm:flex-row sm:mt-0">
+                <div>⛽Lekha Jokha</div>
+                <div className="cursor-pointer" onClick={() => (navigate("/newlekhajokha"))}><IoCreateSharp />
+                </div>
+              </div>
             </div>
             <div>
               {/* Reports Grid */}
