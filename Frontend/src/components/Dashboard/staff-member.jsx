@@ -97,7 +97,7 @@ const StaffDashboard = () => {
   }, [lastScrollY]);
 
   const navItems = [
-    { id: "dashboard", label: "Dashboard", icon: <LuLayoutDashboard />, route: '/dashboard' },
+    { id: "dashboard", label: "Dashboard", icon: <LuLayoutDashboard />, route: '' },
     { id: "cashslip", label: "Cash Slip", icon: <FaMoneyBill />, route: '/cashslip' },
     { id: "shifting", label: "Shifting Arrangement", icon: <FaTruck />, route: '/shifting' },
     { id: "complaint", label: "Complaints", icon: <FaExclamationTriangle />, route: '/complaint' },
