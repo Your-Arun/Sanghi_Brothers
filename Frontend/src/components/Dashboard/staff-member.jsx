@@ -108,6 +108,7 @@ const StaffDashboard = () => {
   if (loading) return <h3 className="text-center mt-20">Loading...</h3>;
   if (!user) return <navigate to="/login" />;
 
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* ✅ Sidebar Toggle Button (Only visible when scrolling up) */}
