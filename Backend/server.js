@@ -6,6 +6,7 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const cookieParser = require("cookie-parser");
 
+
 const app = express();
 
 app.use(express.json());
@@ -26,6 +27,11 @@ app.use(session({
   store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }), // ✅ Session per user alag hoga
   cookie: { secure: false, httpOnly: true, maxAge: 1000 * 60 * 60 } // 1 hour session
 }));
+
+
+
+
+
 // ✅ Import Routes
 const FlowRoute = require("./routes/flowroutes");
 const Monthlyfundflow = require("./routes/sbo3flow");

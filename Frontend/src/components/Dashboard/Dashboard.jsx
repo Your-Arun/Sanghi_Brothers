@@ -25,8 +25,7 @@ const Dashboard = () => {
   const [isOpen3, setIsOpen3] = useState(false);
   const [isProfileOpen, setProfileOpen] = useState(false);
   const { user } = useContext(UserContext); // 👈 Getting user from context
-
-
+ 
   // ✅ Fetch all required data
   useEffect(() => {
     const fetchData = async () => {
