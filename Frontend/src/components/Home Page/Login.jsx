@@ -55,7 +55,6 @@ const Login = () => {
     }
   };
 
-
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
       <form
@@ -115,7 +114,7 @@ const Login = () => {
             Reset it here
           </Link>
         </p>
-      </form>
+        </form>
     </div>
   );
 };

@@ -75,7 +75,6 @@ const App = () => {
 
 const AppContent = () => {
   const location = useLocation();
-
   // ✅ Show Navbar Only on These Routes
   const showNavbarRoutes = ["/", "/contact", "/services", "/about", "/login", "/signup"];
   const shouldShowNavbar = showNavbarRoutes.includes(location.pathname);
@@ -95,7 +94,7 @@ const AppContent = () => {
 
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin-panel" element={<AdminPanel />} />
           <Route path="/staff-dashboard" element={<Staffmember />} />
           <Route path="/bankreport" element={<MergingSbSection />} />

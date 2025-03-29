@@ -5,6 +5,8 @@ import { FaTimes, FaTrash, FaUniversity } from "react-icons/fa";
 import ProfileModal from "./profile";
 import axiosInstance from './axiosInstance'
 import UserContext from '../Home Page/UserContext'
+
+
 const Dashboard = () => {
   const [departments, setDepartments] = useState([]);
   const [reports, setReports] = useState([]); // State to hold reports
@@ -121,6 +123,8 @@ const Dashboard = () => {
     }
   };
 
+
+  
   return (
     <>
       <div className="relative p-6 dashboard  min-h-screen">
