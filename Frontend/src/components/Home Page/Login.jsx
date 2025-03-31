@@ -37,23 +37,29 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+  
     try {
       const { data } = await axiosInstance.post("/login", { email, password });
-
+  
       sessionStorage.setItem(sessionKey, JSON.stringify(data.user));
       sessionStorage.setItem("authToken", data.token);
-
+  
       setUser(data.user);
       toast.success("Login Successful");
-
-      navigate(data.user.department === "staff" ? "/staff-dashboard" : "/dashboard");
+  
+      // ✅ Admin Check
+      if (data.user.department === "admin") {
+        navigate("/admin-panel"); // Admin ko Admin Panel bhejo
+      } else {
+        navigate(data.user.department === "staff" ? "/staff-dashboard" : "/dashboard");
+      }
     } catch (err) {
       toast.error(err.response?.data?.message || "Invalid credentials, please try again.");
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
@@ -66,7 +72,7 @@ const Login = () => {
         {/* Email Input */}
         <input
           type="email"
-          placeholder="Email"
+          placeholder="Email & case sensitive"
           className="w-full p-3 md:p-4 text-sm md:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
           value={email}
           onChange={(e) => setEmail(e.target.value)}

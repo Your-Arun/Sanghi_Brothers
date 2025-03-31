@@ -78,20 +78,31 @@ Router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    // ✅ Hardcoded Admin Credentials
+    if (email === process.env.GMAIL && password === process.env.Password) {
+      const token = jwt.sign({ department: "admin" }, process.env.JWT_SECRET, { expiresIn: "4h" });
+
+      res.cookie("token", token, { httpOnly: true, secure: false, sameSite: "lax" });
+      return res.json({ user: { email, department: "admin" }, token });
+    }
+
+    // ✅ Normal User Login (Database Check)
     const user = await User.findOne({ email });
     if (!user) return res.status(401).json({ message: "Invalid email" });
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: "Wrong password" });
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "4h" });
+    const token = jwt.sign({ userId: user._id, role: "user" }, process.env.JWT_SECRET, { expiresIn: "4h" });
 
     res.cookie("token", token, { httpOnly: true, secure: false, sameSite: "lax" });
     res.json({ user, token });
+
   } catch (err) {
     res.status(500).json({ message: "Login failed" });
   }
 });
+
 // ✅ Profile Route (Fixed missing token vali  dation)
 Router.get("/profile", verifyToken, async (req, res) => {
   try {
