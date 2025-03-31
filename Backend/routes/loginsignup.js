@@ -92,7 +92,7 @@ Router.post("/login", async (req, res) => {
     res.status(500).json({ message: "Login failed" });
   }
 });
-// ✅ Profile Route (Fixed missing token validation)
+// ✅ Profile Route (Fixed missing token vali  dation)
 Router.get("/profile", verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.userId).select("-password");
