@@ -1,5 +1,5 @@
 import React, { useEffect, useState,useContext } from "react";
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 import { Link, useNavigate, useParams } from "react-router-dom";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
@@ -23,10 +23,10 @@ const UpdateReportFile = () => {
   useEffect(() => {
     const fetchReport = async () => {
       try {
-        const response = await axios.get(`http://localhost:5500/reportfile/${id}`);
+        const response = await axiosInstance.get(`/reportfile/${id}`);
         setUpReportfile(response.data);
       } catch (error) {
-        alert("update api kaam nhh krrha.................");
+        alert("Not fetching");
       } finally {
         setLoading(false);
       }
@@ -74,11 +74,10 @@ const UpdateReportFile = () => {
   const handleSave = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5500/reportfile/${id}`, upreportfile);
+      await axiosInstance.put(`/reportfile/${id}`, upreportfile);
       alert("Report updated successfully!");
       setIsEditing(false);
     } catch (error) {
-      console.error("Error updating report:", error);
       alert("Failed to update report.");
     }
   };
@@ -87,7 +86,7 @@ const UpdateReportFile = () => {
     e.preventDefault();
     if (window.confirm("Are you sure you want to delete this report?")) {
       try {
-        await axios.delete(`http://localhost:5500/reportfile/${id}`);
+        await axiosInstance.delete(`/reportfile/${id}`);
         alert("Report deleted successfully!");
         navigate("/dashboard");
         setIsEditing(false);

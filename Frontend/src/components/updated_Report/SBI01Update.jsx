@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 import React, { useEffect, useState } from "react";
 import { Link,  useNavigate, useParams } from "react-router-dom";
 
@@ -17,8 +17,8 @@ function SBI01Update() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resp = await axios.get(
-          `http://localhost:5500/fundposition/${id}`
+        const resp = await axiosInstance.get(
+          `/fundposition/${id}`
         );
         setUpdtSbi(resp.data);
       } catch (error) {
@@ -33,7 +33,7 @@ function SBI01Update() {
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete this report?")) {
       try {
-        await axios.delete(`http://localhost:5500/fundposition/${id}`);
+        await axiosInstance.delete(`/fundposition/${id}`);
         navigate("/sbbank"); // Redirect to dashboard or another page
         alert("Report deleted successfully!");
       } catch (error) {
@@ -92,14 +92,13 @@ function SBI01Update() {
     };
     e.preventDefault();
     try {
-      await axios.put(
-        `http://localhost:5500/fundposition/${id}`,
+      await axiosInstance.put(
+        `/fundposition/${id}`,
         saveDatesbi
       ); // Adjust the URL as needed
       alert("Report updated successfully!");
       setIsEditing(false);
     } catch (error) {
-      console.error("Error updating report:", error);
       alert("Failed to update report.");
     }
   };

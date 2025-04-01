@@ -1,4 +1,4 @@
-import axios from "axios"
+import axiosInstance from '../Dashboard/axiosInstance'
 import { useEffect, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import binImage from "/bin.png"
@@ -17,7 +17,7 @@ const updatesalemanagemnet = () => {
   useEffect(() => {
     const fetchPumpSheetData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5500/mastersheet/staffmanagement/${id}`)
+        const response = await axiosInstance.get(`/mastersheet/staffmanagement/${id}`)
         setPurchasemagnmnet(response.data)
         setDate(response.data.dat2)
         setLoading(false)
@@ -54,7 +54,7 @@ const updatesalemanagemnet = () => {
     e.preventDefault()
     try {
       if (window.confirm("Are you sure you want to delete this purchase management sheet?")) {
-        const response = await axios.delete(`http://localhost:5500/mastersheet/staffmanagement/${id}`)
+        const response = await axiosInstance.delete(`/mastersheet/staffmanagement/${id}`)
         navigate("/mastersheet")
         alert("Staff management sheet deleted successfully!")
       }
@@ -68,7 +68,7 @@ const updatesalemanagemnet = () => {
       ...purchasemgnemt,
     }
     try {
-      const response = await axios.put(`http://localhost:5500/mastersheet/staffmanagement/${id}`, data)
+      const response = await axiosInstance.put(`/mastersheet/staffmanagement/${id}`, data)
       alert("Staff management sheet updated successfully!")
     } catch (error) {
       alert("Error updating staff management sheet!")

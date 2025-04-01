@@ -1,4 +1,4 @@
-import axios from "axios"
+import axiosInstance from '../Dashboard/axiosInstance'
 import { useEffect, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import binImage from "/bin.png"
@@ -17,7 +17,7 @@ const updatesalemanagemnet = () => {
   useEffect(() => {
     const fetchPumpSheetData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5500/mastersheet/bpcl&statutory/${id}`)
+        const response = await axiosInstance.get(`/mastersheet/bpcl&statutory/${id}`)
         setPurchasemagnmnet(response.data)
         setDate(response.data.dat2)
         setLoading(false)
@@ -54,7 +54,7 @@ const updatesalemanagemnet = () => {
     e.preventDefault()
     try {
       if (window.confirm("Are you sure you want to delete this purchase management sheet?")) {
-        const response = await axios.delete(`http://localhost:5500/mastersheet/bpcl&statutory/${id}`)
+        const response = await axiosInstance.delete(`/mastersheet/bpcl&statutory/${id}`)
         navigate("/mastersheet")
         alert("Purchase management sheet deleted successfully!")
       }
@@ -68,7 +68,7 @@ const updatesalemanagemnet = () => {
       ...purchasemgnemt,
     }
     try {
-      const response = await axios.put(`http://localhost:5500/mastersheet/bpcl&statutory/${id}`, data)
+      const response = await axiosInstance.put(`/mastersheet/bpcl&statutory/${id}`, data)
       alert("Purchase management sheet updated successfully!")
     } catch (error) {
       alert("Error updating purchase management sheet!")

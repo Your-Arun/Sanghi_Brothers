@@ -1,8 +1,7 @@
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import binImage from "/bin.png";
-import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import BackButton from "../Home Page/backbutton";
 
@@ -31,7 +30,7 @@ const UpdateSaleManagement = () => {
     useEffect(() => {
         const fetchPumpSheetData = async () => {
             try {
-                const response = await axios.get(`http://localhost:5500/newlekhajokha/${id}`);
+                const response = await axiosInstance.get(`/newlekhajokha/${id}`);
                 setPurchaseManagement(response.data);
                 setDate(response.data.date);
                 setRate(response.data.rate);
@@ -71,7 +70,7 @@ const UpdateSaleManagement = () => {
         e.preventDefault();
         try {
             if (window.confirm("Are you sure you want to delete this Lekhajokha?")) {
-                await axios.delete(`http://localhost:5500/newlekhajokha/${id}`);
+                await axiosInstance.delete(`/newlekhajokha/${id}`);
                 navigate("/lekhajokha");
                 alert("Lekhajokha deleted successfully!");
             }
@@ -91,10 +90,9 @@ const UpdateSaleManagement = () => {
             nozzleReadings,
         };
         try {
-            const response = await axios.put(`http://localhost:5500/newlekhajokha/${id}`, data);
+            const response = await axiosInstance.put(`/newlekhajokha/${id}`, data);
             alert("Lekhajokha updated successfully!");
         } catch (error) {
-            console.error(error);
             alert("Error updating Lekhajokha!");
         }
     };

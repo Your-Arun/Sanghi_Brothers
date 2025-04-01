@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import binImage from "/bin.png";
@@ -20,8 +20,8 @@ const InOutFlowUpdate = () => {
           alert("No valid session found. Please log in.");
           return;
         }
-        const response = await axios.get(
-          `http://localhost:5500/bank/monthlyflow/${id}`
+        const response = await axiosInstance.get(
+          `/bank/monthlyflow/${id}`
         );
 
         setfloww(response.data);
@@ -129,8 +129,8 @@ const InOutFlowUpdate = () => {
       NetFlow: floww.netFlowww,
     };
     try {
-      const response = await axios.put(
-        `http://localhost:5500/bank/monthlyflow/${id}`,
+      const response = await axiosInstance.put(
+        `/bank/monthlyflow/${id}`,
         saveData
       );
       alert("Data saved successfully");
@@ -147,7 +147,7 @@ const InOutFlowUpdate = () => {
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete this report?")) {
       try {
-        await axios.delete(`http://localhost:5500/bank/monthlyflow/${id}`);
+        await axiosInstance.delete(`/bank/monthlyflow/${id}`);
         navigate("/sbbank"); // Redirect to dashboard or another page
         alert("Report deleted successfully!");
       } catch (error) {

@@ -11,13 +11,13 @@ const LogoutConfirmation = ({ onConfirm }) => {
         <div className="flex justify-center gap-4">
           <button
             className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition"
-            onClick={() => onConfirm(true)}
+            onClick={() => onConfirm(true)} // Trigger logout
           >
             Yes, Logout
           </button>
           <button
             className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md transition"
-            onClick={() => onConfirm(false)}
+            onClick={() => onConfirm(false)} // Stay on the same page
           >
             No, Stay Here
           </button>

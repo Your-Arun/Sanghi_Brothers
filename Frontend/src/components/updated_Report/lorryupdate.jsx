@@ -1,4 +1,4 @@
-import axios from "axios"
+import axiosInstance from '../Dashboard/axiosInstance'
 import { useEffect, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import binImage from "/bin.png"
@@ -17,7 +17,7 @@ const tanklorryupdate = () => {
   useEffect(() => {
     const fetchPumpSheetData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5500/mastersheet/tanklorry/${id}`)
+        const response = await axiosInstance.get(`/mastersheet/tanklorry/${id}`)
         setLorrymagnmnet(response.data)
         setDate(response.data.dat2)
         setLoading(false)
@@ -54,7 +54,7 @@ const tanklorryupdate = () => {
     e.preventDefault()
     try {
       if (window.confirm("Are you sure you want to delete this purchase management sheet?")) {
-        const response = await axios.delete(`http://localhost:5500/mastersheet/tanklorry/${id}`)
+        const response = await axiosInstance.delete(`/mastersheet/tanklorry/${id}`)
         navigate("/mastersheet")
         alert("Purchase management sheet deleted successfully!")
       }
@@ -68,10 +68,9 @@ const tanklorryupdate = () => {
       ...lorrymgnemt,
     }
     try {
-      const response = await axios.put(`http://localhost:5500/mastersheet/tanklorry/${id}`, data)
+      const response = await axiosInstance.put(`/mastersheet/tanklorry/${id}`, data)
       alert("Lubricant management sheet updated successfully!")
     } catch (error) {
-      console.error(error)
       alert("Error updating purchase management sheet!")
     }
   }

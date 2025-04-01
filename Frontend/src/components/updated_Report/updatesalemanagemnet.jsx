@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axiosInstance from '../Dashboard/axiosInstance'
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import binImage from "/bin.png";
@@ -56,8 +56,8 @@ const updatesalemanagemnet = () => {
     useEffect(() => {
         const fetchPumpSheetData = async () => {
             try {
-                const response = await axios.get(
-                    `http://localhost:5500/mastersheet/salesmanagementsheet/${id}`
+                const response = await axiosInstance.get(
+                    `/mastersheet/salesmanagementsheet/${id}`
                 );
                 setSalemagnmnet(response.data);
                 setDate(response.data.dat2);
@@ -93,8 +93,8 @@ const updatesalemanagemnet = () => {
         e.preventDefault();
         try {
             if (window.confirm("Are you sure you want to delete this sales management sheet?")) {
-                const response = await axios.delete(
-                    `http://localhost:5500/mastersheet/salesmanagementsheet/${id}`
+                const response = await axiosInstance.delete(
+                    `/mastersheet/salesmanagementsheet/${id}`
                 );
                 navigate("/mastersheet");
                 alert("Sales management sheet deleted successfully!");
@@ -110,8 +110,8 @@ const updatesalemanagemnet = () => {
             points: points
         };
         try {
-            const response = await axios.put(
-                `http://localhost:5500/mastersheet/salesmanagementsheet/${id}`,
+            const response = await axiosInstance.put(
+                `/mastersheet/salesmanagementsheet/${id}`,
                 data
             );
             alert("Sales management sheet updated successfully!");

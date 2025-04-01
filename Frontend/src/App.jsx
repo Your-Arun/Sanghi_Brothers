@@ -1,5 +1,5 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { UserProvider } from "./components/Home Page/UserContext.jsx";
 import "./index.css";
 import Navbar from "./components/Home Page/Navbar";
@@ -57,6 +57,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import AdminPanel from "./components/Dashboard/adminPanel.jsx";
 import AllShifts from "./components/Dashboard/ShiftDisplay.jsx";
 import SessionTimeout from "./components/Home Page/SessionTimeout.jsx";
+import LogoutConfirmation from "./components/Home Page/LogoutConfirm.jsx";
 
 const App = () => {
   return (
@@ -74,7 +75,33 @@ const App = () => {
 
 
 const AppContent = () => {
+  const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
+  const [redirectTo, setRedirectTo] = useState(null); // To store the current page
+  const [isLoggedIn, setIsLoggedIn] = useState(!!sessionStorage.getItem("authToken"));
   const location = useLocation();
+  const navigate = useNavigate(); //
+
+  useEffect(() => {
+    const authToken = sessionStorage.getItem("authToken");
+
+    if (authToken && (location.pathname === "/login" || location.pathname === "/signup"  || location.pathname === "/"  || location.pathname === "/about"  || location.pathname === "/contactus")) {
+      setRedirectTo(location.pathname); // Store the current location
+      setShowLogoutConfirmation(true); // Show confirmation modal if logged in and trying to go to login/signup
+    }
+  }, [location]);
+
+  const handleLogout = (confirm) => {
+    if (confirm) {
+      sessionStorage.removeItem("authToken"); // Remove auth token to log out
+      sessionStorage.removeItem("activeSession");
+      setIsLoggedIn(false); // Update login state
+
+      // Redirect to the page they came from, or fallback to login page
+      navigate(redirectTo || "/login");
+    }
+    setShowLogoutConfirmation(false); // Hide confirmation modal
+  };
+
   // ✅ Show Navbar Only on These Routes
   const showNavbarRoutes = ["/", "/contact", "/services", "/about", "/login", "/signup"];
   const shouldShowNavbar = showNavbarRoutes.includes(location.pathname);
@@ -82,6 +109,9 @@ const AppContent = () => {
   return (
     <>
       {shouldShowNavbar && <Navbar />}
+      {showLogoutConfirmation && (
+        <LogoutConfirmation onConfirm={handleLogout} />
+      )}
       <Routes>
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
@@ -137,8 +167,6 @@ const AppContent = () => {
           <Route path="/meterclose" element={<MeterClose />} />
           <Route path="/meterclose/:id" element={<UpdateMeter />} />
           <Route path="/Cashslip" element={<CashSlip />} />
-
-
         </Route>
       </Routes>
     </>

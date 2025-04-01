@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 import previousImage from "/previous.png";
 import binImage from "/bin.png";
 import saveImage from "/save.png";
@@ -14,8 +14,8 @@ const UpdatePumpSheet = () => {
   useEffect(() => {
     const fetchPumpSheetData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:5500/mastersheet/pumpsheet/${id}`
+        const response = await axiosInstance.get(
+          `/mastersheet/pumpsheet/${id}`
         );
         setPumpSheetData(response.data);
         setLoading(false);
@@ -64,8 +64,8 @@ const UpdatePumpSheet = () => {
         const dta= {
             ...pumpSheetData
         }
-        const response = await axios.put(
-          `http://localhost:5500/mastersheet/pumpsheet/${id}`,
+        const response = await axiosInstance.put(
+          `/mastersheet/pumpsheet/${id}`,
           dta
         );
         alert("Data saved successfully");
@@ -77,7 +77,7 @@ const UpdatePumpSheet = () => {
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete this report?")) {
       try {
-        await axios.delete(`http://localhost:5500/mastersheet/pumpsheet/${id}`);
+        await axiosInstance.delete(`/mastersheet/pumpsheet/${id}`);
         alert("Report deleted successfully!");
         navigate("/mastersheet"); // Redirect to dashboard or another page
       } catch (error) {

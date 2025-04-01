@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import binImage from "/bin.png";
@@ -80,8 +80,8 @@ const Sb03Update = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const resp = await axios.get(
-          `http://localhost:5500/bank/monthlyfundflow/${id}`
+        const resp = await axiosInstance.get(
+          `/bank/monthlyfundflow/${id}`
         );
         if (resp.data) {
           setUpdsb3(resp.data);
@@ -107,11 +107,10 @@ const Sb03Update = () => {
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete this report?")) {
       try {
-        await axios.delete(`http://localhost:5500/bank/monthlyfundflow/${id}`);
+        await axiosInstance.delete(`/bank/monthlyfundflow/${id}`);
         alert("Report deleted successfully!");
         navigate("/bankreport"); // Redirect to dashboard or another page
       } catch (error) {
-        console.error("Error deleting report:", error);
         alert("Failed to delete report.");
       }
     }
@@ -326,15 +325,14 @@ const Sb03Update = () => {
         maybeL: maybeL,
         maybeP: maybeP,
       };
-      const response = await axios.put(
-        `http://localhost:5500/bank/monthlyfundflow/${id}`,
+      const response = await axiosInstance.put(
+        `/bank/monthlyfundflow/${id}`,
         upddt
       );
       alert("Save Successfully");
       navigate("/bankreport"); // Redirect after saving
     } catch (error) {
-      console.error("Error updating report:", error);
-      alert("Andar nhh jara");
+      alert("Not Saving");
     }
   };
 
