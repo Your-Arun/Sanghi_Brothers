@@ -63,10 +63,10 @@ const App = () => {
     <>
       <ToastContainer position="top-right" autoClose={3000} />
       <UserProvider>
-          <Router>
+        <Router>
           <SessionTimeout timeout={240 * 60 * 1000} /> {/* 10 min session timeout */}
-            <AppContent />
-          </Router>
+          <AppContent />
+        </Router>
       </UserProvider>
     </>
   );
@@ -84,18 +84,18 @@ const AppContent = () => {
       {shouldShowNavbar && <Navbar />}
       <Routes>
         {/* Public Routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/" element={<Home />} />
-        <Route path="/contact" element={<ContactUs />} />
         <Route path="/services" element={<Services />} />
         <Route path="/about" element={<AboutUs />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/contact" element={<ContactUs />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/signup" element={<Signup />} />
 
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/admin-panel" element={<AdminPanel />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/admin-panel" element={<AdminPanel />} />
           <Route path="/staff-dashboard" element={<Staffmember />} />
           <Route path="/bankreport" element={<MergingSbSection />} />
           <Route path="/sbbank" element={<Mergesb01Inflo />} />

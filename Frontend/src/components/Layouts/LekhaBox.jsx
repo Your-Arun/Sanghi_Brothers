@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 import previousImage from "/previous.png";
 
 const ChekList = () => {
@@ -9,7 +9,7 @@ const ChekList = () => {
     useEffect(() => {
         const fetchPumpSheetData = async () => {
             try {
-                const response = await axios.get("http://localhost:5500/newlekhajokha", {
+                const response = await axiosInstance.get("/newlekhajokha", {
                 });
                 setPumpSheetData(response.data);
             } catch (error) {

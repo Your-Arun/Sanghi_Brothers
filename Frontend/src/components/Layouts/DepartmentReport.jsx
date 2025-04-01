@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 import UserContext from "../Home Page/UserContext"; // Import User Context
 
 const DepartmentReports = () => {
@@ -22,11 +22,11 @@ const DepartmentReports = () => {
     const fetchData = async () => {
       try {
         const [reportsResponse, reportFilesResponse] = await Promise.all([
-          axios.get("http://localhost:5500/reports", {
-            headers: { Authorization: `Bearer ${token}` },
+          axiosInstance.get("/reports", {
+           
           }),
-          axios.get("http://localhost:5500/reportfile", {
-            headers: { Authorization: `Bearer ${token}` },
+          axiosInstance.get("/reportfile", {
+           
           }),
         ]);
 

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 import UserContext from "../Home Page/UserContext"; // Import UserContext
 
 const Report = () => {
@@ -25,8 +25,8 @@ const Report = () => {
         return;
       }
 
-      await axios.post(
-        "http://localhost:5500/report",
+      await axiosInstance.post(
+        "/report",
         { title, department: user.department, content },
         { withCredentials: true }
       );

@@ -1,5 +1,5 @@
-import axios from "axios";
-import React, { useEffect, useState,useContext } from "react";
+import axiosInstance from '../Dashboard/axiosInstance'
+import React, {  useState,useContext } from "react";
 import { Link } from "react-router-dom";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
@@ -132,8 +132,8 @@ const InFlowOutFlow = () => {
         alert("No valid session found. Please log in.");
         return;
       }
-      const response = await axios.post(
-        "http://localhost:5500/bank/monthlyflow",
+      const response = await axiosInstance.post(
+        "/bank/monthlyflow",
         saveData,
       );
       alert("Data Save Successfully ");

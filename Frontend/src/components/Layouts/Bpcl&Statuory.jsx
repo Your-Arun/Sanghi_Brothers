@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 
 const bpclstatutory = () => {
     const [date, setDate] = useState('');
@@ -76,7 +76,7 @@ const bpclstatutory = () => {
             })),
         };
         try {
-            const response = await axios.post("http://localhost:5500/mastersheet/bpcl&statutory", data);
+            const response = await axiosInstance.post("/mastersheet/bpcl&statutory", data);
             alert("BPCL % Statutory management sheet saved successfully!");
         } catch (error) {
             alert("Error saving sales management sheet!");

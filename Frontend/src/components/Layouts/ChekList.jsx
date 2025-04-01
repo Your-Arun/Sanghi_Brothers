@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 import { FaArrowLeft } from "react-icons/fa";
 
 const sections = [
@@ -27,7 +27,7 @@ const ChekList = () => {
           return;
         }
         const responses = await Promise.all(
-          sections.map((section) => axios.get(`http://localhost:5500/mastersheet/${section.route}`))
+          sections.map((section) => axiosInstance.get(`/mastersheet/${section.route}`))
         );
         
         const newData = sections.reduce((acc, section, index) => {

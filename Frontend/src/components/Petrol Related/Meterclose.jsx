@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import previousImage from '/previous.png';
 import saveImage from '/save.png';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../Dashboard/axiosInstance'
 
 const Meterclose = () => {
     const [date, setDate] = useState('');
@@ -118,7 +118,7 @@ const Meterclose = () => {
             if (date === '') {
               alert('Please select a date');
             }  else {
-              const response = await axios.post('http://localhost:5500/meterclose', data);
+              const response = await axiosInstance.post('/meterclose', data);
               alert('Meter Close saved successfully!');
             }
           } catch (error) {

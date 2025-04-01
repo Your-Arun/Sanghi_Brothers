@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import previousImage from "/previous.png";
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 
 const ChekList = () => {
     const [pumpSheetData, setPumpSheetData] = useState([]);
@@ -9,7 +9,7 @@ const ChekList = () => {
     useEffect(() => {
         const fetchPumpSheetData = async () => {
             try {
-                const response = await axios.get("http://localhost:5500/meterclose", {
+                const response = await axiosInstance.get("/meterclose", {
                 });
                 setPumpSheetData(response.data);
             } catch (error) {

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 
 const PurchaseMangement = () => {
     const [date, setDate] = useState('');
@@ -62,7 +62,7 @@ const PurchaseMangement = () => {
             })),
         };
         try {
-            const response = await axios.post("http://localhost:5500/mastersheet/purchasemanagement", data);
+            const response = await axiosInstance.post("/mastersheet/purchasemanagement", data);
             alert("Purchase management sheet saved successfully!");
         } catch (error) {
             alert("Error saving sales management sheet!");

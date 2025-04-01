@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../Dashboard/axiosInstance'
 import Binimage from '/bin.png';
 import previousImage from '/previous.png';
 import saveImage from '/save.png';
@@ -49,7 +49,7 @@ const UpdateMeterclose = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:5500/meterclose/${id}`);
+                const response = await axiosInstance.get(`/meterclose/${id}`);
                 const fetchedData = response.data;
                 setData(fetchedData);
                 console.log(fetchedData);
@@ -139,11 +139,11 @@ const UpdateMeterclose = () => {
     
         if (JSON.stringify(originalData) !== JSON.stringify(updatedData)) {
             try {
-                const response = await axios.put(`http://localhost:5500/meterclose/${id}`, updatedData);
-                console.log(response.data); // Debugging
+                const response = await axiosInstance.put(`/meterclose/${id}`, updatedData);
+                
                 alert('Meter Close updated successfully!');
             } catch (error) {
-                console.error(error.response?.data || error.message); // Debugging errors
+                
                 alert('Error updating Meter Close!');
             }
         } else {
@@ -154,7 +154,7 @@ const UpdateMeterclose = () => {
     const handleDelete = async () => {
         if (window.confirm('Are you sure you want to delete this report?')) {
             try {
-                const response = await axios.delete(`http://localhost:5500/meterclose/${id}`);
+                const response = await axiosInstance.delete(`/meterclose/${id}`);
                 if (response.status === 200) {
                     alert('Meter Close deleted successfully!');
                     navigate('/createmeterclose');

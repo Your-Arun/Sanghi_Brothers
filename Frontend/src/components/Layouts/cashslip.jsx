@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../Dashboard/axiosInstance'
 import BackButton from '../Home Page/backbutton';
 
 const CashSlip = () => {
@@ -10,16 +10,15 @@ const CashSlip = () => {
     });
     useEffect(() => {
         const fetchCashSlip = async () => {
-            try {
-                const response = await fetch('http://localhost:5500/Cashslip');
-                const data = await response.json();
-                setFecthcashSlip(data);
-            } catch (error) {
-                console.error(error);
-            }
+          try {
+            const response = await axiosInstance.get('/Cashslip');
+            setFecthcashSlip(response.data);
+          } catch (error) {
+            console.error(error);
+          }
         };
         fetchCashSlip();
-    }, []);
+      }, []);
 
     useEffect(() => {
         fetchCashSlipByDate(selectedDate);
@@ -27,14 +26,13 @@ const CashSlip = () => {
 
     const fetchCashSlipByDate = async (date) => {
         try {
-            let url = `http://localhost:5500/Cashslip?date=${date}`;
-            const response = await fetch(url);
-            const data = await response.json();
-            setFecthcashSlip(data);
+          let url = `/Cashslip?date=${date}`;
+          const response = await axiosInstance.get(url);
+          setFecthcashSlip(response.data);
         } catch (error) {
-            console.error("Error fetching cash slip:", error);
+          console.error("Error fetching cash slip:", error);
         }
-    };
+      };
 
     const [cashSlip, setCashSlip] = useState({
         date: "",
@@ -98,13 +96,12 @@ const CashSlip = () => {
 
     const fetchCashSlip = async () => {
         try {
-            const response = await fetch('http://localhost:5500/Cashslip');
-            const data = await response.json();
-            setFecthcashSlip(data);
+          const response = await axiosInstance.get('/Cashslip');
+          setFecthcashSlip(response.data);
         } catch (error) {
-            console.error("Error fetching cash slip:", error);
+          console.error("Error fetching cash slip:", error);
         }
-    };
+      }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -133,7 +130,7 @@ const CashSlip = () => {
                 total: totalAmount,
             };
 
-            await axios.post("http://localhost:5500/Cashslip", cashdata);
+            await axiosInstance.post("/Cashslip", cashdata);
             alert("Cash Slip saved successfully!");
             fetchCashSlipByDate(selectedDate);
 

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import saveImage from "/save.png";
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 import UserContext from "../Home Page/UserContext"
 import BackButton from "../Home Page/backbutton";
 
@@ -87,7 +87,7 @@ const Lekhajokha = () => {
             nozzleReadings: nozzleReadings,
         };
         try {
-            const response = await axios.post("http://localhost:5500/newlekhajokha", data);
+            const response = await axiosInstance.post("/newlekhajokha", data);
             alert("Lekha Jokha saved successfully!");
          } catch (error) {
             alert("Error saving Lekha Jokha!");

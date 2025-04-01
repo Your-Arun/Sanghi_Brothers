@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa"; // Using React Icons
@@ -17,11 +17,11 @@ const MergeSBInflo = () => {
           return;
         }
         // Fetch Fund Position Data
-        const sbiResponse = await axios.get("http://localhost:5500/fundposition", {
+        const sbiResponse = await axiosInstance.get("/fundposition", {
         });
         setSbiUpdate(sbiResponse.data);
         // Fetch Monthly Flow Data
-        const flowResponse = await axios.get("http://localhost:5500/bank/monthlyflow", {
+        const flowResponse = await axiosInstance.get("/bank/monthlyflow", {
         });
         setInOutFlow(flowResponse.data);
       } catch (error) {

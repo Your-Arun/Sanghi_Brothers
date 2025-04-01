@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import previousImage from "/previous.png";
@@ -216,8 +216,8 @@ const SB03_Monthly = () => {
         maybeL: maybeL,
         maybeP: maybeP,
       };
-      const response = await axios.post(
-        "http://localhost:5500/bank/monthlyfundflow",
+      const response = await axiosInstance.post(
+        "/bank/monthlyfundflow",
         data
       );
       alert("Data Succussfully");

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 
 const salesMangemnesheet = () => {
   const [date, setDate] = useState('');
@@ -82,11 +82,9 @@ const salesMangemnesheet = () => {
       })),
     };
     try {
-      const response = await axios.post("http://localhost:5500/mastersheet/salesmanagementsheet", data);
-      console.log(response.data);
+      const response = await axiosInstance.post("/mastersheet/salesmanagementsheet", data);
       alert("Sales management sheet saved successfully!");
     } catch (error) {
-      console.error(error);
       alert("Error saving sales management sheet!");
     }
   };

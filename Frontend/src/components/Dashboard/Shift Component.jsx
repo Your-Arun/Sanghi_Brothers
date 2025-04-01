@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -15,7 +15,7 @@ const ShiftList = () => {
         try {
             // Convert selectedDate to "YYYY-MM-DD"
             const formattedDate = selectedDate.toISOString().split("T")[0];
-            const response = await axios.get(`http://localhost:5500/getshifts?date=${formattedDate}`);
+            const response = await axiosInstance.get(`/getshifts?date=${formattedDate}`);
             // Ensure response is an array and get last 2 shifts
             const latestShifts = Array.isArray(response.data.shifts) ? response.data.shifts.slice(-2) : [];
             setShifts(latestShifts);

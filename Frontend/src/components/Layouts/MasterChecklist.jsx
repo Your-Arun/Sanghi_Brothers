@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 
 const MasterChecklist = () => {
 
@@ -71,8 +71,8 @@ const MasterChecklist = () => {
       const datasheet = { ...inputValues };
 
       console.log(datasheet); // Check the data before sending it
-      const response = await axios.post(
-        "http://localhost:5500/mastersheet/pumpsheet",
+      const response = await axiosInstance.post(
+        "/mastersheet/pumpsheet",
         datasheet
       );
       alert("Save successful");

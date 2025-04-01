@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 import React, { useState } from "react";
 
 const ContactUs = () => {
@@ -38,7 +38,7 @@ const ContactUs = () => {
     if (!validateInput(formData)) return;
 
     try {
-      const response = await axios.post("http://localhost:5500/contactus", formData, {
+      const response = await axiosInstance.post("/contactus", formData, {
         headers: { "Content-Type": "application/json" },
       });
 

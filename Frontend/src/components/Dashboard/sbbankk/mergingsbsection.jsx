@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from '../axiosInstance'
 import React, { useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -14,15 +14,10 @@ const MergingSBSection = () => {
                     alert("No valid token found. Please log in.");
                     return;
                 }
-
-                const sb3resp = await axios.get(
-                    "http://localhost:5500/bank/monthlyfundflow",
-                    { headers: { Authorization: `Bearer ${token}` } }
-                );
-
-                setSb3Update(sb3resp.data);
+                const sb3resp = await axiosInstance.get(
+                    "/bank/monthlyfundflow",  
+                );setSb3Update(sb3resp.data);
             } catch (err) {
-                console.error("Error fetching data:", err);
                 alert("Failed to fetch data.");
             }
         };

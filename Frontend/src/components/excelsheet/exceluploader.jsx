@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 import BackButton from "../Home Page/backbutton";
 import previousImage from "/previous.png"; // ✅ Fixed import
 
@@ -25,7 +25,7 @@ function UploadExcel() {
     formData.append("excelFile", selectedFile);
 
     try {
-      const response = await axios.post("http://localhost:5500/exceluploader", formData, {
+      const response = await axiosInstance.post("/exceluploader", formData, {
       });
       setMessage(`✅ ${response.data.message}`);
       setSelectedFile(null);
@@ -43,7 +43,7 @@ function UploadExcel() {
 
   const fetchSavedFiles = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/exceluploader", {
+      const response = await axiosInstance.get("/exceluploader", {
       });
       setSavedFiles(response.data);
     } catch (error) {
@@ -60,7 +60,7 @@ function UploadExcel() {
   const handleDownload = async (filename) => {
     try {
       const encodedFilename = encodeURIComponent(filename); // ✅ Encode filename
-      const response = await axios.get(`http://localhost:5500/exceluploader/${encodedFilename}`, {
+      const response = await axiosInstance.get(`/exceluploader/${encodedFilename}`, {
         responseType: "blob",
         
       });

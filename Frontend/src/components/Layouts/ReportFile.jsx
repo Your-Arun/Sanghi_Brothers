@@ -1,6 +1,6 @@
 import React, {  useState ,useContext} from "react";
-import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import axiosInstance from '../Dashboard/axiosInstance'
+import { Link} from "react-router-dom";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import UserContext from "../Home Page/UserContext"
@@ -187,13 +187,13 @@ function ReportFile() {
         alert("No valid session found. Please log in.");
         return;
       }
-      const resp = await axios.post(
-        "http://localhost:5500/reportfile",
+      const resp = await axiosInstance.post(
+        "/reportfile",
         reportData,
       );
       alert("Data saved successfully");
     } catch (error) {
-      alert("kaam nhhh kr rha h");
+      alert("Not Save");
     }
   };
   return (

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
@@ -22,7 +22,7 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:5500/verify-invite", {
+      const response = await axiosInstance.post("/verify-invite", {
         invitecode: inviteCode,
       });
 
@@ -50,7 +50,7 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:5500/signup", {
+      const response = await axiosInstance.post("/signup", {
         name,
         username,
         email,

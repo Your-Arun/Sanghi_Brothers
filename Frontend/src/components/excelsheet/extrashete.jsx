@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 
 function UploadExcel() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -21,7 +21,7 @@ function UploadExcel() {
     formData.append("excelFile", selectedFile);
 
     try {
-      const response = await axios.post("http://localhost:5500/api/preview", formData, {
+      const response = await axiosInstance.post("/api/preview", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -44,7 +44,7 @@ function UploadExcel() {
     formData.append("excelFile", selectedFile);
 
     try {
-      const response = await axios.post("http://localhost:5500/api/save", formData, {
+      const response = await axios.post("/api/save", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

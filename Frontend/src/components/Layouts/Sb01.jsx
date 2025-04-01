@@ -1,5 +1,5 @@
 import React, {  useState, useContext } from "react";
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 import saveImage from "/save.png";
 import previousImage from "/previous.png";
 import { Link } from "react-router-dom";
@@ -136,16 +136,15 @@ const Sb01 = () => {
         alert("No valid session found. Please log in.");
         return;
       }
-      const response = await axios.post(
-        "http://localhost:5500/fundposition",
+      const response = await axiosInstance.post(
+        "/fundposition",
         saveData,
 
       );
       alert("Data saved successfully");
 
     } catch (error) {
-      console.error(error);
-      alert("Save nhh hora...");
+      alert("Not Save Successfully...... ");
     }
   };
   const totalsum =

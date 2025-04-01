@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 import BackButton from "../Home Page/backbutton";
 const CashierDeposit = ({ token }) => {
     const [amount, setAmount] = useState("");
@@ -26,7 +26,7 @@ const CashierDeposit = ({ token }) => {
     // Fetch Deposits from API
     const fetchDeposits = async () => {
         try {
-            const response = await axios.get("http://localhost:5500/cashier", {
+            const response = await axiosInstance.get("/cashier", {
                 
             });
             setDeposits(response.data);
@@ -64,8 +64,8 @@ const CashierDeposit = ({ token }) => {
         const depositData = { amount: parseFloat(amount), bank: selectedBank ,totalamount:totalAmount};
 
         try {
-            const response = await axios.post(
-                "http://localhost:5500/cashier",
+            const response = await axiosInstance.post(
+                "/cashier",
                 depositData,
             );
 

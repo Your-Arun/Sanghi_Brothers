@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 import { useNavigate } from "react-router-dom"; // 👈 Navigation ke liye import
 
 const AllShifts = () => {
@@ -15,7 +15,7 @@ const AllShifts = () => {
 
   const fetchAllShifts = async () => {
     try {
-      const response = await axios.get("http://localhost:5500/allshifts");
+      const response = await axiosInstance.get("/allshifts");
       if (response.data.success && Array.isArray(response.data.shifts)) {
         const sortedShifts = response.data.shifts.sort((a, b) => new Date(b.date) - new Date(a.date));
         setShifts(sortedShifts);
@@ -35,7 +35,7 @@ const AllShifts = () => {
     if (!window.confirm("Are you sure you want to delete this shift?")) return;
 
     try {
-      const response = await axios.delete(`http://localhost:5500/shift/${id}`);
+      const response = await axiosInstance.delete(`/shift/${id}`);
       if (response.data.success) {
         setShifts((prevShifts) => prevShifts.filter((shift) => shift._id !== id));
         setFilteredShifts((prevShifts) => prevShifts.filter((shift) => shift._id !== id));

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from '../Dashboard/axiosInstance'
 
 const LubricantMangement = () => {
     const [date, setDate] = useState('');
@@ -66,7 +66,7 @@ const LubricantMangement = () => {
             })),
         };
         try {
-            const response = await axios.post("http://localhost:5500/mastersheet/lubricantmanagement", data);       
+            const response = await axiosInstance.post("/mastersheet/lubricantmanagement", data);       
             alert("Purchase management sheet saved successfully!");
         } catch (error) {
             alert("Error saving sales management sheet!");
