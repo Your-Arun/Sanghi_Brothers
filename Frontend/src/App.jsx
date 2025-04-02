@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import { UserProvider } from "./components/Home Page/UserContext.jsx";
 import "./index.css";
 import Navbar from "./components/Home Page/Navbar";
@@ -74,7 +74,7 @@ const App = () => {
 
 
 const AppContent = () => {
-
+  const location = useLocation();
   // ✅ Show Navbar Only on These Routes
   const showNavbarRoutes = ["/", "/contact", "/services", "/about", "/login", "/signup"];
   const shouldShowNavbar = showNavbarRoutes.includes(location.pathname);
@@ -82,7 +82,6 @@ const AppContent = () => {
   return (
     <>
       {shouldShowNavbar && <Navbar />}
-
       <Routes>
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />

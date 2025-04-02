@@ -15,7 +15,7 @@ app.use(cookieParser());
 // 🛡️ CORS Configuration
 app.use(
   cors({
-    origin: "https://test-frontend-nyqt.onrender.com", // Frontend URL
+    origin: "http://localhost:5173", // Frontend URL
     credentials: true, // ✅ Allow cookies & authentication headers
   })
 );
