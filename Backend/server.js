@@ -88,6 +88,11 @@ app.use("/",  FundPosition);
 app.use("/",  ReportComplaint);
 app.use("/", shiftApi);
 
+
+app.get('/',(req,res)=>{
+  res.status(404).send({message:'Backend live'})
+})
+
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT} 🔴🔴`));
