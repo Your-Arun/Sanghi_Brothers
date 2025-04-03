@@ -57,6 +57,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import AdminPanel from "./components/Dashboard/adminPanel.jsx";
 import AllShifts from "./components/Dashboard/ShiftDisplay.jsx";
 import SessionTimeout from "./components/Home Page/SessionTimeout.jsx";
+import Notfound from "./components/Layouts/NotFound";
+
+
+
+
 
 const App = () => {
   return (
@@ -83,6 +88,7 @@ const AppContent = () => {
     <>
       {shouldShowNavbar && <Navbar />}
       <Routes>
+<Route path="*" element={<Notfound/>
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
