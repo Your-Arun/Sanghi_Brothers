@@ -15,7 +15,7 @@ app.use(cookieParser());
 // 🛡️ CORS Configuration
 app.use(
   cors({
-    origin: "http://localhost:5173", // Frontend URL
+    origin: "https://sanghibros.vercel.app/", // Frontend URL
     credentials: true, // ✅ Allow cookies & authentication headers
   })
 );
