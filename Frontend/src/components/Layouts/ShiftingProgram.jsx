@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaPlus } from "react-icons/fa";
 import BackButton from "../Home Page/backbutton"; // Import the context
 import axiosInstance from "../Dashboard/axiosInstance";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; import { IoTrashBinOutline } from "react-icons/io5";
 
 const ShiftManagementSystem = () => {
   const navigate = useNavigate();
@@ -129,8 +129,6 @@ const ShiftManagementSystem = () => {
       if (!date) {
         alert('Please select Date')
       }
-      console.log("Shift data to save:", JSON.stringify(shiftData, null, 2)); // Debugging log
-
       await axiosInstance.post("/shiftingsavee", shiftData);
       alert("Shift data saved successfully!");
     } catch (error) {
@@ -157,16 +155,22 @@ const ShiftManagementSystem = () => {
 
       morningMembers = shuffleArray([...morningMembers]);
 
-      morningShift.members = morningMembers;
-
       const unassignedMorning = Math.max(0, morningShift.nozzles.length - morningMembers.length);
 
-      let overtimeCandidatesMorning = availableMembers.filter(m => !morningOvertimeMembers.includes(m._id) && m.shift === "evening");
+      let overtimeCandidatesMorning = availableMembers.filter(m => !morningOvertimeMembers.includes(m._id) && m.shift === "evening" && m.role === "operator");
+      overtimeCandidatesMorning = shuffleArray([...overtimeCandidatesMorning]);
 
-      const morningOvertime = overtimeCandidatesMorning.slice(0, unassignedMorning);
+      let morningOvertime = [];
+      if (unassignedMorning > 0) {
+        if (unassignedMorning === 1) {
+          morningOvertime.push(overtimeCandidatesMorning.shift());
+        } else {
+          morningOvertime.push(overtimeCandidatesMorning.shift());
+          morningOvertime.push(overtimeCandidatesMorning.shift());
+        }
+      }
 
-      morningShift.members = [...morningShift.members, ...morningOvertime];
-
+      morningShift.members = shuffleArray([...morningMembers, ...morningOvertime]);
       setMorningOvertimeMembers(morningOvertime.map(m => m._id));
 
       morningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && m.shift === "morning");
@@ -175,10 +179,7 @@ const ShiftManagementSystem = () => {
       morningMembers.forEach(member => member.free = false);
       setShifts([morningShift, shifts[1]]);
 
-      // Update the overtime members arrays
       const updatedMorningOvertimeMembers = morningOvertime.map(m => m._id);
-
-      // Save shifts after assigning
       saveAssignedShifts([morningShift, shifts[1]], updatedMorningOvertimeMembers, eveningOvertimeMembers);
     }
   };
@@ -201,16 +202,22 @@ const ShiftManagementSystem = () => {
 
       eveningMembers = shuffleArray([...eveningMembers]);
 
-      eveningShift.members = eveningMembers;
-
       const unassignedEvening = Math.max(0, eveningShift.nozzles.length - eveningMembers.length);
 
-      let overtimeCandidatesEvening = availableMembers.filter(m => !eveningOvertimeMembers.includes(m._id) && m.shift === "morning");
+      let overtimeCandidatesEvening = availableMembers.filter(m => !eveningOvertimeMembers.includes(m._id) && m.shift === "morning" && m.role === "operator");
+      overtimeCandidatesEvening = shuffleArray([...overtimeCandidatesEvening]);
 
-      const eveningOvertime = overtimeCandidatesEvening.slice(0, unassignedEvening);
+      let eveningOvertime = [];
+      if (unassignedEvening > 0) {
+        if (unassignedEvening === 1) {
+          eveningOvertime.push(overtimeCandidatesEvening.shift());
+        } else {
+          eveningOvertime.push(overtimeCandidatesEvening.shift());
+          eveningOvertime.push(overtimeCandidatesEvening.shift());
+        }
+      }
 
-      eveningShift.members = [...eveningShift.members, ...eveningOvertime];
-
+      eveningShift.members = shuffleArray([...eveningMembers, ...eveningOvertime]);
       setEveningOvertimeMembers(eveningOvertime.map(m => m._id));
 
       eveningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && m.shift === "evening");
@@ -219,10 +226,7 @@ const ShiftManagementSystem = () => {
       eveningMembers.forEach(member => member.free = false);
       setShifts([shifts[0], eveningShift]);
 
-      // Update the overtime members arrays
       const updatedEveningOvertimeMembers = eveningOvertime.map(m => m._id);
-
-      // Save shifts after assigning
       saveAssignedShifts([shifts[0], eveningShift], morningOvertimeMembers, updatedEveningOvertimeMembers);
     }
   };
@@ -350,9 +354,13 @@ const ShiftManagementSystem = () => {
                     </select>
 
                     {/* Delete Button */}
-                    <button onClick={() => handleRemoveMember(member._id)} className="p-2 hover:bg-red-700 text-white rounded-lg transition">
-                      
+                    <button
+                      onClick={() => handleRemoveMember(member._id)}
+                      className="p-2 hover:bg-red-700 hover:text-white text-red-500 rounded-lg transition flex items-center justify-center"
+                    >
+                      <IoTrashBinOutline className="text-lg" />
                     </button>
+
                   </li>
                 ))}
               </ul>
