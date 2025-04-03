@@ -88,7 +88,7 @@ const AppContent = () => {
     <>
       {shouldShowNavbar && <Navbar />}
       <Routes>
-<Route path="*" element={<Notfound/>
+<Route path="*" element={<Notfound/>}/>
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
