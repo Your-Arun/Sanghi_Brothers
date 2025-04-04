@@ -66,7 +66,7 @@ import Notfound from "./components/Layouts/NotFound";
 const App = () => {
   return (
     <>
-      <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer position="top-right" autoClose={2000} />
       <UserProvider>
         <Router>
           <SessionTimeout timeout={240 * 60 * 1000} /> {/* 10 min session timeout */}
