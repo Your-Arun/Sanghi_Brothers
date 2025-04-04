@@ -4,6 +4,7 @@ import { Link} from "react-router-dom";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import UserContext from "../Home Page/UserContext"
+import { toast } from 'react-toastify'
 
 
 function ReportFile() {
@@ -145,7 +146,7 @@ function ReportFile() {
       Object.keys(inputs).length === 0 ||
       Object.keys(reports).length === 0
     ) {
-      alert("Please fill in all required fields.");
+      toast.warn("Please fill in all required fields.");
       return;
     }
 
@@ -184,16 +185,16 @@ function ReportFile() {
     try {
       const token = sessionStorage.getItem("authToken"); // ✅ Use sessionStorage
       if (!token) {
-        alert("No valid session found. Please log in.");
+        toast.warn("No valid session found. Please log in.");
         return;
       }
       const resp = await axiosInstance.post(
         "/reportfile",
         reportData,
       );
-      alert("Data saved successfully");
+      toast.success("Data saved successfully");
     } catch (error) {
-      alert("Not Save");
+      toast.warn("Not Save");
     }
   };
   return (
@@ -972,7 +973,7 @@ function ReportFile() {
               </table>
             </div>
           </div>
-        </form>
+        </form> 
       </div>
     </>
   );

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import previousImage from "/previous.png";
 import axiosInstance from '../Dashboard/axiosInstance'
+import { toast } from 'react-toastify'
+
 
 const ChekList = () => {
     const [pumpSheetData, setPumpSheetData] = useState([]);
@@ -13,14 +15,14 @@ const ChekList = () => {
                 });
                 setPumpSheetData(response.data);
             } catch (error) {
-                console.error("Error fetching pump sheet data:", error);
+                toast.warning("Error fetching pump sheet data:");
             }
         };
         fetchPumpSheetData();
     }, []);
 
     return (
-        <div className="h-[90vh] flex flex-col items-center bg-gray-50 p-6">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
             <h1 className="text-4xl font-bold text-blue-600 mb-6">METER CLOSE</h1>
 
             {/* Create Button */}

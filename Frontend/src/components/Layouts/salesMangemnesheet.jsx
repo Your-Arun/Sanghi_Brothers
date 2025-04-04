@@ -3,6 +3,7 @@ import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import { Link } from "react-router-dom";
 import axiosInstance from '../Dashboard/axiosInstance'
+import { toast } from 'react-toastify'
 
 const salesMangemnesheet = () => {
   const [date, setDate] = useState('');
@@ -83,9 +84,9 @@ const salesMangemnesheet = () => {
     };
     try {
       const response = await axiosInstance.post("/mastersheet/salesmanagementsheet", data);
-      alert("Sales management sheet saved successfully!");
+      toast.success("Sales management sheet saved successfully!");
     } catch (error) {
-      alert("Error saving sales management sheet!");
+      toast.warn("Error saving sales management sheet!");
     }
   };
 

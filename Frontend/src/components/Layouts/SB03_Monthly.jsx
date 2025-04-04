@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import UserContext from "../Home Page/UserContext"
+import { toast } from 'react-toastify'
+
 const SB03_Monthly = () => {
   const { user } = useContext(UserContext);
   const currentYear = new Date().getFullYear();
@@ -220,9 +222,9 @@ const SB03_Monthly = () => {
         "/bank/monthlyfundflow",
         data
       );
-      alert("Data Succussfully");
+      toast.success("Data Succussfully");
     } catch (error) {
-      alert("Failed to send data");
+      toast.warn("Failed to send data");
     }
   };
 

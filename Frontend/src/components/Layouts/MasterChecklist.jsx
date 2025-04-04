@@ -3,6 +3,7 @@ import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import { Link } from "react-router-dom";
 import axiosInstance from '../Dashboard/axiosInstance'
+import { toast } from 'react-toastify'
 
 const MasterChecklist = () => {
 
@@ -69,19 +70,17 @@ const MasterChecklist = () => {
     e.preventDefault();
     try {
       const datasheet = { ...inputValues };
-
-      console.log(datasheet); // Check the data before sending it
-      const response = await axiosInstance.post(
+ const response = await axiosInstance.post(
         "/mastersheet/pumpsheet",
         datasheet
       );
-      alert("Save successful");
+      toast.success("Save successful");
     } catch (error) {
-      alert("Error saving data");
+      toast.warn("Error saving data");
     }
   };
   return (
-    <div>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
       <h1 className="text-center  text-xl p-4">PUMP REPORT SHEET</h1>
       <form onSubmit={handlesave}>
         <div className="text-center mt-[-20px] text-xl p-4">

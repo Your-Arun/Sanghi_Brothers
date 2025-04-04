@@ -3,6 +3,8 @@ import previousImage from '/previous.png';
 import saveImage from '/save.png';
 import { Link } from 'react-router-dom';
 import axiosInstance from '../Dashboard/axiosInstance'
+import { toast } from 'react-toastify'
+
 
 const Meterclose = () => {
     const [date, setDate] = useState('');
@@ -116,13 +118,13 @@ const Meterclose = () => {
         };
         try {
             if (date === '') {
-              alert('Please select a date');
+                toast.warning('Please select a date');
             }  else {
               const response = await axiosInstance.post('/meterclose', data);
-              alert('Meter Close saved successfully!');
+              toast.success('Meter Close saved successfully!');
             }
           } catch (error) {
-            alert('Error saving Meter Close!');
+            toast.warn('Error saving Meter Close!');
           }
       };
 
@@ -186,7 +188,7 @@ const Meterclose = () => {
 
 
     return (
-        <div className="relative p-6 bg-gradient-to-r from-gray-200 to-white min-h-screen">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
             <form onSubmit={handleSubmit}>
                 <div className="flex justify-between items-center mb-6">
                     <Link to={'/createmeterclose'}>

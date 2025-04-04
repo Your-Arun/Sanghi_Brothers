@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from '../Dashboard/axiosInstance'
 import UserContext from "../Home Page/UserContext"; // Import UserContext
+import { toast } from 'react-toastify'
 
 const Report = () => {
   const navigate = useNavigate();
@@ -14,14 +15,14 @@ const Report = () => {
     e.preventDefault();
 
     if (!user || !user.department) {
-      alert("Error: No department found. Please log in again.");
+      toast.warn("Error: No department found. Please log in again.");
       return;
     }
 
     try {
       const token = sessionStorage.getItem("authToken");
       if (!token) {
-        alert("No valid session found. Please log in.");
+        toast.warn("No valid session found. Please log in.");
         return;
       }
 
@@ -30,7 +31,7 @@ const Report = () => {
         { title, department: user.department, content },
         { withCredentials: true }
       );
-      alert("Report created successfully!");
+      toast.success("Report created successfully!");
       // Redirect based on user role
       if (user.department === "staff") {
         navigate("/staff-dashboard");
@@ -38,12 +39,12 @@ const Report = () => {
         navigate("/dashboard");
       }
     } catch (err) {
-      alert("Failed to create the report. Please try again.");
+      toast.warn("Failed to create the report. Please try again.");
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
       <form className="bg-white p-6 rounded shadow-md w-96" onSubmit={handleSubmit}>
         <h2 className="text-lg font-bold mb-4">
           Create Report for {user?.department.toUpperCase() || "N/A"}

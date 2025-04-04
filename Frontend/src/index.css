@@ -17,8 +17,6 @@ body {
   display: none; /* Hides scrollbar in WebKit browsers */
 }
 
-
-
 body {
   -ms-overflow-style: none;  /* Hides scrollbar in IE and Edge */
   scrollbar-width: none; /* Hides scrollbar in Firefox */
@@ -113,12 +111,84 @@ input[type="number"]:focus, input[type="text"]:focus {
 }
 
 /* Responsive table */
-@media (max-width: 768px) {
+@media (max-width: 1920px) {
   table {
     font-size: 14px;
   }
   th, td {
     padding: 10px;
+  }
+}
+
+@media (max-width: 1600px) {
+  table {
+    font-size: 13px;
+  }
+  th, td {
+    padding: 8px;
+  }
+}
+
+@media (max-width: 1366px) {
+  table {
+    font-size: 12px;
+  }
+  th, td {
+    padding: 6px;
+  }
+}
+
+@media (max-width: 1200px) {
+  table {
+    font-size: 11px;
+  }
+  th, td {
+    padding: 4px;
+  }
+}
+
+@media (max-width: 1024px) {
+  table {
+    font-size: 10px;
+  }
+  th, td {
+    padding: 2px;
+  }
+}
+
+@media (max-width: 768px) {
+  table {
+    font-size: 9px;
+  }
+  th, td {
+    padding: 1px;
+  }
+}
+
+@media (max-width: 640px) {
+  table {
+    font-size: 8px;
+  }
+  th, td {
+    padding: 0.5px;
+  }
+}
+
+@media (max-width: 480px) {
+  table {
+    font-size: 7px;
+  }
+  th, td {
+    padding: 0.2px;
+  }
+}
+
+@media (max-width: 320px) {
+  table {
+    font-size: 6px;
+  }
+  th, td {
+    padding: 0.1px;
   }
 }
 
@@ -133,12 +203,25 @@ button {
   transition: background-color 0.3s ease;
 }
 
+@media (max-width: 480px) {
+  button {
+    padding: 5px 10px;
+    font-size: 14px;
+  }
+}
+
 /* Center align container */
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 10px;
+  }
 }
 
 /* Hide spin buttons in number input fields */
@@ -148,3 +231,46 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 0; 
 } 
 
+/* Additional styles for accessibility */
+a {
+  color: #4caf50;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+label {
+  font-size: 14px;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  label {
+    font-size: 12px;
+  }
+} 
+
+/* Flexbox adjustments for better layout on smaller screens */
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.flex-item {
+  flex: 1 1 100%; /* Full width on small screens */
+}
+
+@media (min-width: 768px) {
+  .flex-item {
+    flex: 1 1 48%; /* Two items per row on larger screens */
+  }
+}
+
+@media (min-width: 1024px) {
+  .flex-item {
+    flex: 1 1 30%; /* Three items per row on larger screens */
+  }
+}

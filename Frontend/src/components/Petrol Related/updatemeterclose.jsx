@@ -4,6 +4,7 @@ import Binimage from '/bin.png';
 import previousImage from '/previous.png';
 import saveImage from '/save.png';
 import { Link, useParams, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify'
 
 const UpdateMeterclose = () => {
     const { id } = useParams();
@@ -52,7 +53,6 @@ const UpdateMeterclose = () => {
                 const response = await axiosInstance.get(`/meterclose/${id}`);
                 const fetchedData = response.data;
                 setData(fetchedData);
-                console.log(fetchedData);
                 setDate(fetchedData.date);
                 setCashUnknown(fetchedData.cashUnknown);
                 setCashMs(fetchedData.cashMs);
@@ -62,7 +62,7 @@ const UpdateMeterclose = () => {
                 setRate(fetchedData.rate);
                 setInputs(fetchedData);
             } catch (error) {
-                alert("Error");
+                toast.warn("Error");
             }
         };
         fetchData();
@@ -141,13 +141,13 @@ const UpdateMeterclose = () => {
             try {
                 const response = await axiosInstance.put(`/meterclose/${id}`, updatedData);
                 
-                alert('Meter Close updated successfully!');
+                toast.success('Meter Close updated successfully!');
             } catch (error) {
                 
-                alert('Error updating Meter Close!');
+                toast.warning('Error updating Meter Close!');
             }
         } else {
-            alert('No changes made. Data saved without changes.');
+            toast.warning('No changes made. Data saved without changes.');
         }
     };
     
@@ -156,13 +156,13 @@ const UpdateMeterclose = () => {
             try {
                 const response = await axiosInstance.delete(`/meterclose/${id}`);
                 if (response.status === 200) {
-                    alert('Meter Close deleted successfully!');
+                    toast.success('Meter Close deleted successfully!');
                     navigate('/createmeterclose');
                 } else {
-                    alert('Error deleting Meter Close!');
+                    toast.warning('Error deleting Meter Close!');
                 }
             } catch (error) {
-                alert('Error deleting Meter Close!');
+                toast.warn('Error deleting Meter Close!');
             }
         }
     };

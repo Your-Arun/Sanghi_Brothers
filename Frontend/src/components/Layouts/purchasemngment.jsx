@@ -3,6 +3,7 @@ import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import { Link } from "react-router-dom";
 import axiosInstance from '../Dashboard/axiosInstance'
+import { toast } from 'react-toastify'
 
 const PurchaseMangement = () => {
     const [date, setDate] = useState('');
@@ -63,9 +64,9 @@ const PurchaseMangement = () => {
         };
         try {
             const response = await axiosInstance.post("/mastersheet/purchasemanagement", data);
-            alert("Purchase management sheet saved successfully!");
+            toast.success("Purchase management sheet saved successfully!");
         } catch (error) {
-            alert("Error saving sales management sheet!");
+            toast.warn("Error saving sales management sheet!");
         }
     };
 
@@ -75,103 +76,101 @@ const PurchaseMangement = () => {
         setItems(updatedItems);
     };
     return (
-        <>
-            <div>
-                <h1 className="text-center  text-2xl p-4 font-bold">PURCHASE MANAGEMENT</h1>
-                <form onSubmit={handleSave}>
-                    <div className="flex justify-evenly items-center  p-4">
-                        <Link to={"/mastersheet"}>
-                            <div className="">
-                                <img src={previousImage} width={50} alt="Back" />
-                            </div>
-                        </Link>
-                        <div><input type="date" id="date" value={date} className="bg-transparent" onChange={handleDateChange} />
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+            <h1 className="text-center  text-2xl p-4 font-bold">PURCHASE MANAGEMENT</h1>
+            <form onSubmit={handleSave}>
+                <div className="flex justify-evenly items-center  p-4">
+                    <Link to={"/mastersheet"}>
+                        <div className="">
+                            <img src={previousImage} width={50} alt="Back" />
                         </div>
-                        <div>
-                            <button type="submit">
-                                <img src={saveImage} width={50} alt="Save" />
-                            </button>{" "}
-                        </div>
+                    </Link>
+                    <div><input type="date" id="date" value={date} className="bg-transparent" onChange={handleDateChange} />
                     </div>
-                    <table>
-                        <thead>
-                            <th>Point</th>
-                            <th>Item to Check</th>
-                            <th>Ok</th>
-                            <th>Responsible</th>
-                            <th>Defect Person</th>
-                            <th>Defect Delays Days</th>
-                            <th>Deadline</th>
-                            <th>Comments</th>
-                        </thead>
-                        <tbody>
-                            {items.map((item, index) => (
-                                <tr key={index}>
-                                    <td>
-                                        {index + 1}
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="text"
-                                            value={item}
-                                            onChange={(e) => handleItemChange(e, index)}
-                                        />
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="checkbox"
-                                            id="ok"
-                                            checked={inputs.points[index].ok}
-                                            onChange={(e) => handleInputChnge(e, index)}
-                                        />
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="text"
-                                            id="responsible"
-                                            value={inputs.points[index].responsible}
-                                            onChange={(e) => handleInputChnge(e, index)}
-                                        />
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="text"
-                                            id="defectPerson"
-                                            value={inputs.points[index].defectPerson}
-                                            onChange={(e) => handleInputChnge(e, index)}
-                                        />
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="text"
-                                            id="defectDelaysDays"
-                                            value={inputs.points[index].defectDelaysDays}
-                                            onChange={(e) => handleInputChnge(e, index)}
-                                        />
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="text"
-                                            id="deadline"
-                                            value={inputs.points[index].deadline}
-                                            onChange={(e) => handleInputChnge(e, index)}
-                                        />
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="text"
-                                            id="comment"
-                                            value={inputs.points[index].comment}
-                                            onChange={(e) => handleInputChnge(e, index)}
-                                        />
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-        </>
+                    <div>
+                        <button type="submit">
+                            <img src={saveImage} width={50} alt="Save" />
+                        </button>{" "}
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <th>Point</th>
+                        <th>Item to Check</th>
+                        <th>Ok</th>
+                        <th>Responsible</th>
+                        <th>Defect Person</th>
+                        <th>Defect Delays Days</th>
+                        <th>Deadline</th>
+                        <th>Comments</th>
+                    </thead>
+                    <tbody>
+                        {items.map((item, index) => (
+                            <tr key={index}>
+                                <td>
+                                    {index + 1}
+                                </td>
+                                <td>
+                                    <input
+                                        type="text"
+                                        value={item}
+                                        onChange={(e) => handleItemChange(e, index)}
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        type="checkbox"
+                                        id="ok"
+                                        checked={inputs.points[index].ok}
+                                        onChange={(e) => handleInputChnge(e, index)}
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        type="text"
+                                        id="responsible"
+                                        value={inputs.points[index].responsible}
+                                        onChange={(e) => handleInputChnge(e, index)}
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        type="text"
+                                        id="defectPerson"
+                                        value={inputs.points[index].defectPerson}
+                                        onChange={(e) => handleInputChnge(e, index)}
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        type="text"
+                                        id="defectDelaysDays"
+                                        value={inputs.points[index].defectDelaysDays}
+                                        onChange={(e) => handleInputChnge(e, index)}
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        type="text"
+                                        id="deadline"
+                                        value={inputs.points[index].deadline}
+                                        onChange={(e) => handleInputChnge(e, index)}
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        type="text"
+                                        id="comment"
+                                        value={inputs.points[index].comment}
+                                        onChange={(e) => handleInputChnge(e, index)}
+                                    />
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </form>
+        </div>
     );
 };
 

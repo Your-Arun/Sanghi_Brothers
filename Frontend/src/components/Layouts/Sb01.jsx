@@ -4,6 +4,8 @@ import saveImage from "/save.png";
 import previousImage from "/previous.png";
 import { Link } from "react-router-dom";
 import UserContext from "../Home Page/UserContext"
+import { toast } from 'react-toastify'
+
 const Sb01 = () => {
   const date = new Date().toLocaleDateString();
   const { user } = useContext(UserContext);
@@ -133,7 +135,7 @@ const Sb01 = () => {
     try {
       const token = sessionStorage.getItem("authToken"); // ✅ Use sessionStorage
       if (!token) {
-        alert("No valid session found. Please log in.");
+        toast.warn("No valid session found. Please log in.");
         return;
       }
       const response = await axiosInstance.post(
@@ -141,10 +143,10 @@ const Sb01 = () => {
         saveData,
 
       );
-      alert("Data saved successfully");
+      toast.success("Data saved successfully");
 
     } catch (error) {
-      alert("Not Save Successfully...... ");
+      toast.warn("Not Save Successfully...... ");
     }
   };
   const totalsum =

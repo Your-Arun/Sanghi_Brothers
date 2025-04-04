@@ -2,6 +2,7 @@ import axiosInstance from '../Dashboard/axiosInstance'
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa"; // Using React Icons
+import { toast } from 'react-toastify'
 
 const MergeSBInflo = () => {
   const [sbiUpdate, setSbiUpdate] = useState([]);
@@ -13,7 +14,7 @@ const MergeSBInflo = () => {
       try {
         const token = sessionStorage.getItem("authToken"); // ✅ Use sessionStorage
         if (!token) {
-          alert("No valid session found. Please log in.");
+          toast.warn("No valid session found. Please log in.");
           return;
         }
         // Fetch Fund Position Data
@@ -25,15 +26,15 @@ const MergeSBInflo = () => {
         });
         setInOutFlow(flowResponse.data);
       } catch (error) {
-        alert("Failed to fetch data. Please try again.");
+        toast.warn("Failed to fetch data. Please try again.");
       }
     };
     fetchData();
   }, []);
 
   return (
-    <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
         {/* SB Bank Report Section */}
         <div className="bg-white p-6 rounded-lg shadow-lg">
           <h2 className="text-2xl font-semibold mb-4 text-center text-blue-600">
@@ -120,7 +121,7 @@ const MergeSBInflo = () => {
           <span className="text-lg font-semibold">Back</span>
         </Link>
       </div>
-    </>
+    </div>
   );
 };
 
