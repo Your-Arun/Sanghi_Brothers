@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axiosInstance from '../Dashboard/axiosInstance'
 import previousImage from "/previous.png";
+import { toast } from 'react-toastify'
 
 const ChekList = () => {
     const [pumpSheetData, setPumpSheetData] = useState([]);
@@ -13,14 +14,25 @@ const ChekList = () => {
                 });
                 setPumpSheetData(response.data);
             } catch (error) {
-                console.error("Error fetching pump sheet data:", error);
+                toast.warn("Error fetching pump sheet data!");
             }
         };
         fetchPumpSheetData();
     }, []);
 
+    const handleDelete = async (id) => {
+        try {
+            await axiosInstance.delete(`/newlekhajokha/${id}`);
+            toast.success("Report deleted successfully!");
+            const updatedPumpSheetData = pumpSheetData.filter((pump) => pump._id !== id);
+            setPumpSheetData(updatedPumpSheetData);
+        } catch (error) {
+            toast.warn("Error deleting report!");
+        }
+    };
+
     return (
-        <div className="h-[90vh] flex flex-col items-center bg-gray-50 p-6">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
             {/* Page Title */}
             <h1 className="text-4xl font-bold text-blue-600 mb-6">LEKHA JOKHA</h1>
 
@@ -37,11 +49,7 @@ const ChekList = () => {
             {/* Reports Grid */}
             <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-4xl">
                 {pumpSheetData.map((pump) => (
-                    <Link
-                        key={pump._id}
-                        to={`/newlekhajokha/${pump._id}`}
-                        className="p-4 bg-gray-200 rounded-lg shadow-md text-center hover:bg-gray-300 transition"
-                    >
+                    <div key={pump._id} className="p-4 bg-gray-200 rounded-lg shadow-md text-center hover:bg-gray-300 transition">
                         <h4 className="text-lg font-semibold">Updated Report</h4>
                         <p className="text-blue-700 font-bold">
                             {new Date(pump.date).toLocaleDateString("en-GB", {
@@ -50,7 +58,11 @@ const ChekList = () => {
                                 year: "numeric",
                             })}
                         </p>
-                    </Link>
+                        <Link to={`/newlekhajokha/${pump._id}`}>
+                            <button className="bg-blue-500 text-white px-4 py-2 rounded-md w-full hover:bg-blue-600 transition">View</button>
+                        </Link>
+                        <button onClick={() => handleDelete(pump._id)} className="bg-red-500 text-white px-4 py-2 rounded-md w-full hover:bg-red-600 transition">Delete</button>
+                    </div>
                 ))}
             </div>
 

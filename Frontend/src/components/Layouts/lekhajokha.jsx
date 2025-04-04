@@ -3,6 +3,7 @@ import saveImage from "/save.png";
 import axiosInstance from '../Dashboard/axiosInstance'
 import UserContext from "../Home Page/UserContext"
 import BackButton from "../Home Page/backbutton";
+import { toast } from 'react-toastify'
 
 const Lekhajokha = () => {
     const [date, setDate] = useState('');
@@ -88,9 +89,9 @@ const Lekhajokha = () => {
         };
         try {
             const response = await axiosInstance.post("/newlekhajokha", data);
-            alert("Lekha Jokha saved successfully!");
+            toast.success("Lekha Jokha saved successfully!");
          } catch (error) {
-            alert("Error saving Lekha Jokha!");
+            toast.warn("Error saving Lekha Jokha!");
         }
     };
 

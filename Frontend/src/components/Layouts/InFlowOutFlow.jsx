@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import UserContext from "../Home Page/UserContext"
+import { toast } from 'react-toastify'
+
 
 const InFlowOutFlow = () => {
   const { user } = useContext(UserContext);
@@ -129,22 +131,21 @@ const InFlowOutFlow = () => {
     try {
       const token = sessionStorage.getItem("authToken"); // ✅ Use sessionStorage
       if (!token) {
-        alert("No valid session found. Please log in.");
+        toast.warn("No valid session found. Please log in.");
         return;
       }
       const response = await axiosInstance.post(
         "/bank/monthlyflow",
         saveData,
       );
-      alert("Data Save Successfully ");
+      toast.success("Data Save Successfully");
     } catch (error) {
-      console.log(error);
-      alert("Error !");
+      toast.warn("Error !");
     }
   };
 
   return (
-    <>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
       <div className="text-center mt-10 text-2xl font-serif">
         <h1>
           {" "}
@@ -757,7 +758,7 @@ const InFlowOutFlow = () => {
           </table>
         </form>
       </div>
-    </>
+    </div>
   );
 };
 
