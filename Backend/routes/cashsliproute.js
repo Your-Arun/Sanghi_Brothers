@@ -64,4 +64,24 @@ router.put("/Cashslip/:id", async (req, res) => {
     }
 });
 
+router.delete('/Cashslip/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const deletedSlip = await CashSlip.findByIdAndDelete(id);
+        if (!deletedSlip) {
+            return res.status(404).json({ message: "❌ Cash slip not found!" });
+        }
+        res.status(200).json({ message: "✅ Cash slip deleted successfully!" });
+    } catch (error) {
+        console.error("❌ Error Deleting Cash Slip:", error);
+        res.status(500).json({
+            message: "❌ Failed to delete cash slip!", error
+                : error.message
+        });
+    }
+
+})
+
+
+
 module.exports = router;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { FaMoneyBill, FaTruck, FaExclamationTriangle, FaUser, FaBars, FaTimes } from "react-icons/fa";
+import { FaMoneyBill, FaTruck, FaExclamationTriangle, FaUser , FaBars, FaTimes } from "react-icons/fa";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { BsOpencollective } from "react-icons/bs";
 import { IoCreateSharp } from "react-icons/io5";
@@ -29,7 +29,7 @@ const StaffDashboard = () => {
 
   // ✅ Fetch user on mount
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchUser  = async () => {
       try {
         const { data } = await axiosInstance.get("/profile", { withCredentials: true });
 
@@ -46,8 +46,8 @@ const StaffDashboard = () => {
         setLoading(false); // ✅ Ensure loading state is updated
       }
     };
-    fetchUser();
-  }, [setUser, navigate]);
+    fetchUser ();
+  }, [setUser , navigate]);
   // ✅ Fetch all required data
   useEffect(() => {
     const fetchData = async () => {
@@ -149,7 +149,7 @@ const StaffDashboard = () => {
             }}
             className="flex items-center gap-2 p-2 w-full bg-blue-700 rounded-lg hover:bg-blue-500"
           >
-            <FaUser /> Profile
+            <FaUser  /> Profile
           </button>
 
         </nav>

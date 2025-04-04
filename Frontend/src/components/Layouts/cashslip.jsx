@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../Dashboard/axiosInstance'
 import BackButton from '../Home Page/backbutton';
-
+import { toast } from 'react-toastify'
 const CashSlip = () => {
     const [fecthcashSlip, setFecthcashSlip] = useState([]);
     const [selectedDate, setSelectedDate] = useState(() => {
@@ -10,15 +10,15 @@ const CashSlip = () => {
     });
     useEffect(() => {
         const fetchCashSlip = async () => {
-          try {
-            const response = await axiosInstance.get('/Cashslip');
-            setFecthcashSlip(response.data);
-          } catch (error) {
-            console.error(error);
-          }
+            try {
+                const response = await axiosInstance.get('/Cashslip');
+                setFecthcashSlip(response.data);
+            } catch (error) {
+                toast.warn("Not Found CashSlips");
+            }
         };
         fetchCashSlip();
-      }, []);
+    }, []);
 
     useEffect(() => {
         fetchCashSlipByDate(selectedDate);
@@ -26,13 +26,13 @@ const CashSlip = () => {
 
     const fetchCashSlipByDate = async (date) => {
         try {
-          let url = `/Cashslip?date=${date}`;
-          const response = await axiosInstance.get(url);
-          setFecthcashSlip(response.data);
+            let url = `/Cashslip?date=${date}`;
+            const response = await axiosInstance.get(url);
+            setFecthcashSlip(response.data);
         } catch (error) {
-          console.error("Error fetching cash slip:", error);
+            toast.warning("Error fetching cash slip:");
         }
-      };
+    };
 
     const [cashSlip, setCashSlip] = useState({
         date: "",
@@ -96,12 +96,12 @@ const CashSlip = () => {
 
     const fetchCashSlip = async () => {
         try {
-          const response = await axiosInstance.get('/Cashslip');
-          setFecthcashSlip(response.data);
+            const response = await axiosInstance.get('/Cashslip');
+            setFecthcashSlip(response.data);
         } catch (error) {
-          console.error("Error fetching cash slip:", error);
+            toast.warning("Error fetching cash slip:");
         }
-      }
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -131,21 +131,28 @@ const CashSlip = () => {
             };
 
             await axiosInstance.post("/Cashslip", cashdata);
-            alert("Cash Slip saved successfully!");
+            toast.success("Cash Slip saved successfully!");
             fetchCashSlipByDate(selectedDate);
 
             // ✅ Data save hone ke turant baad fetch karna
             fetchCashSlip();
 
         } catch (error) {
-            console.error("Error saving cash slip:", error.response ? error.response.data : error);
-            alert("Error saving cash slip: " + (error.response ? error.response.data.message : error.message));
+            toast.warn("Error saving cash slip: ");
         }
     };
 
-
+    const handleDelete = async (id) => {
+        try {
+            await axiosInstance.delete(`/Cashslip/${id}`);
+            toast.success("Cash Slip deleted successfully!");
+            fetchCashSlipByDate(selectedDate);
+        } catch (error) {
+            toast.warn("Error deleting cash slip: ");
+        }
+    };
     return (
-        <div className="min-h-screen flex flex-col items-center bg-gray-50 p-6">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
             <div className="bg-white shadow-lg rounded-lg p-6 max-w-2xl w-full">
                 <h2 className="text-4xl font-bold text-center text-blue-600 mb-8 ">Daily Cash Slip</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -223,7 +230,7 @@ const CashSlip = () => {
             {/* Cash Slips Display */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 mt-6">
                 {fecthcashSlip.map((cashSlip, index) => (
-                    <div key={index} className="bg-white shadow-md p-4 rounded-lg border border-gray-200">
+                    <div key={index} onClick={handleDelete} className="bg-white shadow-md p-4 rounded-lg border border-gray-200">
                         <h3 className="text-lg font-bold text-blue-600">{cashSlip.name}</h3>
                         <p><strong>Shift:</strong> {cashSlip.shift}</p>
                         <p><strong>Nozzle No:</strong> {cashSlip.nozzleNo}</p>
@@ -236,7 +243,7 @@ const CashSlip = () => {
             </div>
             {/* Back Button */}
             <div>
-                <BackButton previousImage="/public/previous.png" />
+                <BackButton previousImage="/previous.png" />
             </div>
         </div>
     );

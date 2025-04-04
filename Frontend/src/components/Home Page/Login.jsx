@@ -19,7 +19,7 @@ const Login = () => {
 
   // ✅ Restore session on page load
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchUser  = async () => {
       const sessionData = sessionStorage.getItem(sessionKey);
       if (!sessionData) return;
 
@@ -30,8 +30,8 @@ const Login = () => {
         sessionStorage.removeItem(sessionKey);
       }
     };
-    fetchUser();
-  }, [setUser, sessionKey]);
+    fetchUser ();
+  }, [setUser , sessionKey]);
 
   // ✅ Handle Login
   const handleSubmit = async (e) => {

@@ -44,7 +44,7 @@ function UploadExcel() {
     formData.append("excelFile", selectedFile);
 
     try {
-      const response = await axios.post("/api/save", formData, {
+      const response = await axiosInstance.post("/api/save", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

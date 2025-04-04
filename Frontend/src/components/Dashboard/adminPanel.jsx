@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
-  const [editingUser, setEditingUser] = useState(null);
-  const [isAddingUser, setIsAddingUser] = useState(false);
+  const [editingUser , setEditingUser ] = useState(null);
+  const [isAddingUser , setIsAddingUser ] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -29,7 +29,7 @@ const navigate=useNavigate();
   };
 
   const handleEditClick = (user) => {
-    setEditingUser(user._id);
+    setEditingUser (user._id);
     setFormData({
       username: user.username,
       email: user.email,
@@ -42,37 +42,37 @@ const navigate=useNavigate();
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleUpdateUser = async () => {
+  const handleUpdateUser  = async () => {
     try {
-      await axiosInstance.put(`/users/${editingUser}`, formData);
-      toast.success("User updated successfully");
+      await axiosInstance.put(`/users/${editingUser }`, formData);
+      toast.success("User  updated successfully");
       fetchUsers();
-      setEditingUser(null);
+      setEditingUser (null);
     } catch (error) {
       toast.error("Update failed");
     }
   };
 
-  const handleDeleteUser = async (userId) => {
+  const handleDeleteUser  = async (userId) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
     try {
       await axiosInstance.delete(`/users/${userId}`);
-      toast.success("User deleted");
+      toast.success("User  deleted");
       fetchUsers();
     } catch (error) {
       toast.error("Failed to delete user");
     }
   };
 
-  const handleAddUser = async () => {
+  const handleAddUser  = async () => {
     try {
       if (!formData.password) {
         return toast.error("Password is required for new user");
       }
       await axiosInstance.post("/signup", formData);
-      toast.success("User added successfully");
+      toast.success("User  added successfully");
       fetchUsers();
-      setIsAddingUser(false);
+      setIsAddingUser (false);
       setFormData({ username: "", email: "", department: "manager", phone: "", password: "" });
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to add user");
@@ -92,7 +92,7 @@ const navigate=useNavigate();
         <div className="flex justify-between mb-4">
           <h2 className="text-xl font-bold">Users List</h2>
           <button
-            onClick={() => setIsAddingUser(true)}
+            onClick={() => setIsAddingUser (true)}
             className="bg-green-500 text-white px-3 py-2 rounded"
           >
             + Add Member
@@ -124,7 +124,7 @@ const navigate=useNavigate();
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDeleteUser(user._id)}
+                    onClick={() => handleDeleteUser (user._id)}
                     className="bg-red-500 text-white px-2 py-1 rounded"
                   >
                     Delete
@@ -137,7 +137,7 @@ const navigate=useNavigate();
       </div>
 
       {/* Edit User Modal */}
-      {editingUser && (
+      {editingUser  && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-md w-96">
             <h2 className="text-xl font-bold mb-4 text-center">Edit User</h2>
@@ -174,10 +174,10 @@ const navigate=useNavigate();
               placeholder="Phone Number"
             />
             <div className="flex justify-between mt-4">
-              <button onClick={() => setEditingUser(null)} className="bg-gray-400 text-white px-4 py-2 rounded">
+              <button onClick={() => setEditingUser (null)} className="bg-gray-400 text-white px-4 py-2 rounded">
                 Cancel
               </button>
-              <button onClick={handleUpdateUser} className="bg-blue-500 text-white px-4 py-2 rounded">
+              <button onClick={handleUpdateUser } className="bg-blue-500 text-white px-4 py-2 rounded">
                 Save
               </button>
             </div>
@@ -186,7 +186,7 @@ const navigate=useNavigate();
       )}
 
       {/* Add User Modal */}
-      {isAddingUser && (
+      {isAddingUser  && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-md w-96">
             <h2 className="text-xl font-bold mb-4 text-center">Add Member</h2>
@@ -201,8 +201,8 @@ const navigate=useNavigate();
             <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className="w-full p-2 border rounded mb-2" placeholder="Phone Number" />
             <input type="password" name="password" value={formData.password} onChange={handleChange} className="w-full p-2 border rounded mb-2" placeholder="Password" />
             <div className="flex justify-between mt-4">
-              <button onClick={() => setIsAddingUser(false)} className="bg-gray-400 text-white px-4 py-2 rounded">Cancel</button>
-              <button onClick={handleAddUser} className="bg-green-500 text-white px-4 py-2 rounded">Add</button>
+              <button onClick={() => setIsAddingUser (false)} className="bg-gray-400 text-white px-4 py-2 rounded">Cancel</button>
+              <button onClick={handleAddUser } className="bg-green-500 text-white px-4 py-2 rounded">Add</button>
             </div>
           </div>
         </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from '../Dashboard/axiosInstance'
 import UserContext from "../Home Page/UserContext"; // Import User Context
+import { toast } from 'react-toastify'
 
 const DepartmentReports = () => {
   const { user } = useContext(UserContext); // Get logged-in user from context
@@ -11,7 +12,7 @@ const DepartmentReports = () => {
 
   useEffect(() => {
     if (!user) {
-      alert("You are not authorized. Please login first.");
+      toast.warning("You are not authorized. Please login first.");
       navigate("/login");
       return;
     }
@@ -47,8 +48,7 @@ const DepartmentReports = () => {
           );
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
-        alert("Failed to fetch data.");
+        toast.warn("Failed to fetch data.");
       }
     };
 
@@ -56,7 +56,7 @@ const DepartmentReports = () => {
   }, [user, navigate]);
 
   return (
-    <div className="h-screen-min bg-gray-100 flex flex-col items-center">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
       <div className="w-full bg-teal-700 text-white py-6 text-center shadow-lg">
         {user && (
           <h2 className="text-3xl font-semibold">

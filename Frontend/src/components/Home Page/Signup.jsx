@@ -63,7 +63,7 @@ const Signup = () => {
         localStorage.setItem("token", response.data.token);
       }
 
-      alert(response.data.message || "User registered successfully");
+      alert(response.data.message || "User  registered successfully");
       navigate("/login");
     } catch (err) {
       alert(err.response?.data?.message || "Signup failed");

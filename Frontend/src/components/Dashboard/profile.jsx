@@ -38,7 +38,7 @@ const ProfileModal = ({ closeModal }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm md:max-w-md relative">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm md:max-w-md relative">
         <button className="absolute top-4 right-4 text-gray-500" onClick={closeModal}>
           ❌
         </button>
@@ -50,7 +50,12 @@ const ProfileModal = ({ closeModal }) => {
           {/* Editable Name Field */}
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold">Name:</label>
-            <p className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100">{user.username}</p>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
+            />
           </div>
 
           {/* Non-Editable Email */}

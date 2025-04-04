@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axiosInstance from '../Dashboard/axiosInstance'
 import { FaArrowLeft } from "react-icons/fa";
+import { toast } from 'react-toastify'
 
 const sections = [
   { key: "pumpSheetData", title: "Pump Report Sheet", route: "pumpsheet" },
@@ -23,7 +24,7 @@ const ChekList = () => {
       try {
         const token = sessionStorage.getItem("authToken"); // ✅ Use sessionStorage
         if (!token) {
-          alert("No valid session found. Please log in.");
+          toast.warn("No valid session found. Please log in.");
           return;
         }
         const responses = await Promise.all(
@@ -44,7 +45,7 @@ const ChekList = () => {
         }, {});
         setVisibleCounts(initialCounts);
       } catch (err) {
-        alert("Failed to fetch data");
+        toast.warn("Failed to fetch data");
       }
     };
     fetchData();
@@ -56,7 +57,7 @@ const ChekList = () => {
   };
 
   return (
-    <div className="container mx-auto px-6 py-8 mb-20">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
       <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">MASTER SHEET</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
