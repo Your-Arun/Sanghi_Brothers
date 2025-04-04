@@ -4,6 +4,7 @@ import axiosInstance from '../Dashboard/axiosInstance'
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import binImage from "/bin.png";
+import { toast } from 'react-toastify'
 
 const Sb03Update = () => {
   const { id } = useParams();
@@ -96,7 +97,7 @@ const Sb03Update = () => {
           setDaysInMonth(daysInMonth);
         }
       } catch (error) {
-        alert("Error fetching data. Please try again.");
+        toast.warning("Error fetching data. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -108,10 +109,10 @@ const Sb03Update = () => {
     if (window.confirm("Are you sure you want to delete this report?")) {
       try {
         await axiosInstance.delete(`/bank/monthlyfundflow/${id}`);
-        alert("Report deleted successfully!");
+        toast.success("Report deleted successfully!");
         navigate("/bankreport"); // Redirect to dashboard or another page
       } catch (error) {
-        alert("Failed to delete report.");
+        toast.warning("Failed to delete report.");
       }
     }
   };
@@ -329,10 +330,10 @@ const Sb03Update = () => {
         `/bank/monthlyfundflow/${id}`,
         upddt
       );
-      alert("Save Successfully");
+      toast.success("Save Successfully");
       navigate("/bankreport"); // Redirect after saving
     } catch (error) {
-      alert("Not Saving");
+      toast.warn("Not Saving");
     }
   };
 

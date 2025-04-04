@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom"
 import binImage from "/bin.png"
 import previousImage from "/previous.png"
 import saveImage from "/save.png"
+import { toast } from 'react-toastify'
 
 const updatesalemanagemnet = () => {
   const { id } = useParams()
@@ -22,7 +23,7 @@ const updatesalemanagemnet = () => {
         setDate(response.data.dat2)
         setLoading(false)
       } catch (err) {
-        alert("Not Fetching")
+        toast.warning("Not Fetching")
       } finally {
         setLoading(false)
       }
@@ -56,10 +57,10 @@ const updatesalemanagemnet = () => {
       if (window.confirm("Are you sure you want to delete this purchase management sheet?")) {
         const response = await axiosInstance.delete(`/mastersheet/finance/${id}`)
         navigate("/mastersheet")
-        alert("Finance management sheet deleted successfully!")
+        toast.success("Finance management sheet deleted successfully!")
       }
     } catch (error) {
-      alert("Error deleting finance management sheet!")
+      toast.warn("Error deleting finance management sheet!")
     }
   }
   const handleSave = async (e) => {
@@ -69,9 +70,9 @@ const updatesalemanagemnet = () => {
     }
     try {
       const response = await axiosInstance.put(`/mastersheet/finance/${id}`, data)
-      alert("Finance management sheet updated successfully!")
+      toast.success("Finance management sheet updated successfully!")
     } catch (error) {
-      alert("Error updating finance management sheet!")
+      toast.warn("Error updating finance management sheet!")
     }
   }
 
@@ -116,119 +117,115 @@ const updatesalemanagemnet = () => {
   }
 
   return (
-    <>
-      <div>
-        <h1 className="text-center text-2xl p-4 font-bold">FINANCE MANAGEMENT</h1>
-        <form onSubmit={handleSave}>
-          <div className="flex justify-evenly items-center p-4">
-            <Link to={"/mastersheet"}>
-              <div className="">
-                <img src={previousImage || "/placeholder.svg"} width={50} alt="Back" />
-              </div>
-            </Link>
-            <div className="col-span-2 text-xl">
-              <strong>
-                <input value={handleDate()} className="bg-transparent"  readOnly />
-              </strong>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+      <form onSubmit={handleSave}>
+        <div className="flex justify-between items-center mb-6">
+          <Link to={"/mastersheet"}>
+            <div className="">
+              <img src={previousImage || "/placeholder.svg"} width={50} alt="Back" />
             </div>
-            <div>
-              <img
-                src={binImage || "/placeholder.svg"}
-                onClick={handleDelete}
-                width={50}
-                height={50}
-                className=" "
-                alt="Bin"
-              />
-            </div>
-            <div>
-              <button type="submit">
-                <img src={saveImage || "/placeholder.svg"} width={50} alt="Save" />
-              </button>{" "}
-            </div>
+          </Link>
+          <div className="col-span-2 text-xl">
+            <strong>
+              <input value={handleDate()} className="bg-transparent"  readOnly />
+            </strong>
           </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Point</th>
-                <th>Item to Check</th>
-                <th>Ok</th>
-                <th>Responsible</th>
-                <th>Defect Person</th>
-                <th>Defect Delays Days</th>
-                <th>Deadline</th>
-                <th>Comments</th>
-              </tr>
-            </thead>
-            <tbody>
-              {purchasemgnemt.points.map((item, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>
-                    <input
-                      type="text"
-                      name="itemToCheck"
-                      value={item.itemToCheck}
-                      onChange={(e) => handleItemChange(e, index)}
-                    />
-                  </td>
-                  <td>
+          <div>
+            <img
+              src={binImage || "/placeholder.svg"}
+              onClick={handleDelete}
+              width={50}
+              height={50}
+              className=" "
+              alt="Bin"
+            />
+          </div>
+          <div>
+            <button type="submit">
+              <img src={saveImage || "/placeholder.svg"} width={50} alt="Save" />
+            </button>{" "}
+          </div>
+        </div>
+        <table className="w-full table-auto">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="p-3 text-left">Point</th>
+              <th className="p-3 text-left">Item to Check</th>
+              <th className="p-3 text-left">Ok</th>
+              <th className="p-3 text-left">Responsible</th>
+              <th className="p-3 text-left">Defect Person</th>
+              <th className="p-3 text-left">Defect Delays Days</th>
+              <th className="p-3 text-left">Deadline</th>
+              <th className="p-3 text-left">Comments</th>
+            </tr>
+          </thead>
+          <tbody>
+            {purchasemgnemt.points.map((item, index) => (
+              <tr key={index}>
+                <td className="p-3">{index + 1}</td>
+                <td className="p-3">
                   <input
-                      type="checkbox"
-                      name="ok"
-                      checked={item.ok === true || item.ok === "Yes" || item.ok === "true"}
-                      onChange={(e) => handleInputChnge(e, index)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      name="responsible"
-                      value={item.responsible}
-                      onChange={(e) => handleInputChnge(e, index)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      name="defectPerson"
-                      value={item.defectPerson}
-                      onChange={(e) => handleInputChnge(e, index)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      name="defectDelaysDays"
-                      value={item.defectDelaysDays}
-                      onChange={(e) => handleInputChnge(e, index)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      name="deadline"
-                      value={item.deadline}
-                      onChange={(e) => handleInputChnge(e, index)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      name="comment"
-                      value={item.comment}
-                      onChange={(e) => handleInputChnge(e, index)}
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </form>
-      </div>
-    </>
+                    type="text"
+                    name="itemToCheck"
+                    value={item.itemToCheck}
+                    onChange={(e) => handleItemChange(e, index)}
+                  />
+                </td>
+                <td className="p-3">
+                  <input
+                    type="checkbox"
+                    name="ok"
+                    checked={item.ok === true || item.ok === "Yes" || item.ok === "true"}
+                    onChange={(e) => handleInputChnge(e, index)}
+                  />
+                </td>
+                <td className="p-3">
+                  <input
+                    type="text"
+                    name="responsible"
+                    value={item.responsible}
+                    onChange={(e) => handleInputChnge(e, index)}
+                  />
+                </td>
+                <td className="p-3">
+                  <input
+                    type="text"
+                    name="defectPerson"
+                    value={item.defectPerson}
+                    onChange={(e) => handleInputChnge(e, index)}
+                  />
+                </td>
+                <td className="p-3">
+                  <input
+                    type="text"
+                    name="defectDelaysDays"
+                    value={item.defectDelaysDays}
+                    onChange={(e) => handleInputChnge(e, index)}
+                  />
+                </td>
+                <td className="p-3">
+                  <input
+                    type="text"
+                    name="deadline"
+                    value={item.deadline}
+                    onChange={(e) => handleInputChnge(e, index)}
+                  />
+                </td>
+                <td className="p-3">
+                  <input
+                    type="text"
+                    name="comment"
+                    value={item.comment}
+                    onChange={(e) => handleInputChnge(e, index)}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </form>
+    </div>
   )
 }
 
-export default updatesalemanagemnet
-
+export default updatesalemanagemnet;

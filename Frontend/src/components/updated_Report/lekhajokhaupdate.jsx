@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import binImage from "/bin.png";
 import saveImage from "/save.png";
 import BackButton from "../Home Page/backbutton";
+import { toast } from 'react-toastify'
 
 const UpdateSaleManagement = () => {
     const { id } = useParams();
@@ -40,7 +41,7 @@ const UpdateSaleManagement = () => {
                 setNozzleReadings(response.data.nozzleReadings);
                 setLoading(false);
             } catch (err) {
-                alert("Unable to fetch data");
+                toast.warning("Unable to fetch data");
             } finally {
                 setLoading(false);
             }
@@ -72,10 +73,10 @@ const UpdateSaleManagement = () => {
             if (window.confirm("Are you sure you want to delete this Lekhajokha?")) {
                 await axiosInstance.delete(`/newlekhajokha/${id}`);
                 navigate("/lekhajokha");
-                alert("Lekhajokha deleted successfully!");
+                toast.success("Lekhajokha deleted successfully!");
             }
         } catch (error) {
-            alert("Error deleting Lekhajokha!");
+            toast.warn("Error deleting Lekhajokha!");
         }
     };
 
@@ -91,9 +92,9 @@ const UpdateSaleManagement = () => {
         };
         try {
             const response = await axiosInstance.put(`/newlekhajokha/${id}`, data);
-            alert("Lekhajokha updated successfully!");
+            toast.success("Lekhajokha updated successfully!");
         } catch (error) {
-            alert("Error updating Lekhajokha!");
+            toast.warning("Error updating Lekhajokha!");
         }
     };
 

@@ -1,7 +1,7 @@
 import axiosInstance from '../Dashboard/axiosInstance'
 import React, { useEffect, useState } from "react";
 import { Link,  useNavigate, useParams } from "react-router-dom";
-
+import { toast } from 'react-toastify'
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import binImage from "/bin.png";
@@ -22,7 +22,7 @@ function SBI01Update() {
         );
         setUpdtSbi(resp.data);
       } catch (error) {
-        alert(" Error fetching data");
+        toast.warning(" Error fetching data");
       } finally {
         setLoading(false); // Set loading to false after fetching
       }
@@ -35,9 +35,9 @@ function SBI01Update() {
       try {
         await axiosInstance.delete(`/fundposition/${id}`);
         navigate("/sbbank"); // Redirect to dashboard or another page
-        alert("Report deleted successfully!");
+        toast.success("Report deleted successfully!");
       } catch (error) {
-        alert("Failed to delete report.");
+        toast.warn("Failed to delete report.");
       }
     }
   };
@@ -96,10 +96,10 @@ function SBI01Update() {
         `/fundposition/${id}`,
         saveDatesbi
       ); // Adjust the URL as needed
-      alert("Report updated successfully!");
+      toast.success("Report updated successfully!");
       setIsEditing(false);
     } catch (error) {
-      alert("Failed to update report.");
+      toast.warn("Failed to update report.");
     }
   };
 

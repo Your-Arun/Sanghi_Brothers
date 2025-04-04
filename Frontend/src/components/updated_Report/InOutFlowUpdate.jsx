@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import binImage from "/bin.png";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
+import { toast } from 'react-toastify'
 
 const InOutFlowUpdate = () => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const InOutFlowUpdate = () => {
       try {
         const token = sessionStorage.getItem("authToken"); // ✅ Use sessionStorage
         if (!token) {
-          alert("No valid session found. Please log in.");
+          toast.warning("No valid session found. Please log in.");
           return;
         }
         const response = await axiosInstance.get(
@@ -26,7 +27,7 @@ const InOutFlowUpdate = () => {
 
         setfloww(response.data);
       } catch (error) {
-        alert("An error occurred. Please try again.");
+        toast.warn("An error occurred. Please try again.");
       } finally {
         setLoading(false); // Set loading to false after fetching
       }
@@ -133,14 +134,10 @@ const InOutFlowUpdate = () => {
         `/bank/monthlyflow/${id}`,
         saveData
       );
-      alert("Data saved successfully");
+      toast.success("Data saved successfully");
       setIsEditing(false);
     } catch (error) {
-      console.log(
-        "Error saving data:",
-        error.response ? error.response.data : error.message
-      );
-      alert("Error saving data!");
+      toast.warn("Error saving data!");
     }
   };
 
@@ -149,9 +146,9 @@ const InOutFlowUpdate = () => {
       try {
         await axiosInstance.delete(`/bank/monthlyflow/${id}`);
         navigate("/sbbank"); // Redirect to dashboard or another page
-        alert("Report deleted successfully!");
+        toast.success("Report deleted successfully!");
       } catch (error) {
-        alert("Failed to delete report.");
+        toast.warn("Failed to delete report.");
       }
     }
   };
