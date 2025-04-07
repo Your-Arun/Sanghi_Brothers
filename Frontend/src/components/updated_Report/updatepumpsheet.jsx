@@ -73,9 +73,42 @@ const UpdatePumpSheet = () => {
         alert("Error saving data");
       }
     };
-
+    const confirmDeleteToast = (onConfirm) => {
+      toast(
+        ({ closeToast }) => (
+          <div className="flex flex-col gap-2">
+            <p>Are you sure you want to delete this ?</p>
+            <div className="flex gap-4 mt-2">
+              <button
+                onClick={() => {
+                  onConfirm()
+                  closeToast()
+                }}
+                className="bg-red-500 text-white px-3 py-1 rounded"
+              >
+                Yes
+              </button>
+              <button
+                onClick={closeToast}
+                className="bg-gray-300 px-3 py-1 rounded"
+              >
+                No
+              </button>
+            </div>
+          </div>
+        ),
+        {
+          position: "top-center",
+          autoClose: false,
+          closeOnClick: false,
+          closeButton: false,
+        }
+      )
+    }
+  
   const handleDelete = async () => {
-    if (window.confirm("Are you sure you want to delete this report?")) {
+    e.preventDefault()
+    confirmDeleteToast(async () => {
       try {
         await axiosInstance.delete(`/mastersheet/pumpsheet/${id}`);
         alert("Report deleted successfully!");
@@ -83,8 +116,8 @@ const UpdatePumpSheet = () => {
       } catch (error) {
         alert("Failed to delete report.");
       }
-    }
-  };
+    })
+  }
 
   return (
     <div>

@@ -26,6 +26,39 @@ const Dashboard = () => {
   const [isProfileOpen, setProfileOpen] = useState(false);
   const { user } = useContext(UserContext); // Getting user from context
 
+  const confirmDeleteToast = (onConfirm) => {
+    toast(
+      ({ closeToast }) => (
+        <div className="flex flex-col gap-2">
+          <p>Are you sure you want to delete this ?</p>
+          <div className="flex gap-4 mt-2">
+            <button
+              onClick={() => {
+                onConfirm()
+                closeToast()
+              }}
+              className="bg-red-500 text-white px-3 py-1 rounded"
+            >
+              Yes
+            </button>
+            <button
+              onClick={closeToast}
+              className="bg-gray-300 px-3 py-1 rounded"
+            >
+              No
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        position: "top-center",
+        autoClose: false,
+        closeOnClick: false,
+        closeButton: false,
+      }
+    )
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -60,15 +93,15 @@ const Dashboard = () => {
   };
 
   const handleDeleteReport = async (reportId) => {
-    if (!window.confirm("Are you sure you want to delete this report?")) return;
-    try {
-      await axiosInstance.delete(`/reports/${reportId}`, { withCredentials: true });
-      setReports((prev) => prev.filter((report) => report._id !== reportId));
-      toast.success("Report deleted successfully!");
-    } catch (error) {
-      console.error("Error deleting report:", error);
-      toast.error("Failed to delete report. Please try again.");
-    }
+    confirmDeleteToast(async () => {
+      try {
+        await axiosInstance.delete(`/reports/${reportId}`, { withCredentials: true });
+        setReports((prev) => prev.filter((report) => report._id !== reportId));
+        toast.success("Report deleted successfully!");
+      } catch (error) {
+        toast.error("Failed to delete report. Please try again.");
+      }
+    })
   };
 
   const handleUpdateReport = async () => {
@@ -103,7 +136,6 @@ const Dashboard = () => {
         toast.error("Failed to update report.");
       }
     } catch (err) {
-      console.error("Error updating report:", err.response?.data || err.message);
       toast.error("Failed to update report. Please try again.");
     }
   };

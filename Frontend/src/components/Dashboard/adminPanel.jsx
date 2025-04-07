@@ -14,6 +14,39 @@ const AdminPanel = () => {
     phone: "",
     password: "",
   });
+  const confirmDeleteToast = (onConfirm) => {
+    toast(
+      ({ closeToast }) => (
+        <div className="flex flex-col gap-2">
+          <p>Are you sure you want to delete this ?</p>
+          <div className="flex gap-4 mt-2">
+            <button
+              onClick={() => {
+                onConfirm()
+                closeToast()
+              }}
+              className="bg-red-500 text-white px-3 py-1 rounded"
+            >
+              Yes
+            </button>
+            <button
+              onClick={closeToast}
+              className="bg-gray-300 px-3 py-1 rounded"
+            >
+              No
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        position: "top-center",
+        autoClose: false,
+        closeOnClick: false,
+        closeButton: false,
+      }
+    )
+  }
+
 const navigate=useNavigate();
   useEffect(() => {
     fetchUsers();
@@ -54,7 +87,7 @@ const navigate=useNavigate();
   };
 
   const handleDeleteUser  = async (userId) => {
-    if (!window.confirm("Are you sure you want to delete this user?")) return;
+    confirmDeleteToast(async () => {
     try {
       await axiosInstance.delete(`/users/${userId}`);
       toast.success("User  deleted");
@@ -62,7 +95,8 @@ const navigate=useNavigate();
     } catch (error) {
       toast.error("Failed to delete user");
     }
-  };
+  })
+}
 
   const handleAddUser  = async () => {
     try {

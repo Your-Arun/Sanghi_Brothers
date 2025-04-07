@@ -19,8 +19,41 @@ const ChekList = () => {
         };
         fetchPumpSheetData();
     }, []);
-
+    const confirmDeleteToast = (onConfirm) => {
+        toast(
+          ({ closeToast }) => (
+            <div className="flex flex-col gap-2">
+              <p>Are you sure you want to delete this ?</p>
+              <div className="flex gap-4 mt-2">
+                <button
+                  onClick={() => {
+                    onConfirm()
+                    closeToast()
+                  }}
+                  className="bg-red-500 text-white px-3 py-1 rounded"
+                >
+                  Yes
+                </button>
+                <button
+                  onClick={closeToast}
+                  className="bg-gray-300 px-3 py-1 rounded"
+                >
+                  No
+                </button>
+              </div>
+            </div>
+          ),
+          {
+            position: "top-center",
+            autoClose: false,
+            closeOnClick: false,
+            closeButton: false,
+          }
+        )
+      }
     const handleDelete = async (id) => {
+        e.preventDefault()
+        confirmDeleteToast(async () => {
         try {
             await axiosInstance.delete(`/newlekhajokha/${id}`);
             toast.success("Report deleted successfully!");
@@ -29,7 +62,8 @@ const ChekList = () => {
         } catch (error) {
             toast.warn("Error deleting report!");
         }
-    };
+    })
+  }
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">

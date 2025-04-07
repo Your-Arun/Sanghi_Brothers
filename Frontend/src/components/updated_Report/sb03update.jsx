@@ -105,8 +105,42 @@ const Sb03Update = () => {
     fetchData();
   }, [id]);
 
+  const confirmDeleteToast = (onConfirm) => {
+    toast(
+      ({ closeToast }) => (
+        <div className="flex flex-col gap-2">
+          <p>Are you sure you want to delete this ?</p>
+          <div className="flex gap-4 mt-2">
+            <button
+              onClick={() => {
+                onConfirm()
+                closeToast()
+              }}
+              className="bg-red-500 text-white px-3 py-1 rounded"
+            >
+              Yes
+            </button>
+            <button
+              onClick={closeToast}
+              className="bg-gray-300 px-3 py-1 rounded"
+            >
+              No
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        position: "top-center",
+        autoClose: false,
+        closeOnClick: false,
+        closeButton: false,
+      }
+    )
+  }
+
   const handleDelete = async () => {
-    if (window.confirm("Are you sure you want to delete this report?")) {
+    e.preventDefault()
+    confirmDeleteToast(async () => {
       try {
         await axiosInstance.delete(`/bank/monthlyfundflow/${id}`);
         toast.success("Report deleted successfully!");
@@ -114,8 +148,8 @@ const Sb03Update = () => {
       } catch (error) {
         toast.warning("Failed to delete report.");
       }
-    }
-  };
+    })
+  }
 
   const handleInputChange = (field, index, value) => {
     if (value === "") {

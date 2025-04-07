@@ -38,7 +38,7 @@ const updatesalemanagemnet = () => {
         points: prevPurchasemgnemt.points.map((point, pointIndex) => {
           if (pointIndex === index) {
             if (type === "checkbox") {
-              return { ...point, [name]: checked  }
+              return { ...point, [name]: checked }
             } else {
               return { ...point, [name]: value }
             }
@@ -49,18 +49,51 @@ const updatesalemanagemnet = () => {
       }
     })
   }
-
+  const confirmDeleteToast = (onConfirm) => {
+    toast(
+      ({ closeToast }) => (
+        <div className="flex flex-col gap-2">
+          <p>Are you sure you want to delete this ?</p>
+          <div className="flex gap-4 mt-2">
+            <button
+              onClick={() => {
+                onConfirm()
+                closeToast()
+              }}
+              className="bg-red-500 text-white px-3 py-1 rounded"
+            >
+              Yes
+            </button>
+            <button
+              onClick={closeToast}
+              className="bg-gray-300 px-3 py-1 rounded"
+            >
+              No
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        position: "top-center",
+        autoClose: false,
+        closeOnClick: false,
+        closeButton: false,
+      }
+    )
+  }
   const handleDelete = async (e) => {
     e.preventDefault()
-    try {
-      if (window.confirm("Are you sure you want to delete this purchase management sheet?")) {
+    confirmDeleteToast(async () => {
+      try {
+
         const response = await axiosInstance.delete(`/mastersheet/staffmanagement/${id}`)
         navigate("/mastersheet")
         alert("Staff management sheet deleted successfully!")
+
+      } catch (error) {
+        alert("Error deleting staff management sheet!")
       }
-    } catch (error) {
-      alert("Error deleting staff management sheet!")
-    }
+    })
   }
   const handleSave = async (e) => {
     e.preventDefault()
@@ -173,7 +206,7 @@ const updatesalemanagemnet = () => {
                     />
                   </td>
                   <td>
-                  <input
+                    <input
                       type="checkbox"
                       name="ok"
                       checked={item.ok === true || item.ok === "Yes" || item.ok === "true"}
