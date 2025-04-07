@@ -209,9 +209,9 @@ Router.post("/verify-invite", async (req, res) => {
 
   let userType = null;
 
-  if (Invitecodemembers.includes(invitecode)) {
+  if (process.env.VALID_INVITATION_CODES.includes(invitecode)) {
     userType = "member";
-  } else if (Invitecodestaff.includes(invitecode)) {
+  } else if (process.env.VALID_INVITATION_CODES_FOR_STAFF.includes(invitecode)) {
     userType = "staff";
   }
 
