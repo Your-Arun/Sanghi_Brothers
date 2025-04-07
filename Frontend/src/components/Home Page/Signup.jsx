@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axiosInstance from '../Dashboard/axiosInstance'
 import { Link, useNavigate } from "react-router-dom";
+import GoogleAuth from './googleauth'
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -189,6 +190,8 @@ const Signup = () => {
             Login
           </Link>
         </p>
+
+        <p> <GoogleAuth/> </p>
       </form>
     </div>
   );

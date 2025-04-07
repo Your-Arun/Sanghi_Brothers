@@ -204,16 +204,49 @@ const Invitecodestaff = (process.env.VALID_INVITATION_CODES_FOR_STAFF || "")
   .filter(code => code !== "");
 
 Router.post("/verify-invite", async (req, res) => {
-  const { invitecode } = req.body;
+  const { invitecode, email } = req.body; // get email from frontend if needed
+
+  let userType = null;
 
   if (Invitecodemembers.includes(invitecode)) {
-    return res.json({ valid: true, type: "member" });
+    userType = "member";
   } else if (Invitecodestaff.includes(invitecode)) {
-    return res.json({ valid: true, type: "staff" });
-  } else {
+    userType = "staff";
+  }
+
+  if (!userType) {
     return res.json({ valid: false });
   }
+
+  // You can also save user to DB here if not already
+  const userPayload = {
+    email,
+    type: userType,
+  };
+
+  const token = jwt.sign(userPayload, process.env.JWT_SECRET, {
+    expiresIn: "7d",
+  });
+
+  return res.json({
+    valid: true,
+    type: userType,
+    token,
+  });
 });
+// Router.post("/verify-invite", async (req, res) => {
+//   const { invitecode } = req.body;
+
+//   if (Invitecodemembers.includes(invitecode)) {
+//     return res.json({ valid: true, type: "member" });
+//   } else if (Invitecodestaff.includes(invitecode)) {
+//     return res.json({ valid: true, type: "staff" });
+//   } else {
+//     return res.json({ valid: false });
+//   }
+// });
+
+
 // ✅ Forgot Password - Send OTP
 Router.post("/forgot-password", async (req, res) => {
   const { email, otp, newPassword } = req.body;
@@ -286,6 +319,51 @@ Router.post("/forgot-password", async (req, res) => {
 });
 
 
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+
+
+Router.post("/google-auth", async (req, res) => {
+  const { token } = req.body;
+
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+
+    const { email, name, picture } = payload;
+ // 🔥 Check if user exists
+ let user = await User.findOne({ email });
+
+ if (!user) {
+   // 👇 If not, create user with default role "member"
+   user = await User.create({
+     email,
+     name,
+     picture,
+     department: "", // default or update later using invite code
+     authType: "google"
+   });
+ }
+
+ return res.status(200).json({
+   user: {
+     _id: user._id,
+     email: user.email,
+     name: user.name,
+     picture: user.picture,
+     department: user.department
+   },
+   message: "Google user authenticated",
+ });
+  } catch (error) {
+    return res.status(401).json({ message: "Invalid Google token" });
+  }
+});
 
 
 module.exports = Router;

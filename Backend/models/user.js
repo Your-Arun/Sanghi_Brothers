@@ -10,6 +10,8 @@ const userSchema = new mongoose.Schema(
     department: { type: String, trim: true },
     otp: { type: String },
     otpExpires: { type: Date }, // ✅ Make sure this is defined
+    picture: String,
+    authType: { type: String, default: "google" }
   },
   { timestamps: true }
 );
