@@ -24,7 +24,7 @@ const Navbar = () => {
             <div className="container mx-auto flex justify-between items-center">
                 {/* Heading */}
                 <div className="text-white text-4xl md:text-3xl font-serif flex-1 text-center md:text-left">
-                    SANGHI BROTHERS
+                    <span className="text-white">SANGHI BROTHERS</span>
                 </div>
 
                 {/* Mobile Menu Toggle Button */}
