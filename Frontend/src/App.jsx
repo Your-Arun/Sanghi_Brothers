@@ -67,6 +67,7 @@ const App = () => {
   return (
     <>
       <ToastContainer position="top-right" autoClose={2000} />
+      
       <UserProvider>
         <Router>
           <SessionTimeout timeout={240 * 60 * 1000} /> {/* 10 min session timeout */}
@@ -88,7 +89,7 @@ const AppContent = () => {
     <>
       {shouldShowNavbar && <Navbar />}
       <Routes>
-<Route path="*" element={<Notfound/>}/>
+        <Route path="*" element={<Notfound />} />
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
