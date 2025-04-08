@@ -274,3 +274,192 @@ label {
     flex: 1 1 30%; /* Three items per row on larger screens */
   }
 }
+
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: serif;
+  background-color: #b6c4d0;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* ===== Table Container ===== */
+.table-container {
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin: 2rem auto;
+  border: 1px solid #e0e0e0;
+  overflow-x: auto; /* ✅ Important for mobile scroll */
+  width: 100%;
+  max-width: 100%;
+}
+
+/* ===== Table ===== */
+table {
+  width: 100%;
+  min-width: 600px; /* ✅ Prevent layout break on small screen */
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  color: #333;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+th {
+  background: linear-gradient(90deg, #4caf50, #3a9d3a);
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+th, td {
+  padding: 0.75rem;
+  text-align: center;
+  font-size: 0.875rem;
+  border: 1px solid #e0e0e0;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+tr:hover {
+  background-color: #e8f5e9;
+  color: #333;
+  transform: scale(1.01);
+  transition: all 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== Inputs ===== */
+input[type="number"], input[type="text"] {
+  background-color: #f9f9f9;
+  color: #333;
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+input[type="number"]:focus, input[type="text"]:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* ===== Buttons ===== */
+button {
+  color: #ffffff;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+@media (max-width: 480px) {
+  button {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* ===== Container ===== */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0.75rem;
+  }
+}
+
+/* ===== Typography & Links ===== */
+a {
+  color: #4caf50;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+label {
+  font-size: 0.875rem;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  label {
+    font-size: 0.75rem;
+  }
+}
+
+/* ===== Flex Utility for Cards or Boxes ===== */
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.flex-item {
+  flex: 1 1 100%;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .flex-item {
+    flex: 1 1 48%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .flex-item {
+    flex: 1 1 30%;
+  }
+}
