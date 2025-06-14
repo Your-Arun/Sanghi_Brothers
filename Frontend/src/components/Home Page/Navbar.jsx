@@ -40,7 +40,7 @@ const Navbar = () => {
                     <NavLink
                         to="/"
                         className={({ isActive }) =>
-                            `text-blue hover:bg-gray-300  hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
+                            `text-wheat hover:bg-gray-300  hover:text-wheat-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
                         }
                     >
                         Home
@@ -50,7 +50,7 @@ const Navbar = () => {
                     <NavLink
                         to="/about"
                         className={({ isActive }) =>
-                            `text-blue hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
+                            `text-wheat hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
                         }
                     >
                         About
@@ -60,7 +60,7 @@ const Navbar = () => {
                     <NavLink
                         to="/services"
                         className={({ isActive }) =>
-                            `text-blue hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
+                            `text-wheat hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
                         }
                     >
                         Services
@@ -70,7 +70,7 @@ const Navbar = () => {
                     <NavLink
                         to="/contact"
                         className={({ isActive }) =>
-                            `text-blue hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
+                            `text-wheat hover:bg-gray-300 hover:text-blue-500 transition duration-300 p-2 rounded ${isActive ? 'bg-gray-300 text-blue-500' : ''}`
                         }
                     >
                         Contact
