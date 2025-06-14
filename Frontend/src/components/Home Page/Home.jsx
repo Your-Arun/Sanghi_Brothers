@@ -5,7 +5,7 @@ const Home = () => {
   return (
     <>
 
-      <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-r from-blue-200 to-green-200 px-4">
+      <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-r from-blue-300 to-green-300 px-4">
         <div className="text-center p-6 md:p-8 bg-white rounded-lg shadow-lg w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg transition-transform transform">
           <h1 className="text-3xl md:text-4xl font-bold text-blue-600 mb-4">
             Welcome Home
