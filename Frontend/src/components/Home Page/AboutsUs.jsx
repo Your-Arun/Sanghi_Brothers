@@ -51,31 +51,31 @@ const AboutUs = () => {
         </div>
 
         {/* Legacy & History Section */}
-        <div className="mt-16 space-y-8">
+        <div className="mt-16 space-y-8 mt-2">
           {[
             {
               title: "Legacy",
-              image: "/legacy.jpg",
+              image: "/legacy.jpg" ,className:"w-32 h-32 rounded-lg shadow-md object-cover",
               description:
-                "Seth Motilal Sanghi diversified into cinema business and profitably operated over ten movie theatres in North India.",
+                "Seth Motilal Sanghi diversified into cinema business and profitably operated over ten movie theatres in North India.",className:"text-gray-600 text-xl"
             },
             {
               title: "N K Sanghi",
-              image: "/nksanghi.jpg",
+              image: "/nksanghi.jpg",className:"w-32 h-32 rounded-lg shadow-md object-cover",
               description:
-                "Shri Narendra Kumar Sanghi was the eldest son of Seth Motilal Sanghi. He was a disciplined businessman and a social leader.",
+                "Shri Narendra Kumar Sanghi was the eldest son of Seth Motilal Sanghi. He was a disciplined businessman and a social leader.",className:"text-gray-600 text-xl"
             },
             {
               title: "Cinema & Business Empire",
               image: "/group.jpg",
               description:
-                "His passion for cinemas helped the automobile group also become a leading exhibitor in the country.",
+                "His passion for cinemas helped the automobile group also become a leading exhibitor in the country.",className:"text-gray-600 text-xl"
             },
             {
               title: "Political & Social Influence",
-              image: "/1.jpg",
+              image: "/1.jpg",className:"w-32 h-32 rounded-lg shadow-md object-cover",
               description:
-                "Shri N K Sanghi won the Lok Sabha elections in 1967 & 1971. His social impact is still remembered by his people.",
+                "Shri N K Sanghi won the Lok Sabha elections in 1967 & 1971. His social impact is still remembered by his people.",className:"text-gray-600 text-xl"
             },
           ].map((item, index) => (
             <div
