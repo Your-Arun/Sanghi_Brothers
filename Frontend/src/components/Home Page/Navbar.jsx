@@ -20,7 +20,7 @@ const Navbar = () => {
 
 
     return (
-        <nav className="bg-gradient-to-r from-blue-500 to-purple-600 p-4 shadow-lg">
+        <nav className="bg-gradient-to-r from-blue-300 to-purple-600 p-4 shadow-lg">
             <div className="container mx-auto flex justify-between items-center">
                 {/* Heading */}
                 <div className="text-white text-4xl md:text-3xl font-serif flex-1 text-center md:text-left">
