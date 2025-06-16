@@ -186,14 +186,14 @@ const Dashboard = () => {
             <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">
               Departments
             </h2>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               {["Manager", "Accounts/Finance", "Backoffice"].map((dept) => (
                 <div
                   key={dept}
-                  className="p-6 border bg-yellow-200 rounded-xl shadow-md hover:bg-yellow-300 cursor-pointer transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg break-words min-h-[100px]"
+                  className=" border bg-yellow-200 rounded-xl shadow-md hover:bg-yellow-300 cursor-pointer transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg break-words min-h-[100px]"
                   onClick={() => viewReports(dept.toLowerCase())}
                 >
-                  <h3 className="text-xl font-bold text-orange-700 uppercase">{dept}</h3>
+                  <h3 className="text-[18px] font-bold text-orange-700 uppercase">{dept}</h3>
                 </div>
               ))}
             </div>
@@ -204,7 +204,7 @@ const Dashboard = () => {
       <div className="mb-10 p-6 w-[90%] bg-gradient-to-r from-blue-400 to-yellow-400 rounded-lg shadow-md">
         <div className="flex items-center justify-center">
           <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">
-            BANK Related Reports
+            Bank Reports
           </h2>
           <img
             src={add}
@@ -218,7 +218,7 @@ const Dashboard = () => {
       <div className="mb-10 p-6 w-[90%] bg-gradient-to-r from-blue-400 to-yellow-400 rounded-lg shadow-md">
         <div className="flex items-center justify-center">
           <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">
-            Report File
+            Report Files
           </h2>
           <img
             src={add}
@@ -282,7 +282,7 @@ const Dashboard = () => {
       </div>
       <div className="mb-10 p-6 w-[90%] bg-gradient-to-r from-blue-400 to-yellow-400 rounded-lg shadow-md">
         <div className="flex items-center justify-center">
-          <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">Cashier Kaam</h2>
+          <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">Cashier Works</h2>
           <img
             src={add}
             alt="Create"
