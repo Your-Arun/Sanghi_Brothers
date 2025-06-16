@@ -230,7 +230,7 @@ const SB03_Monthly = () => {
 
   return (
     <>
-      <div>
+      <div className="bg-gradient-to-r from-blue-400 to-yellow-400 flex-col items-center justify-center min-h-screen p-6">
         <form onSubmit={saveData}>
          <div>
          <h1 className="text-center  text-3xl p-4 text-blue-600">

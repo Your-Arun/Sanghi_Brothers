@@ -145,7 +145,7 @@ const InFlowOutFlow = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+    <div className="flex bg-gradient-to-r from-blue-400 to-yellow-400 flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
       <div className="text-center mt-10 text-2xl font-serif">
         <h1>
           {" "}

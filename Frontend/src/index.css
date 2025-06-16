@@ -467,16 +467,3 @@ label {
 }
 
 
-.input-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 100%;
-}
-
-.input-group input {
-  flex: 1 1 250px; /* allows wrapping and responsiveness */
-  max-width: 100%;
-}
