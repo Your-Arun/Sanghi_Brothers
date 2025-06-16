@@ -1,12 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import homeLogo from "/public/home.jpg";
 
 const Home = () => {
   return (
     <>
 
-      <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-r from-blue-300 to-green-300 px-4">
-        <div className="text-center p-6 md:p-8 bg-white rounded-lg shadow-lg w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg transition-transform transform">
+      <div
+        className="flex flex-col justify-center items-center min-h-screen bg-cover bg-center px-4"
+        style={{ backgroundImage: `url(${homeLogo})` }}
+      >
+        <div className="bg-white bg-opacity-80 text-center p-6 md:p-8 rounded-lg shadow-lg w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg transition-transform transform">
           <h1 className="text-3xl md:text-4xl font-bold text-blue-600 mb-4">
             Welcome Home
           </h1>
