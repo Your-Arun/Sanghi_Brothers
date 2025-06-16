@@ -181,7 +181,7 @@ const Dashboard = () => {
 
 
       <div>
-        <div className="mb-16 p-6 w-[90%] rounded-lg shadow-md">
+        <div className="mb-16 p-6 w-[90%] bg-gradient-to-r from-blue-400 to-yellow-400 rounded-lg shadow-md">
           <div className="mb-6">
             <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">
               Departments
@@ -200,7 +200,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-      <div className="mb-10 p-6 w-[90%] rounded-lg shadow-md">
+      <div className="mb-10 p-6 w-[90%] bg-gradient-to-r from-blue-400 to-yellow-400 rounded-lg shadow-md">
         <div className="flex items-center justify-center">
           <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">
             BANK Related Reports
@@ -214,7 +214,7 @@ const Dashboard = () => {
           />
         </div>
       </div>
-      <div className="mb-10 p-6 w-[90%] rounded-lg shadow-md">
+      <div className="mb-10 p-6 w-[90%] bg-gradient-to-r from-blue-400 to-yellow-400 rounded-lg shadow-md">
         <div className="flex items-center justify-center">
           <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">
             Report File
@@ -279,7 +279,7 @@ const Dashboard = () => {
           </div>
         )}
       </div>
-      <div className="mb-10 p-6 w-[90%] rounded-lg shadow-md">
+      <div className="mb-10 p-6 w-[90%] bg-gradient-to-r from-blue-400 to-yellow-400 rounded-lg shadow-md">
         <div className="flex items-center justify-center">
           <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">Cashier Kaam</h2>
           <img
@@ -341,7 +341,7 @@ const Dashboard = () => {
           </div>
         )}
       </div>
-      <div className="mb-10 p-6 w-[90%] rounded-lg shadow-md">
+      <div className="mb-10 p-6 w-[90%] bg-gradient-to-r from-blue-400 to-yellow-400 rounded-lg shadow-md">
         <div className="flex items-center justify-center">
           <h2 className="text-3xl font-bold mb-4 mt-8 text-blue-700">Complaints</h2>
           <img
