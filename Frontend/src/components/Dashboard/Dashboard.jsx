@@ -156,29 +156,29 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col bg-gradient-to-r from-blue-400 to-yellow-400 items-center justify-center min-h-screen p-6">
-      <div className="flex items-center justify-between w-full max-w-4xl mx-auto mb-8 ">
-        <div>
-          <h1 className="text-5xl font-extrabold uppercase font-serif text-center 
-                text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-500 
-                drop-shadow-lg mt-[-10px] mb-8">
-            Dashboard
-          </h1>
-        </div>
-        <div>
-          <div className="relative user-menu">
-            <div className="flex items-center justify-start pl-6">
-              <img
-                src="/user.png"
-                alt="User"
-                className="w-12 h-12 rounded-full border-2 border-gray-400 shadow-md cursor-pointer
-        hover:scale-105 transition-transform duration-300"
-                onClick={() => setProfileOpen(true)}
-              />
-              {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
-            </div>
+      <div className="flex items-center justify-between w-full max-w-4xl mx-auto mb-8 px-4">
+        {/* Dashboard Title */}
+        <h1 className="text-3xl md:text-5xl font-extrabold uppercase font-serif 
+        text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-500 
+        drop-shadow-lg text-left">
+          Dashboard
+        </h1>
+
+        {/* User Menu */}
+        <div className="relative user-menu">
+          <div className="flex items-center justify-center">
+            <img
+              src="/user.png"
+              alt="User"
+              className="w-9 h-9 md:w-10 md:h-10 rounded-full border border-gray-400 shadow cursor-pointer
+          hover:scale-105 transition-transform duration-300"
+              onClick={() => setProfileOpen(true)}
+            />
+            {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
           </div>
         </div>
       </div>
+
 
       <div>
         <div className="mb-10 p-6 rounded-lg shadow-md">
