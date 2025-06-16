@@ -190,10 +190,10 @@ const Dashboard = () => {
               {["Manager", "Accounts/Finance", "Backoffice"].map((dept) => (
                 <div
                   key={dept}
-                  className=" border bg-yellow-200 rounded-xl shadow-md hover:bg-yellow-300 cursor-pointer transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg break-words min-h-[100px]"
+                  className="p-8 border bg-yellow-200 rounded-xl shadow-md hover:bg-yellow-300 cursor-pointer transition-all duration-300 text-center transform hover:scale-105 hover:shadow-lg break-words min-h-[100px]"
                   onClick={() => viewReports(dept.toLowerCase())}
                 >
-                  <h3 className="text-[18px] font-bold text-orange-700 uppercase">{dept}</h3>
+                  <h3 className="text-xl font-bold text-orange-700 uppercase">{dept}</h3>
                 </div>
               ))}
             </div>
