@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import axiosInstance from '../Dashboard/axiosInstance'
+import axiosInstance from '../Dashboard/axiosInstance';
 import { Link, useNavigate } from "react-router-dom";
+import signupBg from "/home.jpg"; // ✅ Use your actual image path
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -16,7 +17,6 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Handle Invitation Code Verification
   const handleInviteCodeVerification = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -39,7 +39,6 @@ const Signup = () => {
     }
   };
 
-  // Handle Signup
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -47,6 +46,7 @@ const Signup = () => {
       alert("Please verify your invitation code first");
       return;
     }
+
     setLoading(true);
 
     try {
@@ -63,7 +63,7 @@ const Signup = () => {
         localStorage.setItem("token", response.data.token);
       }
 
-      alert(response.data.message || "User  registered successfully");
+      alert(response.data.message || "User registered successfully");
       navigate("/login");
     } catch (err) {
       alert(err.response?.data?.message || "Signup failed");
@@ -73,9 +73,12 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
+    <div
+      className="flex justify-center items-center min-h-screen bg-cover bg-center px-4"
+      style={{ backgroundImage: `url(${signupBg})` }}
+    >
       <form
-        className="bg-white p-6 md:p-8 rounded-lg shadow-lg w-full max-w-sm md:max-w-md lg:max-w-lg"
+        className="bg-white bg-opacity-80 p-6 md:p-8 rounded-lg shadow-lg w-full max-w-sm md:max-w-md lg:max-w-lg"
         onSubmit={isValidInviteCode ? handleSubmit : handleInviteCodeVerification}
       >
         <h2 className="text-2xl md:text-3xl font-bold text-center text-blue-600 mb-6">
@@ -189,10 +192,7 @@ const Signup = () => {
             Login
           </Link>
         </p>
-
-      
       </form>
-
     </div>
   );
 };

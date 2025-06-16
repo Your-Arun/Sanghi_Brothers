@@ -4,6 +4,7 @@ import { Eye, EyeOff } from "lucide-react";
 import UserContext from "./UserContext";
 import axiosInstance from "../Dashboard/axiosInstance";
 import { toast } from "react-toastify";
+import loginBg from "/home.jpg"; // ✅ Replace with your actual image path
 
 const Login = () => {
   const { setUser } = useContext(UserContext);
@@ -13,13 +14,13 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ Generate a unique session key for each tab
-  const sessionKey = sessionStorage.getItem("activeSession") || `userSession_${Math.random().toString(36).substr(2, 9)}`;
+  const sessionKey =
+    sessionStorage.getItem("activeSession") ||
+    `userSession_${Math.random().toString(36).substr(2, 9)}`;
   sessionStorage.setItem("activeSession", sessionKey);
 
-  // ✅ Restore session on page load
   useEffect(() => {
-    const fetchUser  = async () => {
+    const fetchUser = async () => {
       const sessionData = sessionStorage.getItem(sessionKey);
       if (!sessionData) return;
 
@@ -30,44 +31,50 @@ const Login = () => {
         sessionStorage.removeItem(sessionKey);
       }
     };
-    fetchUser ();
-  }, [setUser , sessionKey]);
+    fetchUser();
+  }, [setUser, sessionKey]);
 
-  // ✅ Handle Login
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-  
+
     try {
       const { data } = await axiosInstance.post("/login", { email, password });
-  
+
       sessionStorage.setItem(sessionKey, JSON.stringify(data.user));
       sessionStorage.setItem("authToken", data.token);
-  
+
       setUser(data.user);
       toast.success("Login Successful");
-  
-      // ✅ Admin Check
+
       if (data.user.department === "admin") {
-        navigate("/admin-panel"); // Admin ko Admin Panel bhejo
+        navigate("/admin-panel");
       } else {
-        navigate(data.user.department === "staff" ? "/staff-dashboard" : "/dashboard");
+        navigate(
+          data.user.department === "staff" ? "/staff-dashboard" : "/dashboard"
+        );
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || "Invalid credentials, please try again.");
+      toast.error(
+        err.response?.data?.message || "Invalid credentials, please try again."
+      );
     } finally {
       setLoading(false);
     }
   };
-  
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
+    <div
+      className="flex justify-center items-center min-h-screen bg-cover bg-center px-4"
+      style={{ backgroundImage: `url(${loginBg})` }}
+    >
       <form
-        className="bg-white p-6 md:p-8 rounded-lg shadow-xl w-full max-w-sm md:max-w-md lg:max-w-lg"
+        className="bg-white bg-opacity-80 p-6 md:p-8 rounded-lg shadow-xl w-full max-w-sm md:max-w-md lg:max-w-lg"
         onSubmit={handleSubmit}
       >
-        <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center text-blue-600">Login</h2>
+        <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center text-blue-600">
+          Login
+        </h2>
 
         {/* Email Input */}
         <input
@@ -120,7 +127,7 @@ const Login = () => {
             Reset it here
           </Link>
         </p>
-        </form>
+      </form>
     </div>
   );
 };

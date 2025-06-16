@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import homeLogo from "/public/home.jpg";
+import homeLogo from "/home.jpg";
 
 const Home = () => {
   return (
@@ -10,7 +10,7 @@ const Home = () => {
         className="flex flex-col justify-center items-center min-h-screen bg-cover bg-center px-4"
         style={{ backgroundImage: `url(${homeLogo})` }}
       >
-        <div className="bg-white bg-opacity-80 text-center p-6 md:p-8 rounded-lg shadow-lg w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg transition-transform transform">
+        <div className="bg-white bg-opacity-60 text-center p-6 md:p-8 rounded-lg shadow-lg w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg transition-transform transform">
           <h1 className="text-3xl md:text-4xl font-bold text-blue-600 mb-4">
             Welcome Home
           </h1>
