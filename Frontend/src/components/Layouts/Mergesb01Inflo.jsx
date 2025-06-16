@@ -33,7 +33,7 @@ const MergeSBInflo = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+    <div className="flex flex-col bg-gradient-to-r from-blue-400 to-yellow-400 items-center justify-center min-h-screen bg-gray-100 p-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
         {/* SB Bank Report Section */}
         <div className="bg-white p-6 rounded-lg shadow-lg">

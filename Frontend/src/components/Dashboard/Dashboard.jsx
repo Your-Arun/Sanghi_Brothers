@@ -181,7 +181,7 @@ const Dashboard = () => {
 
 
       <div>
-        <div className="mb-10 p-6 rounded-lg shadow-md">
+        <div className="mb-16 p-6 rounded-lg shadow-md">
           <div className="mb-6">
             <h2 className="text-2xl font-semibold mb-4 text-center text-teal-700">
               Departments
