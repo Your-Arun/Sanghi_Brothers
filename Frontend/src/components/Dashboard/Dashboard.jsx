@@ -165,7 +165,7 @@ const Dashboard = () => {
           </h1>
         </div>
         <div>
-          <div className="relative mb-4 user-menu">
+          <div className="relative user-menu">
             <div className="flex items-center justify-start pl-6">
               <img
                 src="/user.png"
