@@ -156,7 +156,7 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col bg-gradient-to-r from-blue-400 to-yellow-400 items-center justify-center min-h-screen p-6">
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-between w-full max-w-4xl mx-auto mb-8 ">
         <div>
           <h1 className="text-5xl font-extrabold uppercase font-serif text-center 
                 text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-500 
@@ -177,23 +177,6 @@ const Dashboard = () => {
               {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
             </div>
           </div>
-        </div>
-      </div>
-      <h1 className="text-5xl font-extrabold uppercase font-serif text-center 
-                text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-500 
-                drop-shadow-lg mt-[-10px] mb-8">
-        Dashboard
-      </h1>
-      <div className="relative mb-4 user-menu">
-        <div className="flex items-center justify-start pl-6">
-          <img
-            src="/user.png"
-            alt="User"
-            className="w-12 h-12 rounded-full border-2 border-gray-400 shadow-md cursor-pointer
-        hover:scale-105 transition-transform duration-300"
-            onClick={() => setProfileOpen(true)}
-          />
-          {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
         </div>
       </div>
 
