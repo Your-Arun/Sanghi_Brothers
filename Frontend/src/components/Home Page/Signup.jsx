@@ -78,7 +78,7 @@ const Signup = () => {
       style={{ backgroundImage: `url(${signupBg})` }}
     >
       <form
-        className="bg-white bg-opacity-80 p-6 md:p-8 rounded-lg shadow-lg w-full max-w-sm md:max-w-md lg:max-w-lg"
+        className="bg-white bg-opacity-60 p-6 md:p-8 rounded-lg shadow-lg w-full max-w-sm md:max-w-md lg:max-w-lg"
         onSubmit={isValidInviteCode ? handleSubmit : handleInviteCodeVerification}
       >
         <h2 className="text-2xl md:text-3xl font-bold text-center text-blue-600 mb-6">
