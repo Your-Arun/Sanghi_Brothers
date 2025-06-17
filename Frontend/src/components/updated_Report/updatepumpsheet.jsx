@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
+
 const UpdatePumpSheet = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
@@ -76,16 +77,18 @@ const UpdatePumpSheet = () => {
         alert("Error saving data");
       }
     };
+   
+    // delete confirm UI
     const confirmDeleteToast = (onConfirm) => {
       toast(
         ({ closeToast }) => (
           <div className="flex flex-col gap-2">
-            <p>Are you sure you want to delete this ?</p>
+            <p>Are you sure you want to delete this?</p>
             <div className="flex gap-4 mt-2">
               <button
                 onClick={() => {
-                  onConfirm()
-                  closeToast()
+                  onConfirm();
+                  closeToast();
                 }}
                 className="bg-red-500 text-white px-3 py-1 rounded"
               >
@@ -106,21 +109,23 @@ const UpdatePumpSheet = () => {
           closeOnClick: false,
           closeButton: false,
         }
-      )
-    }
-  
-  const handleDelete = async (e) => {
-    e.preventDefault()
-    confirmDeleteToast(async () => {
-      try {
-        await axiosInstance.delete(`/mastersheet/pumpsheet/${id}`);
-        alert("Report deleted successfully!");
-        navigate("/mastersheet"); // Redirect to dashboard or another page
-      } catch (error) {
-        alert("Failed to delete report.");
-      }
-    })
-  }
+      );
+    };
+    
+    // actual handler
+    const handleDelete = (e) => {
+      e.preventDefault();
+      confirmDeleteToast(async () => {
+        try {
+          await axiosInstance.delete(`/mastersheet/pumpsheet/${id}`);
+          toast.success("Report deleted successfully!");
+          navigate("/mastersheet");
+        } catch (error) {
+          toast.error("Failed to delete report.");
+        }
+      });
+    };
+    
 
   return (
     <div>
