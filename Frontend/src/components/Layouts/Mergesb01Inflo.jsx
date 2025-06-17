@@ -54,10 +54,10 @@ const MergeSBInflo = () => {
                   <Link
                     to={`/fundposition/${sbii._id}`}
                     key={sbii._id}
-                    className="p-4 border bg-gray-200 text-xl rounded-lg shadow-md hover:bg-blue-200 transition duration-300 hover:scale-105 text-center"
+                    className="p-4 border bg-gray-200  rounded-lg shadow-md hover:bg-blue-200 transition duration-300 hover:scale-105 text-center"
                   >
-                    <h1 className="text-xl text-gray-800 font-semibold">{sbii.username}</h1>
-                    <h3 className="text-lg font-medium text-gray-700">
+                    <h1 className=" text-gray-800 font-semibold">{sbii.username}</h1>
+                    <h3 className=" font-medium text-gray-700">
                       {new Date(sbii.createdAt).toLocaleDateString("en-GB", {
                         day: "2-digit",
                         month: "2-digit",
