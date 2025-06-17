@@ -8,12 +8,12 @@ import { toast } from 'react-toastify'
 const MasterChecklist = () => {
 
   const [inputValues, setInputValues] = useState({
-    dat1:0,
-    dat2:0,
-    dat3:0,
-    dat4:0,
-    dat5:0,
-    dat6:0,
+    dat1: 0,
+    dat2: 0,
+    dat3: 0,
+    dat4: 0,
+    dat5: 0,
+    dat6: 0,
     a1: '',
     a2: '',
     a3: '',
@@ -70,7 +70,7 @@ const MasterChecklist = () => {
     e.preventDefault();
     try {
       const datasheet = { ...inputValues };
- const response = await axiosInstance.post(
+      const response = await axiosInstance.post(
         "/mastersheet/pumpsheet",
         datasheet
       );
@@ -83,22 +83,24 @@ const MasterChecklist = () => {
     <div className="flex flex-col items-center  bg-gradient-to-r from-blue-400 to-yellow-400 justify-center min-h-screen p-6">
       <h1 className="text-center  text-xl p-4">PUMP REPORT SHEET</h1>
       <form onSubmit={handlesave}>
-        <div className="text-center mt-[-20px] bg-transparent text-xl p-4">
-          <h1 className="bg-transparent">
+        <div className="text-center mt-[-20px] text-xl p-4">
+          <h1 >
             Exceptional Report of{" "}
             <input
-                  type="date"
-                  id="dat1"
-                  value={inputValues.dat1}
-                  onChange={handleInputChange}
-                /> </h1>
-          <h2 className="bg-transparent">
+              type="date"
+              id="dat1"
+              className="bg-transparent"
+              value={inputValues.dat1}
+              onChange={handleInputChange}
+            /> </h1>
+          <h2>
             Reported on <input
-                  type="date"
-                  id="dat2"
-                  value={inputValues.dat2}
-                  onChange={handleInputChange}
-                />
+              className="bg-transparent"
+              type="date"
+              id="dat2"
+              value={inputValues.dat2}
+              onChange={handleInputChange}
+            />
           </h2>
         </div>
         <div className="flex justify-evenly items-center  p-4">
