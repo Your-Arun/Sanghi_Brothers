@@ -243,7 +243,7 @@ const SB03_Monthly = () => {
               </div>
             </Link>
             <div className="text-center mt-5 text-xl p-4">
-              <input type="date" id="datee"  />
+              <input type="date" id="datee" className='bg-transparent'  />
             </div>
             <div>
               <button type="submit">
