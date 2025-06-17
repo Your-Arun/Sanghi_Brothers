@@ -218,13 +218,13 @@ const Sb01 = () => {
               <div className="flex justify-evenly w-full p-4">
                 <Link to={"/sbbank"}>
                   <div>
-                    <img src={previousImage} width={50} alt="Back" />
+                    <img src={previousImage} width={50} alt="Back"  className="bg-transparent"/>
                   </div>
                 </Link>
                 
                 <div>
                   <button type="submit">
-                    <img src={saveImage} width={50} alt="Save" />
+                    <img src={saveImage} width={50} alt="Save"  className="bg-transparent"/>
                   </button>
                 </div>
               </div>
