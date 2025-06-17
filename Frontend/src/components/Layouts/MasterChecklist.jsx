@@ -84,7 +84,7 @@ const MasterChecklist = () => {
       <h1 className="text-center  text-xl p-4">PUMP REPORT SHEET</h1>
       <form onSubmit={handlesave}>
         <div className="text-center mt-[-20px] bg-transparent text-xl p-4">
-          <h1>
+          <h1 className="bg-transparent">
             Exceptional Report of{" "}
             <input
                   type="date"
@@ -92,7 +92,7 @@ const MasterChecklist = () => {
                   value={inputValues.dat1}
                   onChange={handleInputChange}
                 /> </h1>
-          <h2>
+          <h2 className="bg-transparent">
             Reported on <input
                   type="date"
                   id="dat2"
