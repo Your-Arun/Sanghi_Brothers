@@ -167,7 +167,7 @@ const InFlowOutFlow = () => {
              
             </div>
             <div>
-              <button type="submit">
+              <button type="submit" className='bg-transparent'>
                 <img src={saveImage} width={50} alt="Save" />
               </button>{" "}
             </div>
@@ -261,7 +261,7 @@ const InFlowOutFlow = () => {
               </tr>
 
               <tr>
-                <td>BPCL CR. RECD NOV 24</td>
+                <td>BPCL CR. RECD </td>
                 <td>
                   <input
                     type="number"
@@ -742,11 +742,11 @@ const InFlowOutFlow = () => {
                   {OutFlow > 0 ? (
                     <span className="text-green-600">
                       {" "}
-                      Inflow:${OutFlow.toFixed(2)}
+                      Inflow:Rs💰{OutFlow.toFixed(2)}
                     </span>
                   ) : OutFlow < 0 ? (
                     <span className="text-red-600">
-                      Outflow:${Math.abs(OutFlow).toFixed(2)}
+                      Outflow:Rs💰{Math.abs(OutFlow).toFixed(2)}
                     </span>
                   ) : (
                     <span>No net flow</span>
