@@ -1101,7 +1101,7 @@ function SBI01Update() {
                   <td>
                     {updtSbi.CalculatedValue.e39result.toFixed(2)} <br />
                     TOTAL DUE as on AS PER BPCL <br />
-                    LEDGER CR.RECd.Nov.24
+                    LEDGER CR.RECd
                   </td>
                 </tr>
                 <tr>
