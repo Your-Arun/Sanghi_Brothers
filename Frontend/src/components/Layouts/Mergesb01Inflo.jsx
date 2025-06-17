@@ -48,13 +48,14 @@ const MergeSBInflo = () => {
               <h3 className="text-xl font-bold">Fund Position</h3>
             </Link>
 
-            <div className="grid mt-4 grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3 justify-center">
+            <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3 justify-center max-h-64 overflow-y-auto">
+
               {sbiUpdate.length > 0 ? (
                 sbiUpdate.map((sbii) => (
                   <Link
                     to={`/fundposition/${sbii._id}`}
                     key={sbii._id}
-                    className="p-4 border bg-gray-200  rounded-lg shadow-md hover:bg-blue-200 transition duration-300 hover:scale-105 text-center"
+                    className=" border bg-gray-200  rounded-lg shadow-md hover:bg-blue-200 transition duration-300 hover:scale-105 text-center"
                   >
                     <h1 className=" text-gray-800 font-semibold">{sbii.username}</h1>
                     <h3 className=" font-medium text-gray-700">
@@ -88,7 +89,8 @@ const MergeSBInflo = () => {
               <h3 className="text-xl font-bold">In-Out Flow</h3>
             </Link>
 
-            <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 justify-center">
+            <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3 justify-center max-h-64 overflow-y-auto">
+
               {inOutFlow.length > 0 ? (
                 inOutFlow.map((flow) => (
                   <div
