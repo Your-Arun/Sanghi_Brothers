@@ -28,7 +28,7 @@ const MergingSBSection = () => {
     return (
         <>
             <div className="mb-10 p-6 bg-gradient-to-r from-blue-400 to-yellow-400 rounded-lg shadow-md">
-                <h1 className="text-center text-4xl p-4 mb-10">🏦 BANK RELATED REPORTS</h1>
+                <h1 className="text-center bg-gradient-to-r from-blue-400 to-yellow-400 text-4xl p-4 mb-10">🏦 BANK RELATED REPORTS</h1>
 
                 <div className="flex flex-col gap-6 p-6">
                     {/* SB Bank Report Section */}
