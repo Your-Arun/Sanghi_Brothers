@@ -206,7 +206,7 @@ const InOutFlowUpdate = () => {
                 <img src={previousImage} width={50} alt="Back" />
               </div>
             </Link>
-            <div>
+            <div className='bg-transparent'>
               {" "}
               <img
                 onClick={handleDelete}
@@ -215,7 +215,7 @@ const InOutFlowUpdate = () => {
                 alt="Delete"
               />
             </div>
-            <div>
+            <div className="bg-transparent">
               <button type="submit">
                 <img src={saveImage} width={50} alt="Save" />
               </button>{" "}
@@ -314,7 +314,7 @@ const InOutFlowUpdate = () => {
                 </tr>
 
                 <tr>
-                  <td>BPCL CR. RECD NOV 24</td>
+                  <td>BPCL CR. RECD</td>
                   <td>
                     <input
                       type="number"
@@ -795,11 +795,11 @@ const InOutFlowUpdate = () => {
                     {floww.OutFlow > 0 ? (
                       <span className="text-green-600">
                         {" "}
-                        Inflow:{floww.OutFlow.toFixed(2)}
+                        Inflow:Rs💰{floww.OutFlow.toFixed(2)}
                       </span>
                     ) : floww.OutFlow < 0 ? (
                       <span className="text-red-600">
-                        Outflow:{Math.abs(floww.OutFlow).toFixed(2)}
+                        Outflow:Rs💰{Math.abs(floww.OutFlow).toFixed(2)}
                       </span>
                     ) : (
                       <span>No net flow</span>
