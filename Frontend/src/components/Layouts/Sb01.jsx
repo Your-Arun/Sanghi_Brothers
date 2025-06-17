@@ -223,8 +223,8 @@ const Sb01 = () => {
                 </Link>
                 
                 <div>
-                  <button type="submit">
-                    <img src={saveImage} width={50} alt="Save"  className="bg-transparent"/>
+                  <button type="submit" className="bg-transparent">
+                    <img src={saveImage} width={50} alt="Save"/>
                   </button>
                 </div>
               </div>

@@ -218,7 +218,7 @@ function SBI01Update() {
           Updated Fund Position of{" "}
           <span className="text-red-600">Sanghi Brothers</span>
         </h1>
-        <h1>SBI 02 Bank position as on {updtSbi.createdAt.split("T")[0]}</h1>
+        <h1>SB 02 Bank position as on {updtSbi.createdAt.split("T")[0]}</h1>
         <div className="flex justify-evenly items-center  p-4">
           <Link to={"/sbbank"}>
             <div className="">
