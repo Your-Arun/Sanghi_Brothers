@@ -106,18 +106,20 @@ const UpdatePumpSheet = () => {
       )
     }
   
-  const handleDelete = async () => {
-    e.preventDefault()
-    confirmDeleteToast(async () => {
-      try {
-        await axiosInstance.delete(`/mastersheet/pumpsheet/${id}`);
-        alert("Report deleted successfully!");
-        navigate("/mastersheet"); // Redirect to dashboard or another page
-      } catch (error) {
-        alert("Failed to delete report.");
-      }
-    })
-  }
+    const handleDelete = async (e) => {
+      e.preventDefault();
+      confirmDeleteToast(async () => {
+        try {
+          await axiosInstance.delete(`/mastersheet/pumpsheet/${id}`);
+          alert("Report deleted successfully!");
+          navigate("/mastersheet");
+        } catch (error) {
+          alert("Failed to delete report.");
+          console.error("Delete error:", error);
+        }
+      });
+    };
+    
 
   return (
     <div className="flex flex-col items-center  bg-gradient-to-r from-blue-400 to-yellow-400 justify-center min-h-screen bg-gray-100 p-6">
