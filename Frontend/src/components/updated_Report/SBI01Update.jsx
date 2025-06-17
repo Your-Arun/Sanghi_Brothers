@@ -221,17 +221,18 @@ function SBI01Update() {
         <h1>SB 02 Bank position as on {updtSbi.createdAt.split("T")[0]}</h1>
         <div className="flex justify-evenly items-center  p-4">
           <Link to={"/sbbank"}>
-            <div className="">
+            <div className="bg-transparent">
               <img src={previousImage} width={50} alt="Back" />
             </div>
           </Link>
           <button
+          className="bg-transparent"
             type="button" // Change type to "button"
             onClick={handleDelete} // Call handleDelete on click
           ><img src={binImage} width={50} alt="Bin" />
             Delete File
           </button>
-          <button
+          <button className="bg-transparent"
             onClick={handleSaveSBI}
           >   <img src={saveImage} width={50} alt="Save" />
             Save Changes
