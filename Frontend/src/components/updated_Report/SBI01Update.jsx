@@ -218,7 +218,7 @@ function SBI01Update() {
           Updated Fund Position of{" "}
           <span className="text-red-600">Sanghi Brothers</span>
         </h1>
-        <h1>SB 02 Bank position as on {updtSbi.createdAt.split("T")[0]}</h1>
+        <h1>SB Bank position as on {updtSbi.createdAt.split("T")[0]}</h1>
         <div className="flex justify-evenly items-center  p-4">
           <Link to={"/sbbank"}>
             <div className="bg-transparent">
@@ -230,12 +230,12 @@ function SBI01Update() {
             type="button" // Change type to "button"
             onClick={handleDelete} // Call handleDelete on click
           ><img src={binImage} width={50} alt="Bin" />
-            Delete File
+            
           </button>
           <button className="bg-transparent"
             onClick={handleSaveSBI}
           >   <img src={saveImage} width={50} alt="Save" />
-            Save Changes
+          
           </button>
         </div>
       </div>
