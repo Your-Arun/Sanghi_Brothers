@@ -1,7 +1,8 @@
 import axiosInstance from '../Dashboard/axiosInstance'
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { toast } from 'react-toastify'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import binImage from "/bin.png";
@@ -33,12 +34,12 @@ function SBI01Update() {
     toast(
       ({ closeToast }) => (
         <div className="flex flex-col gap-2">
-          <p>Are you sure you want to delete this ?</p>
+          <p>Are you sure you want to delete this?</p>
           <div className="flex gap-4 mt-2">
             <button
               onClick={() => {
-                onConfirm()
-                closeToast()
+                onConfirm();
+                closeToast();
               }}
               className="bg-red-500 text-white px-3 py-1 rounded"
             >
@@ -59,9 +60,9 @@ function SBI01Update() {
         closeOnClick: false,
         closeButton: false,
       }
-    )
-  }
-  const handleDelete = async () => {
+    );
+  };
+  const handleDelete = async (e) => {
     e.preventDefault()
     confirmDeleteToast(async () => {
       try {
