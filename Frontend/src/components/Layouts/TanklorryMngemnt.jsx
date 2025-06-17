@@ -83,7 +83,7 @@ const tanklorry = () => {
         setItems(updatedItems);
     };
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+        <div className="flex flex-col items-center  bg-gradient-to-r from-blue-400 to-yellow-400 justify-center min-h-screen bg-gray-100 p-6">
             <h1 className="text-center  text-2xl p-4 font-bold">TANK LORRY MANAGEMENT</h1>
             <form onSubmit={handleSave}>
                 <div className="flex justify-evenly items-center  p-4">

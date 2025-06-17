@@ -153,7 +153,7 @@ const tanklorryupdate = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+    <div className="flex flex-col items-center  bg-gradient-to-r from-blue-400 to-yellow-400 justify-center min-h-screen bg-gray-100 p-6">
       <form onSubmit={handleSave}>
         <div className="flex justify-between items-center mb-6">
           <Link to={"/mastersheet"}>
