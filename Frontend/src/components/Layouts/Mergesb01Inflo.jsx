@@ -48,7 +48,7 @@ const MergeSBInflo = () => {
               <h3 className="text-xl font-bold">Fund Position</h3>
             </Link>
 
-            <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 justify-center">
+            <div className="grid mt-4 grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3 justify-center">
               {sbiUpdate.length > 0 ? (
                 sbiUpdate.map((sbii) => (
                   <Link
