@@ -5,6 +5,8 @@ import binImage from "/bin.png";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const InOutFlowUpdate = () => {
   const navigate = useNavigate();
@@ -174,7 +176,7 @@ const InOutFlowUpdate = () => {
     )
   }
 
-  const handleDelete = async () => {
+  const handleDelete = async (e) => {
     e.preventDefault()
     confirmDeleteToast(async () => {
       try {
@@ -215,17 +217,13 @@ const InOutFlowUpdate = () => {
                 alt="Delete"
               />
             </div>
-            <div className="bg-transparent">
-              <button type="submit">
+            <div >
+              <button className="bg-transparent" type="submit">
                 <img src={saveImage} width={50} alt="Save" />
               </button>{" "}
             </div>
           </div>
-          <div className="flex justify-center">
-            <div className="text-2xl bg-blue-400 p-4  rounded-[20px]   border-none outline-none">
-              {floww.Department}
-            </div>
-          </div>
+         
           <div>
             <table>
               <tbody>
