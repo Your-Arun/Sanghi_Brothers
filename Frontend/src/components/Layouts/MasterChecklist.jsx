@@ -80,7 +80,7 @@ const MasterChecklist = () => {
     }
   };
   return (
-    <div className="flex flex-col items-center  bg-gradient-to-r from-blue-400 to-yellow-400 justify-center min-h-screen p-6">
+  <div className="flex flex-col items-center  bg-gradient-to-r from-blue-400 to-yellow-400 justify-center min-h-screen p-6">
       <h1 className="text-center  text-xl p-4">PUMP REPORT SHEET</h1>
       <form onSubmit={handlesave}>
         <div className="text-center mt-[-20px] text-xl p-4">
@@ -110,7 +110,7 @@ const MasterChecklist = () => {
             </div>
           </Link>
           <div>
-            <button type="submit">
+            <button type="submit" className="bg-transparent">
               <img src={saveImage} width={50} alt="Save" />
             </button>{" "}
           </div>
