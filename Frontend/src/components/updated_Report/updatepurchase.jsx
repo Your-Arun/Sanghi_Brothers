@@ -153,7 +153,7 @@ const updatesalemanagemnet = () => {
 
   return (
     <>
-        <div className="flex flex-col items-center  bg-gradient-to-r from-blue-400 to-yellow-400 justify-center min-h-screen bg-gray-100 p-6">
+        <div className="flex flex-col items-center  bg-gradient-to-r from-blue-400 to-yellow-400 justify-center bg-gray-100 p-6">
         <h1 className="text-center  text-2xl p-4 font-bold">PURCHASE MANAGEMENT</h1>
       <form onSubmit={handleSave}>
           <div className="flex justify-evenly items-center p-4">
@@ -183,73 +183,72 @@ const updatesalemanagemnet = () => {
               </button>{" "}
             </div>
           </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Point</th>
-                <th>Item to Check</th>
-                <th>Ok</th>
-                <th>Responsible</th>
-                <th>Defect Person</th>
-                <th>Defect Delays Days</th>
-                <th>Deadline</th>
-                <th>Comments</th>
-              </tr>
-            </thead>
+          <div className="overflow-x-auto w-full max-w-screen-lg mx-auto">
+          <table  className="table-auto w-full border-collapse border border-gray-300 text-sm">
+          <thead>
+                        <th className="p-2 border">Point</th>
+                        <th className="p-2 border"> Item to Check</th>
+                        <th className="p-2 border">Ok</th>
+                        <th className="p-2 border">Responsible</th>
+                        <th className="p-2 border">Defect Person</th>
+                        <th className="p-2 border">Defect Delays Days</th>
+                        <th className="p-2 border">Deadline</th>
+                        <th className="p-2 border">Comments</th>
+                    </thead>
             <tbody>
               {purchasemgnemt.points.map((item, index) => (
                 <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>
-                    <input
+                  <td className='p-2 border'>{index + 1}</td>
+                  <td className="p-2 border">
+                  <input
                       type="text"
                       name="itemToCheck"
                       value={item.itemToCheck}
                       onChange={(e) => handleItemChange(e, index)}
                     />
                   </td>
-                  <td>
-                    <input
+                  <td className="p-2 border">
+                  <input
                       type="checkbox"
                       name="ok"
                       checked={item.ok === true || item.ok === "Yes" || item.ok === "true"}
                       onChange={(e) => handleInputChnge(e, index)}
                     />
                   </td>
-                  <td>
-                    <input
+                  <td className="p-2 border">
+                  <input
                       type="text"
                       name="responsible"
                       value={item.responsible}
                       onChange={(e) => handleInputChnge(e, index)}
                     />
                   </td>
-                  <td>
-                    <input
+                  <td className="p-2 border">
+                  <input
                       type="text"
                       name="defectPerson"
                       value={item.defectPerson}
                       onChange={(e) => handleInputChnge(e, index)}
                     />
                   </td>
-                  <td>
-                    <input
+                  <td className="p-2 border">
+                  <input
                       type="text"
                       name="defectDelaysDays"
                       value={item.defectDelaysDays}
                       onChange={(e) => handleInputChnge(e, index)}
                     />
                   </td>
-                  <td>
-                    <input
+                  <td className="p-2 border">
+                  <input
                       type="text"
                       name="deadline"
                       value={item.deadline}
                       onChange={(e) => handleInputChnge(e, index)}
                     />
                   </td>
-                  <td>
-                    <input
+                  <td className="p-2 border">
+                  <input
                       type="text"
                       name="comment"
                       value={item.comment}
@@ -260,6 +259,7 @@ const updatesalemanagemnet = () => {
               ))}
             </tbody>
           </table>
+          </div>
         </form>
       </div>
     </>
