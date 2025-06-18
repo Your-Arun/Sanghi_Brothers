@@ -205,7 +205,7 @@ const Sb01 = () => {
 
   return (
     <>
-      <div className="bg-gradient-to-r from-blue-400 to-yellow-400 items-center justify-center min-h-screen p-6">
+      <div className="bg-gradient-to-r from-blue-400 to-yellow-400 items-center justify-center p-6">
         <form className=" min-h-screen " onSubmit={handleSave}>
           <div>
             <div className="text-center text-3xl p-4">
@@ -230,7 +230,8 @@ const Sb01 = () => {
               </div>
             </div>
           </div>
-          <table className="sbitb text-center ">
+          <div className="overflow-x-auto w-full max-w-screen-lg mx-auto">
+          <table  className="table-auto w-full border-collapse border border-gray-300 text-sm">
             <tbody>
               <tr>
                 <th>
@@ -1110,6 +1111,7 @@ const Sb01 = () => {
               </tr>
             </tbody>
           </table>
+          </div>
         </form>
       </div>
     </>
