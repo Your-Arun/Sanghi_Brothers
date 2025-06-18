@@ -246,7 +246,7 @@ const SB03_Monthly = () => {
               <input type="date" id="datee" className='bg-transparent'  />
             </div>
             <div>
-              <button type="submit">
+              <button type="submit" className='bg-transparent'>
                 <img src={saveImage} width={50} alt="Save" />
               </button>{" "}
             </div>

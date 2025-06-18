@@ -138,7 +138,7 @@ const Sb03Update = () => {
     )
   }
 
-  const handleDelete = async () => {
+  const handleDelete = async (e) => {
     e.preventDefault()
     confirmDeleteToast(async () => {
       try {
@@ -396,7 +396,7 @@ const Sb03Update = () => {
               <img src={binImage} alt="Bin" width={50} />
             </div>
             <div>
-              <button type="submit">
+              <button type="submit" className="bg-transparent">
                 <img src={saveImage} width={50} alt="Save" />
               </button>
             </div>
