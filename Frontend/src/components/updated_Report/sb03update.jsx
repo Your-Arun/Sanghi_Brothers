@@ -106,37 +106,44 @@ const Sb03Update = () => {
   }, [id]);
 
   const confirmDeleteToast = (onConfirm) => {
-    toast(
-      ({ closeToast }) => (
-        <div className="flex flex-col gap-2">
-          <p>Are you sure you want to delete this ?</p>
-          <div className="flex gap-4 mt-2">
-            <button
-              onClick={() => {
-                onConfirm()
-                closeToast()
-              }}
-              className="bg-red-500 text-white px-3 py-1 rounded"
-            >
-              Yes
-            </button>
-            <button
-              onClick={closeToast}
-              className="bg-gray-300 px-3 py-1 rounded"
-            >
-              No
-            </button>
+    const toastId = "delete-confirm";
+  
+    // Agar already open hai, dobara na kholna
+    if (!toast.isActive(toastId)) {
+      toast(
+        ({ closeToast }) => (
+          <div className="flex flex-col gap-2">
+            <p>Are you sure you want to delete this ?</p>
+            <div className="flex gap-4 mt-2">
+              <button
+                onClick={() => {
+                  onConfirm();
+                  closeToast();
+                }}
+                className="bg-red-500 text-white px-3 py-1 rounded"
+              >
+                Yes
+              </button>
+              <button
+                onClick={closeToast}
+                className="bg-gray-300 px-3 py-1 rounded"
+              >
+                No
+              </button>
+            </div>
           </div>
-        </div>
-      ),
-      {
-        position: "top-center",
-        autoClose: false,
-        closeOnClick: false,
-        closeButton: false,
-      }
-    )
-  }
+        ),
+        {
+          toastId,
+          position: "top-center",
+          autoClose: false,
+          closeOnClick: false,
+          closeButton: false,
+        }
+      );
+    }
+  };
+  
 
   const handleDelete = async (e) => {
     e.preventDefault()
@@ -373,10 +380,12 @@ const Sb03Update = () => {
 
   return (
     <>
-      <div>
+      <div className="bg-gradient-to-r from-blue-400 to-yellow-400 flex-col items-center justify-center min-h-screen p-6">
         <form onSubmit={handleSaveSB}>
-          <h1 className="text-center mt-5 text-3xl p-4">Monthly Data Flow</h1>
-          <h1 className="text-center mt-[-40px] text-3xl p-4">By {username}</h1>
+        <h1 className="text-center  text-3xl p-4 text-blue-600">
+            Monthly Data Flow
+          </h1>
+         
           <h2 className="text-center mt-5 text-3xl p-4">
             {new Date(updsb3.Date)
               .toLocaleString("en-GB", {
