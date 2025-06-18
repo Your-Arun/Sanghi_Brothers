@@ -21,7 +21,7 @@ const salesMangemnesheet = () => {
     })),
   });
 
-  const items = [
+  const [items,setItems] =useState([
     "Yesterday's Sale Report Checked",
     "Petrol  loss Reconciliation  +/-,tankwise",
     "Sales Invoices Feed in computer",
@@ -57,7 +57,7 @@ const salesMangemnesheet = () => {
     "Fire extinguisher checked daily",
     "Complain book in bpcl resolved",
     "Any maintance work",
-  ];
+    "",""  ]);
 
   const handleInputChnge = (e, index) => {
     const { id, value, checked } = e.target;
@@ -89,6 +89,12 @@ const salesMangemnesheet = () => {
       toast.warn("Error saving sales management sheet!");
     }
   };
+
+  const handleItemChange = (e, index) => {
+    const updatedItems = [...items];
+    updatedItems[index] = e.target.value;
+    setItems(updatedItems);
+};
 
   return (
     <>
@@ -123,10 +129,14 @@ const salesMangemnesheet = () => {
               {inputs.points.map((point, index) => (
                 <tr key={index}>
                   <td>
-                   {index + 1}
+                    {index + 1}
                   </td>
                   <td>
-                    {items[index]}
+                    <input
+                      type="text"
+                      value={point}
+                      onChange={(e) => handleItemChange(e, index)}
+                    />
                   </td>
                   <td>
                     <input
