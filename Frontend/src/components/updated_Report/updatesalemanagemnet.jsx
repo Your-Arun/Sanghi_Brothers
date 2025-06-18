@@ -15,44 +15,7 @@ const updatesalemanagemnet = () => {
     });
     const navigate = useNavigate();
     const [date, setDate] = useState('');
-    const [points, setPoints] = useState([]);
-    const [items, setItems] = useState([
-        "Yesterday's Sale Report Checked",
-        "Petrol  loss Reconciliation  +/-,tankwise",
-        "Sales Invoices Feed in computer",
-        "Paytm Amount check shiftwise",
-        "Credit Card check shiftwise",
-        "All Sales check nozzle wise with amount",
-        "MPD Rate Change done before 6AM (Automation)",
-        "Non Space Rate Change done before 6AM (Automation)",
-        "Opening time before 6AM?",
-        "Customer Complain received yesterday?",
-        "5 ltr  testing done  from all nozzles",
-        "All standys taken out 2 nos",
-        "Air facilities available",
-        "Check shiftwise sale for DSM/DSW",
-        "Bpcl register done",
-        "All 6 nozzle work propely",
-        "Any complain book to bpcl ",
-        "Proper debit note fill up",
-        "Morning density put in register both tank",
-        "Today decant density put in register both tank",
-        "Proper direction given to customer",
-        "Oil change Machine taken out",
-        "Camper for drinking water 2 nos taken out",
-        "Stock board update taken out morning",
-        "Both tank check with water paste",
-        "Air machine working",
-        "Paytm code for all staff",
-        "Pending slip check",
-        "Any Nozzle +/- Delilverd report",
-        "Cleaning of 4 wheeler glass taken out",
-        "Automation mismatch report",
-        "Peo cleaning",
-        "Fire extinguisher checked daily",
-        "Complain book in bpcl resolved",
-        "Any maintance work",
-    ]);
+
 
     useEffect(() => {
         const fetchPumpSheetData = async () => {
@@ -62,8 +25,7 @@ const updatesalemanagemnet = () => {
                 );
                 setSalemagnmnet(response.data);
                 setDate(response.data.dat2);
-                setPoints(response.data.points);
-                setLoading(false);
+                               setLoading(false);
             } catch (err) {
                 alert("Fetch nhh hora");
             } finally {
@@ -140,8 +102,7 @@ const updatesalemanagemnet = () => {
     const handleSave = async (e) => {
         e.preventDefault();
         const data = {
-            date: date,
-            points: points
+           ...salemgnemt
         };
         try {
             const response = await axiosInstance.put(
@@ -177,16 +138,7 @@ const updatesalemanagemnet = () => {
         );
     }
 
-    const handleItemChange = (e, index) => {
-        const { value } = e.target
-        salemgnemt((prevPurchasemgnemt) => ({
-          ...prevPurchasemgnemt,
-          points: prevPurchasemgnemt.points.map((point, pointIndex) =>
-            pointIndex === index ? { ...point, itemToCheck: value } : point,
-          ),
-        }))
-      }
-
+   
     return (
         <>
             <div className="flex flex-col items-center  bg-gradient-to-r from-blue-400 to-yellow-400 justify-center min-h-screen bg-gray-100 p-6">
