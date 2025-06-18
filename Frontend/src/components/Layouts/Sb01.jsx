@@ -206,7 +206,7 @@ const Sb01 = () => {
   return (
     <>
       <div className="bg-gradient-to-r from-blue-400 to-yellow-400 items-center justify-center p-6">
-        <form className=" min-h-screen " onSubmit={handleSave}>
+        <form  onSubmit={handleSave}>
           <div>
             <div className="text-center text-3xl p-4">
               <h1>
