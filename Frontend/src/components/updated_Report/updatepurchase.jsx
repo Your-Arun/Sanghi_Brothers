@@ -152,9 +152,9 @@ const updatesalemanagemnet = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center  bg-gradient-to-r from-blue-400 to-yellow-400 justify-center min-h-screen bg-gray-100 p-6">
-        <h1 className="text-center mt-[-30px] text-2xl p-4 font-bold">PURCHASE MANAGEMENT</h1>
-        <form onSubmit={handleSave}>
+        <div className="flex flex-col items-center  bg-gradient-to-r from-blue-400 to-yellow-400 justify-center min-h-screen bg-gray-100 p-6">
+        <h1 className="text-center  text-2xl p-4 font-bold">PURCHASE MANAGEMENT</h1>
+      <form onSubmit={handleSave}>
           <div className="flex justify-evenly items-center p-4">
             <Link to={"/mastersheet"}>
               <div className="">
@@ -177,7 +177,7 @@ const updatesalemanagemnet = () => {
               />
             </div>
             <div>
-              <button type="submit">
+              <button type="submit" className='bg-transparent'>
                 <img src={saveImage || "/placeholder.svg"} width={50} alt="Save" />
               </button>{" "}
             </div>

@@ -73,14 +73,14 @@ const updatesalemanagemnet = () => {
     }, [id]);
 
     const handleInputChnge = (e, index) => {
-        const { id, value, checked } = e.target;
+        const { id, name, value,type, checked } = e.target;
         setPoints((prevPoints) => {
             return prevPoints.map((point, pointIndex) => {
                 if (pointIndex === index) {
-                    if (id === 'ok') {
-                        return { ...point, ok: checked ? 'Yes' : 'No' };
+                    if (type === 'checkbox') {
+                        return { ...point, [name]:checked };
                     } else {
-                        return { ...point, [id]: value };
+                        return { ...point, [name]: value };
                     }
                 } else {
                     return point;
@@ -194,7 +194,7 @@ const updatesalemanagemnet = () => {
                         <div><img src={binImage} onClick={handleDelete} width={50} height={50} className=" " alt="Bin" /></div>
 
                         <div>
-                            <button type="submit">
+                            <button type="submit" className='bg-transparent'>
                                 <img src={saveImage} width={50} alt="Save" />
                             </button>{" "}
                         </div>
@@ -221,7 +221,7 @@ const updatesalemanagemnet = () => {
                                     <td>
                                         <input
                                             type="checkbox"
-                                            id="ok"
+                                            name="ok"
                                             checked={point.ok === 'Yes'}
                                             onChange={(e) => handleInputChnge(e, index)}
                                         />
@@ -229,7 +229,7 @@ const updatesalemanagemnet = () => {
                                     <td>
                                         <input
                                             type="text"
-                                            id="responsible"
+                                            name="responsible"
                                             value={point.responsible}
                                             onChange={(e) => handleInputChnge(e, index)}
                                         />
@@ -237,7 +237,7 @@ const updatesalemanagemnet = () => {
                                     <td>
                                         <input
                                             type="text"
-                                            id="defectPerson"
+                                            name="defectPerson"
                                             value={point.defectPerson}
                                             onChange={(e) => handleInputChnge(e, index)}
                                         />
@@ -245,7 +245,7 @@ const updatesalemanagemnet = () => {
                                     <td>
                                         <input
                                             type="text"
-                                            id="defectDelaysDays"
+                                            name="defectDelaysDays"
                                             value={point.defectDelaysDays}
                                             onChange={(e) => handleInputChnge(e, index)}
                                         />
@@ -253,7 +253,7 @@ const updatesalemanagemnet = () => {
                                     <td>
                                         <input
                                             type="text"
-                                            id="deadline"
+                                            name="deadline"
                                             value={point.deadline}
                                             onChange={(e) => handleInputChnge(e, index)}
                                         />

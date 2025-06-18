@@ -88,7 +88,7 @@ const PurchaseMangement = () => {
                     <div><input type="date" id="date" value={date} className="bg-transparent" onChange={handleDateChange} />
                     </div>
                     <div>
-                        <button type="submit">
+                        <button type="submit" className="bg-transparent">
                             <img src={saveImage} width={50} alt="Save" />
                         </button>{" "}
                     </div>
