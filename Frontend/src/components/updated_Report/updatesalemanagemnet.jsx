@@ -74,12 +74,12 @@ const updatesalemanagemnet = () => {
     }, [id]);
 
     const handleInputChnge = (e, index) => {
-        const { id, name, value,type, checked } = e.target;
+        const { id, name, value, type, checked } = e.target;
         setPoints((prevPoints) => {
             return prevPoints.map((point, pointIndex) => {
                 if (pointIndex === index) {
                     if (type === 'checkbox') {
-                        return { ...point, [name]:checked };
+                        return { ...point, [name]: checked };
                     } else {
                         return { ...point, [name]: value };
                     }
@@ -91,53 +91,53 @@ const updatesalemanagemnet = () => {
     };
     const confirmDeleteToast = (onConfirm) => {
         toast(
-          ({ closeToast }) => (
-            <div className="flex flex-col gap-2">
-              <p>Are you sure you want to delete this ?</p>
-              <div className="flex gap-4 mt-2">
-                <button
-                  onClick={() => {
-                    onConfirm()
-                    closeToast()
-                  }}
-                  className="bg-red-500 text-white px-3 py-1 rounded"
-                >
-                  Yes
-                </button>
-                <button
-                  onClick={closeToast}
-                  className="bg-gray-300 px-3 py-1 rounded"
-                >
-                  No
-                </button>
-              </div>
-            </div>
-          ),
-          {
-            position: "top-center",
-            autoClose: false,
-            closeOnClick: false,
-            closeButton: false,
-          }
+            ({ closeToast }) => (
+                <div className="flex flex-col gap-2">
+                    <p>Are you sure you want to delete this ?</p>
+                    <div className="flex gap-4 mt-2">
+                        <button
+                            onClick={() => {
+                                onConfirm()
+                                closeToast()
+                            }}
+                            className="bg-red-500 text-white px-3 py-1 rounded"
+                        >
+                            Yes
+                        </button>
+                        <button
+                            onClick={closeToast}
+                            className="bg-gray-300 px-3 py-1 rounded"
+                        >
+                            No
+                        </button>
+                    </div>
+                </div>
+            ),
+            {
+                position: "top-center",
+                autoClose: false,
+                closeOnClick: false,
+                closeButton: false,
+            }
         )
-      }
-    const handleDelete = async (e)=>{
+    }
+    const handleDelete = async (e) => {
         e.preventDefault();
         confirmDeleteToast(async () => {
-        try {
+            try {
 
                 const response = await axiosInstance.delete(
                     `/mastersheet/salesmanagementsheet/${id}`
                 );
                 navigate("/mastersheet");
                 toast.success("Sales management sheet deleted successfully!");
-            
-        } catch (error) {
-            toast.warn("Error deleting sales management sheet!");
-        }
-    })
-  }
-   const handleSave = async (e) => {
+
+            } catch (error) {
+                toast.warn("Error deleting sales management sheet!");
+            }
+        })
+    }
+    const handleSave = async (e) => {
         e.preventDefault();
         const data = {
             date: date,
@@ -150,7 +150,7 @@ const updatesalemanagemnet = () => {
             );
             toast.success("Sales management sheet saved successfully!");
         } catch (error) {
-          toast.warn("Error saving sales management sheet!");
+            toast.warn("Error saving sales management sheet!");
         }
     };
 
@@ -176,6 +176,16 @@ const updatesalemanagemnet = () => {
             </div>
         );
     }
+
+    const handleItemChange = (e, index) => {
+        const { value } = e.target
+        salemgnemt((prevPurchasemgnemt) => ({
+          ...prevPurchasemgnemt,
+          points: prevPurchasemgnemt.points.map((point, pointIndex) =>
+            pointIndex === index ? { ...point, itemToCheck: value } : point,
+          ),
+        }))
+      }
 
     return (
         <>
@@ -211,13 +221,18 @@ const updatesalemanagemnet = () => {
                             <th>Deadline</th>
                         </thead>
                         <tbody>
-                            {points.map((point, index) => (
+                            {salemgnemt.points.map((point, index) => (
                                 <tr key={index}>
                                     <td>
                                         {index + 1}
                                     </td>
                                     <td>
-                                        {items[index]}
+                                        <input
+                                            type="text"
+                                            name="itemToCheck"
+                                            value={point.itemToCheck}
+                                            onChange={(e) => handleItemChange(e, index)}
+                                        />
                                     </td>
                                     <td>
                                         <input
