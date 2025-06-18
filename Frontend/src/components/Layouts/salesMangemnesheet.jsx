@@ -132,7 +132,7 @@ const salesMangemnesheet = () => {
                     <input
                       type="checkbox"
                       id="ok"
-                      checked={point.ok}
+                      checked={inputs.points[index].ok}
                       onChange={(e) => handleInputChnge(e, index)}
                     />
                   </td>

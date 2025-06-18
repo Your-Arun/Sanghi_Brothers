@@ -223,7 +223,7 @@ const updatesalemanagemnet = () => {
                                         <input
                                             type="checkbox"
                                             name="ok"
-                                            checked={point.ok === 'Yes'}
+                                            checked={point.ok === true || point.ok === "Yes" || point.ok === "true"}
                                             onChange={(e) => handleInputChnge(e, index)}
                                         />
                                     </td>
