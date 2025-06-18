@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom"
 import binImage from "/bin.png"
 import previousImage from "/previous.png"
 import saveImage from "/save.png"
+import { toast } from 'react-toastify'
 
 const updatesalemanagemnet = () => {
   const { id } = useParams()
@@ -90,10 +91,10 @@ const updatesalemanagemnet = () => {
     try {
        const response = await axiosInstance.delete(`/mastersheet/purchasemanagement/${id}`)
         navigate("/mastersheet")
-        alert("Purchase management sheet deleted successfully!")
+        toast.success("Purchase management sheet deleted successfully!")
       
     } catch (error) {
-      alert("Error deleting purchase management sheet!")
+      toast.warn("Error deleting purchase management sheet!")
     }
   })
 }
@@ -104,9 +105,9 @@ const updatesalemanagemnet = () => {
     }
     try {
       const response = await axiosInstance.put(`/mastersheet/purchasemanagement/${id}`, data)
-      alert("Purchase management sheet updated successfully!")
+      toast.success("Sales management sheet saved successfully!");
     } catch (error) {
-      alert("Error updating purchase management sheet!")
+      toast.warn("Error saving sales management sheet!");
     }
   }
 

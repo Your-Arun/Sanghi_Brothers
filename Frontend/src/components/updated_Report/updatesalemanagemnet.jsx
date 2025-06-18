@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import binImage from "/bin.png";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
+import { toast } from 'react-toastify';
 
 const updatesalemanagemnet = () => {
     const { id } = useParams();
@@ -129,10 +130,10 @@ const updatesalemanagemnet = () => {
                     `/mastersheet/salesmanagementsheet/${id}`
                 );
                 navigate("/mastersheet");
-                alert("Sales management sheet deleted successfully!");
+                toast.success("Sales management sheet deleted successfully!");
             }
         } catch (error) {
-            alert("Error deleting sales management sheet!");
+            toast.warn("Error deleting sales management sheet!");
         }
     })
   }
@@ -147,9 +148,9 @@ const updatesalemanagemnet = () => {
                 `/mastersheet/salesmanagementsheet/${id}`,
                 data
             );
-            alert("Sales management sheet updated successfully!");
+            toast.success("Sales management sheet saved successfully!");
         } catch (error) {
-            alert("Error updating sales management sheet!");
+          toast.warn("Error saving sales management sheet!");
         }
     };
 
