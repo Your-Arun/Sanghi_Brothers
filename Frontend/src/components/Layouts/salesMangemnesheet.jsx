@@ -126,7 +126,7 @@ const salesMangemnesheet = () => {
               <th>Deadline</th>
             </thead>
             <tbody>
-              {inputs.map((point, index) => (
+              {items.map((point, index) => (
                 <tr key={index}>
                   <td>
                     {index + 1}
