@@ -232,18 +232,18 @@ const Sb01 = () => {
           </div>
           <div className="overflow-x-auto w-full">
           <table className="min-w-[900px] w-full border-collapse border border-gray-300 text-sm md:text-base">
+          <thead>
+      <tr>
+        <th className="border p-2"><br /></th>
+        <th className="border p-2">Name</th>
+        <th className="border p-2" colSpan="2">Transfer</th>
+        <th className="border p-2" colSpan="2">To A/c No.</th>
+        <th className="border p-2">Acc##</th>
+        <th className="border p-2">Closing Balance</th>
+      </tr>
+    </thead>
           <tbody>
-              <tr >
-                <th className="border p-2">
-                  <br />
-                </th>
-                <th className="border p-2">Name</th>
-                <th className="border p-2" colSpan="2">Transfer</th>
-                <th className="border p-2" colSpan="2">to a/c no.</th>
-                <th className="border p-2">Acc##</th>
-                <th className="border p-2">Closing Balance</th>
-              </tr>
-              <tr>
+                           <tr>
                 <td className="p-2 border">
                   <br />
                 </td>
