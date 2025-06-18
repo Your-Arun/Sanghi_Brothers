@@ -125,13 +125,13 @@ const updatesalemanagemnet = () => {
         e.preventDefault();
         confirmDeleteToast(async () => {
         try {
-            if (window.confirm("Are you sure you want to delete this sales management sheet?")) {
+
                 const response = await axiosInstance.delete(
                     `/mastersheet/salesmanagementsheet/${id}`
                 );
                 navigate("/mastersheet");
                 toast.success("Sales management sheet deleted successfully!");
-            }
+            
         } catch (error) {
             toast.warn("Error deleting sales management sheet!");
         }
