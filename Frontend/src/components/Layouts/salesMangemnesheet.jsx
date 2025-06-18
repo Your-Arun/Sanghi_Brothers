@@ -21,7 +21,7 @@ const salesMangemnesheet = () => {
     })),
   });
 
-  const [items,setItems] =useState([
+  const [items, setItems] = useState([
     "Yesterday's Sale Report Checked",
     "Petrol  loss Reconciliation  +/-,tankwise",
     "Sales Invoices Feed in computer",
@@ -57,7 +57,7 @@ const salesMangemnesheet = () => {
     "Fire extinguisher checked daily",
     "Complain book in bpcl resolved",
     "Any maintance work",
-    "",""  ]);
+    "", ""]);
 
   const handleInputChnge = (e, index) => {
     const { id, value, checked } = e.target;
@@ -94,11 +94,11 @@ const salesMangemnesheet = () => {
     const updatedItems = [...items];
     updatedItems[index] = e.target.value;
     setItems(updatedItems);
-};
+  };
 
   return (
     <>
-      <div className="flex flex-col items-center  bg-gradient-to-r from-blue-400 to-yellow-400 justify-center min-h-screen bg-gray-100 p-6">
+      <div className="flex flex-col items-center bg-gradient-to-r from-blue-400 to-yellow-400 justify-center bg-gray-100 p-6">
         <h1 className="text-center mt-[-30px] text-2xl p-4 font-bold">SALES MANAGEMENT SHEET</h1>
         <form onSubmit={handleSave}>
           <div className="flex justify-evenly items-center  p-4">
@@ -115,73 +115,47 @@ const salesMangemnesheet = () => {
               </button>{" "}
             </div>
           </div>
-          <table>
-            <thead>
-              <th>Point</th>
-              <th>Item to Check</th>
-              <th>Ok</th>
-              <th>Responsible</th>
-              <th>Defect Person</th>
-              <th>Defect Delays Days</th>
-              <th>Deadline</th>
-            </thead>
-            <tbody>
-              {items.map((point, index) => (
-                <tr key={index}>
-                  <td>
-                    {index + 1}
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      value={point}
-                      onChange={(e) => handleItemChange(e, index)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="checkbox"
-                      id="ok"
-                      checked={inputs.points[index].ok}
-                      onChange={(e) => handleInputChnge(e, index)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      id="responsible"
-                      value={point.responsible}
-                      onChange={(e) => handleInputChnge(e, index)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      id="defectPerson"
-                      value={point.defectPerson}
-                      onChange={(e) => handleInputChnge(e, index)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      id="defectDelaysDays"
-                      value={point.defectDelaysDays}
-                      onChange={(e) => handleInputChnge(e, index)}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      id="deadline"
-                      value={point.deadline}
-                      onChange={(e) => handleInputChnge(e, index)}
-                    />
-                  </td>
+          <div className="overflow-x-auto w-full max-w-screen-lg mx-auto">
+            <table className="table-auto w-full border-collapse border border-gray-300 text-sm">
+              <thead className="bg-gray-200">
+                <tr>
+                  <th className="p-2 border">Point</th>
+                  <th className="p-2 border">Item to Check</th>
+                  <th className="p-2 border">Ok</th>
+                  <th className="p-2 border">Responsible</th>
+                  <th className="p-2 border">Defect Person</th>
+                  <th className="p-2 border">Defect Delays Days</th>
+                  <th className="p-2 border">Deadline</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {items.map((item, index) => (
+                  <tr key={index}>
+                    <td className="p-2 border">{index + 1}</td>
+                    <td className="p-2 border">
+                      <input type="text" value={item} onChange={(e) => handleItemChange(e, index)} className="w-full border p-1" />
+                    </td>
+                    <td className="p-2 border text-center">
+                      <input type="checkbox" id="ok" checked={inputs.points[index]?.ok} onChange={(e) => handleInputChnge(e, index)} />
+                    </td>
+                    <td className="p-2 border">
+                      <input type="text" id="responsible" value={inputs.points[index]?.responsible} onChange={(e) => handleInputChnge(e, index)} className="w-full border p-1" />
+                    </td>
+                    <td className="p-2 border">
+                      <input type="text" id="defectPerson" value={inputs.points[index]?.defectPerson} onChange={(e) => handleInputChnge(e, index)} className="w-full border p-1" />
+                    </td>
+                    <td className="p-2 border">
+                      <input type="text" id="defectDelaysDays" value={inputs.points[index]?.defectDelaysDays} onChange={(e) => handleInputChnge(e, index)} className="w-full border p-1" />
+                    </td>
+                    <td className="p-2 border">
+                      <input type="text" id="deadline" value={inputs.points[index]?.deadline} onChange={(e) => handleInputChnge(e, index)} className="w-full border p-1" />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
         </form>
       </div>
     </>
