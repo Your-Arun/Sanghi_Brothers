@@ -244,11 +244,11 @@ const Sb01 = () => {
                 <th>Closing Balance</th>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>SBI xxxx06421</td>
-                <td>
+                <td className="p-2 border">SBI xxxx06421</td>
+                <td className="p-2 border">
                   <input
                     id="c6"
                     type="number"
@@ -256,7 +256,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   {" "}
                   <input
                     id="d6"
@@ -265,7 +265,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   {" "}
                   <input
                     type="number"
@@ -274,7 +274,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   {" "}
                   <input
                     type="number"
@@ -283,7 +283,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   {" "}
                   <input
                     type="number"
@@ -292,14 +292,14 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>{j6result}</td>
+                <td className="p-2 border">{j6result}</td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>SBIN000068037</td>
-                <td>
+                <td className="p-2 border">SBIN000068037</td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="c7"
@@ -307,7 +307,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="d7"
@@ -315,7 +315,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="e7"
@@ -323,7 +323,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="f7"
@@ -331,7 +331,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="i7"
@@ -339,14 +339,14 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>{j7result}</td>
+                <td className="p-2 border">{j7result}</td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>SbI xxxxx5358</td>
-                <td>
+                <td className="p-2 border">SbI xxxxx5358</td>
+                <td className="p-2 border">
                   {" "}
                   <input
                     type="number"
@@ -355,7 +355,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   {" "}
                   <input
                     type="number"
@@ -364,7 +364,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   {" "}
                   <input
                     type="number"
@@ -373,7 +373,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   {" "}
                   <input
                     type="number"
@@ -382,7 +382,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   {" "}
                   <input
                     type="number"
@@ -391,16 +391,16 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>{j8result}</td>
+                <td className="p-2 border">{j8result}</td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="c9"
@@ -409,7 +409,7 @@ const Sb01 = () => {
                   />
                 </td>
 
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="d9"
@@ -417,23 +417,23 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>{j9result.toFixed(2)}</td>
+                <td className="p-2 border">{j9result.toFixed(2)}</td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>Card payment not cr.by paytm/icici</td>
-                <td>
+                <td className="p-2 border">Card payment not cr.by paytm/icici</td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="c10"
@@ -441,7 +441,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="d10"
@@ -449,7 +449,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="e10"
@@ -457,7 +457,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="f10"
@@ -465,7 +465,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="i10"
@@ -473,7 +473,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="j10"
@@ -483,11 +483,11 @@ const Sb01 = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>cash deposit in m/c from evening shift</td>
-                <td>
+                <td className="p-2 border">cash deposit in m/c from evening shift</td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="c11"
@@ -495,7 +495,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="d11"
@@ -503,7 +503,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="e11"
@@ -511,7 +511,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="f11"
@@ -519,7 +519,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="i11"
@@ -527,7 +527,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="j11"
@@ -537,11 +537,11 @@ const Sb01 = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>cash in hand of Yesterday for deposit </td>
-                <td>
+                <td className="p-2 border">cash in hand of Yesterday for deposit </td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="c12"
@@ -549,7 +549,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="d12"
@@ -557,7 +557,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="e12"
@@ -565,7 +565,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="f12"
@@ -573,7 +573,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="i12"
@@ -581,14 +581,14 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>{j12result.toFixed(2)}</td>
+                <td className="p-2 border">{j12result.toFixed(2)}</td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>Recd.from s.v</td>
-                <td>
+                <td className="p-2 border">Recd.from s.v</td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="c13"
@@ -596,7 +596,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="d13"
@@ -604,7 +604,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="e13"
@@ -612,7 +612,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="f13"
@@ -620,7 +620,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="i13"
@@ -628,7 +628,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="j13"
@@ -638,11 +638,11 @@ const Sb01 = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>Recd.from Mukund Sanghi </td>
-                <td>
+                <td className="p-2 border">Recd.from Mukund Sanghi </td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="c14"
@@ -650,7 +650,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="d14"
@@ -658,7 +658,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="e14"
@@ -666,7 +666,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="f14"
@@ -674,7 +674,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="i14"
@@ -682,7 +682,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="j14"
@@ -692,11 +692,11 @@ const Sb01 = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>other deposits</td>
-                <td>
+                <td className="p-2 border">other deposits</td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="c15"
@@ -704,18 +704,18 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>Deposit</td>
-                <td>to a/c no.</td>
+                <td className="p-2 border">Deposit</td>
+                <td className="p-2 border">to a/c no.</td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>cash of Yesterday for deposit in othe a/c </td>
-                <td>
+                <td className="p-2 border">cash of Yesterday for deposit in othe a/c </td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="c16"
@@ -723,11 +723,11 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>{e16result.toFixed(2)}</td>
-                <td>
+                <td className="p-2 border">{e16result.toFixed(2)}</td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="f16"
@@ -737,11 +737,11 @@ const Sb01 = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>Today 1 shift Amt.deposit in a/c</td>
-                <td>
+                <td className="p-2 border">Today 1 shift Amt.deposit in a/c</td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="c17"
@@ -749,10 +749,10 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="e17"
@@ -760,7 +760,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="f17"
@@ -770,11 +770,11 @@ const Sb01 = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>Total</td>
-                <td>{totalsum.toFixed(2)}</td>
+                <td className="p-2 border">Total</td>
+                <td className="p-2 border">{totalsum.toFixed(2)}</td>
               </tr>
 
               <tr>
@@ -784,11 +784,11 @@ const Sb01 = () => {
                 <br />
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td> payment to bpcl for invoice 21-12</td>
-                <td>
+                <td className="p-2 border"> payment to bpcl for invoice 21-12</td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="c21"
@@ -798,11 +798,11 @@ const Sb01 = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td> payment to bpcl for invoice 00-12</td>
-                <td>
+                <td className="p-2 border"> payment to bpcl for invoice 00-12</td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="c22"
@@ -812,11 +812,11 @@ const Sb01 = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td> payment to bpcl for invoice 00-12</td>
-                <td>
+                <td className="p-2 border"> payment to bpcl for invoice 00-12</td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="c23"
@@ -826,11 +826,11 @@ const Sb01 = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>Pd to Hearing healthcare</td>
-                <td>
+                <td className="p-2 border">Pd to Hearing healthcare</td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="c24"
@@ -838,10 +838,10 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="e24"
@@ -851,11 +851,11 @@ const Sb01 = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>Pd to A.K.SANGHI</td>
-                <td>
+                <td className="p-2 border">Pd to A.K.SANGHI</td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="c25"
@@ -863,11 +863,11 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
 
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="e25"
@@ -877,11 +877,11 @@ const Sb01 = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>Pd to GST OF PP</td>
-                <td>
+                <td className="p-2 border">Pd to GST OF PP</td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="c26"
@@ -889,10 +889,10 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="e26"
@@ -902,11 +902,11 @@ const Sb01 = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>Pd FOR AIR COPRESSOR</td>
-                <td>
+                <td className="p-2 border">Pd FOR AIR COPRESSOR</td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="c27"
@@ -914,10 +914,10 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="e27"
@@ -927,24 +927,24 @@ const Sb01 = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>Balance in evening</td>
-                <td>{balenv.toFixed(2)}</td>
+                <td className="p-2 border">Balance in evening</td>
+                <td className="p-2 border">{balenv.toFixed(2)}</td>
               </tr>
 
               <tr>
                 <br />
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="c30"
@@ -957,7 +957,7 @@ const Sb01 = () => {
                 <br />
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="a32"
@@ -966,8 +966,8 @@ const Sb01 = () => {
                   />
                 </td>
 
-                <td>Today morning stock value of petrol</td>
-                <td>
+                <td className="p-2 border">Today morning stock value of petrol</td>
+                <td className="p-2 border">
                   {" "}
                   <input
                     type="number"
@@ -976,7 +976,7 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input
                     type="number"
                     id="d32"
@@ -987,7 +987,7 @@ const Sb01 = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   {" "}
                   <input
                     type="number"
@@ -996,8 +996,8 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>Petrol PUR for the Day</td>
-                <td>
+                <td className="p-2 border">Petrol PUR for the Day</td>
+                <td className="p-2 border">
                   {" "}
                   <input
                     type="number"
@@ -1008,18 +1008,18 @@ const Sb01 = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>Total Fund including stock</td>
-                <td> {c34result.toFixed(2)}</td>
+                <td className="p-2 border">Total Fund including stock</td>
+                <td className="p-2 border"> {c34result.toFixed(2)}</td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>Due payment to bpcl for invoice 00-12</td>
-                <td>
+                <td className="p-2 border">Due payment to bpcl for invoice 00-12</td>
+                <td className="p-2 border">
                   {" "}
                   <input
                     type="number"
@@ -1030,11 +1030,11 @@ const Sb01 = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>Due payment to bpcl for invoice 00-12</td>
-                <td>
+                <td className="p-2 border">Due payment to bpcl for invoice 00-12</td>
+                <td className="p-2 border">
                   {" "}
                   <input
                     type="number"
@@ -1045,11 +1045,11 @@ const Sb01 = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>Due payment to bpcl for invoice 00-12</td>
-                <td>
+                <td className="p-2 border">Due payment to bpcl for invoice 00-12</td>
+                <td className="p-2 border">
                   {" "}
                   <input
                     type="number"
@@ -1060,11 +1060,11 @@ const Sb01 = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>Due payment to bpcl for invoice 00-12</td>
-                <td>
+                <td className="p-2 border">Due payment to bpcl for invoice 00-12</td>
+                <td className="p-2 border">
                   {" "}
                   <input
                     type="number"
@@ -1075,11 +1075,11 @@ const Sb01 = () => {
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>Due payment to bpcl for OIL invoice </td>
-                <td>
+                <td className="p-2 border">Due payment to bpcl for OIL invoice </td>
+                <td className="p-2 border">
                   {" "}
                   <input
                     type="number"
@@ -1088,24 +1088,24 @@ const Sb01 = () => {
                     onChange={handleInputChange}
                   />
                 </td>
-                <td>
+                <td className="p-2 border">
                   <input type="date" />
                 </td>
-                <td>
+                <td className="p-2 border">
                   {e39result.toFixed(2)} <br />
                   TOTAL DUE as on AS PER BPCL <br />
                   LEDGER CR.RECd
                 </td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
-                <td>working capital</td>
-                <td>{workingcap.toFixed(2)}</td>
+                <td className="p-2 border">working capital</td>
+                <td className="p-2 border">{workingcap.toFixed(2)}</td>
               </tr>
               <tr>
-                <td>
+                <td className="p-2 border">
                   <br />
                 </td>
               </tr>
