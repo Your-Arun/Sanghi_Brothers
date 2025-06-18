@@ -198,7 +198,8 @@ const updatesalemanagemnet = () => {
             <tbody>
               {purchasemgnemt.points.map((item, index) => (
                 <tr key={index}>
-                  <td className='p-2 border'>{index + 1}</td>
+                  <td className='p-2 border'>
+                    {index + 1}</td>
                   <td className="p-2 border">
                   <input
                       type="text"

@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom"
 import binImage from "/bin.png"
 import previousImage from "/previous.png"
 import saveImage from "/save.png"
+import { toast } from 'react-toastify'
 
 const updatesalemanagemnet = () => {
   const { id } = useParams()
@@ -88,10 +89,10 @@ const updatesalemanagemnet = () => {
 
         const response = await axiosInstance.delete(`/mastersheet/staffmanagement/${id}`)
         navigate("/mastersheet")
-        alert("Staff management sheet deleted successfully!")
+        toast.success("Staff management sheet deleted successfully!")
 
       } catch (error) {
-        alert("Error deleting staff management sheet!")
+        toast.warn("Error deleting staff management sheet!")
       }
     })
   }
@@ -102,9 +103,9 @@ const updatesalemanagemnet = () => {
     }
     try {
       const response = await axiosInstance.put(`/mastersheet/staffmanagement/${id}`, data)
-      alert("Staff management sheet updated successfully!")
+      toast.success("Staff management sheet updated successfully!")
     } catch (error) {
-      alert("Error updating staff management sheet!")
+      toast.warn("Error updating staff management sheet!")
     }
   }
 
@@ -150,7 +151,7 @@ const updatesalemanagemnet = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center  bg-gradient-to-r from-blue-400 to-yellow-400 justify-center min-h-screen bg-gray-100 p-6">
+      <div className="flex flex-col items-center  bg-gradient-to-r from-blue-400 to-yellow-400 justify-center bg-gray-100 p-6">
         <h1 className="text-center  text-2xl p-4 font-bold">STAFF MANAGEMENT</h1>
         <form onSubmit={handleSave}>
           <div className="flex justify-evenly items-center p-4">
@@ -175,29 +176,29 @@ const updatesalemanagemnet = () => {
               />
             </div>
             <div>
-              <button type="submit">
+              <button type="submit" className='bg-transparent'>
                 <img src={saveImage || "/placeholder.svg"} width={50} alt="Save" />
               </button>{" "}
             </div>
           </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Point</th>
-                <th>Item to Check</th>
-                <th>Ok</th>
-                <th>Responsible</th>
-                <th>Defect Person</th>
-                <th>Defect Delays Days</th>
-                <th>Deadline</th>
-                <th>Comments</th>
-              </tr>
-            </thead>
+          <div className="overflow-x-auto w-full max-w-screen-lg mx-auto">
+          <table  className="table-auto w-full border-collapse border border-gray-300 text-sm">
+          <thead>
+                        <th className="p-2 border">Point</th>
+                        <th className="p-2 border"> Item to Check</th>
+                        <th className="p-2 border">Ok</th>
+                        <th className="p-2 border">Responsible</th>
+                        <th className="p-2 border">Defect Person</th>
+                        <th className="p-2 border">Defect Delays Days</th>
+                        <th className="p-2 border">Deadline</th>
+                        <th className="p-2 border">Comments</th>
+                    </thead>
             <tbody>
               {purchasemgnemt.points.map((item, index) => (
                 <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>
+                  <td className="p-2 border">
+                  {index + 1}</td>
+                  <td className="p-2 border">
                     <input
                       type="text"
                       name="itemToCheck"
@@ -205,7 +206,7 @@ const updatesalemanagemnet = () => {
                       onChange={(e) => handleItemChange(e, index)}
                     />
                   </td>
-                  <td>
+                  <td className="p-2 border">
                     <input
                       type="checkbox"
                       name="ok"
@@ -213,7 +214,7 @@ const updatesalemanagemnet = () => {
                       onChange={(e) => handleInputChnge(e, index)}
                     />
                   </td>
-                  <td>
+                  <td className="p-2 border">
                     <input
                       type="text"
                       name="responsible"
@@ -221,7 +222,7 @@ const updatesalemanagemnet = () => {
                       onChange={(e) => handleInputChnge(e, index)}
                     />
                   </td>
-                  <td>
+                  <td className="p-2 border">
                     <input
                       type="text"
                       name="defectPerson"
@@ -229,7 +230,7 @@ const updatesalemanagemnet = () => {
                       onChange={(e) => handleInputChnge(e, index)}
                     />
                   </td>
-                  <td>
+                  <td className="p-2 border">
                     <input
                       type="text"
                       name="defectDelaysDays"
@@ -237,7 +238,7 @@ const updatesalemanagemnet = () => {
                       onChange={(e) => handleInputChnge(e, index)}
                     />
                   </td>
-                  <td>
+                  <td className="p-2 border">
                     <input
                       type="text"
                       name="deadline"
@@ -245,7 +246,7 @@ const updatesalemanagemnet = () => {
                       onChange={(e) => handleInputChnge(e, index)}
                     />
                   </td>
-                  <td>
+                  <td className="p-2 border">
                     <input
                       type="text"
                       name="comment"
@@ -257,6 +258,7 @@ const updatesalemanagemnet = () => {
               ))}
             </tbody>
           </table>
+          </div>
         </form>
       </div>
     </>

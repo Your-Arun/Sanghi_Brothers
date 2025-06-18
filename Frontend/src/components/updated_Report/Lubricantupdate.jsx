@@ -86,11 +86,11 @@ const updatesalemanagemnet = () => {
     e.preventDefault()
     confirmDeleteToast(async () => {
     try {
-      if (window.confirm("Are you sure you want to delete this purchase management sheet?")) {
+      
         const response = await axiosInstance.delete(`/mastersheet/lubricantmanagement/${id}`)
         navigate("/mastersheet")
         toast.success("Purchase management sheet deleted successfully!")
-      }
+      
     } catch (error) {
       toast.warn("Error deleting purchase management sheet!")
     }

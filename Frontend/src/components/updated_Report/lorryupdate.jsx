@@ -88,11 +88,11 @@ const tanklorryupdate = () => {
     e.preventDefault()
     confirmDeleteToast(async () => {
     try {
-      if (window.confirm("Are you sure you want to delete this purchase management sheet?")) {
+ 
         const response = await axiosInstance.delete(`/mastersheet/tanklorry/${id}`)
         navigate("/mastersheet")
         toast.success("Purchase management sheet deleted successfully!")
-      }
+       
     } catch (error) {
       toast.warn("Error deleting purchase management sheet!")
     }
@@ -177,28 +177,28 @@ const tanklorryupdate = () => {
             />
           </div>
           <div>
-            <button type="submit">
+            <button type="submit" className='bg-transparent'>
               <img src={saveImage || "/placeholder.svg"} width={50} alt="Save" />
             </button>{" "}
           </div>
         </div>
-        <table className="w-full table-auto">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="p-3 text-left">Point</th>
-              <th className="p-3 text-left">Item to Check</th>
-              <th className="p-3 text-left">Ok</th>
-              <th className="p-3 text-left">Responsible</th>
-              <th className="p-3 text-left">Defect Person</th>
-              <th className="p-3 text-left">Defect Delays Days</th>
-              <th className="p-3 text-left">Deadline</th>
-            </tr>
-          </thead>
+        <div className="overflow-x-auto w-full max-w-screen-lg mx-auto">
+          <table  className="table-auto w-full border-collapse border border-gray-300 text-sm">
+          <thead>
+                        <th className="p-2 border">Point</th>
+                        <th className="p-2 border"> Item to Check</th>
+                        <th className="p-2 border">Ok</th>
+                        <th className="p-2 border">Responsible</th>
+                        <th className="p-2 border">Defect Person</th>
+                        <th className="p-2 border">Defect Delays Days</th>
+                        <th className="p-2 border">Deadline</th>
+                    </thead>
           <tbody>
             {lorrymgnemt.points.map((item, index) => (
               <tr key={index}>
-                <td className="p-3">{index + 1}</td>
-                <td className="p-3">
+                                <td className='p-2 border'>
+                                {index + 1}</td>
+                                <td className='p-2 border'>
                   <input
                     type="text"
                     name="itemToCheck"
@@ -206,40 +206,40 @@ const tanklorryupdate = () => {
                     onChange={(e) => handleItemChange(e, index)}
                   />
                 </td>
-                <td className="p-3">
-                  <input
+                <td className='p-2 border'>
+                <input
                     type="checkbox"
                     name="ok"
                     checked={item.ok === true || item.ok === "Yes" || item.ok === "true"}
                     onChange={(e) => handleInputChnge(e, index)}
                   />
                 </td>
-                <td className="p-3">
-                  <input
+                <td className='p-2 border'>
+                <input
                     type="text"
                     name="responsible"
                     value={item.responsible}
                     onChange={(e) => handleInputChnge(e, index)}
                   />
                 </td>
-                <td className="p-3">
-                  <input
+                <td className='p-2 border'>
+                <input
                     type="text"
                     name="defectPerson"
                     value={item.defectPerson}
                     onChange={(e) => handleInputChnge(e, index)}
                   />
                 </td>
-                <td className="p-3">
-                  <input
+                <td className='p-2 border'>
+                <input
                     type="text"
                     name="defectDelaysDays"
                     value={item.defectDelaysDays}
                     onChange={(e) => handleInputChnge(e, index)}
                   />
                 </td>
-                <td className="p-3">
-                  <input
+                <td className='p-2 border'>
+                <input
                     type="text"
                     name="deadline"
                     value={item.deadline}
@@ -250,6 +250,7 @@ const tanklorryupdate = () => {
             ))}
           </tbody>
         </table>
+        </div>
       </form>
     </div>
   )
