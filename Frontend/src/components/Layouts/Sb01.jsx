@@ -230,7 +230,7 @@ const Sb01 = () => {
               </div>
             </div>
           </div>
-          <div className="w-full overflow-x-auto">
+          <div className=" sbo1 w-full overflow-x-auto">
             <div className="min-w-[1000px]">
               <table className="w-full border-collapse border border-gray-300 text-sm"> <thead>
                 <tr>
