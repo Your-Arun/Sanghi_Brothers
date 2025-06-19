@@ -231,9 +231,10 @@ function ReportFile() {
             </div>
 
             <div className="table-wraper sales-table-wraper">
-            <table className="font-serif text-center responsive-table">
+            <table className="responsive-table">
               <tbody>
-                <tr className=" text-xl">
+               <thead>
+               <tr className=" text-xl">
                   <th>Name</th>
                   <th>Sales</th>
                   <th>Road</th>
@@ -243,6 +244,7 @@ function ReportFile() {
                   <th>Ns </th>
                   <th>Ns </th>
                 </tr>
+               </thead>
                 <tr>
                   <td>Nozzele No.</td>
                   <td></td>
