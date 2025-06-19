@@ -230,7 +230,8 @@ function ReportFile() {
               </div>
             </div>
 
-            <table className="font-serif text-center">
+            <div className="table-wraper sales-table-wraper">
+            <table className="font-serif text-center responsive-table">
               <tbody>
                 <tr className=" text-xl">
                   <th>Name</th>
@@ -852,11 +853,12 @@ function ReportFile() {
                 </tr>
               </tbody>
             </table>
+            </div>
           </div>
-          <div>
+          <div  className="table-wraper sales-table-wraper">
             <div className="text-center mb-20">
               <h2>This Month , last year</h2>
-              <table className="text-center justify-center mx-auto">
+              <table className="responsive-table">
                 <thead>
                   {" "}
                   <tr>
