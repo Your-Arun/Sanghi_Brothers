@@ -230,7 +230,7 @@ const Sb01 = () => {
               </div>
             </div>
           </div>
-          <div className="table-wrapper">
+          <div className="table-wrapper sales-table-wrapper">
             <table className="responsive-table">
               <thead>
                 <tr>

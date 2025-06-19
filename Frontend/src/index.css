@@ -495,9 +495,10 @@ label {
   font-weight: 600;
 }
 
-input[type="text"],
-input[type="number"],
-input[type="date"] {
+/* Scoped styles only for table inside .sales-table-wrapper */
+.sales-table-wrapper input[type="text"],
+.sales-table-wrapper input[type="number"],
+.sales-table-wrapper input[type="date"] {
   width: 100%;
   padding: 0.25rem 0.5rem;
   border: 1px solid #d1d5db;
