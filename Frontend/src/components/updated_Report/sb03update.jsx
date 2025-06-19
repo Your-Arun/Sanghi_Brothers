@@ -107,7 +107,7 @@ const Sb03Update = () => {
 
   const confirmDeleteToast = (onConfirm) => {
     const toastId = "delete-confirm";
-  
+
     // Agar already open hai, dobara na kholna
     if (!toast.isActive(toastId)) {
       toast(
@@ -143,7 +143,7 @@ const Sb03Update = () => {
       );
     }
   };
-  
+
 
   const handleDelete = async (e) => {
     e.preventDefault()
@@ -222,33 +222,33 @@ const Sb03Update = () => {
     );
   }
   const sumofL = updsb3.l.reduce((acc, curr) => acc + Number(curr), 0);
-    const sumofM = updsb3.m.reduce((acc, curr) => acc + Number(curr), 0);
-    const sumofP = updsb3.p.reduce((acc, curr) => acc + Number(curr), 0);
-    const sumofQ = updsb3.q.reduce((acc, curr) => acc + Number(curr), 0);
-    const sumofW = updsb3.w.reduce((acc, curr) => acc + Number(curr), 0);
-    const sumofX = updsb3.x.reduce((acc, curr) => acc + Number(curr), 0);
-    const sumofY = sumofP + sumofQ - sumofX;
-    const maybeL = sumofL + sumofM;
-    const maybeP = sumofP + sumofQ;
-    const pureofL = maybeL > 0 ? (sumofL * 100) / maybeL : 0;
-    const pureofM = maybeL > 0 ? (sumofM * 100) / maybeL : 0;
-    const pureofP = maybeP > 0 ? (sumofP * 100) / maybeP : 0;
-    const pureofQ = maybeP > 0 ? (sumofQ * 100) / maybeP : 0;
-    const lossOfW =
-      sumofP + sumofQ > 0 ? (sumofW / (sumofP + sumofQ)) * 100 : 0;
-    const SumofAF = updsb3.af.reduce((acc, curr) => acc + Number(curr), 0);
-    const SumofAG = updsb3.ag.reduce((acc, curr) => acc + Number(curr), 0);
-    const SumofAH = updsb3.ah.reduce((acc, curr) => acc + Number(curr), 0);
-    const SumofAI = SumofAG + SumofAH;
-    const SumofAJ = updsb3.aj.reduce((acc, curr) => acc + Number(curr), 0);
-    const SumofAM = updsb3.am.reduce((acc, curr) => acc + Number(curr), 0);
-    const totalXY =
-      updsb3.target4 > 0
-        ? sumofX / updsb3.target4 + sumofY / updsb3.target4
-        : 0;
-    const sumofXY = sumofX + sumofY;
-    const sumofvab51 =
-      updsb3.target4 > 0 ? (sumofP + sumofQ) / updsb3.target4 : 0;
+  const sumofM = updsb3.m.reduce((acc, curr) => acc + Number(curr), 0);
+  const sumofP = updsb3.p.reduce((acc, curr) => acc + Number(curr), 0);
+  const sumofQ = updsb3.q.reduce((acc, curr) => acc + Number(curr), 0);
+  const sumofW = updsb3.w.reduce((acc, curr) => acc + Number(curr), 0);
+  const sumofX = updsb3.x.reduce((acc, curr) => acc + Number(curr), 0);
+  const sumofY = sumofP + sumofQ - sumofX;
+  const maybeL = sumofL + sumofM;
+  const maybeP = sumofP + sumofQ;
+  const pureofL = maybeL > 0 ? (sumofL * 100) / maybeL : 0;
+  const pureofM = maybeL > 0 ? (sumofM * 100) / maybeL : 0;
+  const pureofP = maybeP > 0 ? (sumofP * 100) / maybeP : 0;
+  const pureofQ = maybeP > 0 ? (sumofQ * 100) / maybeP : 0;
+  const lossOfW =
+    sumofP + sumofQ > 0 ? (sumofW / (sumofP + sumofQ)) * 100 : 0;
+  const SumofAF = updsb3.af.reduce((acc, curr) => acc + Number(curr), 0);
+  const SumofAG = updsb3.ag.reduce((acc, curr) => acc + Number(curr), 0);
+  const SumofAH = updsb3.ah.reduce((acc, curr) => acc + Number(curr), 0);
+  const SumofAI = SumofAG + SumofAH;
+  const SumofAJ = updsb3.aj.reduce((acc, curr) => acc + Number(curr), 0);
+  const SumofAM = updsb3.am.reduce((acc, curr) => acc + Number(curr), 0);
+  const totalXY =
+    updsb3.target4 > 0
+      ? sumofX / updsb3.target4 + sumofY / updsb3.target4
+      : 0;
+  const sumofXY = sumofX + sumofY;
+  const sumofvab51 =
+    updsb3.target4 > 0 ? (sumofP + sumofQ) / updsb3.target4 : 0;
 
   const handleSaveSB = async (e) => {
     e.preventDefault();
@@ -382,10 +382,10 @@ const Sb03Update = () => {
     <>
       <div className="bg-gradient-to-r from-blue-400 to-yellow-400 flex-col items-center justify-center min-h-screen p-6">
         <form onSubmit={handleSaveSB}>
-        <h1 className="text-center  text-3xl p-4 text-blue-600">
+          <h1 className="text-center  text-3xl p-4 text-blue-600">
             Monthly Data Flow
           </h1>
-         
+
           <h2 className="text-center mt-5 text-3xl p-4">
             {new Date(updsb3.Date)
               .toLocaleString("en-GB", {
@@ -410,407 +410,409 @@ const Sb03Update = () => {
               </button>
             </div>
           </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Op. Stock Tank 2</th>
-                <th> Op. Stock Tank 1</th>
-                <th>Pur. Tank 2</th>
-                <th>Pur. Tank 1</th>
-                <th>Total Stock Tank 2</th>
-                <th>Total Stock Tank 1</th>
-                <th>Sales Tank 2</th>
-                <th>Sales Tank 1</th>
-                <th>Closing Stock Tank 2</th>
-                <th>Closing Stock Tank 1</th>
-                <th>Total Stock</th>
-                <th>Sale</th>
-                <th>For the day +/-</th>
-                <th>Sale Shift 1</th>
-                <th>Sale Shift 2</th>
-                <th>Total Tank 1 + Tank 2</th>
-                <th>Tank 1 Actual Stock</th>
-                <th>Tank 1 Variance</th>
-                <th>Tank 2 Actual Stock</th>
-                <th>Tank 2 Variance</th>
-                <th>Both Tank Variance</th>
-                <th>Credit Sale</th>
-                <th>Tank 1 Daily Tank wise variance</th>
-                <th>Tank 2 Daily Tank wise variance</th>
-                <th>Total</th>
-                <th>Pur..</th>
-                <th>Loss %</th>
-                <th>Avg</th>
-                <th>Testing</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Array.from({ length: daysInMonth }, (_, index) => (
-                <tr key={index}>
-                  <td>{`${index + 1}/${updsb3.month}/${updsb3.year}`}</td>
+          <div className="table-wrapper sales-table-wrapper">
+            <table className="responsive-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Op. Stock Tank 2</th>
+                  <th> Op. Stock Tank 1</th>
+                  <th>Pur. Tank 2</th>
+                  <th>Pur. Tank 1</th>
+                  <th>Total Stock Tank 2</th>
+                  <th>Total Stock Tank 1</th>
+                  <th>Sales Tank 2</th>
+                  <th>Sales Tank 1</th>
+                  <th>Closing Stock Tank 2</th>
+                  <th>Closing Stock Tank 1</th>
+                  <th>Total Stock</th>
+                  <th>Sale</th>
+                  <th>For the day +/-</th>
+                  <th>Sale Shift 1</th>
+                  <th>Sale Shift 2</th>
+                  <th>Total Tank 1 + Tank 2</th>
+                  <th>Tank 1 Actual Stock</th>
+                  <th>Tank 1 Variance</th>
+                  <th>Tank 2 Actual Stock</th>
+                  <th>Tank 2 Variance</th>
+                  <th>Both Tank Variance</th>
+                  <th>Credit Sale</th>
+                  <th>Tank 1 Daily Tank wise variance</th>
+                  <th>Tank 2 Daily Tank wise variance</th>
+                  <th>Total</th>
+                  <th>Pur..</th>
+                  <th>Loss %</th>
+                  <th>Avg</th>
+                  <th>Testing</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Array.from({ length: daysInMonth }, (_, index) => (
+                  <tr key={index}>
+                    <td>{`${index + 1}/${updsb3.month}/${updsb3.year}`}</td>
+                    <td>
+                      <input
+                        type="number"
+                        value={updsb3.j[index] || ""}
+                        onChange={(e) =>
+                          handleInputChange("j", index, e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        value={updsb3.k[index] || ""}
+                        onChange={(e) =>
+                          handleInputChange("k", index, e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        value={updsb3.l[index] || ""}
+                        onChange={(e) =>
+                          handleInputChange("l", index, e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        value={updsb3.m[index] || ""}
+                        onChange={(e) =>
+                          handleInputChange("m", index, e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>{updsb3.j[index] + updsb3.l[index]}</td>
+                    <td>{updsb3.k[index] + updsb3.m[index]}</td>
+                    <td>
+                      <input
+                        type="number"
+                        value={updsb3.p[index] || ""}
+                        onChange={(e) =>
+                          handleInputChange("p", index, e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        value={updsb3.q[index] || ""}
+                        onChange={(e) =>
+                          handleInputChange("q", index, e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>{updsb3.j[index] + updsb3.l[index] - updsb3.p[index]}</td>
+                    <td>{updsb3.k[index] + updsb3.m[index] - updsb3.q[index]}</td>
+                    <td>
+                      {updsb3.j[index] +
+                        updsb3.l[index] -
+                        updsb3.p[index] +
+                        (updsb3.k[index] + updsb3.m[index] - updsb3.q[index])}
+                    </td>
+                    <td>{updsb3.p[index] + updsb3.q[index]}</td>
+                    <td>
+                      <input
+                        type="number"
+                        value={updsb3.w[index] || ""}
+                        onChange={(e) =>
+                          handleInputChange("w", index, e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        value={updsb3.x[index] || ""}
+                        onChange={(e) =>
+                          handleInputChange("x", index, e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>{updsb3.p[index] + updsb3.q[index] - updsb3.x[index]}</td>
+                    <td>{updsb3.aa[index] + updsb3.ac[index]}</td>
+                    <td>
+                      <input
+                        type="number"
+                        value={updsb3.aa[index] || ""}
+                        onChange={(e) =>
+                          handleInputChange("aa", index, e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>
+                      {updsb3.aa[index] -
+                        (updsb3.k[index] + updsb3.m[index] - updsb3.q[index])}
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        value={updsb3.ac[index] || ""}
+                        onChange={(e) =>
+                          handleInputChange("ac", index, e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>
+                      {updsb3.ac[index] -
+                        (updsb3.j[index] + updsb3.l[index] - updsb3.p[index])}
+                    </td>
+                    <td>
+                      {updsb3.aa[index] -
+                        (updsb3.k[index] + updsb3.m[index] - updsb3.q[index]) +
+                        (updsb3.ac[index] -
+                          (updsb3.j[index] + updsb3.l[index] - updsb3.p[index]))}
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        value={updsb3.af[index] || ""}
+                        onChange={(e) =>
+                          handleInputChange("af", index, e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        value={updsb3.ag[index] || ""}
+                        onChange={(e) =>
+                          handleInputChange("ag", index, e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        value={updsb3.ah[index] || ""}
+                        onChange={(e) =>
+                          handleInputChange("ah", index, e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        value={updsb3.ai[index] || ""}
+                        onChange={(e) =>
+                          handleInputChange("ai", index, e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        value={updsb3.aj[index] || ""}
+                        onChange={(e) =>
+                          handleInputChange("aj", index, e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        value={updsb3.ak[index] || ""}
+                        onChange={(e) =>
+                          handleInputChange("ak", index, e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        value={updsb3.al[index] || ""}
+                        onChange={(e) =>
+                          handleInputChange("al", index, e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        value={updsb3.am[index] || ""}
+                        onChange={(e) =>
+                          handleInputChange("am", index, e.target.value)
+                        }
+                      />
+                    </td>
+                  </tr>
+                ))}
+                <tr>
+                  <td>
+                    <strong>Total</strong>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <strong>{sumofL}</strong>
+                  </td>
+                  <td>
+                    <strong>{sumofM}</strong>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <strong>{sumofP}</strong>
+                  </td>
+                  <td>
+                    <strong>{sumofQ}</strong>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>{sumofP + sumofQ}</td>
+                  <td>{sumofW}</td>
+                  <td>{sumofX}</td>
+                  <td>{sumofY}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>% PUR</strong>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <strong>{pureofL.toFixed(2)}</strong>
+                  </td>
+                  <td>
+                    <strong>{pureofM.toFixed(2)}</strong>
+                  </td>
+                  <td></td>
+                  <td>
+                    <strong> % Sale</strong>
+                  </td>
+                  <td>
+                    <strong> {pureofP.toFixed(2)}</strong>
+                  </td>
+                  <td>
+                    <strong> {pureofQ.toFixed(2)}</strong>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td>Act. Loss</td>
+                  <td>{lossOfW}</td>
+                  <td>{updsb3.target4 > 0 ? sumofX / updsb3.target4 : 0}</td>
+                  <td>{updsb3.target4 > 0 ? sumofY / updsb3.target4 : 0}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>{SumofAF}</td>
+                  <td>{SumofAG}</td>
+                  <td>{SumofAH}</td>
+                  <td>{SumofAI}</td>
+                  <td>{SumofAJ}</td>
+                  <td></td>
+                  <td></td>
+                  <td>{SumofAM}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Target</strong>
+                  </td>
+                  <td></td>
+                  <td></td>
                   <td>
                     <input
                       type="number"
-                      value={updsb3.j[index] || ""}
-                      onChange={(e) =>
-                        handleInputChange("j", index, e.target.value)
-                      }
+                      name="target1"
+                      value={updsb3.target1 || 0}
+                      onChange={handleTargetChange}
                     />
                   </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>Water</td>
                   <td>
+                    {" "}
                     <input
                       type="number"
-                      value={updsb3.k[index] || ""}
-                      onChange={(e) =>
-                        handleInputChange("k", index, e.target.value)
-                      }
+                      name="target3"
+                      value={updsb3.target3 || 0}
+                      onChange={handleTargetChange}
                     />
                   </td>
+                  <td></td>
+                  <td></td>
+                  <td>{totalXY.toFixed(2)}</td>
+                  <td></td>
+                  <td></td>
                   <td>
                     <input
                       type="number"
-                      value={updsb3.l[index] || ""}
-                      onChange={(e) =>
-                        handleInputChange("l", index, e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      value={updsb3.m[index] || ""}
-                      onChange={(e) =>
-                        handleInputChange("m", index, e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>{updsb3.j[index] + updsb3.l[index]}</td>
-                  <td>{updsb3.k[index] + updsb3.m[index]}</td>
-                  <td>
-                    <input
-                      type="number"
-                      value={updsb3.p[index] || ""}
-                      onChange={(e) =>
-                        handleInputChange("p", index, e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      value={updsb3.q[index] || ""}
-                      onChange={(e) =>
-                        handleInputChange("q", index, e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>{updsb3.j[index] + updsb3.l[index] - updsb3.p[index]}</td>
-                  <td>{updsb3.k[index] + updsb3.m[index] - updsb3.q[index]}</td>
-                  <td>
-                    {updsb3.j[index] +
-                      updsb3.l[index] -
-                      updsb3.p[index] +
-                      (updsb3.k[index] + updsb3.m[index] - updsb3.q[index])}
-                  </td>
-                  <td>{updsb3.p[index] + updsb3.q[index]}</td>
-                  <td>
-                    <input
-                      type="number"
-                      value={updsb3.w[index] || ""}
-                      onChange={(e) =>
-                        handleInputChange("w", index, e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      value={updsb3.x[index] || ""}
-                      onChange={(e) =>
-                        handleInputChange("x", index, e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>{updsb3.p[index] + updsb3.q[index] - updsb3.x[index]}</td>
-                  <td>{updsb3.aa[index] + updsb3.ac[index]}</td>
-                  <td>
-                    <input
-                      type="number"
-                      value={updsb3.aa[index] || ""}
-                      onChange={(e) =>
-                        handleInputChange("aa", index, e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    {updsb3.aa[index] -
-                      (updsb3.k[index] + updsb3.m[index] - updsb3.q[index])}
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      value={updsb3.ac[index] || ""}
-                      onChange={(e) =>
-                        handleInputChange("ac", index, e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    {updsb3.ac[index] -
-                      (updsb3.j[index] + updsb3.l[index] - updsb3.p[index])}
-                  </td>
-                  <td>
-                    {updsb3.aa[index] -
-                      (updsb3.k[index] + updsb3.m[index] - updsb3.q[index]) +
-                      (updsb3.ac[index] -
-                        (updsb3.j[index] + updsb3.l[index] - updsb3.p[index]))}
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      value={updsb3.af[index] || ""}
-                      onChange={(e) =>
-                        handleInputChange("af", index, e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      value={updsb3.ag[index] || ""}
-                      onChange={(e) =>
-                        handleInputChange("ag", index, e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      value={updsb3.ah[index] || ""}
-                      onChange={(e) =>
-                        handleInputChange("ah", index, e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      value={updsb3.ai[index] || ""}
-                      onChange={(e) =>
-                        handleInputChange("ai", index, e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      value={updsb3.aj[index] || ""}
-                      onChange={(e) =>
-                        handleInputChange("aj", index, e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      value={updsb3.ak[index] || ""}
-                      onChange={(e) =>
-                        handleInputChange("ak", index, e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      value={updsb3.al[index] || ""}
-                      onChange={(e) =>
-                        handleInputChange("al", index, e.target.value)
-                      }
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      value={updsb3.am[index] || ""}
-                      onChange={(e) =>
-                        handleInputChange("am", index, e.target.value)
-                      }
+                      name="target4"
+                      value={updsb3.target4 || 0}
+                      onChange={handleTargetChange}
                     />
                   </td>
                 </tr>
-              ))}
-              <tr>
-                <td>
-                  <strong>Total</strong>
-                </td>
-                <td></td>
-                <td></td>
-                <td>
-                  <strong>{sumofL}</strong>
-                </td>
-                <td>
-                  <strong>{sumofM}</strong>
-                </td>
-                <td></td>
-                <td></td>
-                <td>
-                  <strong>{sumofP}</strong>
-                </td>
-                <td>
-                  <strong>{sumofQ}</strong>
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>{sumofP + sumofQ}</td>
-                <td>{sumofW}</td>
-                <td>{sumofX}</td>
-                <td>{sumofY}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>% PUR</strong>
-                </td>
-                <td></td>
-                <td></td>
-                <td>
-                  <strong>{pureofL.toFixed(2)}</strong>
-                </td>
-                <td>
-                  <strong>{pureofM.toFixed(2)}</strong>
-                </td>
-                <td></td>
-                <td>
-                  <strong> % Sale</strong>
-                </td>
-                <td>
-                  <strong> {pureofP.toFixed(2)}</strong>
-                </td>
-                <td>
-                  <strong> {pureofQ.toFixed(2)}</strong>
-                </td>
-                <td></td>
-                <td></td>
-                <td>Act. Loss</td>
-                <td>{lossOfW}</td>
-                <td>{updsb3.target4 > 0 ? sumofX / updsb3.target4 : 0}</td>
-                <td>{updsb3.target4 > 0 ? sumofY / updsb3.target4 : 0}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>{SumofAF}</td>
-                <td>{SumofAG}</td>
-                <td>{SumofAH}</td>
-                <td>{SumofAI}</td>
-                <td>{SumofAJ}</td>
-                <td></td>
-                <td></td>
-                <td>{SumofAM}</td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>Target</strong>
-                </td>
-                <td></td>
-                <td></td>
-                <td>
-                  <input
-                    type="number"
-                    name="target1"
-                    value={updsb3.target1 || 0}
-                    onChange={handleTargetChange}
-                  />
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>Water</td>
-                <td>
-                  {" "}
-                  <input
-                    type="number"
-                    name="target3"
-                    value={updsb3.target3 || 0}
-                    onChange={handleTargetChange}
-                  />
-                </td>
-                <td></td>
-                <td></td>
-                <td>{totalXY.toFixed(2)}</td>
-                <td></td>
-                <td></td>
-                <td>
-                  <input
-                    type="number"
-                    name="target4"
-                    value={updsb3.target4 || 0}
-                    onChange={handleTargetChange}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>Target</strong>
-                </td>
-                <td></td>
-                <td></td>
-                <td>
-                  <input
-                    type="number"
-                    name="target2"
-                    value={updsb3.target2 || 0}
-                    onChange={handleTargetChange}
-                  />
-                </td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>May be acheived</strong>
-                </td>
-                <td></td>
-                <td></td>
-                <td>
-                  <strong>{maybeL}</strong>
-                </td>
-                <td></td>
-                <td></td>
-                <td>
-                  <strong>{maybeP}</strong>
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>{sumofXY}</td>
-                <td></td>
-                <td>{sumofvab51}</td>
-              </tr>
-            </tbody>
-          </table>
+                <tr>
+                  <td>
+                    <strong>Target</strong>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <input
+                      type="number"
+                      name="target2"
+                      value={updsb3.target2 || 0}
+                      onChange={handleTargetChange}
+                    />
+                  </td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>May be acheived</strong>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <strong>{maybeL}</strong>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <strong>{maybeP}</strong>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>{sumofXY}</td>
+                  <td></td>
+                  <td>{sumofvab51}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </form>
       </div>
     </>

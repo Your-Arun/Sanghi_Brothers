@@ -226,23 +226,23 @@ function SBI01Update() {
             </div>
           </Link>
           <button
-          className="bg-transparent"
+            className="bg-transparent"
             type="button" // Change type to "button"
             onClick={handleDelete} // Call handleDelete on click
           ><img src={binImage} width={50} alt="Bin" />
-            
+
           </button>
           <button className="bg-transparent"
             onClick={handleSaveSBI}
           >   <img src={saveImage} width={50} alt="Save" />
-          
+
           </button>
         </div>
       </div>
       <div>
-        <div>
-          <form>
-            <table>
+        <form>
+          <div className="table-wrapper sales-table-wrapper">
+            <table className="responsive-table">
               <tbody>
                 <tr>
                   <th>
@@ -1118,9 +1118,9 @@ function SBI01Update() {
                 </tr>
               </tbody>
             </table>
-          </form>
-        </div>
-      </div>
+          </div>
+        </form>
+      </div >
     </>
   );
 }

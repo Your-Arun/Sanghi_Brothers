@@ -252,7 +252,8 @@ const SB03_Monthly = () => {
             </div>
           </div>
          </div>
-          <table>
+         <div className="table-wrapper sales-table-wrapper">
+         <table className="responsive-table">
             <thead>
               <tr>
                 <th>Date</th>
@@ -696,6 +697,7 @@ const SB03_Monthly = () => {
               </tr>
             </tbody>
           </table>
+         </div>
         </form>
       </div>
     </>
