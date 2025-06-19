@@ -230,894 +230,890 @@ const Sb01 = () => {
               </div>
             </div>
           </div>
-          <div className="w-full overflow-x-auto">
-            <div className="inline-block min-w-full align-middle">
-              <div className="overflow-x-auto border p-10 rounded-lg">
-                <table className="min-w-[1000px] table-auto border-collapse border border-gray-300 text-sm ">
-                  <thead>
-                    <tr>
-                      <th className="border p-2"><br /></th>
-                      <th className="border p-2">Name</th>
-                      <th className="border p-2" colSpan="2">Transfer</th>
-                      <th className="border p-2" colSpan="2">To A/c No.</th>
-                      <th className="border p-2">Acc##</th>
-                      <th className="border p-2">Closing Balance</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">SBI xxxx06421</td>
-                      <td className="p-2 border">
-                        <input
-                          id="c6"
-                          type="number"
-                          value={inputs.c6}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        {" "}
-                        <input
-                          id="d6"
-                          type="number"
-                          value={inputs.d6}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        {" "}
-                        <input
-                          type="number"
-                          id="e6"
-                          value={inputs.e6}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        {" "}
-                        <input
-                          type="number"
-                          id="f6"
-                          value={inputs.f6}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        {" "}
-                        <input
-                          type="number"
-                          id="i6"
-                          value={inputs.i6}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">{j6result}</td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">SBIN000068037</td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="c7"
-                          value={inputs.c7}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="d7"
-                          value={inputs.d7}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="e7"
-                          value={inputs.e7}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="f7"
-                          value={inputs.f7}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="i7"
-                          value={inputs.i7}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">{j7result}</td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">SbI xxxxx5358</td>
-                      <td className="p-2 border">
-                        {" "}
-                        <input
-                          type="number"
-                          id="c8"
-                          value={inputs.c8}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        {" "}
-                        <input
-                          type="number"
-                          id="d8"
-                          value={inputs.d8}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        {" "}
-                        <input
-                          type="number"
-                          id="e8"
-                          value={inputs.e8}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        {" "}
-                        <input
-                          type="number"
-                          id="f8"
-                          value={inputs.f8}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        {" "}
-                        <input
-                          type="number"
-                          id="i8"
-                          value={inputs.i8}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">{j8result}</td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="c9"
-                          value={inputs.c9}
-                          onChange={handleInputChange}
-                        />
-                      </td>
+          <div className="table-wrapper">
+            <table className="responsive-table">
+              <thead>
+                <tr>
+                  <th className="border p-2"><br /></th>
+                  <th className="border p-2">Name</th>
+                  <th className="border p-2" colSpan="2">Transfer</th>
+                  <th className="border p-2" colSpan="2">To A/c No.</th>
+                  <th className="border p-2">Acc##</th>
+                  <th className="border p-2">Closing Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">SBI xxxx06421</td>
+                  <td className="p-2 border">
+                    <input
+                      id="c6"
+                      type="number"
+                      value={inputs.c6}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    {" "}
+                    <input
+                      id="d6"
+                      type="number"
+                      value={inputs.d6}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    {" "}
+                    <input
+                      type="number"
+                      id="e6"
+                      value={inputs.e6}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    {" "}
+                    <input
+                      type="number"
+                      id="f6"
+                      value={inputs.f6}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    {" "}
+                    <input
+                      type="number"
+                      id="i6"
+                      value={inputs.i6}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">{j6result}</td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">SBIN000068037</td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="c7"
+                      value={inputs.c7}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="d7"
+                      value={inputs.d7}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="e7"
+                      value={inputs.e7}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="f7"
+                      value={inputs.f7}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="i7"
+                      value={inputs.i7}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">{j7result}</td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">SbI xxxxx5358</td>
+                  <td className="p-2 border">
+                    {" "}
+                    <input
+                      type="number"
+                      id="c8"
+                      value={inputs.c8}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    {" "}
+                    <input
+                      type="number"
+                      id="d8"
+                      value={inputs.d8}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    {" "}
+                    <input
+                      type="number"
+                      id="e8"
+                      value={inputs.e8}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    {" "}
+                    <input
+                      type="number"
+                      id="f8"
+                      value={inputs.f8}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    {" "}
+                    <input
+                      type="number"
+                      id="i8"
+                      value={inputs.i8}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">{j8result}</td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="c9"
+                      value={inputs.c9}
+                      onChange={handleInputChange}
+                    />
+                  </td>
 
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="d9"
-                          value={inputs.d9}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">{j9result.toFixed(2)}</td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">Card payment not cr.by paytm/icici</td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="c10"
-                          value={inputs.c10}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="d10"
-                          value={inputs.d10}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="e10"
-                          value={inputs.e10}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="f10"
-                          value={inputs.f10}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="i10"
-                          value={inputs.i10}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="j10"
-                          value={inputs.j10}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">cash deposit in m/c from evening shift</td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="c11"
-                          value={inputs.c11}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="d11"
-                          value={inputs.d11}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="e11"
-                          value={inputs.e11}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="f11"
-                          value={inputs.f11}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="i11"
-                          value={inputs.i11}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="j11"
-                          value={inputs.j11}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">cash in hand of Yesterday for deposit </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="c12"
-                          value={inputs.c12}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="d12"
-                          value={inputs.d12}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="e12"
-                          value={inputs.e12}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="f12"
-                          value={inputs.f12}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="i12"
-                          value={inputs.i12}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">{j12result.toFixed(2)}</td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">Recd.from s.v</td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="c13"
-                          value={inputs.c13}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="d13"
-                          value={inputs.d13}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="e13"
-                          value={inputs.e13}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="f13"
-                          value={inputs.f13}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="i13"
-                          value={inputs.i13}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="j13"
-                          value={inputs.j13}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">Recd.from Mukund Sanghi </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="c14"
-                          value={inputs.c14}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="d14"
-                          value={inputs.d14}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="e14"
-                          value={inputs.e14}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="f14"
-                          value={inputs.f14}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="i14"
-                          value={inputs.i14}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="j14"
-                          value={inputs.j14}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">other deposits</td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="c15"
-                          value={inputs.c15}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">Deposit</td>
-                      <td className="p-2 border">to a/c no.</td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">cash of Yesterday for deposit in othe a/c </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="c16"
-                          value={inputs.c16}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">{e16result.toFixed(2)}</td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="f16"
-                          value={inputs.f16}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">Today 1 shift Amt.deposit in a/c</td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="c17"
-                          value={inputs.c17}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="e17"
-                          value={inputs.e17}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="f17"
-                          value={inputs.f17}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">Total</td>
-                      <td className="p-2 border">{totalsum.toFixed(2)}</td>
-                    </tr>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="d9"
+                      value={inputs.d9}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">{j9result.toFixed(2)}</td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">Card payment not cr.by paytm/icici</td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="c10"
+                      value={inputs.c10}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="d10"
+                      value={inputs.d10}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="e10"
+                      value={inputs.e10}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="f10"
+                      value={inputs.f10}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="i10"
+                      value={inputs.i10}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="j10"
+                      value={inputs.j10}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">cash deposit in m/c from evening shift</td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="c11"
+                      value={inputs.c11}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="d11"
+                      value={inputs.d11}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="e11"
+                      value={inputs.e11}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="f11"
+                      value={inputs.f11}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="i11"
+                      value={inputs.i11}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="j11"
+                      value={inputs.j11}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">cash in hand of Yesterday for deposit </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="c12"
+                      value={inputs.c12}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="d12"
+                      value={inputs.d12}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="e12"
+                      value={inputs.e12}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="f12"
+                      value={inputs.f12}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="i12"
+                      value={inputs.i12}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">{j12result.toFixed(2)}</td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">Recd.from s.v</td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="c13"
+                      value={inputs.c13}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="d13"
+                      value={inputs.d13}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="e13"
+                      value={inputs.e13}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="f13"
+                      value={inputs.f13}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="i13"
+                      value={inputs.i13}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="j13"
+                      value={inputs.j13}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">Recd.from Mukund Sanghi </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="c14"
+                      value={inputs.c14}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="d14"
+                      value={inputs.d14}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="e14"
+                      value={inputs.e14}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="f14"
+                      value={inputs.f14}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="i14"
+                      value={inputs.i14}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="j14"
+                      value={inputs.j14}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">other deposits</td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="c15"
+                      value={inputs.c15}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">Deposit</td>
+                  <td className="p-2 border">to a/c no.</td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">cash of Yesterday for deposit in othe a/c </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="c16"
+                      value={inputs.c16}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">{e16result.toFixed(2)}</td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="f16"
+                      value={inputs.f16}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">Today 1 shift Amt.deposit in a/c</td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="c17"
+                      value={inputs.c17}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="e17"
+                      value={inputs.e17}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="f17"
+                      value={inputs.f17}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">Total</td>
+                  <td className="p-2 border">{totalsum.toFixed(2)}</td>
+                </tr>
 
-                    <tr>
-                      <br />
-                    </tr>
-                    <tr>
-                      <br />
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border"> payment to bpcl for invoice 21-12</td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="c21"
-                          value={inputs.c21}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border"> payment to bpcl for invoice 00-12</td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="c22"
-                          value={inputs.c22}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border"> payment to bpcl for invoice 00-12</td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="c23"
-                          value={inputs.c23}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">Pd to Hearing healthcare</td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="c24"
-                          value={inputs.c24}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="e24"
-                          value={inputs.e24}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">Pd to A.K.SANGHI</td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="c25"
-                          value={inputs.c25}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
+                <tr>
+                  <br />
+                </tr>
+                <tr>
+                  <br />
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border"> payment to bpcl for invoice 21-12</td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="c21"
+                      value={inputs.c21}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border"> payment to bpcl for invoice 00-12</td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="c22"
+                      value={inputs.c22}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border"> payment to bpcl for invoice 00-12</td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="c23"
+                      value={inputs.c23}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">Pd to Hearing healthcare</td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="c24"
+                      value={inputs.c24}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="e24"
+                      value={inputs.e24}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">Pd to A.K.SANGHI</td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="c25"
+                      value={inputs.c25}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
 
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="e25"
-                          value={inputs.e25}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">Pd to GST OF PP</td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="c26"
-                          value={inputs.c26}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="e26"
-                          value={inputs.e26}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">Pd FOR AIR COPRESSOR</td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="c27"
-                          value={inputs.c27}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="e27"
-                          value={inputs.e27}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">Balance in evening</td>
-                      <td className="p-2 border">{balenv.toFixed(2)}</td>
-                    </tr>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="e25"
+                      value={inputs.e25}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">Pd to GST OF PP</td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="c26"
+                      value={inputs.c26}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="e26"
+                      value={inputs.e26}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">Pd FOR AIR COPRESSOR</td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="c27"
+                      value={inputs.c27}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="e27"
+                      value={inputs.e27}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">Balance in evening</td>
+                  <td className="p-2 border">{balenv.toFixed(2)}</td>
+                </tr>
 
-                    <tr>
-                      <br />
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="c30"
-                          value={inputs.c30}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <br />
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="a32"
-                          value={inputs.a32}
-                          onChange={handleInputChange}
-                        />
-                      </td>
+                <tr>
+                  <br />
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="c30"
+                      value={inputs.c30}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <br />
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="a32"
+                      value={inputs.a32}
+                      onChange={handleInputChange}
+                    />
+                  </td>
 
-                      <td className="p-2 border">Today morning stock value of petrol</td>
-                      <td className="p-2 border">
-                        {" "}
-                        <input
-                          type="number"
-                          id="c32"
-                          value={inputs.c32}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input
-                          type="number"
-                          id="d32"
-                          value={inputs.d32}
-                          onChange={handleInputChange}
-                        />{" "}
-                        per Ltr rate
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        {" "}
-                        <input
-                          type="number"
-                          id="a33"
-                          value={inputs.a33}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">Petrol PUR for the Day</td>
-                      <td className="p-2 border">
-                        {" "}
-                        <input
-                          type="number"
-                          id="c33"
-                          value={inputs.c33}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">Total Fund including stock</td>
-                      <td className="p-2 border"> {c34result.toFixed(2)}</td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">Due payment to bpcl for invoice 00-12</td>
-                      <td className="p-2 border">
-                        {" "}
-                        <input
-                          type="number"
-                          id="c35"
-                          value={inputs.c35}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">Due payment to bpcl for invoice 00-12</td>
-                      <td className="p-2 border">
-                        {" "}
-                        <input
-                          type="number"
-                          id="c36"
-                          value={inputs.c36}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">Due payment to bpcl for invoice 00-12</td>
-                      <td className="p-2 border">
-                        {" "}
-                        <input
-                          type="number"
-                          id="c37"
-                          value={inputs.c37}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">Due payment to bpcl for invoice 00-12</td>
-                      <td className="p-2 border">
-                        {" "}
-                        <input
-                          type="number"
-                          id="c38"
-                          value={inputs.c38}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">Due payment to bpcl for OIL invoice </td>
-                      <td className="p-2 border">
-                        {" "}
-                        <input
-                          type="number"
-                          id="c39"
-                          value={inputs.c39}
-                          onChange={handleInputChange}
-                        />
-                      </td>
-                      <td className="p-2 border">
-                        <input type="date" />
-                      </td>
-                      <td className="p-2 border">
-                        {e39result.toFixed(2)} <br />
-                        TOTAL DUE as on AS PER BPCL <br />
-                        LEDGER CR.RECd
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                      <td className="p-2 border">working capital</td>
-                      <td className="p-2 border">{workingcap.toFixed(2)}</td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border">
-                        <br />
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+                  <td className="p-2 border">Today morning stock value of petrol</td>
+                  <td className="p-2 border">
+                    {" "}
+                    <input
+                      type="number"
+                      id="c32"
+                      value={inputs.c32}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input
+                      type="number"
+                      id="d32"
+                      value={inputs.d32}
+                      onChange={handleInputChange}
+                    />{" "}
+                    per Ltr rate
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    {" "}
+                    <input
+                      type="number"
+                      id="a33"
+                      value={inputs.a33}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">Petrol PUR for the Day</td>
+                  <td className="p-2 border">
+                    {" "}
+                    <input
+                      type="number"
+                      id="c33"
+                      value={inputs.c33}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">Total Fund including stock</td>
+                  <td className="p-2 border"> {c34result.toFixed(2)}</td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">Due payment to bpcl for invoice 00-12</td>
+                  <td className="p-2 border">
+                    {" "}
+                    <input
+                      type="number"
+                      id="c35"
+                      value={inputs.c35}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">Due payment to bpcl for invoice 00-12</td>
+                  <td className="p-2 border">
+                    {" "}
+                    <input
+                      type="number"
+                      id="c36"
+                      value={inputs.c36}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">Due payment to bpcl for invoice 00-12</td>
+                  <td className="p-2 border">
+                    {" "}
+                    <input
+                      type="number"
+                      id="c37"
+                      value={inputs.c37}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">Due payment to bpcl for invoice 00-12</td>
+                  <td className="p-2 border">
+                    {" "}
+                    <input
+                      type="number"
+                      id="c38"
+                      value={inputs.c38}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">Due payment to bpcl for OIL invoice </td>
+                  <td className="p-2 border">
+                    {" "}
+                    <input
+                      type="number"
+                      id="c39"
+                      value={inputs.c39}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="p-2 border">
+                    <input type="date" />
+                  </td>
+                  <td className="p-2 border">
+                    {e39result.toFixed(2)} <br />
+                    TOTAL DUE as on AS PER BPCL <br />
+                    LEDGER CR.RECd
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                  <td className="p-2 border">working capital</td>
+                  <td className="p-2 border">{workingcap.toFixed(2)}</td>
+                </tr>
+                <tr>
+                  <td className="p-2 border">
+                    <br />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-        </form>
-      </div>
+        </form >
+      </div >
     </>
   );
 };

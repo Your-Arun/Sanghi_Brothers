@@ -466,3 +466,50 @@ label {
 }
 
 
+
+/* Table Scroll Container */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+}
+
+/* Table Styles */
+.responsive-table {
+  min-width: 1000px; /* Forces horizontal scroll */
+  border-collapse: collapse;
+  width: 100%;
+  background-color: white;
+}
+
+.responsive-table th,
+.responsive-table td {
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  text-align: left;
+}
+
+.responsive-table thead {
+  background-color: #f9fafb;
+  font-weight: 600;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"] {
+  width: 100%;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+/* Scrollbar Styling (optional) */
+.table-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+.table-wrapper::-webkit-scrollbar-thumb {
+  background-color: #9ca3af;
+  border-radius: 10px;
+}
