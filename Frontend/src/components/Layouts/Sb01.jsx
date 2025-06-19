@@ -232,8 +232,8 @@ const Sb01 = () => {
           </div>
           <div className="w-full overflow-x-auto">
             <div className="inline-block min-w-full align-middle">
-              <div className="overflow-x-auto border rounded-lg">
-                <table className="min-w-[1000px] table-auto border-collapse border border-gray-300 text-sm p-6">
+              <div className="overflow-x-auto border p-10 rounded-lg">
+                <table className="min-w-[1000px] table-auto border-collapse border border-gray-300 text-sm ">
                   <thead>
                     <tr>
                       <th className="border p-2"><br /></th>
