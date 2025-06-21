@@ -1,6 +1,6 @@
-import React, {  useState ,useContext} from "react";
+import React, { useState, useContext } from "react";
 import axiosInstance from '../Dashboard/axiosInstance'
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import UserContext from "../Home Page/UserContext"
@@ -212,8 +212,8 @@ function ReportFile() {
                   <img src={previousImage} width={50} alt="Back" />
                 </div>
               </Link>
-             
-              <div className="flex flex-col justify-center items-center">
+
+              <div className="flex flex-col justify-center items-center bg-transparent">
                 <label className="block mb-2 text-gray-700">Select Date:</label>
                 <input
                   type="date"
@@ -224,638 +224,640 @@ function ReportFile() {
                 />
               </div>
               <div>
-                <button type="submit" className=" rounded-md p-2">
+                <button type="submit" className=" rounded-md p-2 bg-transparent">
                   <img src={saveImage} width={50} alt="Save" />
                 </button>
               </div>
             </div>
 
             <div className="table-wraper sales-table-wraper">
-            <table className="font-serif text-center responsive-table">
-              <tbody>
-                <tr className=" text-xl">
-                  <th>Name</th>
-                  <th>Sales</th>
-                  <th>Road</th>
-                  <th>Road</th>
-                  <th>Showroom</th>
-                  <th>Showroom</th>
-                  <th>Ns </th>
-                  <th>Ns </th>
-                </tr>
-                <tr>
-                  <td>Nozzele No.</td>
-                  <td></td>
-                  <td>1</td>
-                  <td>2</td>
-                  <td>3</td>
-                  <td>4</td>
-                  <td>5</td>
-                  <td>6</td>
-                </tr>
-                <tr>
-                  <td>Opening Stock 01/12/24</td>
-                  <td>
-                    <div className="opeingstock">
+              <table className="font-serif text-center responsive-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Sales</th>
+                    <th>Road</th>
+                    <th>Road</th>
+                    <th>Showroom</th>
+                    <th>Showroom</th>
+                    <th>Ns </th>
+                    <th>Ns </th>
+                  </tr>
+                  <tr>
+                    <td>Nozzele No.</td>
+                    <td></td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>5</td>
+                    <td>6</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Opening Stock 01/12/24</td>
+                    <td>
+                      <div className="opeingstock">
+                        <input
+                          type="number"
+                          id="b3"
+                          value={inputs.b3}
+                          onChange={handleInputChange}
+                        />
+                        Litre
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Shift -1</td>
+                    <td className="bfour" id="b4">
+                      <div id="b4results">{b4result}</div>
+                    </td>
+                    <td>
                       <input
                         type="number"
-                        id="b3"
-                        value={inputs.b3}
+                        className="c4"
+                        id="c4"
+                        value={inputs.c4}
                         onChange={handleInputChange}
                       />
-                      Litre
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Shift -1</td>
-                  <td className="bfour" id="b4">
-                    <div id="b4results">{b4result}</div>
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="c4"
-                      id="c4"
-                      value={inputs.c4}
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        className="d684"
+                        id="d4"
+                        value={inputs.d4}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        className="e4"
+                        id="e4"
+                        value={inputs.e4}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        className="f4"
+                        id="f4"
+                        value={inputs.f4}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        className="g4"
+                        id="g4"
+                        value={inputs.g4}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        className="h4"
+                        id="h4"
+                        value={inputs.h4}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Shift -2</td>
+                    <td className="bfive" id="b5">
+                      <div id="b5results">{b5result}</div>
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        className="c5"
+                        id="c5"
+                        value={inputs.c5}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        className="d5"
+                        id="d5"
+                        value={inputs.d5}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        className="e5"
+                        id="e5"
+                        value={inputs.e5}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        className="f5"
+                        id="f5"
+                        value={inputs.f5}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        className="g5"
+                        id="g5"
+                        value={inputs.g5}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        className="h5"
+                        id="h5"
+                        value={inputs.h5}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Total Sales</td>
+                    <td className="bsix" id="b6" onChange={handleInputChange}>
+                      {b6result}
+                    </td>
+                    <td>{c6result}</td>
+                    <td>{d6result}</td>
+                    <td>{e6result}</td>
+                    <td>{f6result}</td>
+                    <td>{g6result}</td>
+                    <td>{h6result}</td>
+                  </tr>
+                  <tr>
+                    <td>Stock as per Record</td>
+                    <td
+                      className="bseven"
+                      id="b7"
+                      value={inputs.b7}
                       onChange={handleInputChange}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="d684"
-                      id="d4"
-                      value={inputs.d4}
+                    >
+                      <div>{stockrecord}</div>
+                    </td>
+                    <td>Tank 1</td>
+                    <td>Tank 2</td>
+                    <td>In lorry</td>
+                    <td>water/ms</td>
+                  </tr>
+                  <tr>
+                    <td>Stock as per dip</td>
+                    <td
+                      className="beight"
+                      id="b8"
+                      value={inputs.b8}
                       onChange={handleInputChange}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="e4"
-                      id="e4"
-                      value={inputs.e4}
+                    >
+                      <div>{perdip}</div>
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        className="c8"
+                        id="c8"
+                        value={inputs.c8}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        className="d8"
+                        id="d8"
+                        value={inputs.d8}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        className="e8"
+                        id="e8"
+                        value={inputs.e8}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        className="f8"
+                        id="f8"
+                        value={inputs.f8}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Vairance +/-</td>
+                    <td className="bnine">{variance}</td>
+                    <td
+                      className="c9"
+                      id="c9"
+                      value={inputs.c9}
                       onChange={handleInputChange}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="f4"
-                      id="f4"
-                      value={inputs.f4}
+                    >
+                      {perVar}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Avg. for the month</td>
+                    <td
+                      className="bten"
+                      id="b10"
+                      value={inputs.b10}
                       onChange={handleInputChange}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="g4"
-                      id="g4"
-                      value={inputs.g4}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="h4"
-                      id="h4"
-                      value={inputs.h4}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Shift -2</td>
-                  <td className="bfive" id="b5">
-                    <div id="b5results">{b5result}</div>
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="c5"
-                      id="c5"
-                      value={inputs.c5}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="d5"
-                      id="d5"
-                      value={inputs.d5}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="e5"
-                      id="e5"
-                      value={inputs.e5}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="f5"
-                      id="f5"
-                      value={inputs.f5}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="g5"
-                      id="g5"
-                      value={inputs.g5}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="h5"
-                      id="h5"
-                      value={inputs.h5}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Total Sales</td>
-                  <td className="bsix" id="b6" onChange={handleInputChange}>
-                    {b6result}
-                  </td>
-                  <td>{c6result}</td>
-                  <td>{d6result}</td>
-                  <td>{e6result}</td>
-                  <td>{f6result}</td>
-                  <td>{g6result}</td>
-                  <td>{h6result}</td>
-                </tr>
-                <tr>
-                  <td>Stock as per Record</td>
-                  <td
-                    className="bseven"
-                    id="b7"
-                    value={inputs.b7}
-                    onChange={handleInputChange}
-                  >
-                    <div>{stockrecord}</div>
-                  </td>
-                  <td>Tank 1</td>
-                  <td>Tank 2</td>
-                  <td>In lorry</td>
-                  <td>water/ms</td>
-                </tr>
-                <tr>
-                  <td>Stock as per dip</td>
-                  <td
-                    className="beight"
-                    id="b8"
-                    value={inputs.b8}
-                    onChange={handleInputChange}
-                  >
-                    <div>{perdip}</div>
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="c8"
-                      id="c8"
-                      value={inputs.c8}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="d8"
-                      id="d8"
-                      value={inputs.d8}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="e8"
-                      id="e8"
-                      value={inputs.e8}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      className="f8"
-                      id="f8"
-                      value={inputs.f8}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Vairance +/-</td>
-                  <td className="bnine">{variance}</td>
-                  <td
-                    className="c9"
-                    id="c9"
-                    value={inputs.c9}
-                    onChange={handleInputChange}
-                  >
-                    {perVar}
-                  </td>
-                </tr>
-                <tr>
-                  <td>Avg. for the month</td>
-                  <td
-                    className="bten"
-                    id="b10"
-                    value={inputs.b10}
-                    onChange={handleInputChange}
-                  >
-                    <div>{avgmonth}</div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Sale target</td>
-                  <td className="beleven">
-                    <input
-                      type="number"
-                      id="b11"
-                      value={inputs.b11}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Actual sale till date</td>
-                  <td className="btwelve">
-                    <input
-                      type="number"
-                      id="b12"
-                      value={inputs.b12}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Pur. target last yr</td>
-                  <td className="bthirteen">
-                    <input
-                      id="b13"
-                      type="number"
-                      value={inputs.b13}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Pur till date</td>
-                  <td className="bforteen">
-                    <input
-                      type="number"
-                      id="b14"
-                      value={inputs.b14}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Our Target</td>
-                  <td className="bfifteen">
-                    <input
-                      type="number"
-                      id="b15"
-                      value={inputs.b15}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>If avg is</td>
-                  <td className="bsixteen">
-                    <input
-                      type="number"
-                      id="b16"
-                      value={inputs.b16}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Avg Diff.</td>
-                  <td id="b17">{avgdiff}</td>
-                </tr>
-                <tr>
-                  <td>Pdp for Today</td>
-                  <td>
-                    <input
-                      id="b18"
-                      type="number"
-                      value={inputs.b18}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    Pdp for Next day <span>{getNextDay()}</span>
-                  </td>
-                  <td>
-                    <input
-                      id="b19"
-                      type="number"
-                      step="0.01"
-                      value={inputs.b19}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>New Rate Today</td>
-                  <td>
-                    <input
-                      id="b20"
-                      type="number"
-                      step="0.01"
-                      value={inputs.b20}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Old Rate</td>
-                  <td>
-                    <input
-                      id="b21"
-                      type="number"
-                      step="0.01"
-                      value={inputs.b21}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>2T 1ltr</td>
-                  <td>
-                    <input
-                      id="b22"
-                      type="number"
-                      value={inputs.b22}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>2t 500ml</td>
-                  <td>
-                    <input
-                      id="b23"
-                      type="number"
-                      value={inputs.b23}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>2T 250ml</td>
-                  <td>
-                    <input
-                      id="b24"
-                      type="number"
-                      value={inputs.b24}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>60ml pouch sold</td>
-                  <td>
-                    <input
-                      id="b25"
-                      type="number"
-                      value={inputs.b25}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>40ml pouch sold</td>
-                  <td>
-                    <input
-                      id="b26"
-                      type="number"
-                      value={inputs.b26}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>20ml pouch sold</td>
-                  <td>
-                    <input
-                      id="b27"
-                      type="number"
-                      value={inputs.b27}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Classic 1 Ltr sold</td>
-                  <td>
-                    <input
-                      id="b28"
-                      type="number"
-                      value={inputs.b28}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Nxt 1 Ltr</td>
-                  <td>
-                    <input
-                      id="b29"
-                      type="number"
-                      value={inputs.b29}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Nxt 900ml</td>
-                  <td>
-                    <input
-                      id="b30"
-                      type="number"
-                      value={inputs.b30}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>4T Plus 1 ltr</td>
-                  <td>
-                    <input
-                      id="b31"
-                      type="number"
-                      value={inputs.b31}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>4T Plus 900ml</td>
-                  <td>
-                    <input
-                      id="b32"
-                      type="number"
-                      value={inputs.b32}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>4T Zipp 1 Ltr</td>
-                  <td>
-                    <input
-                      id="b33"
-                      type="number"
-                      value={inputs.b33}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>4T Zipp 900ml</td>
-                  <td>
-                    <input
-                      id="b34"
-                      type="number"
-                      value={inputs.b34}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Stotech</td>
-                  <td>
-                    <input
-                      id="b35"
-                      type="number"
-                      value={inputs.b35}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Hero Honda 800ml</td>
-                  <td>
-                    <input
-                      id="b36"
-                      type="number"
-                      value={inputs.b36}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Hero Honda 900ml</td>
-                  <td>
-                    <input
-                      id="b37"
-                      type="number"
-                      value={inputs.b37}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Ready cool 1 Ltr</td>
-                  <td>
-                    <input
-                      id="b38"
-                      type="number"
-                      value={inputs.b38}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Ready cool 500ml</td>
-                  <td>
-                    <input
-                      id="b39"
-                      type="number"
-                      value={inputs.b39}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>60ml pouch leakage</td>
-                  <td>
-                    <input
-                      id="b40"
-                      type="number"
-                      value={inputs.b40}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>40ml pouch leakage</td>
-                  <td>
-                    <input
-                      id="b41"
-                      type="number"
-                      value={inputs.b41}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>20ml pouch leakage</td>
-                  <td>
-                    <input
-                      id="b42"
-                      type="number"
-                      value={inputs.b42}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Today Credit Sold</td>
-                  <td>
-                    <input
-                      type="number"
-                      id="b43"
-                      value={inputs.b43}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Today Cash Sales</td>
-                  <td id="b44" value={inputs.b44} onChange={handleInputChange}>
-                    {cashsales}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                    >
+                      <div>{avgmonth}</div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Sale target</td>
+                    <td className="beleven">
+                      <input
+                        type="number"
+                        id="b11"
+                        value={inputs.b11}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Actual sale till date</td>
+                    <td className="btwelve">
+                      <input
+                        type="number"
+                        id="b12"
+                        value={inputs.b12}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Pur. target last yr</td>
+                    <td className="bthirteen">
+                      <input
+                        id="b13"
+                        type="number"
+                        value={inputs.b13}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Pur till date</td>
+                    <td className="bforteen">
+                      <input
+                        type="number"
+                        id="b14"
+                        value={inputs.b14}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Our Target</td>
+                    <td className="bfifteen">
+                      <input
+                        type="number"
+                        id="b15"
+                        value={inputs.b15}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>If avg is</td>
+                    <td className="bsixteen">
+                      <input
+                        type="number"
+                        id="b16"
+                        value={inputs.b16}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Avg Diff.</td>
+                    <td id="b17">{avgdiff}</td>
+                  </tr>
+                  <tr>
+                    <td>Pdp for Today</td>
+                    <td>
+                      <input
+                        id="b18"
+                        type="number"
+                        value={inputs.b18}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Pdp for Next day <span>{getNextDay()}</span>
+                    </td>
+                    <td>
+                      <input
+                        id="b19"
+                        type="number"
+                        step="0.01"
+                        value={inputs.b19}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>New Rate Today</td>
+                    <td>
+                      <input
+                        id="b20"
+                        type="number"
+                        step="0.01"
+                        value={inputs.b20}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Old Rate</td>
+                    <td>
+                      <input
+                        id="b21"
+                        type="number"
+                        step="0.01"
+                        value={inputs.b21}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>2T 1ltr</td>
+                    <td>
+                      <input
+                        id="b22"
+                        type="number"
+                        value={inputs.b22}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>2t 500ml</td>
+                    <td>
+                      <input
+                        id="b23"
+                        type="number"
+                        value={inputs.b23}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>2T 250ml</td>
+                    <td>
+                      <input
+                        id="b24"
+                        type="number"
+                        value={inputs.b24}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>60ml pouch sold</td>
+                    <td>
+                      <input
+                        id="b25"
+                        type="number"
+                        value={inputs.b25}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>40ml pouch sold</td>
+                    <td>
+                      <input
+                        id="b26"
+                        type="number"
+                        value={inputs.b26}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>20ml pouch sold</td>
+                    <td>
+                      <input
+                        id="b27"
+                        type="number"
+                        value={inputs.b27}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Classic 1 Ltr sold</td>
+                    <td>
+                      <input
+                        id="b28"
+                        type="number"
+                        value={inputs.b28}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Nxt 1 Ltr</td>
+                    <td>
+                      <input
+                        id="b29"
+                        type="number"
+                        value={inputs.b29}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Nxt 900ml</td>
+                    <td>
+                      <input
+                        id="b30"
+                        type="number"
+                        value={inputs.b30}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>4T Plus 1 ltr</td>
+                    <td>
+                      <input
+                        id="b31"
+                        type="number"
+                        value={inputs.b31}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>4T Plus 900ml</td>
+                    <td>
+                      <input
+                        id="b32"
+                        type="number"
+                        value={inputs.b32}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>4T Zipp 1 Ltr</td>
+                    <td>
+                      <input
+                        id="b33"
+                        type="number"
+                        value={inputs.b33}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>4T Zipp 900ml</td>
+                    <td>
+                      <input
+                        id="b34"
+                        type="number"
+                        value={inputs.b34}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Stotech</td>
+                    <td>
+                      <input
+                        id="b35"
+                        type="number"
+                        value={inputs.b35}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Hero Honda 800ml</td>
+                    <td>
+                      <input
+                        id="b36"
+                        type="number"
+                        value={inputs.b36}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Hero Honda 900ml</td>
+                    <td>
+                      <input
+                        id="b37"
+                        type="number"
+                        value={inputs.b37}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Ready cool 1 Ltr</td>
+                    <td>
+                      <input
+                        id="b38"
+                        type="number"
+                        value={inputs.b38}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Ready cool 500ml</td>
+                    <td>
+                      <input
+                        id="b39"
+                        type="number"
+                        value={inputs.b39}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>60ml pouch leakage</td>
+                    <td>
+                      <input
+                        id="b40"
+                        type="number"
+                        value={inputs.b40}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>40ml pouch leakage</td>
+                    <td>
+                      <input
+                        id="b41"
+                        type="number"
+                        value={inputs.b41}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>20ml pouch leakage</td>
+                    <td>
+                      <input
+                        id="b42"
+                        type="number"
+                        value={inputs.b42}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Today Credit Sold</td>
+                    <td>
+                      <input
+                        type="number"
+                        id="b43"
+                        value={inputs.b43}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Today Cash Sales</td>
+                    <td id="b44" value={inputs.b44} onChange={handleInputChange}>
+                      {cashsales}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
-          <div  className="table-wraper sales-table-wraper">
+          <div className="table-wraper sales-table-wraper">
             <div className="text-center mb-20">
               <h2>This Month , last year</h2>
               <table className="responsive-table">
@@ -975,7 +977,7 @@ function ReportFile() {
               </table>
             </div>
           </div>
-        </form> 
+        </form>
       </div>
     </>
   );
