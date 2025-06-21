@@ -514,3 +514,36 @@ label {
   background-color: #9ca3af;
   border-radius: 10px;
 }
+
+/* Container for horizontal scrolling */
+.sales-table-container {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+/* General table styling */
+.sales-table {
+  width: 1000px; /* or max-content if dynamic */
+  border-collapse: collapse;
+  font-size: 0.875rem; /* same as text-sm */
+  background-color: white;
+}
+
+.sales-table th,
+.sales-table td {
+  border: 1px solid #d1d5db; /* Tailwind gray-300 */
+  padding: 0.5rem;
+  text-align: center;
+}
+
+/* Consistent input styling inside the table */
+.sales-table input[type="number"],
+.sales-table input[type="text"],
+.sales-table input[type="date"] {
+  width: 100%;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  box-sizing: border-box;
+}
