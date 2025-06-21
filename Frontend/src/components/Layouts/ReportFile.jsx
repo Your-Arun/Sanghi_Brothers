@@ -200,7 +200,7 @@ function ReportFile() {
   return (
     <>
       {" "}
-      <div>
+      <div className="bg-gradient-to-r from-blue-400 to-yellow-400 items-center justify-center p-6">
         <form onSubmit={handleSubmit}>
           <div>
             <h1 className="text-3xl mt-5  font-thin text-center  text-red-950  mb-4">
@@ -219,7 +219,7 @@ function ReportFile() {
                   type="date"
                   value={entryDate}
                   onChange={(e) => setEntryDate(e.target.value)}
-                  className="border rounded p-2 w-full"
+                  className="border rounded p-2 w-full bg-transparent"
                   required
                 />
               </div>
@@ -231,7 +231,7 @@ function ReportFile() {
             </div>
 
             <div className="table-wraper sales-table-wraper">
-              <table className="font-serif text-center responsive-table">
+              <table className="responsive-table">
                 <thead>
                   <tr>
                     <th>Name</th>
