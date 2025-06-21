@@ -890,7 +890,7 @@ const UpdateReportFile = () => {
                   <td>
                     <input
                       type="number"
-                      id="f12"
+                    name="f12"
                       value={upreportfile.inputs.f12}
                       onChange={handleInputChange}
                     />
@@ -898,7 +898,7 @@ const UpdateReportFile = () => {
                   <td>
                     <input
                       type="number"
-                      id="g12"
+                      name="g12"
                       value={upreportfile.inputs.g12}
                       onChange={handleInputChange}
                     />
@@ -906,7 +906,7 @@ const UpdateReportFile = () => {
                   <td>
                     <input
                       type="number"
-                      id="h12"
+                      name="h12"
                       value={upreportfile.inputs.h12}
                       onChange={handleInputChange}
                     />
@@ -914,9 +914,9 @@ const UpdateReportFile = () => {
                   <td className="text-red-700">Loss</td>
                 </tr>
                 <tr>
-                  <td>{upreportfile.ftera}</td>
-                  <td>{upreportfile.gtera}</td>
-                  <td>{upreportfile.htera}</td>
+                  <td>{upreportfile.reports.ftera}</td>
+                  <td>{upreportfile.reports.gtera}</td>
+                  <td>{upreportfile.reports.htera}</td>
                   <td>% Sale</td>
                 </tr>
                 <tr>
@@ -931,7 +931,7 @@ const UpdateReportFile = () => {
                   <td>
                     <input
                       type="number"
-                      id="f13"
+                      name="f13"
                       value={upreportfile.inputs.f13}
                       onChange={handleInputChange}
                     />
@@ -939,7 +939,7 @@ const UpdateReportFile = () => {
                   <td>
                     <input
                       type="number"
-                      id="g13"
+                      name ="g13"
                       value={upreportfile.inputs.g13}
                       onChange={handleInputChange}
                     />
@@ -947,7 +947,7 @@ const UpdateReportFile = () => {
                   <td>
                     <input
                       type="number"
-                      id="h13"
+                      name="h13"
                       value={upreportfile.inputs.h13}
                       onChange={handleInputChange}
                     />
@@ -958,7 +958,7 @@ const UpdateReportFile = () => {
                   <td>
                     <input
                       type="number"
-                      id="f14"
+                      name="f14"
                       value={upreportfile.inputs.f14}
                       onChange={handleInputChange}
                     />
@@ -966,7 +966,7 @@ const UpdateReportFile = () => {
                   <td>
                     <input
                       type="number"
-                      id="g14"
+                      name="g14"
                       value={upreportfile.inputs.g14}
                       onChange={handleInputChange}
                     />
@@ -974,7 +974,7 @@ const UpdateReportFile = () => {
                   <td>
                     <input
                       type="number"
-                      id="h14"
+                      name="h14"
                       value={upreportfile.inputs.h14}
                       onChange={handleInputChange}
                     />
@@ -982,9 +982,9 @@ const UpdateReportFile = () => {
                   <td>Pure</td>
                 </tr>
                 <tr>
-                  <td>{upreportfile.feighteen}</td>
-                  <td>{upreportfile.geighteen}</td>
-                  <td>{upreportfile.heighteen}</td>
+                  <td>{upreportfile.reports.feighteen}</td>
+                  <td>{upreportfile.reports.geighteen}</td>
+                  <td>{upreportfile.reports.heighteen}</td>
                   <td>Avg</td>
                 </tr>
               </tbody>
