@@ -197,6 +197,22 @@ function ReportFile() {
       toast.warn("Not Save");
     }
   };
+
+  const getPreviousDate = (dateString) => {
+    const date = new Date(dateString);
+    date.setDate(date.getDate() - 1);
+    return date.toISOString().split('T')[0]; // returns "YYYY-MM-DD"
+  };
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit',
+    }); // e.g. "15/06/25"
+  };
+  
+
   return (
     <>
       {" "}
@@ -257,8 +273,8 @@ function ReportFile() {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Opening Stock 01/12/24</td>
-                    <td>
+                  <td>Opening Stock {entryDate && formatDate(getPreviousDate(entryDate))}</td>
+                  <td>
                       <div className="opeingstock">
                         <input
                           type="number"
