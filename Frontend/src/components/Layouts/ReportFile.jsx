@@ -229,7 +229,9 @@ function ReportFile() {
                 </button>
               </div>
             </div>
+          </div>
 
+          <div className="flex flex-col justify-center items-center">
             <div className="table-wraper sales-table-wraper">
               <table className="responsive-table">
                 <thead>
@@ -857,6 +859,7 @@ function ReportFile() {
               </table>
             </div>
           </div>
+
           <div className="table-wraper sales-table-wraper">
             <div className="text-center mb-20">
               <h2>This Month , last year</h2>
