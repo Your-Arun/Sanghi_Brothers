@@ -200,7 +200,7 @@ function ReportFile() {
   return (
     <>
       {" "}
-      <div className="bg-gradient-to-r from-blue-400 to-yellow-400 items-center justify-center p-6">
+      <div className="bg-gradient-to-r from-blue-400 to-yellow-400 items-center justify-center">
         <form onSubmit={handleSubmit}>
           <div>
             <h1 className="text-3xl mt-5  font-thin text-center  text-red-950  mb-4">
@@ -231,7 +231,7 @@ function ReportFile() {
             </div>
           </div>
 
-          <div className="flex flex-col justify-center items-center">
+          <div className="">
             <div className="table-wraper sales-table-wraper">
               <table className="responsive-table">
                 <thead>
