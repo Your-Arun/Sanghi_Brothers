@@ -211,7 +211,12 @@ function ReportFile() {
       year: '2-digit',
     }); // e.g. "15/06/25"
   };
-  
+
+  const currentYear = new Date().getFullYear();
+  const year1 = currentYear - 1;
+  const year2 = currentYear - 2;
+  const year3 = currentYear - 3;
+
 
   return (
     <>
@@ -273,8 +278,8 @@ function ReportFile() {
                 </thead>
                 <tbody>
                   <tr>
-                  <td>Opening Stock {entryDate && formatDate(getPreviousDate(entryDate))}</td>
-                  <td>
+                    <td>Opening Stock {entryDate && formatDate(getPreviousDate(entryDate))}</td>
+                    <td>
                       <div className="opeingstock">
                         <input
                           type="number"
@@ -880,10 +885,10 @@ function ReportFile() {
                   <thead>
                     {" "}
                     <tr>
-                      <th>2023</th>
-                      <th>2022</th>
-                      <th>2021</th>
-                      <th>Last 3Year</th>
+                      <th>{year1}</th>
+                      <th>{year2}</th>
+                      <th>{year3}</th>
+                      <th>Last 3 Years</th>
                     </tr>
                   </thead>
                   <tbody>

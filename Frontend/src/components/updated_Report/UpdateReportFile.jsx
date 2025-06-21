@@ -1,10 +1,11 @@
-import React, { useEffect, useState,useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axiosInstance from '../Dashboard/axiosInstance'
 import { Link, useNavigate, useParams } from "react-router-dom";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import binImage from "/bin.png";
 import UserContext from "../Home Page/UserContext"
+import { toast } from "react-toastify";
 
 const UpdateReportFile = () => {
   const { id } = useParams();
@@ -54,7 +55,7 @@ const UpdateReportFile = () => {
       </div>
     );
   }
-  const canEdit =user?.department==='manager';
+  const canEdit = user?.department === 'manager';
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     if (!canEdit) {
@@ -75,10 +76,10 @@ const UpdateReportFile = () => {
     e.preventDefault();
     try {
       await axiosInstance.put(`/reportfile/${id}`, upreportfile);
-      alert("Report updated successfully!");
+      toast.success("Report updated successfully!");
       setIsEditing(false);
     } catch (error) {
-      alert("Failed to update report.");
+      toast.warn("Failed to update report.");
     }
   };
 
@@ -121,11 +122,11 @@ const UpdateReportFile = () => {
     confirmDeleteToast(async () => {
       try {
         await axiosInstance.delete(`/reportfile/${id}`);
-        alert("Report deleted successfully!");
+        toast.success("Report deleted successfully!");
         navigate("/dashboard");
         setIsEditing(false);
       } catch (error) {
-        alert("Failed to delete report.");
+        toast.warn("Failed to delete report.");
       }
     })
   }
@@ -171,9 +172,9 @@ const UpdateReportFile = () => {
     upreportfile.reports.perVar =
       upreportfile.inputs.b12 !== 0
         ? (
-            (upreportfile.reports.variance / upreportfile.inputs.b12) *
-            100
-          ).toFixed(2)
+          (upreportfile.reports.variance / upreportfile.inputs.b12) *
+          100
+        ).toFixed(2)
         : 0;
     upreportfile.reports.avgmonth =
       upreportfile.inputs.b12 !== 0
@@ -214,10 +215,14 @@ const UpdateReportFile = () => {
 
   calculateReports();
 
+  const currentYear = new Date().getFullYear();
+  const year1 = currentYear - 1;
+  const year2 = currentYear - 2;
+  const year3 = currentYear - 3;
   return (
-    <div>
+    <div className="bg-gradient-to-r from-blue-400 to-yellow-400 p-6 ">
       <div>
-        <h1 className="text-3xl mt-5  font-thin text-center  text-red-950  mb-4">
+        <h1 className="text-3xl text-center  text-red-950  mb-4">
           Report File
         </h1>
         <div className="flex justify-evenly items-center  p-4">
@@ -229,22 +234,22 @@ const UpdateReportFile = () => {
           <button className="py-3  px-4 inline-flex items-center gap-x-2 text-xl bg-red-500 font-medium rounded-lg  ">
             {upreportfile.department}
           </button>
-          <button>
+          <button className="bg-transparent">
             <img src={binImage} alt="BIN" width={50} onClick={handleDelete} />
           </button>
           <button className="py-3  px-4 inline-flex bg-red-500 items-center gap-x-2 text-xl  font-medium rounded-lg">
             {upreportfile.entryDate.split("T")[0]}
           </button>
-          <button type="submit">
+          <button type="submit" className="bg-transparent" >
             <img src={saveImage} onClick={handleSave} width={50} alt="Save" />
           </button>
         </div>
       </div>
-      <div className="flex justify-around">
-        <div>
-          <table className="font-serif text-center">
-            <tbody>
-              <tr className="text-xl ">
+      <div className="flex flex-col justify-center items-center">
+        <div className="sales-table-container">
+          <table className="sales-table">
+            <thead>
+              <tr>
                 <th>Name</th>
                 <th>Sales</th>
                 <th>Road</th>
@@ -264,6 +269,8 @@ const UpdateReportFile = () => {
                 <td>5</td>
                 <td>6</td>
               </tr>
+            </thead>
+            <tbody>
               <tr>
                 <td>Opening Stock</td>
                 <td>
@@ -863,6 +870,126 @@ const UpdateReportFile = () => {
               </tr>
             </tbody>
           </table>
+        </div>
+        <div className="table-wraper sales-table-wraper">
+          <div className="text-center mb-20">
+            <h2>This Month , last year</h2>
+            <table className="responsive-table">
+              <thead>
+                {" "}
+                <tr>
+                  <th>{year1}</th>
+                  <th>{year2}</th>
+                  <th>{year3}</th>
+                  <th>Last 3 Years</th>
+                </tr>
+              </thead>
+              <tbody>
+                {" "}
+                <tr>
+                  <td>
+                    <input
+                      type="number"
+                      id="f12"
+                      value={upreportfile.inputs.f12}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      id="g12"
+                      value={upreportfile.inputs.g12}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      id="h12"
+                      value={upreportfile.inputs.h12}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td className="text-red-700">Loss</td>
+                </tr>
+                <tr>
+                  <td>{upreportfile.ftera}</td>
+                  <td>{upreportfile.gtera}</td>
+                  <td>{upreportfile.htera}</td>
+                  <td>% Sale</td>
+                </tr>
+                <tr>
+                  <td>
+
+                  </td>
+                  <td> </td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>
+                    <input
+                      type="number"
+                      id="f13"
+                      value={upreportfile.inputs.f13}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      id="g13"
+                      value={upreportfile.inputs.g13}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      id="h13"
+                      value={upreportfile.inputs.h13}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td>Sale</td>
+                </tr>
+                <tr>
+                  <td>
+                    <input
+                      type="number"
+                      id="f14"
+                      value={upreportfile.inputs.f14}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      id="g14"
+                      value={upreportfile.inputs.g14}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      id="h14"
+                      value={upreportfile.inputs.h14}
+                      onChange={handleInputChange}
+                    />
+                  </td>
+                  <td>Pure</td>
+                </tr>
+                <tr>
+                  <td>{upreportfile.feighteen}</td>
+                  <td>{upreportfile.geighteen}</td>
+                  <td>{upreportfile.heighteen}</td>
+                  <td>Avg</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
