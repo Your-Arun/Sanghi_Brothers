@@ -219,7 +219,7 @@ function ReportFile() {
       <div className="bg-gradient-to-r from-blue-400 to-yellow-400 p-6 ">
         <form onSubmit={handleSubmit}>
           <div>
-            <h1 className="text-3xl mt-5  font-thin text-center  text-red-950  mb-4">
+            <h1 className="text-3xl text-center  text-red-950  mb-4">
               Report File
             </h1>
             <div className="flex justify-evenly items-center  p-4">
@@ -406,7 +406,7 @@ function ReportFile() {
                       />
                     </td>
                   </tr>
-                  <tr>
+                  <tr className="font-bold">
                     <td>Total Sales</td>
                     <td className="bsix" id="b6" onChange={handleInputChange}>
                       {b6result}
