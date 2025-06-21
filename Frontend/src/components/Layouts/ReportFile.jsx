@@ -200,7 +200,7 @@ function ReportFile() {
   return (
     <>
       {" "}
-      <div className="bg-gradient-to-r from-blue-400 to-yellow-400 p-4">
+      <div className="bg-gradient-to-r from-blue-400 to-yellow-400 p-6 items-center justify-center ">
         <form onSubmit={handleSubmit}>
           <div>
             <h1 className="text-3xl mt-5  font-thin text-center  text-red-950  mb-4">
