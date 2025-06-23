@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axiosInstance from '../Dashboard/axiosInstance'
 import BackButton from "../Home Page/backbutton";
 import { toast } from 'react-toastify'
+import { toWords } from 'number-to-words';
 
 const CashierDeposit = ({ token }) => {
     const [amount, setAmount] = useState("");
@@ -71,7 +72,7 @@ const CashierDeposit = ({ token }) => {
                 depositData,
             );
 
-            setMessage(`✅ ${response.data.message}`);
+            setMessage(`${response.data.message}`);
             setAmount("");
             setSelectedBank("");
             fetchDeposits();
@@ -211,9 +212,12 @@ const CashierDeposit = ({ token }) => {
                 )}
 
                 {/* Total Amount */}
-                <div className="mt-6 p-4 bg-blue-100 rounded-lg text-center">
-                    <h4 className="text-lg font-semibold text-blue-700">Total Deposited: ₹{totalAmount}</h4>
-                </div>
+                <h4 className="text-lg font-semibold text-blue-700">
+                    Total Deposited: ₹{totalAmount.toLocaleString('en-IN')}
+                </h4>
+                <h4 className="text-lg font-semibold text-blue-700">
+                 ({toWords(totalAmount)})
+                </h4>
             </div>
             <div>
                 <BackButton previousImage="/previous.png" />
