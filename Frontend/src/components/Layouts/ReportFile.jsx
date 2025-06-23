@@ -109,7 +109,7 @@ function ReportFile() {
     const { id, value } = e.target;
     setInputs({
       ...inputs,
-      [id]: value, // Set to 0 if empty, otherwise parse
+      [id]: value === "" ? 0 : parseFloat(value) || 0, // Set to 0 if empty, otherwise parse
     });
   };
 
