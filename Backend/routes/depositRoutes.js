@@ -59,7 +59,7 @@ router.get("/cashier", async (req, res) => {
 
 router.delete('/cashier/:id', async (req, res) => {
     try {
-      const deletedDeposit = await Cashier.findByIdAndDelete(req.params.id);
+      const deletedDeposit = await Deposit.findByIdAndDelete(req.params.id);
   
       if (!deletedDeposit) {
         return res.status(404).json({ message: 'Deposit not found' });

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from '../Dashboard/axiosInstance'
 import BackButton from "../Home Page/backbutton";
+import { toast } from 'react-toastify'
+
 const CashierDeposit = ({ token }) => {
     const [amount, setAmount] = useState("");
     const [selectedBank, setSelectedBank] = useState("");
@@ -91,14 +93,13 @@ const CashierDeposit = ({ token }) => {
 
 
     const handleDelete = async (id) => {
-        if (!window.confirm("Are you sure you want to delete this deposit?")) return;
       
         try {
           await axiosInstance.delete(`/cashier/${id}`);
-          setMessage("✅ Deposit deleted successfully.");
+          toast.success("✅ Deposit deleted successfully.");
           fetchDeposits(); // refresh list
         } catch (error) {
-          setMessage("❌ Failed to delete deposit.");
+          toast.warn("❌ Failed to delete deposit.");
         }
       };
       
