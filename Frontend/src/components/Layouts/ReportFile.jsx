@@ -105,7 +105,7 @@ function ReportFile() {
     const { id, value } = e.target;
     setInputs({
       ...inputs,
-      [id]: value === "" ? 0 : parseFloat(value) || 0, // Set to 0 if empty, otherwise parse
+      [id]: value, // Set to 0 if empty, otherwise parse
     });
   };
 
@@ -881,7 +881,7 @@ function ReportFile() {
             </div>
             <div className="table-wraper sales-table-wraper">
               <div className="text-center mb-20">
-                <h2>This Month , last year</h2>
+                <h2 className="text-2xl font-bold p-4">This Month , Last year</h2>
                 <table className="responsive-table">
                   <thead>
                     {" "}
