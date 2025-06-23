@@ -29,7 +29,7 @@ const CashierDeposit = ({ token }) => {
     const fetchDeposits = async () => {
         try {
             const response = await axiosInstance.get("/cashier", {
-                
+
             });
             setDeposits(response.data);
             calculateTotal(response.data);
@@ -63,7 +63,7 @@ const CashierDeposit = ({ token }) => {
             return;
         }
 
-        const depositData = { amount: parseFloat(amount), bank: selectedBank ,totalamount:totalAmount};
+        const depositData = { amount: parseFloat(amount), bank: selectedBank, totalamount: totalAmount };
 
         try {
             const response = await axiosInstance.post(
@@ -90,19 +90,52 @@ const CashierDeposit = ({ token }) => {
         }
     }, [message]);
 
-
+    const confirmDeleteToast = (onConfirm) => {
+        toast(
+            ({ closeToast }) => (
+                <div className="flex flex-col gap-2">
+                    <p>Are you sure you want to delete this ?</p>
+                    <div className="flex gap-4 mt-2">
+                        <button
+                            onClick={() => {
+                                onConfirm()
+                                closeToast()
+                            }}
+                            className="bg-red-500 text-white px-3 py-1 rounded"
+                        >
+                            Yes
+                        </button>
+                        <button
+                            onClick={closeToast}
+                            className="bg-gray-300 px-3 py-1 rounded"
+                        >
+                            No
+                        </button>
+                    </div>
+                </div>
+            ),
+            {
+                position: "top-center",
+                autoClose: false,
+                closeOnClick: false,
+                closeButton: false,
+            }
+        )
+    }
 
     const handleDelete = async (id) => {
-      
-        try {
-          await axiosInstance.delete(`/cashier/${id}`);
-          toast.success("✅ Deposit deleted successfully.");
-          fetchDeposits(); // refresh list
-        } catch (error) {
-          toast.warn("❌ Failed to delete deposit.");
-        }
-      };
-      
+        confirmDeleteToast(async () => {
+            try {
+                await axiosInstance.delete(`/cashier/${id}`);
+                toast.success("✅ Deposit deleted successfully.");
+                fetchDeposits(); // refresh list
+            } catch (error) {
+                toast.warn("❌ Failed to delete deposit.");
+            }
+        })
+
+    };
+
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
@@ -160,19 +193,19 @@ const CashierDeposit = ({ token }) => {
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                         {deposits.map((deposit, index) => (
-                           <div key={deposit._id || index} className="bg-gray-100 p-4 rounded-lg shadow-md relative">
-                           <button
-                             onClick={() => handleDelete(deposit._id)}
-                             className="absolute top-2 right-2 text-red-600 hover:text-red-800 font-bold text-sm"
-                             title="Delete"
-                           >
-                             ❌
-                           </button>
-                           <p className="text-lg font-semibold text-gray-800">💰 ₹{deposit.amount}</p>
-                           <p className="text-sm text-gray-600">🏦 {deposit.bank}</p>
-                           <p className="text-xs text-gray-500">{new Date(deposit.date).toLocaleDateString()}</p>
-                         </div>
-                         
+                            <div key={deposit._id || index} className="bg-gray-100 p-4 rounded-lg shadow-md relative">
+                                <div
+                                    onClick={() => handleDelete(deposit._id)}
+                                    className="absolute top-2 right-2 text-red-600 hover:text-red-800 font-bold text-sm"
+                                    title="Delete"
+                                >
+                                    ❌
+                                </div>
+                                <p className="text-lg font-semibold text-gray-800">💰 ₹{deposit.amount}</p>
+                                <p className="text-sm text-gray-600">🏦 {deposit.bank}</p>
+                                <p className="text-xs text-gray-500">{new Date(deposit.date).toLocaleDateString()}</p>
+                            </div>
+
                         ))}
                     </div>
                 )}
@@ -183,8 +216,8 @@ const CashierDeposit = ({ token }) => {
                 </div>
             </div>
             <div>
-     <BackButton previousImage="/previous.png" />
-     </div>
+                <BackButton previousImage="/previous.png" />
+            </div>
         </div>
 
     );
