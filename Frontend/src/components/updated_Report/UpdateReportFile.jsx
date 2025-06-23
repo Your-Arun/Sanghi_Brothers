@@ -25,9 +25,10 @@ const UpdateReportFile = () => {
     const fetchReport = async () => {
       try {
         const response = await axiosInstance.get(`/reportfile/${id}`);
-        setUpReportfile(response.data);
+        setUpReportfile(response.data); 
+        console.log(response.data)
       } catch (error) {
-        alert("Not fetching");
+        toast.warning("Not fetching");
       } finally {
         setLoading(false);
       }
@@ -231,13 +232,10 @@ const UpdateReportFile = () => {
               <img src={previousImage} width={50} alt="Back" />
             </div>
           </Link>
-          <button className="py-3  px-4 inline-flex items-center gap-x-2 text-xl bg-red-500 font-medium rounded-lg  ">
-            {upreportfile.department}
-          </button>
           <button className="bg-transparent">
             <img src={binImage} alt="BIN" width={50} onClick={handleDelete} />
           </button>
-          <button className="py-3  px-4 inline-flex bg-red-500 items-center gap-x-2 text-xl  font-medium rounded-lg">
+          <button className="py-3 text-black  px-4 inline-flex items-center gap-x-2 text-xl font-medium rounded-lg">
             {upreportfile.entryDate.split("T")[0]}
           </button>
           <button type="submit" className="bg-transparent" >
@@ -911,7 +909,7 @@ const UpdateReportFile = () => {
                       onChange={handleInputChange}
                     />
                   </td>
-                  <td className="text-red-700">Loss</td>
+                  <td className="text-red-700"></td>
                 </tr>
                 <tr>
                   <td>{upreportfile.reports.ftera}</td>
