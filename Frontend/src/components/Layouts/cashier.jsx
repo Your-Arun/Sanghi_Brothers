@@ -214,9 +214,9 @@ const CashierDeposit = ({ token }) => {
                 {/* <h4 className="text-lg font-semibold text-blue-700">
                     Total Deposited: ₹{totalAmount.toLocaleString('en-IN')}
                 </h4> */}
-                <h4 className="text-lg font-semibold text-blue-700">
+                <h4 className="text-lg font-semibold text-center text-blue-700">
                     Total Deposited: ₹{totalAmount.toLocaleString('en-IN')}<br />
-                    ({numWords(totalAmount, { lang: 'en-in' })})
+                    ({numWords(totalAmount, { lang: 'en-in' }).toUpperCase()})
                 </h4>
             </div>
             <div>
