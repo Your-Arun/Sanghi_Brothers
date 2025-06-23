@@ -232,12 +232,12 @@ const UpdateReportFile = () => {
               <img src={previousImage} width={50} alt="Back" />
             </div>
           </Link>
-          <button className="bg-transparent">
+          <div className="bg-transparent">
             <img src={binImage} alt="BIN" width={50} onClick={handleDelete} />
-          </button>
-          <button className="py-3 text-black  px-4 inline-flex items-center gap-x-2 text-xl rounded-lg">
+          </div>
+          <div className="py-3 text-black  px-4 inline-flex items-center gap-x-2 text-xl rounded-lg">
             {upreportfile.entryDate.split("T")[0]}
-          </button>
+          </div>
           <button type="submit" className="bg-transparent" >
             <img src={saveImage} onClick={handleSave} width={50} alt="Save" />
           </button>
@@ -871,7 +871,7 @@ const UpdateReportFile = () => {
         </div>
         <div className="table-wraper sales-table-wraper">
           <div className="text-center mb-20">
-            <h2 className="text-2xl font-bold  p-4">This Month , last year</h2>
+            <h2 className="text-2xl font-bold  p-4">This Month , Last year</h2>
             <table className="responsive-table">
               <thead>
                 {" "}
@@ -909,7 +909,14 @@ const UpdateReportFile = () => {
                       onChange={handleInputChange}
                     />
                   </td>
-                  <td className="text-red-700"></td>
+                  <td className="font-bold">
+                      <input
+                          type="text"
+                          id="i12"
+                          value={upreportfile.inputs.i12}
+                          onChange={handleInputChange}
+                        />
+                      </td>
                 </tr>
                 <tr>
                   <td>{upreportfile.reports.ftera}</td>

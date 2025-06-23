@@ -73,6 +73,7 @@ function ReportFile() {
     f14: 0,
     g14: 0,
     h14: 0,
+    i12:'',
   });
   const [reports, setReports] = useState({
     b4result: 0,
@@ -918,7 +919,14 @@ function ReportFile() {
                           onChange={handleInputChange}
                         />
                       </td>
-                      <td className="text-red-700"></td>
+                      <td className="font-bold">
+                      <input
+                          type="text"
+                          id="i12"
+                          value={inputs.i12}
+                          onChange={handleInputChange}
+                        />
+                      </td>
                     </tr>
                     <tr>
                       <td>{ftera}</td>

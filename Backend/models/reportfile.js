@@ -71,6 +71,7 @@ const reportSchema = new mongoose.Schema(
       f14: { type: Number, default: 0 },
       g14: { type: Number, default: 0 },
       h14: { type: Number, default: 0 },
+      i12: { type: String },
     },
     reports: {
       b4result: { type: Number, default: 0 },
