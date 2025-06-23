@@ -14,7 +14,7 @@
     "axios": "^1.7.9",
     "jwt-decode": "^3.1.2",
     "lucide-react": "^0.469.0",
-    "number-to-words": "^1.2.4",
+    "num-words": "^1.2.3",
     "react": "^18.3.1",
     "react-datepicker": "^8.2.1",
     "react-dom": "^18.3.1",
