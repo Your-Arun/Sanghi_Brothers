@@ -74,6 +74,10 @@ function ReportFile() {
     g14: 0,
     h14: 0,
     i12:'',
+    i13:'',
+    i14:'',
+    i15:'',
+    i16:'',
   });
   const [reports, setReports] = useState({
     b4result: 0,
@@ -929,10 +933,17 @@ function ReportFile() {
                       </td>
                     </tr>
                     <tr>
-                      <td>{ftera}</td>
-                      <td>{gtera}</td>
-                      <td>{htera}</td>
-                      <td>% Sale</td>
+                      <td className="font-bold">{ftera}</td>
+                      <td className="font-bold">{gtera}</td>
+                      <td className="font-bold">{htera}</td>
+                      <td className="font-bold">
+                      <input
+                          type="text"
+                          id="i13"
+                          value={inputs.i13}
+                          onChange={handleInputChange}
+                        />
+                      </td>
                     </tr>
                     <tr>
                       <td>
@@ -967,7 +978,14 @@ function ReportFile() {
                           onChange={handleInputChange}
                         />
                       </td>
-                      <td>Sale</td>
+                      <td className="font-bold">
+                      <input
+                          type="text"
+                          id="i14"
+                          value={inputs.i14}
+                          onChange={handleInputChange}
+                        />
+                      </td>
                     </tr>
                     <tr>
                       <td>
@@ -994,13 +1012,27 @@ function ReportFile() {
                           onChange={handleInputChange}
                         />
                       </td>
-                      <td>Pure</td>
+                      <td className="font-bold">
+                      <input
+                          type="text"
+                          id="i15"
+                          value={inputs.i15}
+                          onChange={handleInputChange}
+                        />
+                      </td>
                     </tr>
                     <tr>
                       <td>{feighteen}</td>
                       <td>{geighteen}</td>
                       <td>{heighteen}</td>
-                      <td>Avg</td>
+                      <td className="font-bold">
+                      <input
+                          type="text"
+                          id="i16"
+                          value={inputs.i16}
+                          onChange={handleInputChange}
+                        />
+                      </td>
                     </tr>
                   </tbody>
                 </table>

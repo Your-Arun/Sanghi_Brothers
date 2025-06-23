@@ -913,10 +913,17 @@ const UpdateReportFile = () => {
                       </td>
                 </tr>
                 <tr>
-                  <td>{upreportfile.reports.ftera}</td>
-                  <td>{upreportfile.reports.gtera}</td>
-                  <td>{upreportfile.reports.htera}</td>
-                  <td>% Sale</td>
+                  <td className="font-bold">{upreportfile.reports.ftera}</td>
+                  <td className="font-bold">{upreportfile.reports.gtera}</td>
+                  <td className="font-bold">{upreportfile.reports.htera}</td>
+                  <td className="font-bold">
+                      <input
+                          type="text"
+                          name="i13"
+                          value={upreportfile.inputs.i13}
+                          onChange={handleInputChange}
+                        />
+                      </td>
                 </tr>
                 <tr>
                   <td>
@@ -951,7 +958,14 @@ const UpdateReportFile = () => {
                       onChange={handleInputChange}
                     />
                   </td>
-                  <td>Sale</td>
+                  <td className="font-bold">
+                      <input
+                          type="text"
+                          name="i14"
+                          value={upreportfile.inputs.i14}
+                          onChange={handleInputChange}
+                        />
+                      </td>
                 </tr>
                 <tr>
                   <td>
@@ -978,13 +992,27 @@ const UpdateReportFile = () => {
                       onChange={handleInputChange}
                     />
                   </td>
-                  <td>Pure</td>
+                  <td className="font-bold">
+                      <input
+                          type="text"
+                          name="i15"
+                          value={upreportfile.inputs.i15}
+                          onChange={handleInputChange}
+                        />
+                      </td>
                 </tr>
                 <tr>
                   <td>{upreportfile.reports.feighteen}</td>
                   <td>{upreportfile.reports.geighteen}</td>
                   <td>{upreportfile.reports.heighteen}</td>
-                  <td>Avg</td>
+                  <td className="font-bold">
+                      <input
+                          type="text"
+                          name="i16"
+                          value={upreportfile.inputs.i16}
+                          onChange={handleInputChange}
+                        />
+                      </td>
                 </tr>
               </tbody>
             </table>
