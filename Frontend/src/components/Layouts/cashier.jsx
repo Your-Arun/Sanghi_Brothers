@@ -88,6 +88,21 @@ const CashierDeposit = ({ token }) => {
         }
     }, [message]);
 
+
+
+    const handleDelete = async (id) => {
+        if (!window.confirm("Are you sure you want to delete this deposit?")) return;
+      
+        try {
+          await axiosInstance.delete(`/cashier/${id}`);
+          setMessage("✅ Deposit deleted successfully.");
+          fetchDeposits(); // refresh list
+        } catch (error) {
+          setMessage("❌ Failed to delete deposit.");
+        }
+      };
+      
+
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
             <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-lg">
@@ -144,11 +159,19 @@ const CashierDeposit = ({ token }) => {
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                         {deposits.map((deposit, index) => (
-                            <div key={index} className="bg-gray-100 p-4 rounded-lg shadow-md">
-                                <p className="text-lg font-semibold text-gray-800">💰 ₹{deposit.amount}</p>
-                                <p className="text-sm text-gray-600">🏦 {deposit.bank}</p>
-                                <p className="text-xs text-gray-500">{new Date(deposit.date).toLocaleDateString()}</p>
-                            </div>
+                           <div key={deposit._id || index} className="bg-gray-100 p-4 rounded-lg shadow-md relative">
+                           <button
+                             onClick={() => handleDelete(deposit._id)}
+                             className="absolute top-2 right-2 text-red-600 hover:text-red-800 font-bold text-sm"
+                             title="Delete"
+                           >
+                             ❌
+                           </button>
+                           <p className="text-lg font-semibold text-gray-800">💰 ₹{deposit.amount}</p>
+                           <p className="text-sm text-gray-600">🏦 {deposit.bank}</p>
+                           <p className="text-xs text-gray-500">{new Date(deposit.date).toLocaleDateString()}</p>
+                         </div>
+                         
                         ))}
                     </div>
                 )}

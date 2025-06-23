@@ -413,7 +413,7 @@ const UpdateReportFile = () => {
                   />
                 </td>
               </tr>
-              <tr>
+              <tr className="font-bold">
                 <td>Total Sales</td>
                 <td className="bsix" id="b6">
                   {upreportfile.reports.b6result}
