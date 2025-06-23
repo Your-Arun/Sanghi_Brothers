@@ -918,7 +918,7 @@ function ReportFile() {
                           onChange={handleInputChange}
                         />
                       </td>
-                      <td className="text-red-700">Loss</td>
+                      <td className="text-red-700"></td>
                     </tr>
                     <tr>
                       <td>{ftera}</td>

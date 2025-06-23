@@ -235,7 +235,7 @@ const UpdateReportFile = () => {
           <button className="bg-transparent">
             <img src={binImage} alt="BIN" width={50} onClick={handleDelete} />
           </button>
-          <button className="py-3 text-black  px-4 inline-flex items-center gap-x-2 text-xl font-medium rounded-lg">
+          <button className="py-3 text-black  px-4 inline-flex items-center gap-x-2 text-xl rounded-lg">
             {upreportfile.entryDate.split("T")[0]}
           </button>
           <button type="submit" className="bg-transparent" >
@@ -871,7 +871,7 @@ const UpdateReportFile = () => {
         </div>
         <div className="table-wraper sales-table-wraper">
           <div className="text-center mb-20">
-            <h2>This Month , last year</h2>
+            <h2 className="text-2xl font-bold  p-4">This Month , last year</h2>
             <table className="responsive-table">
               <thead>
                 {" "}
