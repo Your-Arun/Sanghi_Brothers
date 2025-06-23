@@ -127,10 +127,10 @@ const CashierDeposit = ({ token }) => {
         confirmDeleteToast(async () => {
             try {
                 await axiosInstance.delete(`/cashier/${id}`);
-                toast.success("✅ Deposit deleted successfully.");
+                toast.success("Deposit deleted successfully.");
                 fetchDeposits(); // refresh list
             } catch (error) {
-                toast.warn("❌ Failed to delete deposit.");
+                toast.warn("Failed to delete deposit.");
             }
         })
 
@@ -196,7 +196,7 @@ const CashierDeposit = ({ token }) => {
                             <div key={deposit._id || index} className="bg-gray-100 p-4 rounded-lg shadow-md relative">
                                 <div
                                     onClick={() => handleDelete(deposit._id)}
-                                    className="absolute top-2 right-2 text-red-600 hover:text-red-800 font-bold text-sm"
+                                    className="absolute  cursor-pointer top-2 right-2 text-red-600 hover:text-red-800 font-bold text-sm"
                                     title="Delete"
                                 >
                                     ❌
