@@ -57,7 +57,7 @@ const UpdateReportFile = () => {
   }
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    const numericValue = value === "" ? "" : Number(value);
+    const numericValue = value === "" ? "" : Number(value) || Text(value);
     setUpReportfile((prev) => ({
       ...prev,
       inputs: {
