@@ -26,7 +26,6 @@ const UpdateReportFile = () => {
       try {
         const response = await axiosInstance.get(`/reportfile/${id}`);
         setUpReportfile(response.data); 
-        console.log(response.data)
       } catch (error) {
         toast.warning("Not fetching");
       } finally {
@@ -907,7 +906,7 @@ const UpdateReportFile = () => {
                   <td className="font-bold">
                       <input
                           type="text"
-                          id="i12"
+                          name="i12"
                           value={upreportfile.inputs.i12}
                           onChange={handleInputChange}
                         />
