@@ -56,13 +56,8 @@ const UpdateReportFile = () => {
       </div>
     );
   }
-  const canEdit = user?.department === 'manager';
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (!canEdit) {
-      alert("Only manager can edit");
-      return;
-    }
     const numericValue = value === "" ? "" : Number(value);
     setUpReportfile((prev) => ({
       ...prev,
@@ -223,7 +218,7 @@ const UpdateReportFile = () => {
   return (
     <div className="bg-gradient-to-r from-blue-400 to-yellow-400 p-6 ">
       <div>
-        <h1 className="text-3xl text-center  text-red-950  mb-4">
+        <h1 className="text-5xl text-center font-bold  mb-4">
           Report File
         </h1>
         <div className="flex justify-evenly items-center  p-4">

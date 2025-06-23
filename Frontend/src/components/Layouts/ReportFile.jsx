@@ -225,7 +225,7 @@ function ReportFile() {
       <div className="bg-gradient-to-r from-blue-400 to-yellow-400 p-6 ">
         <form onSubmit={handleSubmit}>
           <div>
-            <h1 className="text-3xl text-center  text-red-950  mb-4">
+            <h1 className="text-5xl text-center font-bold  mb-4">
               Report File
             </h1>
             <div className="flex justify-evenly items-center  p-4">
