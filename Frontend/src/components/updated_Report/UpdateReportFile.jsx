@@ -67,6 +67,23 @@ const UpdateReportFile = () => {
     }));
   };
 
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  
+  //   const parsedValue =
+  //     value === "" ? "" : !isNaN(value) && value.trim() !== "" ? Number(value) : value;
+  
+  //   setUpReportfile((prev) => ({
+  //     ...prev,
+  //     inputs: {
+  //       ...prev.inputs,
+  //       [name]: parsedValue,
+  //     },
+  //   }));
+  // };
+  
+
+
   const handleSave = async (e) => {
     e.preventDefault();
     try {
