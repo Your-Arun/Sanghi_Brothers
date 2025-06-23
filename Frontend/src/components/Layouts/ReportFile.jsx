@@ -105,13 +105,30 @@ function ReportFile() {
   });
 
 
+  // const handleInputChange = (e) => {
+  //   const { id, value } = e.target;
+  //   setInputs({
+  //     ...inputs,
+  //     [id]: value === "" ? 0 : parseFloat(value) || 0, // Set to 0 if empty, otherwise parse
+  //   });
+  // };
+
+
   const handleInputChange = (e) => {
     const { id, value } = e.target;
+      const parsedValue =
+      value === ""
+        ? 0
+        : !isNaN(value) && value.trim() !== ""
+        ? parseFloat(value)
+        : value;
+  
     setInputs({
       ...inputs,
-      [id]: value === "" ? 0 : parseFloat(value) || 0, // Set to 0 if empty, otherwise parse
+      [id]: parsedValue,
     });
   };
+  
 
   const b4result =
     inputs.c4 + inputs.d4 + inputs.e4 + inputs.f4 + inputs.g4 + inputs.h4;
