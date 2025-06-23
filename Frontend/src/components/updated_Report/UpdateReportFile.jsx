@@ -55,32 +55,32 @@ const UpdateReportFile = () => {
       </div>
     );
   }
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    const numericValue = value === "" ? "" : Number(value) || Text(value);
-    setUpReportfile((prev) => ({
-      ...prev,
-      inputs: {
-        ...prev.inputs,
-        [name]: numericValue,
-      },
-    }));
-  };
-
   // const handleInputChange = (e) => {
   //   const { name, value } = e.target;
-  
-  //   const parsedValue =
-  //     value === "" ? "" : !isNaN(value) && value.trim() !== "" ? Number(value) : value;
-  
+  //   const numericValue = value === "" ? "" : Number(value) || Text(value);
   //   setUpReportfile((prev) => ({
   //     ...prev,
   //     inputs: {
   //       ...prev.inputs,
-  //       [name]: parsedValue,
+  //       [name]: numericValue,
   //     },
   //   }));
   // };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+  
+    const parsedValue =
+      value === "" ? "" : !isNaN(value) && value.trim() !== "" ? Number(value) : value;
+  
+    setUpReportfile((prev) => ({
+      ...prev,
+      inputs: {
+        ...prev.inputs,
+        [name]: parsedValue,
+      },
+    }));
+  };
   
 
 
@@ -372,6 +372,15 @@ const UpdateReportFile = () => {
                     type="Number"
                     name="d5"
                     value={upreportfile.inputs.d5}
+                    onChange={handleInputChange}
+                    className="border rounded p-1"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="Number"
+                    name="e5"
+                    value={upreportfile.inputs.e5}
                     onChange={handleInputChange}
                     className="border rounded p-1"
                   />
