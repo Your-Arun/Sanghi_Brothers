@@ -186,7 +186,7 @@ const CashSlip = () => {
         })
     }
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+        <div className="flex flex-col items-center justify-center bg-gradient-to-r from-blue-400 to-yellow-400 p-6">
             <div className="bg-white shadow-lg rounded-lg p-6 max-w-2xl w-full">
                 <h2 className="text-4xl font-bold text-center text-blue-600 mb-8 ">Daily Cash Slip</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -264,7 +264,7 @@ const CashSlip = () => {
             {/* Cash Slips Display */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 mt-6">
                 {fecthcashSlip.map((cashSlip, index) => (
-                    <div key={index} onClick={handleDelete} className="bg-white shadow-md p-4 rounded-lg border border-gray-200">
+                    <div key={index} onClick={handleDelete} className="bg-white shadow-md p-4 rounded-lg border bg-gray-400">
                         <h3 className="text-lg font-bold text-blue-600">{cashSlip.name}</h3>
                         <p><strong>Shift:</strong> {cashSlip.shift}</p>
                         <p><strong>Nozzle No:</strong> {cashSlip.nozzleNo}</p>
