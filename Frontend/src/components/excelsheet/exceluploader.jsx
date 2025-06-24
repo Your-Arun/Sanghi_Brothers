@@ -78,9 +78,9 @@ function UploadExcel() {
   
   
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-6">
+    <div className="flex flex-col items-center bg-gradient-to-r from-blue-400 to-yellow-400 justify-center min-h-screen bg-gray-50 p-6">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-lg">
-        <h2 className="text-2xl font-semibold mb-5 text-center">📂 Upload Excel File</h2>
+        <h2 className="text-4xl font-semibold mb-5 text-center">📂 Upload Excel File</h2>
 
         <label className="w-full flex flex-col items-center justify-center border-2 border-dashed border-gray-300 p-6 rounded-lg cursor-pointer hover:border-blue-500">
           <input type="file" accept=".xlsx, .xls" className="hidden" onChange={handleFileChange} />
