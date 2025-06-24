@@ -197,10 +197,8 @@ const CashSlip = () => {
             try {
                 await axiosInstance.delete(`/Cashslip/${id}`);
                 setFecthcashSlip(prev => prev.filter(item => item._id !== id));
-
                 toast.success("Deleted successfully");
             } catch (error) {
-                console.error(error);
                 toast.error("Failed to delete");
             }
         })
@@ -210,7 +208,7 @@ const CashSlip = () => {
         <div className="flex flex-col items-center justify-center bg-gradient-to-r from-blue-400 to-yellow-400 p-6">
             <div className="bg-white shadow-lg rounded-lg p-6 max-w-2xl w-full">
                 <h2 className="text-4xl font-bold text-center text-blue-600 mb-8 ">Daily Cash Slip</h2>
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4 font-bold">
                     {/* Date & Shift */}
                     <div className="flex flex-col sm:flex-row gap-4">
                         <input type="date" name="date" value={cashSlip.date} onChange={handleChange} required className="border p-2 rounded-md w-full" />
