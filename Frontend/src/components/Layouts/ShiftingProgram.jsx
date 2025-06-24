@@ -264,7 +264,7 @@ const ShiftManagementSystem = () => {
   );
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+    <div className="flex flex-col items-center  bg-gradient-to-r from-blue-400 to-yellow-400 justify-center min-h-screen p-6">
       <h1 className="text-3xl font-bold text-center mb-5">SHIFT MANAGEMENT SYSTEM</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-white rounded-lg p-3 shadow-md">
@@ -370,11 +370,11 @@ const ShiftManagementSystem = () => {
           </div>
         </div>
       </div>
-      <div className="flex justify-evenly mt-5">
+      <div className="flex justify-evenly mt-5 gap-4">
         <div >
-          <button className="bg-green-500 text-white px-4 py-2 rounded">
+          <div className="bg-green-500 text-white px-4 py-2 rounded">
             <input type="date" className="bg-transparent border-none p-0" value={date} onChange={handleDateChange} />
-          </button>
+          </div>
         </div>
         <div className="flex gap-4">
           <button onClick={handleAssignMorningShift} className="bg-blue-500 text-white px-4 py-2 rounded">
@@ -385,9 +385,9 @@ const ShiftManagementSystem = () => {
           </button>
         </div>
         <div>
-          <button onClick={() => navigate('/allshifting')} className="bg-green-500 text-white px-4 py-2 rounded">
+          <div onClick={() => navigate('/allshifting')} className="bg-green-500 text-white px-4 py-2 rounded">
             All Shifts
-          </button>
+          </div>
         </div>
       </div>
       <div>
