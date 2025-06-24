@@ -44,10 +44,10 @@ const Report = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-      <form className="bg-white p-6 rounded shadow-md w-96" onSubmit={handleSubmit}>
-        <h2 className="text-lg font-bold mb-4">
-          Create Report for {user?.department.toUpperCase() || "N/A"}
+    <div className="flex flex-col bg-gradient-to-r from-blue-400 to-yellow-400 items-center justify-center bg-gray-100 p-6">
+      <form className="bg-white p-6 rounded shadow-md " onSubmit={handleSubmit}>
+        <h2 className="text-4xl text-center font-bold mb-4">
+          CREATE REPORT
         </h2>
         <input
           type="text"
