@@ -13,16 +13,10 @@ const Report = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!user || !user.department) {
-      toast.warn("Error: No department found. Please log in again.");
-      return;
-    }
-
-    try {
+       try {
       const token = sessionStorage.getItem("authToken");
       if (!token) {
-        toast.warn("No valid session found. Please log in.");
+        toast.warning("No valid session found. Please log in.");
         return;
       }
 
