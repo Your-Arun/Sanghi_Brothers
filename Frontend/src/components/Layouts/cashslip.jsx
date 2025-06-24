@@ -2,8 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from '../Dashboard/axiosInstance'
 import BackButton from '../Home Page/backbutton';
 import { toast } from 'react-toastify'
+import UserContext from "../Home Page/UserContext"; // Import UserContext
+
 const CashSlip = () => {
     const [fecthcashSlip, setFecthcashSlip] = useState([]);
+    const { user } = useContext(UserContext); // Get user from context
+
     const [selectedDate, setSelectedDate] = useState(() => {
         const today = new Date();
         return today.toISOString().split("T")[0];
@@ -174,17 +178,18 @@ const CashSlip = () => {
         )
     }
     const handleDelete = async (id) => {
-        e.preventDefault()
-        confirmDeleteToast(async () => {
-            try {
-                await axiosInstance.delete(`/Cashslip/${id}`);
-                toast.success("Cash Slip deleted successfully!");
-                fetchCashSlipByDate(selectedDate);
-            } catch (error) {
-                toast.warn("Error deleting cash slip: ");
-            }
-        })
-    }
+        if (!window.confirm("Are you sure you want to delete this entry?")) return;
+      
+        try {
+          await axiosInstance.delete(`/Cashslip/${id}`);
+          setFecthcashSlip(prev => prev.filter(item => item._id !== id));
+          toast.success("Deleted successfully");
+        } catch (error) {
+          console.error(error);
+          toast.error("Failed to delete");
+        }
+      };
+      
     return (
         <div className="flex flex-col items-center justify-center bg-gradient-to-r from-blue-400 to-yellow-400 p-6">
             <div className="bg-white shadow-lg rounded-lg p-6 max-w-2xl w-full">
@@ -264,7 +269,7 @@ const CashSlip = () => {
             {/* Cash Slips Display */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 mt-6">
                 {fecthcashSlip.map((cashSlip, index) => (
-                    <div key={index} onClick={handleDelete} className="bg-white shadow-md p-4 rounded-lg border bg-gray-400">
+                    <div key={index} className="bg-white shadow-md p-4 rounded-lg border border-gray-200 relative group">
                         <h3 className="text-lg font-bold text-blue-600">{cashSlip.name}</h3>
                         <p><strong>Shift:</strong> {cashSlip.shift}</p>
                         <p><strong>Nozzle No:</strong> {cashSlip.nozzleNo}</p>
@@ -272,9 +277,20 @@ const CashSlip = () => {
                         <p><strong>Closing:</strong> {cashSlip.closingReading}</p>
                         <p><strong>Sales:</strong> {cashSlip.salesInLtr} L</p>
                         <p><strong>Total:</strong> ₹{cashSlip.total}</p>
+
+                        {/* Delete button only for manager */}
+                        {user.department === "manager" && (
+                            <button
+                                onClick={() => handleDelete(cashSlip._id)}
+                                className="absolute top-2 right-2 text-red-600 hover:text-red-800 font-bold text-sm"
+                            >
+                                🗑️
+                            </button>
+                        )}
                     </div>
                 ))}
             </div>
+
             {/* Back Button */}
             <div>
                 <BackButton previousImage="/previous.png" />
