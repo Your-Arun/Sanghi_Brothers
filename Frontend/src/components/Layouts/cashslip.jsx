@@ -177,19 +177,34 @@ const CashSlip = () => {
             }
         )
     }
+    // const handleDelete = async (id) => {
+    //     e.preventDefault()
+    //     confirmDeleteToast(async () => {
+    //         try {
+    //             await axiosInstance.delete(`/Cashslip/${id}`);
+    //             toast.success("Cash Slip deleted successfully!");
+    //             fetchCashSlipByDate(selectedDate);
+    //         } catch (error) {
+    //             toast.warn("Error deleting cash slip: ");
+    //         }
+    //     })
+    // }
+
+
+
     const handleDelete = async (id) => {
-        if (!window.confirm("Are you sure you want to delete this entry?")) return;
-      
-        try {
-          await axiosInstance.delete(`/Cashslip/${id}`);
-          setFecthcashSlip(prev => prev.filter(item => item._id !== id));
-          toast.success("Deleted successfully");
-        } catch (error) {
-          console.error(error);
-          toast.error("Failed to delete");
-        }
-      };
-      
+        e.preventDefault()
+        confirmDeleteToast(async () => {
+            try {
+                await axiosInstance.delete(`/Cashslip/${id}`);
+                toast.success("Deleted successfully");
+            } catch (error) {
+                console.error(error);
+                toast.error("Failed to delete");
+            }
+        })
+    };
+
     return (
         <div className="flex flex-col items-center justify-center bg-gradient-to-r from-blue-400 to-yellow-400 p-6">
             <div className="bg-white shadow-lg rounded-lg p-6 max-w-2xl w-full">
