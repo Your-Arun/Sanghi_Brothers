@@ -193,7 +193,6 @@ const CashSlip = () => {
 
 
     const handleDelete = async (id) => {
-        e.preventDefault()
         confirmDeleteToast(async () => {
             try {
                 await axiosInstance.delete(`/Cashslip/${id}`);
