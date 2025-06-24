@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axiosInstance from '../Dashboard/axiosInstance'
 import BackButton from "../Home Page/backbutton";
 import previousImage from "/previous.png"; // ✅ Fixed import
+import { toast } from "react-toastify";
 
 function UploadExcel() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -47,7 +48,7 @@ function UploadExcel() {
       });
       setSavedFiles(response.data);
     } catch (error) {
-      alert("Error fetching files:", error);
+      toast.warn("Error fetching files:", error);
     }
   };
 
@@ -72,7 +73,7 @@ function UploadExcel() {
       link.click();
       document.body.removeChild(link);
     } catch (error) {
-      console.error("❌ Download failed:", error);
+      toast.warning("❌ Download failed:", error);
     }
   };
   
