@@ -47,7 +47,7 @@ const Report = () => {
     <>
       <div className="flex flex-col bg-gradient-to-r from-blue-400 to-yellow-400 p-6 items-center justify-center min-h-screen">
         <form className="bg-white p-6 rounded shadow-md " onSubmit={handleSubmit}>
-          <h2 className="text-4xl bg-gradient-to-r from-red-800 to-red-300 text-center font-bold mb-4">
+          <h2 className="text-4xl text-gradient-to-r from-red-800 to-red-300 text-center font-bold mb-4">
             COMPLAINTs
           </h2>
           <input
