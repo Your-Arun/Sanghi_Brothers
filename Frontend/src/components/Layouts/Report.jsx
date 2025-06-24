@@ -44,32 +44,34 @@ const Report = () => {
   };
 
   return (
-    <div className="flex flex-col bg-gradient-to-r from-blue-400 to-yellow-400 items-center justify-center bg-gray-100 p-6">
-      <form className="bg-white p-6 rounded shadow-md " onSubmit={handleSubmit}>
-        <h2 className="text-4xl text-center font-bold mb-4">
-          CREATE REPORT
-        </h2>
-        <input
-          type="text"
-          className="w-full p-2 mb-2 border rounded"
-          placeholder="Enter report title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
-        <textarea
-          className="w-full p-2 mb-2 border rounded"
-          rows="6"
-          placeholder="Enter report content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          required
-        ></textarea>
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
-          Create Report
-        </button>
-      </form>
-    </div>
+    <>
+      <div className="flex flex-col bg-gradient-to-r from-blue-400 to-yellow-400 items-center justify-center">
+        <form className="bg-white p-6 rounded shadow-md " onSubmit={handleSubmit}>
+          <h2 className="text-4xl text-center font-bold mb-4">
+            COMPLAINTs
+          </h2>
+          <input
+            type="text"
+            className="w-full p-2 mb-2 border rounded"
+            placeholder="Enter report title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+          <textarea
+            className="w-full p-2 mb-2 border rounded"
+            rows="6"
+            placeholder="Enter report content"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            required
+          ></textarea>
+          <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
+            Create Report
+          </button>
+        </form>
+      </div>
+    </>
   );
 };
 
