@@ -197,6 +197,8 @@ const CashSlip = () => {
         confirmDeleteToast(async () => {
             try {
                 await axiosInstance.delete(`/Cashslip/${id}`);
+                setFecthcashSlip(prev => prev.filter(item => item._id !== id));
+
                 toast.success("Deleted successfully");
             } catch (error) {
                 console.error(error);
