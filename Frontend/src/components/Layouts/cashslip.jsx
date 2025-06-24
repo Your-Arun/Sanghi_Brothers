@@ -298,7 +298,7 @@ const CashSlip = () => {
                         {user.department === "manager" && (
                             <button
                                 onClick={() => handleDelete(cashSlip._id)}
-                                className="absolute top-2 right-2 text-red-600 hover:text-red-800 font-bold text-sm"
+                                className="absolute top-2 right-2 bg-transparent text-red-600 hover:text-red-800 font-bold text-sm"
                             >
                                 🗑️
                             </button>
