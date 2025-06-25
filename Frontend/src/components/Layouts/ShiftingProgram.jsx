@@ -377,7 +377,7 @@ const ShiftManagementSystem = () => {
                         onClick={() => handleRemoveMember(member._id)}
                         className="text-red-600 hover:text-white hover:bg-red-600 p-2 rounded-full transition"
                       >
-                        <IoTrashBinOutline className="text-lg" />
+                        <IoTrashBinOutline className="text-lg text-center " />
                       </div>
                     </td>
                   </tr>
@@ -420,8 +420,8 @@ const ShiftManagementSystem = () => {
 
 
 
-      <div>
-        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 mt-5 mb-4">
+      <div className="w-full px-4 py-6 bg-gradient-to-tr from-gray-100 to-white">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {shifts.map((shift) => {
             const nozzles = shift.nozzles || [1, 2, 3, 4, 5, 6];
             const members = shift.members || [];
@@ -429,34 +429,41 @@ const ShiftManagementSystem = () => {
             return (
               <div
                 key={shift.id}
-                className="bg-white shadow-lg rounded-xl p-6 border border-gray-200"
+                className="bg-white shadow-xl rounded-2xl p-6 border border-gray-200 flex flex-col justify-between"
               >
-                <h3 className="text-3xl font-bold text-gray-800 text-center">{shift.name}</h3>
-                <p className="text-lg text-gray-600 text-center mt-1"> {date || "Not Assigned"}</p>
-                <p className="text-lg font-medium text-center text-indigo-600 mt-1">
-                  {shift.startTime} A.M - {shift.endTime} P.M
-                </p>
+                {/* Shift Header */}
+                <div className="text-center mb-4">
+                  <h3 className="text-3xl font-bold text-indigo-700">{shift.name}</h3>
+                  <p className="text-lg text-gray-600">{date || "Not Assigned"}</p>
+                  <p className="text-base font-medium text-indigo-500 mt-1">
+                    {shift.startTime} A.M – {shift.endTime} P.M
+                  </p>
+                </div>
 
-                <div className="flex justify-between items-center bg-gray-100 p-3 mt-3 rounded-lg">
-                  {shift?.supervisor && (
-                    <span className="font-semibold text-gray-700 mr-10">
-                      Supervisor: <span className="text-blue-600">{shift.supervisor.name.toUpperCase()}</span>
+                {/* Supervisor & AirBoy */}
+                <div className="flex flex-wrap justify-between items-center bg-gray-100 rounded-lg p-4 text-sm sm:text-base mb-4">
+                  {shift.supervisor && (
+                    <span className="font-semibold text-gray-700 mr-6">
+                      Supervisor:{" "}
+                      <span className="text-blue-600 uppercase">{shift.supervisor.name}</span>
                     </span>
                   )}
-                  {shift?.airBoy && (
+                  {shift.airBoy && (
                     <span className="font-semibold text-gray-700">
-                      Air Boy: <span className="text-green-600">{shift.airBoy.name.toUpperCase()}</span>
+                      Air Boy:{" "}
+                      <span className="text-green-600 uppercase">{shift.airBoy.name}</span>
                     </span>
                   )}
                 </div>
 
+                {/* Nozzle Table */}
                 <div className="overflow-x-auto">
-                  <table className="w-full mt-4 border-collapse border border-gray-300">
-                    <thead>
-                      <tr className="bg-gray-200 text-gray-800">
-                        <th className="py-2 px-3 border">Nozzle</th>
-                        <th className="py-2 px-3 border">Member</th>
-                        <th className="py-2 px-3 border">Overtime</th>
+                  <table className="w-full border border-gray-300 rounded-lg overflow-hidden">
+                    <thead className="bg-gray-200 text-gray-800">
+                      <tr>
+                        <th className="py-3 px-4 border text-left">⛽ Nozzle</th>
+                        <th className="py-3 px-4 border text-left">👤 Member</th>
+                        <th className="py-3 px-4 border text-left">⏱️ Overtime</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -467,7 +474,14 @@ const ShiftManagementSystem = () => {
                           ((shift.name === "Morning Shift" && morningOvertimeMembers.includes(member._id)) ||
                             (shift.name === "Evening Shift" && eveningOvertimeMembers.includes(member._id)));
 
-                        return <ShiftRow key={index} nozzle={nozzle} member={member} isOvertime={isOvertime} />;
+                        return (
+                          <ShiftRow
+                            key={index}
+                            nozzle={nozzle}
+                            member={member}
+                            isOvertime={isOvertime}
+                          />
+                        );
                       })}
                     </tbody>
                   </table>
@@ -477,6 +491,10 @@ const ShiftManagementSystem = () => {
           })}
         </div>
       </div>
+
+
+
+
       <div>
         <BackButton previousImage="/previous.png" />
       </div>
