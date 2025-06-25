@@ -557,7 +557,7 @@ label {
 .shift-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 @media (min-width: 1024px) {
@@ -624,7 +624,6 @@ label {
 
 .shift-table-wrapper {
   overflow-x: auto;
-  padding: 1rem;
 }
 
 .shift-table {
@@ -639,7 +638,7 @@ label {
 .shift-table td {
   border: 1px solid #d1d5db;
   padding: 0.75rem 1rem;
-  text-align: left;
+  text-align: center;
   word-wrap: break-word;
 }
 
