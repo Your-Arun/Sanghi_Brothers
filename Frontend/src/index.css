@@ -637,7 +637,7 @@ label {
 .shift-table th,
 .shift-table td {
   border: 1px solid #d1d5db;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 0.75rem;
   text-align: center;
   word-wrap: break-word;
 }
