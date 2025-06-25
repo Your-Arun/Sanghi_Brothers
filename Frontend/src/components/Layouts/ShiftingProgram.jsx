@@ -266,118 +266,137 @@ const ShiftManagementSystem = () => {
   return (
     <div className="flex flex-col items-center  bg-gradient-to-r from-blue-400 to-yellow-400 justify-center min-h-screen p-6">
       <h1 className="text-3xl fo nt-bold  bg-gradient-to-r from-blue-800 to-yellow-800 text-transparent bg-clip-text text-center mb-5">SHIFT MANAGEMENT SYSTEM</h1>
-      <div className="grid grid-cols-1  md:grid-cols-2 gap-4">
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-blue-100 to-yellow-100 p-4">
-          {/* Add Member Card */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-3xl mb-10">
-            <h2 className="text-3xl font-bold text-center text-blue-600 mb-6">➕ Add Member</h2>
-            <form onSubmit={handleAddMember} className="space-y-4">
-              <div className="flex flex-wrap gap-4 justify-center">
-                <input
-                  type="text"
-                  placeholder="Enter member name"
-                  value={newMember.name}
-                  onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
-                  className="border p-3 rounded-lg w-full sm:w-48"
-                />
-                <select
-                  value={newMember.role}
-                  onChange={(e) => setNewMember({ ...newMember, role: e.target.value })}
-                  className="border p-3 rounded-lg w-full sm:w-48"
-                >
-                  <option value="">Select Role</option>
-                  <option value="operator">Operator</option>
-                  <option value="supervisor">Supervisor</option>
-                  <option value="air boy">Air Boy</option>
-                </select>
-                <select
-                  value={newMember.shift}
-                  onChange={(e) => setNewMember({ ...newMember, shift: e.target.value })}
-                  className="border p-3 rounded-lg w-full sm:w-48"
-                >
-                  <option value="">Select Shift</option>
-                  <option value="morning">Morning</option>
-                  <option value="evening">Evening</option>
-                </select>
-                <select
-                  value={newMember.available}
-                  onChange={(e) => setNewMember({ ...newMember, available: e.target.value })}
-                  className="border p-3 rounded-lg w-full sm:w-48"
-                >
-                  <option value="">Select Availability</option>
-                  <option value="present">Present</option>
-                  <option value="absent">Absent</option>
-                </select>
-                <button
-                  type="submit"
-                  className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 flex items-center gap-2"
-                >
-                  <FaPlus /> Add
-                </button>
-              </div>
-            </form>
-          </div>
 
-          {/* Member List Card */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-5xl">
-            <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">👥 Member List</h2>
 
-            <div className="overflow-x-auto">
-              <ul className="w-full">
-                {members.map((member, index) => (
-                  <li key={member._id} className="grid grid-cols-5 items-center gap-4 p-3 border-b text-sm md:text-base">
-                    <span className="font-semibold">{index + 1}. {member.name.toUpperCase()}</span>
-
-                    <select
-                      value={member.role}
-                      onChange={(e) => handleRoleChange(member._id, e.target.value)}
-                      className="border p-2 rounded bg-gray-50"
-                    >
-                      <option value="operator">Operator</option>
-                      <option value="supervisor">Supervisor</option>
-                      <option value="air boy">Air Boy</option>
-                    </select>
-
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input type="checkbox" checked={member.available === "present"} onChange={() =>
-                        handleUpdateAvailability(member._id, member.available === "present" ? "absent" : "present", null)
-                      } className="sr-only peer" />
-                      <div className="w-14 h-7 bg-gray-300 peer-checked:bg-green-500 rounded-full p-1 transition-all">
-                        <div className={`w-6 h-6 bg-white rounded-full shadow-md transform duration-300 flex items-center justify-center text-xs font-bold ${member.available === "present" ? "translate-x-7 text-green-600" : "translate-x-0 text-gray-600"}`}>
-                          {member.available === "present" ? "P" : "A"}
-                        </div>
-                      </div>
-                    </label>
-
-                    <select
-                      value={member.shift}
-                      onChange={(e) => handleUpdateShift(member._id, e.target.value)}
-                      className="border p-2 rounded bg-gray-50"
-                    >
-                      <option value="morning">Morning</option>
-                      <option value="evening">Evening</option>
-                    </select>
-
-                    <button
-                      onClick={() => handleRemoveMember(member._id)}
-                      className="text-red-600 hover:text-white hover:bg-red-600 p-2 rounded-full transition"
-                    >
-                      <IoTrashBinOutline className="text-xl" />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Summary */}
-            <div className="flex justify-center items-center gap-6 mt-6 bg-gray-100 p-4 rounded-lg shadow-inner">
-              <span className="text-lg font-bold text-green-600">✅ Present: {members.filter(m => m.available === "present").length}</span>
-              <span className="text-lg font-bold text-red-600">❌ Absent: {members.filter(m => m.available === "absent").length}</span>
-            </div>
-          </div>
+      <div className="flex flex-col items-center justify-start min-h-screen bg-gradient-to-r from-blue-100 to-yellow-100 p-6 overflow-x-hidden">
+        {/* Add Member Card */}
+        <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-5xl mb-8">
+          <h2 className="text-3xl font-bold text-center text-blue-600 mb-6">➕ Add Member</h2>
+          <form onSubmit={handleAddMember} className="flex flex-wrap justify-center gap-4">
+            <input
+              type="text"
+              placeholder="Enter member name"
+              value={newMember.name}
+              onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
+              className="border p-3 rounded-lg w-48"
+            />
+            <select
+              value={newMember.role}
+              onChange={(e) => setNewMember({ ...newMember, role: e.target.value })}
+              className="border p-3 rounded-lg w-48"
+            >
+              <option value="">Select Role</option>
+              <option value="operator">Operator</option>
+              <option value="supervisor">Supervisor</option>
+              <option value="air boy">Air Boy</option>
+            </select>
+            <select
+              value={newMember.shift}
+              onChange={(e) => setNewMember({ ...newMember, shift: e.target.value })}
+              className="border p-3 rounded-lg w-48"
+            >
+              <option value="">Select Shift</option>
+              <option value="morning">Morning</option>
+              <option value="evening">Evening</option>
+            </select>
+            <select
+              value={newMember.available}
+              onChange={(e) => setNewMember({ ...newMember, available: e.target.value })}
+              className="border p-3 rounded-lg w-48"
+            >
+              <option value="">Select Availability</option>
+              <option value="present">Present</option>
+              <option value="absent">Absent</option>
+            </select>
+            <button
+              type="submit"
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 flex items-center gap-2"
+            >
+              <FaPlus /> Add
+            </button>
+          </form>
         </div>
 
+        {/* Member List Card */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-7xl">
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">👥 Member List</h2>
+
+          {/* Member Table Style */}
+          <div className="max-h-[60vh] overflow-y-auto rounded-lg shadow-inner">
+            <table className="w-full text-sm md:text-base table-fixed border border-gray-200">
+              <thead className="bg-gray-100 sticky top-0 z-10">
+                <tr className="text-left">
+                  <th className="p-3 w-[5%]">#</th>
+                  <th className="p-3 w-[25%]">Name</th>
+                  <th className="p-3 w-[20%]">Role</th>
+                  <th className="p-3 w-[20%]">Availability</th>
+                  <th className="p-3 w-[20%]">Shift</th>
+                  <th className="p-3 w-[10%] text-center">Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                {members.map((member, index) => (
+                  <tr key={member._id} className="border-t hover:bg-gray-50">
+                    <td className="p-3 font-medium">{index + 1}</td>
+                    <td className="p-3 font-medium">{member.name.toUpperCase()}</td>
+                    <td className="p-3">
+                      <select
+                        value={member.role}
+                        onChange={(e) => handleRoleChange(member._id, e.target.value)}
+                        className="border p-2 rounded w-full"
+                      >
+                        <option value="operator">Operator</option>
+                        <option value="supervisor">Supervisor</option>
+                        <option value="air boy">Air Boy</option>
+                      </select>
+                    </td>
+                    <td className="p-3">
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" checked={member.available === "present"} onChange={() =>
+                          handleUpdateAvailability(member._id, member.available === "present" ? "absent" : "present", null)
+                        } className="sr-only peer" />
+                        <div className="w-14 h-7 bg-gray-300 peer-checked:bg-green-500 rounded-full p-1 transition-all">
+                          <div className={`w-6 h-6 bg-white rounded-full shadow-md transform duration-300 flex items-center justify-center text-xs font-bold ${member.available === "present" ? "translate-x-7 text-green-600" : "translate-x-0 text-gray-600"}`}>
+                            {member.available === "present" ? "P" : "A"}
+                          </div>
+                        </div>
+                      </label>
+                    </td>
+                    <td className="p-3">
+                      <select
+                        value={member.shift}
+                        onChange={(e) => handleUpdateShift(member._id, e.target.value)}
+                        className="border p-2 rounded w-full"
+                      >
+                        <option value="morning">Morning</option>
+                        <option value="evening">Evening</option>
+                      </select>
+                    </td>
+                    <td className="p-3 text-center">
+                      <button
+                        onClick={() => handleRemoveMember(member._id)}
+                        className="text-red-600 hover:text-white hover:bg-red-600 p-2 rounded-full transition"
+                      >
+                        <IoTrashBinOutline className="text-lg" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Summary */}
+          <div className="flex justify-center items-center gap-6 mt-4 bg-gray-100 p-4 rounded-lg shadow-inner">
+            <span className="text-lg font-bold text-green-600">✅ Present: {members.filter(m => m.available === "present").length}</span>
+            <span className="text-lg font-bold text-red-600">❌ Absent: {members.filter(m => m.available === "absent").length}</span>
+          </div>
+        </div>
       </div>
+
+
+
+
       <div className="flex justify-evenly mt-5 gap-4">
         <div >
           <div className="bg-green-500 text-white px-4 py-2 rounded">
@@ -398,6 +417,9 @@ const ShiftManagementSystem = () => {
           </div>
         </div>
       </div>
+
+
+
       <div>
         <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6 mt-5 mb-4">
           {shifts.map((shift) => {
