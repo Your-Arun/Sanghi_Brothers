@@ -157,32 +157,56 @@ const ShiftManagementSystem = () => {
 
       const unassignedMorning = Math.max(0, morningShift.nozzles.length - morningMembers.length);
 
-      let overtimeCandidatesMorning = availableMembers.filter(m => !morningOvertimeMembers.includes(m._id) && m.shift === "evening" && m.role === "operator");
+      let overtimeCandidatesMorning = availableMembers.filter(
+        (m) =>
+          !morningOvertimeMembers.includes(m._id) &&
+          m.shift === "evening" &&
+          m.role === "operator"
+      );
       overtimeCandidatesMorning = shuffleArray([...overtimeCandidatesMorning]);
 
       let morningOvertime = [];
       if (unassignedMorning > 0) {
-        if (unassignedMorning === 1) {
-          morningOvertime.push(overtimeCandidatesMorning.shift());
-        } else {
-          morningOvertime.push(overtimeCandidatesMorning.shift());
-          morningOvertime.push(overtimeCandidatesMorning.shift());
-        }
+        morningOvertime.push(...overtimeCandidatesMorning.splice(0, Math.min(2, unassignedMorning)));
       }
 
-      morningShift.members = shuffleArray([...morningMembers, ...morningOvertime]);
-      setMorningOvertimeMembers(morningOvertime.map(m => m._id));
+      // 🟩 Combine morning + overtime
+      let finalMorningOperators = shuffleArray([...morningMembers, ...morningOvertime]);
 
-      morningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && m.shift === "morning");
-      morningShift.airBoy = availableMembers.find(m => m.role === "air boy" && m.shift === "morning");
+      // 🟨 Check if extra operator is available (more than 6, and no overtime used)
+      let extraOperator = null;
+      if (
+        finalMorningOperators.length > morningShift.nozzles.length &&
+        morningOvertime.length === 0
+      ) {
+        extraOperator = finalMorningOperators.pop(); // Remove 1 extra to show separately
+      }
 
-      morningMembers.forEach(member => member.free = false);
+      // 🟦 Set members to shift
+      morningShift.members = finalMorningOperators;
+      setMorningOvertimeMembers(morningOvertime.map((m) => m._id));
+
+      morningShift.supervisor = availableMembers.find(
+        (m) => m.role === "supervisor" && m.shift === "morning"
+      );
+      morningShift.airBoy = availableMembers.find(
+        (m) => m.role === "air boy" && m.shift === "morning"
+      );
+
+      // 🟧 Save extra operator (new field)
+      morningShift.extraOperator = extraOperator || null;
+
+      morningMembers.forEach((member) => (member.free = false));
       setShifts([morningShift, shifts[1]]);
 
-      const updatedMorningOvertimeMembers = morningOvertime.map(m => m._id);
-      saveAssignedShifts([morningShift, shifts[1]], updatedMorningOvertimeMembers, eveningOvertimeMembers);
+      saveAssignedShifts(
+        [morningShift, shifts[1]],
+        morningOvertime.map((m) => m._id),
+        eveningOvertimeMembers
+      );
     }
   };
+
   const handleAssignEveningShift = () => {
     if (members.length === 0) {
       alert("Please add team members first");
@@ -450,6 +474,15 @@ const ShiftManagementSystem = () => {
                         <span className="text-blue-600 uppercase">{shift.supervisor.name}</span>
                       </span>
                     )}
+                    {shift.extraOperator && (
+                      <span className="text-gray-700 font-medium">
+                        Extra Operator:{" "}
+                        <span className="text-blue-600 uppercase">
+                          {shift.extraOperator.name}
+                        </span>
+                      </span>
+                    )}
+
                     {shift.airBoy && (
                       <span className="text-gray-700 font-medium">
                         Air Boy:{" "}
