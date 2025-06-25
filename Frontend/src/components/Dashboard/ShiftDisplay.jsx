@@ -131,6 +131,7 @@ const AllShifts = () => {
 
               <div className="flex justify-evenly mt-3">
                 <p className="font-semibold">Supervisor: <span className="text-red-800">{shift.supervisor}</span></p>
+                <p className="font-semibold">Extra Operator: <span className="text-red-800">{shift.extraOperator}</span></p>
                 <p className="font-semibold">Air Boy: <span className="text-red-800">{shift.airBoy}</span></p>
               </div>
 

@@ -13,6 +13,7 @@ const ShiftSchema = new mongoose.Schema({
   endTime: { type: String, required: true },
   supervisor: { type: String, default: "Not Assigned" },
   airBoy: { type: String, default: "Not Assigned" },
+  extraOperator: { type: String, default: null },
   nozzles: [NozzleSchema], // Array of nozzle objects
 });
 

@@ -99,9 +99,12 @@ const ShiftManagementSystem = () => {
   const saveAssignedShifts = async (shifts, morningOvertimeMembers, eveningOvertimeMembers) => {
     try {
       const shiftData = shifts.map((shift) => {
-        const nozzles = shift.nozzles || [1, 2, 3, 4, 5, 6]; // Ensure nozzle sequence
-        const members = shift.members || []; // Use members directly, no shuffle
-
+        const nozzles = shift.nozzles || [1, 2, 3, 4, 5, 6];
+        const members = shift.members || [];
+  
+        const isMorning = shift.name === "Morning Shift";
+        const overtimeList = isMorning ? morningOvertimeMembers : eveningOvertimeMembers;
+  
         return {
           date: date,
           shiftType: shift.name,
@@ -109,16 +112,11 @@ const ShiftManagementSystem = () => {
           endTime: shift.endTime,
           supervisor: shift.supervisor ? shift.supervisor.name : "Not Assigned",
           airBoy: shift.airBoy ? shift.airBoy.name : "Not Assigned",
+          extraOperator: shift.extraOperator ? shift.extraOperator.name : null, // ✅ new field
           nozzles: nozzles.map((nozzle, index) => {
             const assignedMember = members[index] || null;
-
-            // Check if the member is in the correct overtime array based on the shift type
-            const isOvertime =
-              assignedMember &&
-              (shift.name === "Morning Shift"
-                ? morningOvertimeMembers.includes(assignedMember._id)
-                : eveningOvertimeMembers.includes(assignedMember._id));
-
+            const isOvertime = assignedMember && overtimeList.includes(assignedMember._id);
+  
             return {
               nozzleNumber: `Nozzle ${index + 1}`,
               member: assignedMember ? assignedMember.name : "Unassigned",
@@ -127,15 +125,20 @@ const ShiftManagementSystem = () => {
           }),
         };
       });
+  
       if (!date) {
-        toast.warning('Please select Date')
+        toast.warning("Please select Date");
+        return;
       }
+  
       await axiosInstance.post("/shiftingsavee", shiftData);
       toast.success("Shift data saved successfully!");
     } catch (error) {
       toast.warn("Failed to save shift data.");
+      console.error(error);
     }
   };
+  
   const handleAssignMorningShift = () => {
     if (members.length === 0) {
       alert("Please add team members first");
@@ -493,12 +496,15 @@ const ShiftManagementSystem = () => {
                   {/* Supervisor & Air Boy Info */}
                   <div>
                     <div className="bg-gray-100 rounded-md px-4 py-2 flex justify-between items-center flex-wrap text-sm">
-                      <div> {shift.supervisor && (
-                        <span className="text-gray-700 font-medium">
-                          Supervisor:{" "}
-                          <span className="text-blue-600 uppercase">{shift.supervisor.name}</span>
-                        </span>
-                      )}
+                      <div>
+                        {shift.supervisor && (
+                          <span className="text-gray-700 font-medium">
+                            Supervisor:{" "}
+                            <span className="text-blue-600 uppercase">{shift.supervisor.name}</span>
+                          </span>
+                        )}
+                      </div>
+                      <div>
                         {shift.extraOperator && (
                           <span className="text-gray-700 font-medium">
                             Extra Operator:{" "}
@@ -506,18 +512,18 @@ const ShiftManagementSystem = () => {
                               {shift.extraOperator.name}
                             </span>
                           </span>
-                        )}</div>
-
-
+                        )}
+                      </div>
                     </div>
-
                     <div className="bg-gray-100 rounded-md px-4 py-2 flex justify-between items-center flex-wrap text-sm">
-                      {shift.airBoy && (
+                      <div> {shift.airBoy && (
                         <span className="text-gray-700 font-medium">
                           Air Boy:{" "}
                           <span className="text-green-600 uppercase">{shift.airBoy.name}</span>
                         </span>
-                      )}</div>
+                      )}
+                      </div>
+                    </div>
                   </div>
 
                   {/* Table */}
