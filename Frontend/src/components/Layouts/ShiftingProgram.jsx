@@ -420,50 +420,43 @@ const ShiftManagementSystem = () => {
 
 
 
-      <div className="w-full px-6 py-8  min-h-screen">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="shift-container">
+        <div className="shift-grid">
           {shifts.map((shift) => {
             const nozzles = shift.nozzles || [1, 2, 3, 4, 5, 6];
             const members = shift.members || [];
 
             return (
-              <div
-                key={shift.id}
-                className="bg-white rounded-2xl shadow-lg border border-gray-200 flex flex-col justify-between overflow-hidden"
-              >
-                {/* Shift Header */}
-                <div className="bg-indigo-100 p-6 text-center">
-                  <h2 className="text-2xl font-bold text-indigo-700">{shift.name}</h2>
-                  <p className="text-sm text-gray-600">{date || "Not Assigned"}</p>
-                  <p className="text-sm text-indigo-600 font-semibold mt-1">
-                    {shift.startTime} A.M – {shift.endTime} P.M
-                  </p>
+              <div key={shift.id} className="shift-card">
+                {/* Header */}
+                <div className="shift-header">
+                  <h2>{shift.name}</h2>
+                  <p>{date || "Not Assigned"}</p>
+                  <p className="time">{shift.startTime} A.M – {shift.endTime} P.M</p>
                 </div>
 
-                {/* Supervisor & Air Boy Info */}
-                <div className="bg-gray-50 px-6 py-3 flex justify-between items-center text-sm flex-wrap gap-2">
+                {/* Supervisor & Air Boy */}
+                <div className="shift-info">
                   {shift.supervisor && (
-                    <span className="font-medium text-gray-700">
-                      Supervisor:{" "}
-                      <span className="text-blue-600 uppercase">{shift.supervisor.name}</span>
+                    <span>
+                      Supervisor: <span className="supervisor">{shift.supervisor.name.toUpperCase()}</span>
                     </span>
                   )}
                   {shift.airBoy && (
-                    <span className="font-medium text-gray-700">
-                      Air Boy:{" "}
-                      <span className="text-green-600 uppercase">{shift.airBoy.name}</span>
+                    <span>
+                      Air Boy: <span className="airboy">{shift.airBoy.name.toUpperCase()}</span>
                     </span>
                   )}
                 </div>
 
                 {/* Table */}
-                <div className="overflow-x-auto p-4">
-                  <table className="w-full table-fixed border border-gray-300 text-sm">
-                    <thead className="bg-gray-200 text-gray-800">
+                <div className="shift-table-wrapper">
+                  <table className="shift-table">
+                    <thead>
                       <tr>
-                        <th className="w-1/4 py-2 px-3 border">⛽ Nozzle</th>
-                        <th className="w-1/2 py-2 px-3 border">👤 Member</th>
-                        <th className="w-1/4 py-2 px-3 border">⏱️ Overtime</th>
+                        <th>⛽ Nozzle</th>
+                        <th>👤 Member</th>
+                        <th>⏱️ Overtime</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -493,6 +486,7 @@ const ShiftManagementSystem = () => {
           })}
         </div>
       </div>
+
 
 
 
