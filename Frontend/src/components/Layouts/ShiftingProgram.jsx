@@ -203,7 +203,7 @@ const ShiftManagementSystem = () => {
       setShifts([morningShift, shifts[1]]);
 
       saveAssignedShifts(
-        [morningShift, shifts[1]],
+        [morningShift],
         morningOvertime.map((m) => m._id),
         eveningOvertimeMembers
       );
@@ -274,7 +274,7 @@ const ShiftManagementSystem = () => {
 
       const updatedEveningOvertimeMembers = eveningOvertime.map((m) => m._id);
       saveAssignedShifts(
-        [shifts[0], eveningShift],
+        [eveningShift],
         morningOvertimeMembers,
         updatedEveningOvertimeMembers
       );
