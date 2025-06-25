@@ -420,72 +420,83 @@ const ShiftManagementSystem = () => {
 
 
 
-      <div className="shift-container">
-        <div className="shift-grid">
+      <div className="w-full px-4 py-6 min-h-screen">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {shifts.map((shift) => {
             const nozzles = shift.nozzles || [1, 2, 3, 4, 5, 6];
             const members = shift.members || [];
 
             return (
-              <div key={shift.id} className="shift-card">
-                {/* Header */}
-                <div className="shift-header">
-                  <h2>{shift.name}</h2>
-                  <p>{date || "Not Assigned"}</p>
-                  <p className="time">{shift.startTime} A.M – {shift.endTime} P.M</p>
-                </div>
+              <div
+                key={shift.id}
+                className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden flex flex-col"
+              >
+                {/* Full Content Wrapper (ensures everything stays inside) */}
+                <div className="p-4 space-y-4">
+                  {/* Header */}
+                  <div className="text-center">
+                    <h2 className="text-2xl font-bold text-indigo-700">{shift.name}</h2>
+                    <p className="text-sm text-gray-600">{date || "Not Assigned"}</p>
+                    <p className="text-sm text-indigo-500 font-medium mt-1">
+                      {shift.startTime} A.M – {shift.endTime} P.M
+                    </p>
+                  </div>
 
-                {/* Supervisor & Air Boy */}
-                <div className="shift-info">
-                  {shift.supervisor && (
-                    <span>
-                      Supervisor: <span className="supervisor">{shift.supervisor.name.toUpperCase()}</span>
-                    </span>
-                  )}
-                  {shift.airBoy && (
-                    <span>
-                      Air Boy: <span className="airboy">{shift.airBoy.name.toUpperCase()}</span>
-                    </span>
-                  )}
-                </div>
+                  {/* Supervisor & Air Boy Info */}
+                  <div className="bg-gray-100 rounded-md px-4 py-2 flex justify-between items-center flex-wrap text-sm">
+                    {shift.supervisor && (
+                      <span className="text-gray-700 font-medium">
+                        Supervisor:{" "}
+                        <span className="text-blue-600 uppercase">{shift.supervisor.name}</span>
+                      </span>
+                    )}
+                    {shift.airBoy && (
+                      <span className="text-gray-700 font-medium">
+                        Air Boy:{" "}
+                        <span className="text-green-600 uppercase">{shift.airBoy.name}</span>
+                      </span>
+                    )}
+                  </div>
 
-                {/* Table */}
-                <div className="shift-table-wrapper">
-                  <table className="shift-table">
-                    <thead>
-                      <tr>
-                        <th>⛽ Nozzle</th>
-                        <th>👤 Member</th>
-                        <th>⏱️ Overtime</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {nozzles.map((nozzle, index) => {
-                        const member = members[index] || null;
-                        const isOvertime =
-                          member &&
-                          ((shift.name === "Morning Shift" &&
-                            morningOvertimeMembers.includes(member._id)) ||
-                            (shift.name === "Evening Shift" &&
-                              eveningOvertimeMembers.includes(member._id)));
+                  {/* Table */}
+                  <div className="overflow-x-auto">
+                    <table className="w-full min-w-[300px] table-fixed border border-gray-300 text-sm rounded-lg">
+                      <thead className="bg-gray-200 text-gray-800">
+                        <tr>
+                          <th className="w-1/4 py-2 px-3 border">⛽ Nozzle</th>
+                          <th className="w-1/2 py-2 px-3 border">👤 Member</th>
+                          <th className="w-1/4 py-2 px-3 border">⏱️ Overtime</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {nozzles.map((nozzle, index) => {
+                          const member = members[index] || null;
+                          const isOvertime =
+                            member &&
+                            ((shift.name === "Morning Shift" &&
+                              morningOvertimeMembers.includes(member._id)) ||
+                              (shift.name === "Evening Shift" &&
+                                eveningOvertimeMembers.includes(member._id)));
 
-                        return (
-                          <ShiftRow
-                            key={index}
-                            nozzle={nozzle}
-                            member={member}
-                            isOvertime={isOvertime}
-                          />
-                        );
-                      })}
-                    </tbody>
-                  </table>
+                          return (
+                            <ShiftRow
+                              key={index}
+                              nozzle={nozzle}
+                              member={member}
+                              isOvertime={isOvertime}
+                            />
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             );
           })}
         </div>
       </div>
+
 
 
 
