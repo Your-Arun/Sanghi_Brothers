@@ -134,9 +134,9 @@ const AllShifts = () => {
                 <p className="font-semibold">Air Boy: <span className="text-red-800">{shift.airBoy}</span></p>
               </div>
 
-              <div className="overflow-x-auto mt-4">
-                <table className="w-full min-w-[600px] table-fixed border border-gray-300 text-sm rounded-lg overflow-hidden">
-                  <thead>
+              <div className="overflow-x-auto">
+                    <table className="w-full min-w-[300px] table-fixed border border-gray-300 text-sm rounded-lg">
+                     <thead>
                     <tr className="bg-gray-200 text-gray-800">
                       <th className="py-2 px-3 border">Nozzle</th>
                       <th className="py-2 px-3 border">Member</th>
