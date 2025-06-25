@@ -457,13 +457,13 @@ const ShiftManagementSystem = () => {
                 </div>
 
                 {/* Nozzle Table */}
-                <div className="overflow-x-auto">
-                  <table className="w-full border border-gray-300 rounded-lg overflow-hidden">
+                <div className="w-full overflow-x-auto">
+                  <table className="w-full table-fixed border border-gray-300 rounded-lg overflow-hidden">
                     <thead className="bg-gray-200 text-gray-800">
                       <tr>
-                        <th className="py-3 px-4 border text-left">⛽ Nozzle</th>
-                        <th className="py-3 px-4 border text-left">👤 Member</th>
-                        <th className="py-3 px-4 border text-left">⏱️ Overtime</th>
+                        <th className="w-1/4 py-3 px-2 border text-left text-sm sm:text-base">⛽ Nozzle</th>
+                        <th className="w-1/2 py-3 px-2 border text-left text-sm sm:text-base">👤 Member</th>
+                        <th className="w-1/4 py-3 px-2 border text-left text-sm sm:text-base">⏱️ Overtime</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -486,6 +486,7 @@ const ShiftManagementSystem = () => {
                     </tbody>
                   </table>
                 </div>
+
               </div>
             );
           })}

@@ -63,7 +63,6 @@ const AllShifts = () => {
     )
   }
   const handleDelete = async (id) => {
-    e.preventDefault()
     confirmDeleteToast(async () => {
     try {
       const response = await axiosInstance.delete(`/shift/${id}`);
