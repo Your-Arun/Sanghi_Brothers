@@ -468,27 +468,27 @@ const ShiftManagementSystem = () => {
 
                   {/* Supervisor & Air Boy Info */}
                   <div className="bg-gray-100 rounded-md px-4 py-2 flex justify-between items-center flex-wrap text-sm">
-                    {shift.supervisor && (
+                    <p> {shift.supervisor && (
                       <span className="text-gray-700 font-medium">
                         Supervisor:{" "}
                         <span className="text-blue-600 uppercase">{shift.supervisor.name}</span>
                       </span>
                     )}
-                    {shift.extraOperator && (
-                      <span className="text-gray-700 font-medium">
-                        Extra Operator:{" "}
-                        <span className="text-blue-600 uppercase">
-                          {shift.extraOperator.name}
+                      {shift.extraOperator && (
+                        <span className="text-gray-700 font-medium">
+                          Extra Operator:{" "}
+                          <span className="text-blue-600 uppercase">
+                            {shift.extraOperator.name}
+                          </span>
                         </span>
-                      </span>
-                    )}
+                      )}</p>
 
-                    {shift.airBoy && (
+                    <p>{shift.airBoy && (
                       <span className="text-gray-700 font-medium">
                         Air Boy:{" "}
                         <span className="text-green-600 uppercase">{shift.airBoy.name}</span>
                       </span>
-                    )}
+                    )}</p>
                   </div>
 
                   {/* Table */}
