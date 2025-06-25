@@ -567,8 +567,8 @@ label {
 }
 
 @media (min-width: 1024px) {
-  .shift-container {
-    padding: 2px;
+  .shift-grid {
+    padding: .5rem;
   }
 } 
 
