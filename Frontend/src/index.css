@@ -628,6 +628,7 @@ label {
 
 .shift-table {
   width: 100%;
+  padding: 0.5rem 0.75rem;
   table-layout: fixed;
   border-collapse: collapse;
   border: 1px solid #d1d5db; /* gray-300 */
