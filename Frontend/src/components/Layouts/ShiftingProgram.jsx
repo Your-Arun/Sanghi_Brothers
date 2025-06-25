@@ -268,7 +268,7 @@ const ShiftManagementSystem = () => {
       <h1 className="text-3xl fo nt-bold  bg-gradient-to-r from-blue-800 to-yellow-800 text-transparent bg-clip-text text-center mb-5">SHIFT MANAGEMENT SYSTEM</h1>
 
 
-      <div className="flex flex-col items-center justify-start min-h-screen bg-gradient-to-r from-blue-100 to-yellow-100 p-6 overflow-x-hidden">
+      <div className="flex flex-col items-center justify-start min-h-screen p-6 overflow-x-hidden">
         {/* Add Member Card */}
         <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-5xl mb-8">
           <h2 className="text-3xl font-bold text-center text-blue-600 mb-6">➕ Add Member</h2>
