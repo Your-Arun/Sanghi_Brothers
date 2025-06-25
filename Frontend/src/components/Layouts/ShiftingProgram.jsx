@@ -373,12 +373,12 @@ const ShiftManagementSystem = () => {
                       </select>
                     </td>
                     <td className="p-3 text-center">
-                      <button
+                      <div
                         onClick={() => handleRemoveMember(member._id)}
                         className="text-red-600 hover:text-white hover:bg-red-600 p-2 rounded-full transition"
                       >
                         <IoTrashBinOutline className="text-lg" />
-                      </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
