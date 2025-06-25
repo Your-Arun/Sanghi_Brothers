@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axiosInstance from '../Dashboard/axiosInstance'
-import { useNavigate } from "react-router-dom"; // 👈 Navigation ke liye import
+import axiosInstance from "../Dashboard/axiosInstance";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const AllShifts = () => {
@@ -8,7 +8,7 @@ const AllShifts = () => {
   const [filteredShifts, setFilteredShifts] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
 
-  const navigate = useNavigate(); // 👈 Navigation function
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchAllShifts();
@@ -18,7 +18,9 @@ const AllShifts = () => {
     try {
       const response = await axiosInstance.get("/allshifts");
       if (response.data.success && Array.isArray(response.data.shifts)) {
-        const sortedShifts = response.data.shifts.sort((a, b) => new Date(b.date) - new Date(a.date));
+        const sortedShifts = response.data.shifts.sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
         setShifts(sortedShifts);
         setFilteredShifts(sortedShifts);
       } else {
@@ -31,16 +33,17 @@ const AllShifts = () => {
       setFilteredShifts([]);
     }
   };
+
   const confirmDeleteToast = (onConfirm) => {
     toast(
       ({ closeToast }) => (
         <div className="flex flex-col gap-2">
-          <p>Are you sure you want to delete this ?</p>
+          <p>Are you sure you want to delete this?</p>
           <div className="flex gap-4 mt-2">
             <button
               onClick={() => {
-                onConfirm()
-                closeToast()
+                onConfirm();
+                closeToast();
               }}
               className="bg-red-500 text-white px-3 py-1 rounded"
             >
@@ -61,21 +64,22 @@ const AllShifts = () => {
         closeOnClick: false,
         closeButton: false,
       }
-    )
-  }
+    );
+  };
+
   const handleDelete = async (id) => {
     confirmDeleteToast(async () => {
-    try {
-      const response = await axiosInstance.delete(`/shift/${id}`);
-      if (response.data.success) {
-        setShifts((prevShifts) => prevShifts.filter((shift) => shift._id !== id));
-        setFilteredShifts((prevShifts) => prevShifts.filter((shift) => shift._id !== id));
+      try {
+        const response = await axiosInstance.delete(`/shift/${id}`);
+        if (response.data.success) {
+          setShifts((prev) => prev.filter((shift) => shift._id !== id));
+          setFilteredShifts((prev) => prev.filter((shift) => shift._id !== id));
+        }
+      } catch (error) {
+        console.error("Error deleting shift:", error);
       }
-    } catch (error) {
-      console.error("Error deleting shift:", error);
-    }
-  })
-}
+    });
+  };
 
   const handleFilterChange = (event) => {
     const date = event.target.value;
@@ -89,11 +93,11 @@ const AllShifts = () => {
   };
 
   return (
-    <div className="container mx-auto p-5">
+    <div className="container mx-auto px-4 py-6 min-h-screen">
       {/* Back Button */}
       <button
         className="bg-gray-800 text-white px-4 py-2 rounded-lg mb-4 hover:bg-gray-700 transition"
-        onClick={() => navigate(-1)} // 👈 Pichhle page pe jaane ka function
+        onClick={() => navigate(-1)}
       >
         ← Back
       </button>
@@ -101,10 +105,10 @@ const AllShifts = () => {
       <h2 className="text-2xl font-bold text-center mb-4">All Shifts</h2>
 
       {/* Date Filter */}
-      <div className="mb-4 text-center">
+      <div className="mb-6 text-center">
         <input
           type="date"
-          className="p-2 border rounded"
+          className="p-2 border rounded shadow-sm"
           value={selectedDate}
           onChange={handleFilterChange}
         />
@@ -115,51 +119,74 @@ const AllShifts = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filteredShifts.map((shift) => (
-            <div key={shift._id} className="bg-white shadow-md p-5 rounded-lg relative">
+            <div
+              key={shift._id}
+              className="bg-white shadow-md rounded-xl border border-gray-200 p-5 relative"
+            >
               <button
-                className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded-md text-xs"
+                className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-md text-xs"
                 onClick={() => handleDelete(shift._id)}
               >
                 Delete
               </button>
 
-              <h3 className="text-xl font-bold text-center">{shift.shiftType}</h3>
+              <h3 className="text-xl font-bold text-center text-indigo-700">
+                {shift.shiftType}
+              </h3>
               <p className="text-center text-gray-600">{shift.date}</p>
-              <p className="text-center font-medium text-indigo-600">
-                {shift.startTime} - {shift.endTime}
+              <p className="text-center font-medium text-indigo-500">
+                {shift.startTime} – {shift.endTime}
               </p>
 
-              <div className="flex justify-evenly mt-3">
-                <p className="font-semibold">Supervisor: <span className="text-red-800">{shift.supervisor}</span></p>
-                <p className="font-semibold">Air Boy: <span className="text-red-800">{shift.airBoy}</span></p>
+              <div className="flex justify-between flex-wrap mt-3 text-sm">
+                <p className="font-semibold">
+                  Supervisor:{" "}
+                  <span className="text-blue-700">{shift.supervisor}</span>
+                </p>
+                <p className="font-semibold">
+                  Air Boy:{" "}
+                  <span className="text-green-700">{shift.airBoy}</span>
+                </p>
               </div>
 
-              <table className="w-full mt-4 border-collapse border border-gray-300">
-                <thead>
-                  <tr className="bg-gray-200 text-gray-800">
-                    <th className="py-2 px-3 border">Nozzle</th>
-                    <th className="py-2 px-3 border">Member</th>
-                    <th className="py-2 px-3 border">Overtime</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {shift.nozzles.map((nozzle, index) => (
-                    <tr key={index} className="hover:bg-gray-100 transition">
-                      <td className="py-2 px-3 border text-center">{nozzle.nozzleNumber}</td>
-                      <td className="py-2 px-3 border text-center">{nozzle.member}</td>
-                      <td className="py-2 px-3 border text-center">
-                        <span
-                          className={`px-2 py-1 rounded-lg text-xs font-bold ${
-                            nozzle.overtime ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-                          }`}
-                        >
-                          {nozzle.overtime ? "Overtime ✅" : "❌ Overtime"}
-                        </span>
-                      </td>
+              {/* Responsive Table */}
+              <div className="overflow-x-auto mt-4">
+                <table className="w-full min-w-[600px] table-fixed border border-gray-300 text-sm rounded-lg overflow-hidden">
+                  <thead className="bg-gray-200 text-gray-800">
+                    <tr>
+                      <th className="w-1/4 py-2 px-3 border text-left">⛽ Nozzle</th>
+                      <th className="w-1/2 py-2 px-3 border text-left">👤 Member</th>
+                      <th className="w-1/4 py-2 px-3 border text-left">⏱️ Overtime</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {shift.nozzles.map((nozzle, index) => (
+                      <tr
+                        key={index}
+                        className="hover:bg-gray-100 transition-all"
+                      >
+                        <td className="py-2 px-3 border text-center">
+                          {nozzle.nozzleNumber}
+                        </td>
+                        <td className="py-2 px-3 border text-center">
+                          {nozzle.member}
+                        </td>
+                        <td className="py-2 px-3 border text-center">
+                          <span
+                            className={`px-2 py-1 rounded-lg text-xs font-bold ${
+                              nozzle.overtime
+                                ? "bg-green-100 text-green-700"
+                                : "bg-red-100 text-red-700"
+                            }`}
+                          >
+                            {nozzle.overtime ? "Overtime ✅" : "❌ Overtime"}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           ))}
         </div>
