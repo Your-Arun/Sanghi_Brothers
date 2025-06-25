@@ -420,7 +420,7 @@ const ShiftManagementSystem = () => {
 
 
 
-      <div className="w-full px-4 py-6 bg-gradient-to-tr from-gray-100 to-white">
+      <div className="w-full px-6 py-8  min-h-screen">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {shifts.map((shift) => {
             const nozzles = shift.nozzles || [1, 2, 3, 4, 5, 6];
@@ -429,41 +429,41 @@ const ShiftManagementSystem = () => {
             return (
               <div
                 key={shift.id}
-                className="bg-white shadow-xl rounded-2xl p-6 border border-gray-200 flex flex-col justify-between"
+                className="bg-white rounded-2xl shadow-lg border border-gray-200 flex flex-col justify-between overflow-hidden"
               >
                 {/* Shift Header */}
-                <div className="text-center mb-4">
-                  <h3 className="text-3xl font-bold text-indigo-700">{shift.name}</h3>
-                  <p className="text-lg text-gray-600">{date || "Not Assigned"}</p>
-                  <p className="text-base font-medium text-indigo-500 mt-1">
+                <div className="bg-indigo-100 p-6 text-center">
+                  <h2 className="text-2xl font-bold text-indigo-700">{shift.name}</h2>
+                  <p className="text-sm text-gray-600">{date || "Not Assigned"}</p>
+                  <p className="text-sm text-indigo-600 font-semibold mt-1">
                     {shift.startTime} A.M – {shift.endTime} P.M
                   </p>
                 </div>
 
-                {/* Supervisor & AirBoy */}
-                <div className="flex flex-wrap justify-between items-center bg-gray-100 rounded-lg p-4 text-sm sm:text-base mb-4">
+                {/* Supervisor & Air Boy Info */}
+                <div className="bg-gray-50 px-6 py-3 flex justify-between items-center text-sm flex-wrap gap-2">
                   {shift.supervisor && (
-                    <span className="font-semibold text-gray-700 mr-6">
+                    <span className="font-medium text-gray-700">
                       Supervisor:{" "}
                       <span className="text-blue-600 uppercase">{shift.supervisor.name}</span>
                     </span>
                   )}
                   {shift.airBoy && (
-                    <span className="font-semibold text-gray-700">
+                    <span className="font-medium text-gray-700">
                       Air Boy:{" "}
                       <span className="text-green-600 uppercase">{shift.airBoy.name}</span>
                     </span>
                   )}
                 </div>
 
-                {/* Nozzle Table */}
-                <div className="w-full overflow-x-auto">
-                  <table className="w-full table-fixed border border-gray-300 rounded-lg overflow-hidden">
+                {/* Table */}
+                <div className="overflow-x-auto p-4">
+                  <table className="w-full table-fixed border border-gray-300 text-sm">
                     <thead className="bg-gray-200 text-gray-800">
                       <tr>
-                        <th className="w-1/4 py-3 px-2 border text-left text-sm sm:text-base">⛽ Nozzle</th>
-                        <th className="w-1/2 py-3 px-2 border text-left text-sm sm:text-base">👤 Member</th>
-                        <th className="w-1/4 py-3 px-2 border text-left text-sm sm:text-base">⏱️ Overtime</th>
+                        <th className="w-1/4 py-2 px-3 border">⛽ Nozzle</th>
+                        <th className="w-1/2 py-2 px-3 border">👤 Member</th>
+                        <th className="w-1/4 py-2 px-3 border">⏱️ Overtime</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -471,8 +471,10 @@ const ShiftManagementSystem = () => {
                         const member = members[index] || null;
                         const isOvertime =
                           member &&
-                          ((shift.name === "Morning Shift" && morningOvertimeMembers.includes(member._id)) ||
-                            (shift.name === "Evening Shift" && eveningOvertimeMembers.includes(member._id)));
+                          ((shift.name === "Morning Shift" &&
+                            morningOvertimeMembers.includes(member._id)) ||
+                            (shift.name === "Evening Shift" &&
+                              eveningOvertimeMembers.includes(member._id)));
 
                         return (
                           <ShiftRow
@@ -486,12 +488,12 @@ const ShiftManagementSystem = () => {
                     </tbody>
                   </table>
                 </div>
-
               </div>
             );
           })}
         </div>
       </div>
+
 
 
 
