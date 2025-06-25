@@ -212,48 +212,72 @@ const ShiftManagementSystem = () => {
       alert("Please add team members first");
       return;
     }
-
+  
     const availableMembers = members.filter(
       (m) => m.available === "present" && !absentees.includes(m._id)
     );
-
+  
     const eveningShift = shifts.find((shift) => shift.name === "Evening Shift");
-
+  
     if (eveningShift) {
       let eveningMembers = availableMembers.filter(
         (m) => m.shift === "evening" && m.role === "operator"
       );
-
+  
       eveningMembers = shuffleArray([...eveningMembers]);
-
+  
       const unassignedEvening = Math.max(0, eveningShift.nozzles.length - eveningMembers.length);
-
-      let overtimeCandidatesEvening = availableMembers.filter(m => !eveningOvertimeMembers.includes(m._id) && m.shift === "morning" && m.role === "operator");
+  
+      let overtimeCandidatesEvening = availableMembers.filter(
+        (m) =>
+          !eveningOvertimeMembers.includes(m._id) &&
+          m.shift === "morning" &&
+          m.role === "operator"
+      );
       overtimeCandidatesEvening = shuffleArray([...overtimeCandidatesEvening]);
-
+  
       let eveningOvertime = [];
       if (unassignedEvening > 0) {
-        if (unassignedEvening === 1) {
-          eveningOvertime.push(overtimeCandidatesEvening.shift());
-        } else {
-          eveningOvertime.push(overtimeCandidatesEvening.shift());
-          eveningOvertime.push(overtimeCandidatesEvening.shift());
-        }
+        eveningOvertime.push(...overtimeCandidatesEvening.splice(0, Math.min(2, unassignedEvening)));
       }
-
-      eveningShift.members = shuffleArray([...eveningMembers, ...eveningOvertime]);
-      setEveningOvertimeMembers(eveningOvertime.map(m => m._id));
-
-      eveningShift.supervisor = availableMembers.find(m => m.role === "supervisor" && m.shift === "evening");
-      eveningShift.airBoy = availableMembers.find(m => m.role === "air boy" && m.shift === "evening");
-
-      eveningMembers.forEach(member => member.free = false);
+  
+      // 🟩 Combine evening members + overtime
+      let finalEveningOperators = shuffleArray([...eveningMembers, ...eveningOvertime]);
+  
+      // 🟨 Check for extra operator if no overtime used and more than needed
+      let extraOperator = null;
+      if (
+        finalEveningOperators.length > eveningShift.nozzles.length &&
+        eveningOvertime.length === 0
+      ) {
+        extraOperator = finalEveningOperators.pop(); // Remove & display separately
+      }
+  
+      eveningShift.members = finalEveningOperators;
+      setEveningOvertimeMembers(eveningOvertime.map((m) => m._id));
+  
+      eveningShift.supervisor = availableMembers.find(
+        (m) => m.role === "supervisor" && m.shift === "evening"
+      );
+      eveningShift.airBoy = availableMembers.find(
+        (m) => m.role === "air boy" && m.shift === "evening"
+      );
+  
+      // 🟧 Save extraOperator in shift object
+      eveningShift.extraOperator = extraOperator || null;
+  
+      eveningMembers.forEach((member) => (member.free = false));
       setShifts([shifts[0], eveningShift]);
-
-      const updatedEveningOvertimeMembers = eveningOvertime.map(m => m._id);
-      saveAssignedShifts([shifts[0], eveningShift], morningOvertimeMembers, updatedEveningOvertimeMembers);
+  
+      const updatedEveningOvertimeMembers = eveningOvertime.map((m) => m._id);
+      saveAssignedShifts(
+        [shifts[0], eveningShift],
+        morningOvertimeMembers,
+        updatedEveningOvertimeMembers
+      );
     }
   };
+  
   const handleRoleChange = async (id, newRole) => {
     try {
       await axiosInstance.put(`/shifting/${id}`, { role: newRole });
@@ -468,7 +492,7 @@ const ShiftManagementSystem = () => {
 
                   {/* Supervisor & Air Boy Info */}
                   <div className="bg-gray-100 rounded-md px-4 py-2 flex justify-between items-center flex-wrap text-sm">
-                    <p> {shift.supervisor && (
+                    <div> {shift.supervisor && (
                       <span className="text-gray-700 font-medium">
                         Supervisor:{" "}
                         <span className="text-blue-600 uppercase">{shift.supervisor.name}</span>
@@ -481,14 +505,14 @@ const ShiftManagementSystem = () => {
                             {shift.extraOperator.name}
                           </span>
                         </span>
-                      )}</p>
+                      )}</div>
 
-                    <p>{shift.airBoy && (
+                    <div>{shift.airBoy && (
                       <span className="text-gray-700 font-medium">
                         Air Boy:{" "}
                         <span className="text-green-600 uppercase">{shift.airBoy.name}</span>
                       </span>
-                    )}</p>
+                    )}</div>
                   </div>
 
                   {/* Table */}
