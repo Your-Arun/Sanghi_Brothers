@@ -112,7 +112,7 @@ const ShiftManagementSystem = () => {
           endTime: shift.endTime,
           supervisor: shift.supervisor ? shift.supervisor.name : "Not Assigned",
           airBoy: shift.airBoy ? shift.airBoy.name : "Not Assigned",
-          extraOperator: shift.extraOperator ? shift.extraOperator.name : null, // ✅ new field
+          extraOperator: shift.extraOperator ? shift.extraOperator.name : "Not Assigned", // ✅ new field
           nozzles: nozzles.map((nozzle, index) => {
             const assignedMember = members[index] || null;
             const isOvertime = assignedMember && overtimeList.includes(assignedMember._id);
