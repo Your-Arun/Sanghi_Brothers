@@ -265,7 +265,7 @@ const ShiftManagementSystem = () => {
 
   return (
     <div className="flex flex-col items-center  bg-gradient-to-r from-blue-400 to-yellow-400 justify-center min-h-screen p-6">
-      <h1 className="text-3xl font-bold text-center mb-5">SHIFT MANAGEMENT SYSTEM</h1>
+      <h1 className="text-3xl fo nt-bold  bg-gradient-to-r from-blue-400 to-yellow-400 text-transparent bg-clip-text text-center mb-5">SHIFT MANAGEMENT SYSTEM</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-white rounded-lg p-3 shadow-md">
           <h2 className="text-lg md:text-xl font-semibold text-center mb-2">Add Member</h2>
@@ -311,62 +311,62 @@ const ShiftManagementSystem = () => {
               </button>
             </div>
           </form>
-        </div>
-        <div className="bg-white rounded-lg p-3 shadow-md mt-5">
-          <h2 className="text-xl md:text-xl font-semibold text-center mb-2">Member List</h2>
-          <div className="overflow-x-auto p-4">
-            <ul className="w-full max-w-3xl mx-auto">
-              {members.map((member, index) => (
-                <li key={member._id} className="grid grid-cols-5 items-center gap-2 p-2 border-b">
-                  {/* Name */}
-                  <span className="text-sm md:text-base font-medium">{index + 1}. {member.name.toUpperCase()}</span>
+          <div className="bg-white rounded-lg p-3 shadow-md mt-5">
+            <h2 className="text-xl md:text-xl font-semibold text-center mb-2">Member List</h2>
+            <div className="overflow-x-auto p-4">
+              <ul className="w-full max-w-3xl mx-auto">
+                {members.map((member, index) => (
+                  <li key={member._id} className="grid grid-cols-5 items-center gap-2 p-2 border-b">
+                    {/* Name */}
+                    <span className="text-sm md:text-base font-medium">{index + 1}. {member.name.toUpperCase()}</span>
 
-                  {/* Role Dropdown */}
-                  <select
-                    value={member.role}
-                    onChange={(e) => handleRoleChange(member._id, e.target.value)}
-                    className="border p-1 rounded text-sm w-full bg-gray-50"
-                  >
-                    <option value="operator">Operator</option>
-                    <option value="supervisor">Supervisor</option>
-                    <option value="air boy">Air Boy</option>
-                  </select>
+                    {/* Role Dropdown */}
+                    <select
+                      value={member.role}
+                      onChange={(e) => handleRoleChange(member._id, e.target.value)}
+                      className="border p-1 rounded text-sm w-full bg-gray-50"
+                    >
+                      <option value="operator">Operator</option>
+                      <option value="supervisor">Supervisor</option>
+                      <option value="air boy">Air Boy</option>
+                    </select>
 
-                  {/* Availability Toggle */}
-                  <label className="relative inline-flex cursor-pointer">
-                    <input type="checkbox" checked={member.available === "present"} onChange={() => handleUpdateAvailability(member._id, member.available === "present" ? "absent" : "present", null)} className="sr-only peer" />
-                    <div className="w-16 h-7 bg-gray-300 peer-checked:bg-green-500 rounded-full flex items-center p-1 transition">
-                      <span className="w-6 h-6 bg-white rounded-full shadow transform transition peer-checked:translate-x-9 flex items-center justify-center text-xs font-bold text-gray-700 peer-checked:text-green-700">
-                        {member.available === "present" ? "P" : "A"}
-                      </span>
-                    </div>
-                  </label>
+                    {/* Availability Toggle */}
+                    <label className="relative inline-flex cursor-pointer">
+                      <input type="checkbox" checked={member.available === "present"} onChange={() => handleUpdateAvailability(member._id, member.available === "present" ? "absent" : "present", null)} className="sr-only peer" />
+                      <div className="w-16 h-7 bg-gray-300 peer-checked:bg-green-500 rounded-full flex items-center p-1 transition">
+                        <span className="w-6 h-6 bg-white rounded-full shadow transform transition peer-checked:translate-x-9 flex items-center justify-center text-xs font-bold text-gray-700 peer-checked:text-green-700">
+                          {member.available === "present" ? "P" : "A"}
+                        </span>
+                      </div>
+                    </label>
 
-                  {/* Shift Dropdown */}
-                  <select
-                    value={member.shift}
-                    onChange={(e) => handleUpdateShift(member._id, e.target.value)}
-                    className="border p-1 rounded text-sm w-full bg-gray-50"
-                  >
-                    <option value="morning">Morning</option>
-                    <option value="evening">Evening</option>
-                  </select>
+                    {/* Shift Dropdown */}
+                    <select
+                      value={member.shift}
+                      onChange={(e) => handleUpdateShift(member._id, e.target.value)}
+                      className="border p-1 rounded text-sm w-full bg-gray-50"
+                    >
+                      <option value="morning">Morning</option>
+                      <option value="evening">Evening</option>
+                    </select>
 
-                  {/* Delete Button */}
-                  <button
-                    onClick={() => handleRemoveMember(member._id)}
-                    className="p-2 hover:bg-red-700 hover:text-white text-red-500 rounded-lg transition flex items-center justify-center"
-                  >
-                    <IoTrashBinOutline className="text-lg" />
-                  </button>
+                    {/* Delete Button */}
+                    <button
+                      onClick={() => handleRemoveMember(member._id)}
+                      className="p-2 hover:bg-red-700 hover:text-white text-red-500 rounded-lg transition flex items-center justify-center"
+                    >
+                      <IoTrashBinOutline className="text-lg" />
+                    </button>
 
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="flex justify-center items-center gap-4 p-4 bg-gray-100 rounded-lg shadow-md">
-            <span className="text-lg font-bold text-green-600">Present: {members.filter(m => m.available === "present").length}</span>
-            <span className="text-lg font-bold text-red-600">Absent: {members.filter(m => m.available === "absent").length}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="flex justify-center items-center gap-4 p-4 bg-gray-100 rounded-lg shadow-md">
+              <span className="text-lg font-bold text-green-600">Present: {members.filter(m => m.available === "present").length}</span>
+              <span className="text-lg font-bold text-red-600">Absent: {members.filter(m => m.available === "absent").length}</span>
+            </div>
           </div>
         </div>
       </div>
