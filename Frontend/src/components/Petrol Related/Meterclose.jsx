@@ -11,6 +11,8 @@ const Meterclose = () => {
     const [cashUnknown, setCashUnknown] = useState('');
     const [cashMs, setCashMs] = useState('');
     const [cashSp, setCashSp] = useState('');
+    const[ntry1 ,setNtry1]=useState('');
+    const[ntry2 ,setNtry2]=useState('');
     const [crSalesMs, setCrSalesMs] = useState('');
     const [u2, setU2] = useState('');
     const [rate, setrate] = useState('');
@@ -84,49 +86,51 @@ const Meterclose = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = {
-          date: date,
-          rate: rate,
-          points: inputs.points.map((point) => ({
-            ...point,
-            name: items[inputs.points.indexOf(point)]
-          })),
-          cashUnknown: cashUnknown || 0,
-          cashMs: cashMs || 0,
-          cashSp: cashSp || 0,
-          crSalesMs: crSalesMs || 0,
-          u2: u2 || 0,
-          totalCredit: totalCredit || 0,
-          items1: inputs.items1,
-          totaln1: totaln1 || 0,
-          totaln2: totaln2 || 0,
-          totaln3: totaln3 || 0,
-          totaln4: totaln4 || 0,
-          totaln5: totaln5 || 0,
-          totaln6: totaln6 || 0,
-          totals1: totals1 || 0,
-          totals2: totals2 || 0,
-          totals3: totals3 || 0,
-          totals4: totals4 || 0,
-          totals5: totals5 || 0,
-          totals6: totals6 || 0,
-          closingMetern1: closingMetern1 || 0,
-          closingMetern2: closingMetern2 || 0,
-          closingMetern3: closingMetern3 || 0,
-          closingMetern4: closingMetern4 || 0,
-          closingMetern5: closingMetern5 || 0,
-          closingMetern6: closingMetern6 || 0,
+            date: date,
+            rate: rate,
+            points: inputs.points.map((point) => ({
+                ...point,
+                name: items[inputs.points.indexOf(point)]
+            })),
+            entry1:ntry1 || 0,
+            entry2:ntry2 || 0,
+            cashUnknown: cashUnknown || 0,
+            cashMs: cashMs || 0,
+            cashSp: cashSp || 0,
+            crSalesMs: crSalesMs || 0,
+            u2: u2 || 0,
+            totalCredit: totalCredit || 0,
+            items1: inputs.items1,
+            totaln1: totaln1 || 0,
+            totaln2: totaln2 || 0,
+            totaln3: totaln3 || 0,
+            totaln4: totaln4 || 0,
+            totaln5: totaln5 || 0,
+            totaln6: totaln6 || 0,
+            totals1: totals1 || 0,
+            totals2: totals2 || 0,
+            totals3: totals3 || 0,
+            totals4: totals4 || 0,
+            totals5: totals5 || 0,
+            totals6: totals6 || 0,
+            closingMetern1: closingMetern1 || 0,
+            closingMetern2: closingMetern2 || 0,
+            closingMetern3: closingMetern3 || 0,
+            closingMetern4: closingMetern4 || 0,
+            closingMetern5: closingMetern5 || 0,
+            closingMetern6: closingMetern6 || 0,
         };
         try {
             if (date === '') {
                 toast.warning('Please select a date');
-            }  else {
-              const response = await axiosInstance.post('/meterclose', data);
-              toast.success('Meter Close saved successfully!');
+            } else {
+                const response = await axiosInstance.post('/meterclose', data);
+                toast.success('Meter Close saved successfully!');
             }
-          } catch (error) {
+        } catch (error) {
             toast.warn('Error saving Meter Close!');
-          }
-      };
+        }
+    };
 
     const openingMeterIndex = items.indexOf('Opening Meter');
     const salesIndex = items.indexOf('Sales');
@@ -182,13 +186,13 @@ const Meterclose = () => {
     const closingMetern4 = parseInt(oilValuesCalculated.n4) + parseInt(totaln4) + parseInt(testingValues.n4) || 0;
     const closingMetern5 = parseInt(oilValuesCalculated.n5) + parseInt(totaln5) + parseInt(testingValues.n5) || 0;
     const closingMetern6 = parseInt(oilValuesCalculated.n6) + parseInt(totaln6) + parseInt(testingValues.n6) || 0;
-    const totalCredit = parseInt(cashUnknown)+ parseInt(cashMs) + parseInt(cashSp) + parseInt(crSalesMs) + parseInt(u2) || 0;
+    const totalCredit = parseInt(cashUnknown) + parseInt(cashMs) + parseInt(cashSp) + parseInt(crSalesMs) + parseInt(u2) || 0;
 
 
 
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+        <div className="flex flex-col items-center bg-gradient-to-r from-blue-400 to-yellow-400 justify-center min-h-screen p-6">
             <form onSubmit={handleSubmit}>
                 <div className="flex justify-between items-center mb-6">
                     <Link to={'/createmeterclose'}>
@@ -198,15 +202,16 @@ const Meterclose = () => {
                         {' '}
                         <h1 className="text-4xl font-bold text-gray-800 text-center">Meter Close</h1>
                         <input
-                            className="border-2 border-gray-300 rounded-md p-2"
+                            className="border-2 border-gray-300 font-bold rounded-md p-2"
                             type="date"
                             name="date"
                             id="date"
                             value={date}
                             onChange={handleDateChange}
                         />
-                    </div><div>
-                            <input className="border-2 border-gray-300 rounded-md p-2"
+                    </div>
+                        <div>
+                            <input className="border-2 font-bold border-gray-300 rounded-md p-2"
                                 name="rate"
                                 value={rate}
                                 type="number"
@@ -214,14 +219,15 @@ const Meterclose = () => {
                                 placeholder="Petrol Rate"
                                 onChange={handleRateChange}
                             />
-                        </div></div>
-                    <button type="submit">
+                        </div>
+                    </div>
+                    <button type="submit" className='bg-transparent'>
                         <img src={saveImage} width={50} alt="Save" />
                     </button>
                 </div>
-                <div className="bg-white p-6 rounded-lg shadow-md mt-6 mb-6">
+                <div className=" p-6 rounded-lg shadow-md mt-6 mb-6">
                     <table className="w-full table-auto">
-                        <thead className="bg-gray-100">
+                        <thead className="bg-gray-100 font-bold">
                             <tr>
                                 <th className="p-3 text-left">Name</th>
                                 <th className="p-3 text-left">Nozzle 1</th>
@@ -235,7 +241,7 @@ const Meterclose = () => {
                         <tbody>
                             {inputs.points.map((point, index) => (
                                 <tr key={index}>
-                                    <td className="p-3">
+                                    <td className="p-3 font-bold">
                                         <input
                                             type="text"
                                             value={point.name}
@@ -340,7 +346,7 @@ const Meterclose = () => {
                             <tbody>
                                 <tr>
                                     <td>
-                                        <h2 />
+                                        <input type="text" name='entry1' value={ntry1} onChange={(e)=>setNtry1(e.target.value)} id='entry1' />
                                     </td>
                                     <td>
                                         <input type="number" name="cashUnknown" value={cashUnknown} onChange={(e) => setCashUnknown(e.target.value)} id="cashUnknown" />
@@ -376,7 +382,7 @@ const Meterclose = () => {
                                 <tr>
 
                                     <td>
-                                        <h2 />
+                                    <input type="text" name='entry2' value={ntry2} onChange={(e)=>setNtry2(e.target.value)} id='entry2' />
                                     </td>
                                     <td>
                                         <input type="number" name="u2" id="u2" value={u2} onChange={(e) => setU2(e.target.value)} />
@@ -394,9 +400,9 @@ const Meterclose = () => {
 
                                         <h2 />
                                     </td>
-                                    <td>CREDIT</td>
-                                    <td>SALE</td>
-                                    <td>M.S</td>
+                                    <td className='font-bold'>CREDIT</td>
+                                    <td className='font-bold'>SALE</td>
+                                    <td className='font-bold'>M.S</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -405,7 +411,7 @@ const Meterclose = () => {
                 <div className="grid grid-cols-2 gap-2">
                     <div className="bg-white p-6">
                         <table>
-                            <thead>
+                            <thead className='font-bold'>
                                 <tr>
                                     <th>S No.</th>
                                     <th>NAME</th>

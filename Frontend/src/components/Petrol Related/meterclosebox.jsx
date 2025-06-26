@@ -22,7 +22,7 @@ const ChekList = () => {
     }, []);
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+        <div className="flex flex-col items-center bg-gradient-to-r from-blue-400 to-yellow-400 justify-center min-h-screen p-6">
             <h1 className="text-4xl font-bold text-blue-600 mb-6">METER CLOSE</h1>
 
             {/* Create Button */}

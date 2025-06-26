@@ -33,6 +33,12 @@ const meterCloseSchema = new mongoose.Schema({
       },
     },
   ],
+  entry1:{
+    type: String,
+  },
+  entry2:{
+    type: String,
+    },
   cashUnknown: {
     type: Number,
   },
