@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import homeLogo from "/bg.jpg";
+import homeLogo from "public/bg.jpg";
 
 const Home = () => {
   return (
