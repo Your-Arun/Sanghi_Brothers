@@ -17,6 +17,8 @@ const UpdateMeterclose = () => {
     const [crSalesMs, setCrSalesMs] = useState('');
     const [u2, setU2] = useState('');
     const [rate, setRate] = useState('');
+    const [ntry1, setNtry1] = useState('');
+    const [ntry2, setNtry2] = useState('');
     const [items, setItems] = useState([
         'Opening Meter',
         'Sales',
@@ -61,6 +63,8 @@ const UpdateMeterclose = () => {
                 setU2(fetchedData.u2);
                 setRate(fetchedData.rate);
                 setInputs(fetchedData);
+                setNtry1(fetchedData.entry1);
+                setNtry2(fetchData.entry2)
             } catch (error) {
                 toast.warn("Error");
             }
@@ -110,6 +114,8 @@ const UpdateMeterclose = () => {
         const updatedData = {
             date: new Date(date).toISOString().split('T')[0],
             rate,
+            ntry1,
+            ntry2,
             cashUnknown,
             cashMs,
             cashSp,
@@ -136,14 +142,14 @@ const UpdateMeterclose = () => {
             closingMetern5,
             closingMetern6,
         };
-    
+
         if (JSON.stringify(originalData) !== JSON.stringify(updatedData)) {
             try {
                 const response = await axiosInstance.put(`/meterclose/${id}`, updatedData);
-                
+
                 toast.success('Meter Close updated successfully!');
             } catch (error) {
-                
+
                 toast.warning('Error updating Meter Close!');
             }
         } else {
@@ -152,39 +158,39 @@ const UpdateMeterclose = () => {
     };
     const confirmDeleteToast = (onConfirm) => {
         toast(
-          ({ closeToast }) => (
-            <div className="flex flex-col gap-2">
-              <p>Are you sure you want to delete this ?</p>
-              <div className="flex gap-4 mt-2">
-                <button
-                  onClick={() => {
-                    onConfirm()
-                    closeToast()
-                  }}
-                  className="bg-red-500 text-white px-3 py-1 rounded"
-                >
-                  Yes
-                </button>
-                <button
-                  onClick={closeToast}
-                  className="bg-gray-300 px-3 py-1 rounded"
-                >
-                  No
-                </button>
-              </div>
-            </div>
-          ),
-          {
-            position: "top-center",
-            autoClose: false,
-            closeOnClick: false,
-            closeButton: false,
-          }
+            ({ closeToast }) => (
+                <div className="flex flex-col gap-2">
+                    <p>Are you sure you want to delete this ?</p>
+                    <div className="flex gap-4 mt-2">
+                        <button
+                            onClick={() => {
+                                onConfirm()
+                                closeToast()
+                            }}
+                            className="bg-red-500 text-white px-3 py-1 rounded"
+                        >
+                            Yes
+                        </button>
+                        <button
+                            onClick={closeToast}
+                            className="bg-gray-300 px-3 py-1 rounded"
+                        >
+                            No
+                        </button>
+                    </div>
+                </div>
+            ),
+            {
+                position: "top-center",
+                autoClose: false,
+                closeOnClick: false,
+                closeButton: false,
+            }
         )
-      }
+    }
     const handleDelete = async () => {
         e.preventDefault()
-    confirmDeleteToast(async () => {
+        confirmDeleteToast(async () => {
             try {
                 const response = await axiosInstance.delete(`/meterclose/${id}`);
                 if (response.status === 200) {
@@ -197,10 +203,10 @@ const UpdateMeterclose = () => {
                 toast.warn('Error deleting Meter Close!');
             }
         })
-      }
+    }
 
     const datee = date.split('T')[0];
- const openingMeterIndex = items.indexOf('Opening Meter');
+    const openingMeterIndex = items.indexOf('Opening Meter');
     const salesIndex = items.indexOf('Sales');
     const oilIndex = items.indexOf('Oil');
     const totalsIndex = items.indexOf('Totals');
@@ -257,7 +263,7 @@ const UpdateMeterclose = () => {
     const closingMetern5 = parseInt(oilValuesCalculated.n5) + parseInt(totaln5) + parseInt(testingValues.n5) || 0;
     const closingMetern6 = parseInt(oilValuesCalculated.n6) + parseInt(totaln6) + parseInt(testingValues.n6) || 0;
 
-    const totalCredit = parseInt(cashUnknown)+parseInt(cashMs) + parseInt(cashSp) + parseInt(crSalesMs) + parseInt(u2) || 0;
+    const totalCredit = parseInt(cashUnknown) + parseInt(cashMs) + parseInt(cashSp) + parseInt(crSalesMs) + parseInt(u2) || 0;
 
     return (
         <div className="relative p-6 bg-gradient-to-r from-gray-200 to-white min-h-screen">
@@ -415,7 +421,7 @@ const UpdateMeterclose = () => {
                             <tbody>
                                 <tr>
                                     <td>
-                                        <h2 />
+                                        <input type="text" name='entry1' value={ntry1} onChange={(e) => { setNtry1(e.target.value) }} id='entry1' />
                                     </td>
                                     <td>
                                         <input type="number" name="cashUnknown" value={cashUnknown} onChange={(e) => setCashUnknown(e.target.value)} id="cashUnknown" />
@@ -451,7 +457,7 @@ const UpdateMeterclose = () => {
                                 <tr>
 
                                     <td>
-                                        <h2 />
+                                        <input type="text" name='entry1' value={ntry2} onChange={(e) => { setNtry2(e.target.value) }} id='entry2' />
                                     </td>
                                     <td>
                                         <input type="number" name="u2" id="u2" value={u2} onChange={(e) => setU2(e.target.value)} />
