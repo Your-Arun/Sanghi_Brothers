@@ -24,7 +24,6 @@ function UploadExcel() {
 
     const formData = new FormData();
     formData.append("excelFile", selectedFile);
-    console.log("Selected file:", selectedFile);
 
     try {
       const response = await axiosInstance.post("/exceluploader", formData, {
