@@ -158,7 +158,7 @@ const Lekhajokha = () => {
                         </div>
                     </div>
 
-                    <div className="flex justify-between mb-4">
+                    <div className="flex font-bold justify-between mb-4">
                         <div className="w-1/3">
                             <label htmlFor="sale">Sale Amount:  <input
                                 type="number"
@@ -188,22 +188,22 @@ const Lekhajokha = () => {
 
                 <div className=" p-6 rounded-lg shadow-md">
                     <table className="w-full table-auto">
-                        <thead className="bg-gray-100">
+                        <thead className="bg-gray-100 text-black">
                             <tr>
-                                <th className="p-3 text-left">S No.</th>
-                                <th className="p-3 text-left">Name</th>
-                                <th className="p-3 text-left">Opening</th>
-                                <th className="p-3 text-left">Sale</th>
-                                <th className="p-3 text-left">Leakage</th>
-                                <th className="p-3 text-left">Add</th>
-                                <th className="p-3 text-left">Closing</th>
+                                <th className="p-3 font-bold text-center">S No.</th>
+                                <th className="p-3  font-bold text-center">Name</th>
+                                <th className="p-3  font-bold text-center">Opening</th>
+                                <th className="p-3 font-bold  text-center">Sale</th>
+                                <th className="p-3 font-bold  text-center">Leakage</th>
+                                <th className="p-3 font-bold  text-center">Add</th>
+                                <th className="p-3 font-bold  text-center">Closing</th>
                             </tr>
                         </thead>
                         <tbody>
                             {inputs.points.map((point, index) => (
                                 <tr key={index}>
                                     <td className="p-3">{index + 1}</td>
-                                    <td className="p-3">
+                                    <td className="p-3 font-bold">
                                         <input
                                             type="text"
                                             value={point.name}
@@ -266,11 +266,11 @@ const Lekhajokha = () => {
                         <thead className="bg-gray-100">
                             <tr>
 
-                                <th className="p-3 text-center">S No.</th>
-                                <th className="p-3 text-center">Nozzle</th>
-                                <th className="p-3 text-center">Reading</th>
-                                <th className="p-3 text-center">Testing (Ltr)</th>
-                                <th className="p-3 text-center">Pending (Ltr)</th>
+                                <th className="p-3 text-center font-bold">S No.</th>
+                                <th className="p-3 text-center font-bold">Nozzle</th>
+                                <th className="p-3 text-center font-bold">Reading</th>
+                                <th className="p-3 text-center font-bold">Testing (Ltr)</th>
+                                <th className="p-3 text-center font-bold">Pending (Ltr)</th>
 
 
                             </tr>
@@ -279,7 +279,7 @@ const Lekhajokha = () => {
                             {nozzleReadings.map((reading, index) => (
                                 <tr key={index}>
                                     <td className="p-3">{index + 1}</td>
-                                    <td className="p-3">Nozzle {index + 1}</td>
+                                    <td className="p-3 font-bold">Nozzle {index + 1}</td>
                                     <td className="p-3"><input type="number" id="reading" value={reading.reading} onChange={(e) => handleNozzleReadingChange(e, index)} /></td>
                                     <td className="p-3"><input type="number" id="testing" value={reading.testing} onChange={(e) => handleNozzleReadingChange(e, index)} /></td>
                                     <td className="p-3"><input type="text" id="pending" value={reading.pending} onChange={(e) => handleNozzleReadingChange(e, index)} /></td>
