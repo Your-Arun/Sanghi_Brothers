@@ -421,7 +421,7 @@ const UpdateMeterclose = () => {
                             <tbody>
                                 <tr>
                                     <td>
-                                        <input type="text" name='entry1' value={ntry1} onChange={(e) => { setNtry1(e.target.value) }} id='entry1' />
+                                        <input className='text-center' type="text" name='entry1' value={ntry1} onChange={(e) => { setNtry1(e.target.value) }} id='entry1' />
                                     </td>
                                     <td>
                                         <input type="number" name="cashUnknown" value={cashUnknown} onChange={(e) => setCashUnknown(e.target.value)} id="cashUnknown" />
@@ -457,7 +457,7 @@ const UpdateMeterclose = () => {
                                 <tr>
 
                                     <td>
-                                        <input type="text" name='entry2' value={ntry2} onChange={(e) => {setNtry2(e.target.value) }} id='entry2' />
+                                        <input className='text-center' type="text" name='entry2' value={ntry2} onChange={(e) => {setNtry2(e.target.value) }} id='entry2' />
                                     </td>
                                     <td>
                                         <input type="number" name="u2" id="u2" value={u2} onChange={(e) => setU2(e.target.value)} />
