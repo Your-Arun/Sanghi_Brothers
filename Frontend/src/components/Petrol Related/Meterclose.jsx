@@ -341,7 +341,7 @@ const Meterclose = () => {
                     </table>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                    <div className="bg-white p-6  ">
+                    <div className=" p-6  ">
                         <table>
                             <tbody>
                                 <tr>
@@ -409,7 +409,7 @@ const Meterclose = () => {
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                    <div className="bg-white p-6">
+                    <div className=" p-6">
                         <table>
                             <thead className='font-bold'>
                                 <tr>
