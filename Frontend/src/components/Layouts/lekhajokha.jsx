@@ -111,16 +111,16 @@ const Lekhajokha = () => {
     return (
         <div className="relative p-6 bg-gradient-to-r from-gray-200 to-white min-h-screen">
             <form onSubmit={handleSubmit}>
-                <h1 className="text-4xl font-bold text-gray-800 text-center">Lekha Jokha</h1>
+                <h1 className="text-5xl font-bold text-gray-800 text-center">Lekha Jokha</h1>
                 <div className="flex justify-end mb-6">
-                    <button type="submit">
+                    <button type="submit" className="bg-transparent">
                         <img src={saveImage} width={50} alt="Save" />
                     </button>
                 </div>
 
 
                 <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-                    <div className="flex justify-between mb-4">
+                    <div className="flex justify-between font-bold mb-4">
                         <div className="w-1/3">
                             <label htmlFor="rate">Petrol Rate:  <input
 
@@ -131,7 +131,8 @@ const Lekhajokha = () => {
                                 value={rate}
                                 onChange={(e) => setrate(e.target.value)}
                                 className="p-3 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-                            /></label>
+                            />
+                            </label>
                         </div>
                         <div className="w-1/3 text-center">
                             <label htmlFor="date">Date:  <input
@@ -141,7 +142,8 @@ const Lekhajokha = () => {
                                 onChange={handleDateChange}
 
                                 className="p-3 w-1/3  border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-                            /></label>
+                            />
+                            </label>
                         </div>
                         <div className="w-1/3">
                             <label htmlFor="pytm">PAYTM Amount:  <input
@@ -151,7 +153,8 @@ const Lekhajokha = () => {
                                 value={paytm}
                                 onChange={(e) => setPaytm(e.target.value)}
                                 className="p-3 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-                            /></label>
+                            />
+                            </label>
                         </div>
                     </div>
 
@@ -285,7 +288,6 @@ const Lekhajokha = () => {
                         </tbody>
                     </table>
                 </div>
-
             </form>
             <BackButton previousImage="/previous.png" />
         </div>
