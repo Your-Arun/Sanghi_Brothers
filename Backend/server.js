@@ -9,7 +9,6 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 
-app.use(express.json());
 app.use(cookieParser());
 
 // 🛡️ CORS Configuration
@@ -19,6 +18,7 @@ app.use(
     credentials: true, // ✅ Allow cookies & authentication headers
   })
 );
+app.use(express.json());
 
 app.use(session({
   secret: process.env.JWT_SECRET,
