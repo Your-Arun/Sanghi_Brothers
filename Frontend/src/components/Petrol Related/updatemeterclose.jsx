@@ -64,7 +64,7 @@ const UpdateMeterclose = () => {
                 setRate(fetchedData.rate);
                 setInputs(fetchedData);
                 setNtry1(fetchedData.entry1);
-                setNtry2(fetchData.entry2)
+                setNtry2(fetchedData.entry2)
             } catch (error) {
                 toast.warn("Error");
             }
@@ -301,7 +301,7 @@ const UpdateMeterclose = () => {
                         <img src={saveImage} width={50} alt="Save" />
                     </button>
                 </div>
-                <div className=" p-6 rounded-lg shadow-md mt-6 mb-6">
+                <div className=" p-6 rounded-lg mt-6 mb-6">
                     <table className="w-full table-auto">
                         <thead className="bg-gray-100  font-bold">
                             <tr>
@@ -317,7 +317,7 @@ const UpdateMeterclose = () => {
                         <tbody>
                             {inputs.points.map((point, index) => (
                                 <tr key={index}>
-                                    <td className="p-3">
+                                    <td className="p-3 font-bold">
                                         <input
                                             type="text"
                                             value={point.name}
@@ -457,7 +457,7 @@ const UpdateMeterclose = () => {
                                 <tr>
 
                                     <td>
-                                        <input type="text" name='entry2' value={ntry2} onChange={(e) => { setNtry2(e.target.value) }} id='entry2' />
+                                        <input type="text" name='entry2' value={ntry2} onChange={(e) => {setNtry2(e.target.value) }} id='entry2' />
                                     </td>
                                     <td>
                                         <input type="number" name="u2" id="u2" value={u2} onChange={(e) => setU2(e.target.value)} />
@@ -465,9 +465,9 @@ const UpdateMeterclose = () => {
                                 </tr>
                                 <tr>
                                     <td>
-                                        <h2 />
+                                        <h2 className='font-bold'>Total</h2>
                                     </td>
-                                    <td>{totalCredit}</td>
+                                    <td className='font-bold'>{totalCredit}</td>
                                 </tr>
                                 <tr>
                                     <td>
