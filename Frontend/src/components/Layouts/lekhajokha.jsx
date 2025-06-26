@@ -186,7 +186,7 @@ const Lekhajokha = () => {
                     </div>
                 </div>
 
-                <div className="bg-white p-6 rounded-lg shadow-md">
+                <div className=" p-6 rounded-lg shadow-md">
                     <table className="w-full table-auto">
                         <thead className="bg-gray-100">
                             <tr>
@@ -261,7 +261,7 @@ const Lekhajokha = () => {
                         </tbody>
                     </table>
                 </div>
-                <div className="bg-white p-6 rounded-lg shadow-md mt-6">
+                <div className=" p-6 rounded-lg shadow-md mt-6">
                     <table className="w-full table-auto">
                         <thead className="bg-gray-100">
                             <tr>
