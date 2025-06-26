@@ -266,14 +266,14 @@ const UpdateMeterclose = () => {
     const totalCredit = parseInt(cashUnknown) + parseInt(cashMs) + parseInt(cashSp) + parseInt(crSalesMs) + parseInt(u2) || 0;
 
     return (
-        <div className="relative p-6 bg-gradient-to-r from-gray-200 to-white min-h-screen">
+        <div className="relative p-6 bg-gradient-to-r from-blue-400 to-yellow-400 min-h-screen">
             <form onSubmit={handleSubmit}>
                 <div className="flex justify-between items-center mb-6">
                     <Link to={'/createmeterclose'}>
                         <img src={previousImage} width={50} alt="Back" />
                     </Link>
                     <div>
-                        <div className="grid mb-4 grid-row-2 items-center gap-2">
+                        <div className="grid font-bold mb-4 grid-row-2 items-center gap-2">
                             <h1 className="text-4xl font-bold text-gray-800 text-center">Meter Close</h1>
                             <input
                                 className="border-2 border-gray-300 rounded-md p-2"
@@ -286,7 +286,7 @@ const UpdateMeterclose = () => {
                         </div>
                         <div>
                             <input
-                                className="border-2 border-gray-300 rounded-md p-2"
+                                className="border-2 font-bold border-gray-300 rounded-md p-2"
                                 type="number"
                                 value={rate}
                                 placeholder="Petrol Rate"
@@ -297,13 +297,13 @@ const UpdateMeterclose = () => {
                             <img className='mt-4 mx-auto' onClick={handleDelete} src={Binimage} alt="Delete" width={50} height={50} />
                         </div>
                     </div>
-                    <button type="submit">
+                    <button type="submit" className='bg-transparent'>
                         <img src={saveImage} width={50} alt="Save" />
                     </button>
                 </div>
-                <div className="bg-white p-6 rounded-lg shadow-md mt-6 mb-6">
+                <div className=" p-6 rounded-lg shadow-md mt-6 mb-6">
                     <table className="w-full table-auto">
-                        <thead className="bg-gray-100">
+                        <thead className="bg-gray-100  font-bold">
                             <tr>
                                 <th className="p-3 text-left">Name</th>
                                 <th className="p-3 text-left">Nozzle 1</th>
@@ -416,7 +416,7 @@ const UpdateMeterclose = () => {
                     </table>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                    <div className="bg-white p-6  ">
+                    <div className=" p-6  ">
                         <table>
                             <tbody>
                                 <tr>
@@ -457,7 +457,7 @@ const UpdateMeterclose = () => {
                                 <tr>
 
                                     <td>
-                                        <input type="text" name='entry1' value={ntry2} onChange={(e) => { setNtry2(e.target.value) }} id='entry2' />
+                                        <input type="text" name='entry2' value={ntry2} onChange={(e) => { setNtry2(e.target.value) }} id='entry2' />
                                     </td>
                                     <td>
                                         <input type="number" name="u2" id="u2" value={u2} onChange={(e) => setU2(e.target.value)} />
@@ -475,19 +475,19 @@ const UpdateMeterclose = () => {
 
                                         <h2 />
                                     </td>
-                                    <td>CREDIT</td>
-                                    <td>SALE</td>
-                                    <td>M.S</td>
+                                    <td className='font-bold'>CREDIT</td>
+                                    <td className='font-bold'>SALE</td>
+                                    <td className='font-bold'>M.S</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                    <div className="bg-white p-6">
+                    <div className=" p-6">
                         <table>
-                            <thead>
-                                <tr>
+                        <thead className='font-bold'>
+                        <tr>
                                     <th>S No.</th>
                                     <th>NAME</th>
                                     <th>Qnty</th>
