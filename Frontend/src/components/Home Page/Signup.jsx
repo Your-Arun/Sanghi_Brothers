@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axiosInstance from '../Dashboard/axiosInstance';
 import { Link, useNavigate } from "react-router-dom";
-import signupBg from "/home.jpg"; // ✅ Use your actual image path
+import signupBg from "/bghome.png"; // ✅ Use your actual image path
 
 const Signup = () => {
   const [name, setName] = useState("");

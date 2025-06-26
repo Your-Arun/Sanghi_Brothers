@@ -4,7 +4,7 @@ import { Eye, EyeOff } from "lucide-react";
 import UserContext from "./UserContext";
 import axiosInstance from "../Dashboard/axiosInstance";
 import { toast } from "react-toastify";
-import loginBg from "/home.jpg"; // ✅ Replace with your actual image path
+import loginBg from "/bghome.png"; // ✅ Replace with your actual image path
 
 const Login = () => {
   const { setUser } = useContext(UserContext);
