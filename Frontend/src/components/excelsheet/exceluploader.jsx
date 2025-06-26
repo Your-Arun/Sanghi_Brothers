@@ -13,7 +13,7 @@ function UploadExcel() {
     setSelectedFile(event.target.files[0]);
   };
 
-  const handleSaveToDB = async (e) => {
+  const handleSaveToDB = async () => {
     if (!selectedFile) {
       setMessage("❌ Please select a file");
       clearMessageAfterDelay();

@@ -15,6 +15,7 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: "https://sanghibros.vercel.app", // Frontend URL
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, // ✅ Allow cookies & authentication headers
   })
 );
