@@ -189,7 +189,6 @@ const UpdateMeterclose = () => {
         )
     }
     const handleDelete = async () => {
-        e.preventDefault()
         confirmDeleteToast(async () => {
             try {
                 const response = await axiosInstance.delete(`/meterclose/${id}`);
