@@ -24,17 +24,21 @@ function UploadExcel() {
 
     const formData = new FormData();
     formData.append("excelFile", selectedFile);
+    console.log("Selected file:", selectedFile);
 
     try {
       const response = await axiosInstance.post("/exceluploader", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       });
       setMessage(`✅ ${response.data.message}`);
       setSelectedFile(null);
       fetchSavedFiles();
     } catch (error) {
+      console.error("❌ Upload failed:", error);
       setMessage("❌ Error saving file");
     }
-
     clearMessageAfterDelay();
   };
 
@@ -63,7 +67,7 @@ function UploadExcel() {
       const encodedFilename = encodeURIComponent(filename); // ✅ Encode filename
       const response = await axiosInstance.get(`/exceluploader/${encodedFilename}`, {
         responseType: "blob",
-        
+
       });
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
@@ -76,8 +80,8 @@ function UploadExcel() {
       toast.warning("❌ Download failed:", error);
     }
   };
-  
-  
+
+
   return (
     <div className="flex flex-col items-center bg-gradient-to-r from-blue-400 to-yellow-400 justify-center min-h-screen bg-gray-50 p-6">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-lg">

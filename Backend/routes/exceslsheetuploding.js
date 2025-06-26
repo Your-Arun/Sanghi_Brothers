@@ -23,7 +23,9 @@ const upload = multer({ storage });
 // 📌 **Route: Save Excel File to Database (GridFS)**
 router.post('/exceluploader', upload.single('excelFile'), async (req, res) => {
     try {
-      if (!req.file) return res.status(400).json({ message: '❌ No file uploaded' });
+      if (!req.file || !req.file.buffer) {
+        return res.status(400).json({ message: '❌ No file uploaded or buffer missing' });
+      }
   
       const gridFSBucket = getGridFSBucket();
   
@@ -38,7 +40,7 @@ router.post('/exceluploader', upload.single('excelFile'), async (req, res) => {
       });
   
     } catch (error) {
-      console.error('Error saving file:', error);
+      console.error('❌ Upload error:', error);
       res.status(500).json({ message: '❌ Error saving file' });
     }
   });
