@@ -46,8 +46,8 @@ const ShiftList = () => {
           </div>
         ) : (
           shifts.map((shift) => (
-            <div key={shift._id} className="bg-white shadow-md rounded-xl p-5 border">
-              <h3 className="text-xl font-bold text-center text-indigo-700">
+            <div key={shift._id} className="bg-white shadow-md rounded-lg p-5 relative">
+              <h3 className="text-xl font-bold text-center">
                 {shift.shiftType}
               </h3>
               <p className="text-center text-sm text-gray-600 mb-1">
