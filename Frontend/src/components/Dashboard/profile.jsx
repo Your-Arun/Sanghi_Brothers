@@ -39,7 +39,7 @@ const ProfileModal = ({ closeModal }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm md:max-w-md relative">
-        <button className="absolute top-4 right-4 text-gray-500" onClick={closeModal}>
+        <button className="absolute bg-transparent top-4 right-4 text-gray-500" onClick={closeModal}>
           ❌
         </button>
 
