@@ -127,7 +127,7 @@ const StaffDashboard = () => {
           } md:relative md:translate-x-0`}
       >
         <h2 className="text-2xl font-bold">Staff Dashboard</h2>
-        <nav className="space-y-3">
+        <nav className="space-y-3 bg-transparent">
           {navItems.map((item) => (
             <button
               key={item.id}
@@ -135,7 +135,7 @@ const StaffDashboard = () => {
                 setActiveTab(item.id);
                 setSidebarOpen(false); // Hide sidebar after navigation
               }}
-              className={`flex items-center gap-2 p-2 w-full rounded-lg transition ${activeTab === item.id ? "bg-blue-700" : "hover:bg-blue-500"
+              className={`flex bg-transparent items-center gap-2 p-2 w-full rounded-lg transition ${activeTab === item.id ? "bg-blue-700" : "hover:bg-blue-500"
                 }`}
             >
               {item.icon} {item.label}
