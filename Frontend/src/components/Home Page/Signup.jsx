@@ -82,9 +82,10 @@ const Signup = () => {
       style={{ backgroundImage: `url(${signupBg})` }}
     >
       <form
-        className="bg-white bg-opacity-60 p-4 md:p-8 rounded-lg shadow-lg w-full max-w-sm md:max-w-md lg:max-w-lg"
+        className="bg-white bg-opacity-60 p-4 md:p-6 rounded-lg shadow-md w-full max-w-sm"
         onSubmit={isValidInviteCode ? handleSubmit : handleInviteCodeVerification}
       >
+
         <h2 className="text-2xl md:text-3xl font-bold text-center text-blue-600 mb-6">
           Signup
         </h2>
@@ -94,8 +95,7 @@ const Signup = () => {
             <input
               type="text"
               placeholder="Enter Invitation Code"
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-              value={inviteCode}
+              className="w-full px-3 py-2 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"              value={inviteCode}
               onChange={(e) => setInviteCode(e.target.value)}
               required
             />
@@ -116,8 +116,7 @@ const Signup = () => {
             <input
               type="text"
               placeholder="Full Name"
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-              value={name}
+              className="w-full px-3 py-2 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"              value={name}
               onChange={(e) => setName(e.target.value)}
               required
             />
@@ -125,8 +124,7 @@ const Signup = () => {
             <input
               type="text"
               placeholder="Username"
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-              value={username}
+              className="w-full px-3 py-2 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"              value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
             />
@@ -134,8 +132,7 @@ const Signup = () => {
             <input
               type="email"
               placeholder="Email"
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-              value={email}
+              className="w-full px-3 py-2 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"              value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
@@ -143,29 +140,28 @@ const Signup = () => {
             <input
               type="tel"
               placeholder="Phone"
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-              value={phone}
+              className="w-full px-3 py-2 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"              value={phone}
               onChange={(e) => setPhone(e.target.value)}
               required
             />
 
-            <div className="relative mb-4">
+            <div className="relative mb-3">
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
-                className="w-full px-3 py-3 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                value={password}
+                className="w-full px-3 py-2 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"                value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
               <button
                 type="button"
-                className=" bg-transparent absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 text-sm"
+                className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 text-sm"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? "Hide" : "Show"}
               </button>
             </div>
+
 
 
             {type === "staff" ? (
@@ -188,8 +184,7 @@ const Signup = () => {
 
             <button
               type="submit"
-              className="w-full bg-green-500 text-white p-3 rounded-lg hover:bg-green-600 transition duration-200 disabled:opacity-50"
-              disabled={loading}
+              className="w-full bg-green-500 text-white px-3 py-2 rounded-md hover:bg-green-600 transition duration-200 disabled:opacity-50"              disabled={loading}
             >
               {loading ? "Signing up..." : "Signup"}
             </button>
