@@ -29,6 +29,10 @@ const Signup = () => {
       if (response.data) {
         setIsValidInviteCode(response.data.valid);
         setType(response.data.type);
+
+        if (response.data.type === "staff") {
+          setDepartment("staff"); // ✅ Auto-fill
+        }
       } else {
         alert("Invalid invitation code");
       }
@@ -163,18 +167,23 @@ const Signup = () => {
               </button>
             </div>
 
-            <select
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-              value={department}
-              onChange={(e) => setDepartment(e.target.value)}
-              required
-            >
-              <option value="">Select Department</option>
-              <option value="manager">MANAGER</option>
-              <option value="accounts/finance">ACCOUNTS/FINANCE</option>
-              <option value="backoffice">BACK OFFICE</option>
-              <option value="staff">STAFF</option>
-            </select>
+            {type === "staff" ? (
+              // ✅ Auto-set department to staff
+              <input type="hidden" value="staff" />
+            ) : (
+              <select
+                className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                value={department}
+                onChange={(e) => setDepartment(e.target.value)}
+                required
+              >
+                <option value="">Select Department</option>
+                <option value="manager">MANAGER</option>
+                <option value="accounts/finance">ACCOUNTS/FINANCE</option>
+                <option value="backoffice">BACK OFFICE</option>
+              </select>
+            )}
+
 
             <button
               type="submit"
