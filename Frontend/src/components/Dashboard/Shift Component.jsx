@@ -50,22 +50,24 @@ const ShiftList = () => {
               <h3 className="text-xl font-bold text-center">
                 {shift.shiftType}
               </h3>
-              <p className="text-center text-sm text-gray-600 mb-1">
+              <p className="text-center text-gray-600">
                 📅 Date: <span className="font-medium">{shift.date}</span>
               </p>
-              <p className="text-center font-medium text-indigo-500">
+              <p className="text-center font-medium text-indigo-600">
                 🕒 Time: {shift.startTime} - {shift.endTime}
               </p>
 
-              <div className="flex justify-between text-sm mt-4 text-gray-700 font-semibold">
-                <p>👨‍💼 Supervisor: {shift.supervisor || "Not Assigned"}</p>
-                <p>🧑‍🔧 Air Boy: {shift.airBoy || "Not Assigned"}</p>
+              <div className="flex justify-evenly mt-3">
+              <p className="font-semibold">Supervisor: <span className="text-red-800"> {shift.supervisor || "Not Assigned"}</span></p>
+                <p className="font-semibold">Extra Operator: <span className="text-red-800">{shift.extraOperator}</span></p>
+                <p className="font-semibold">Air Boy: <span className="text-red-800">{shift.airBoy || "Not Assigned"}</span></p>
               </div>
 
               {/* Nozzle Table */}
-              <table className="w-full mt-4 border-collapse border border-gray-300 text-sm">
+              <div className="overflow-x-auto">
+             <table className="w-full min-w-[300px] table-fixed border border-gray-300 text-sm rounded-lg">
                 <thead>
-                  <tr className="bg-gray-100 text-gray-800">
+                  <tr className="bg-gray-200 text-gray-800">
                     <th className="py-2 px-3 border">Nozzle</th>
                     <th className="py-2 px-3 border">Member</th>
                     <th className="py-2 px-3 border">Overtime</th>
@@ -73,7 +75,7 @@ const ShiftList = () => {
                 </thead>
                 <tbody>
                   {(shift.nozzles || []).map((nozzle, index) => (
-                    <tr key={index} className="hover:bg-gray-50">
+                    <tr key={index} className="hover:bg-gray-100 transition">
                       <td className="py-2 px-3 border text-center">
                         {nozzle.nozzleNumber || "-"}
                       </td>
@@ -95,6 +97,7 @@ const ShiftList = () => {
                   ))}
                 </tbody>
               </table>
+             </div>
             </div>
           ))
         )}
