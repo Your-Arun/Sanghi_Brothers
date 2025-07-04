@@ -14,9 +14,10 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Session key setup
   const sessionKey =
     sessionStorage.getItem("activeSession") ||
-    `userSession_${Math.random().toString(36).substr(2, 9)}`;
+    `userSession_${Math.random().toString(36).substring(2, 11)}`;
   sessionStorage.setItem("activeSession", sessionKey);
 
   useEffect(() => {
@@ -27,7 +28,7 @@ const Login = () => {
       try {
         const { data } = await axiosInstance.get("/profile");
         setUser(data.user);
-      } catch (error) {
+      } catch {
         sessionStorage.removeItem(sessionKey);
       }
     };
@@ -43,7 +44,6 @@ const Login = () => {
 
       sessionStorage.setItem(sessionKey, JSON.stringify(data.user));
       sessionStorage.setItem("authToken", data.token);
-
       setUser(data.user);
       toast.success("Login Successful");
 
@@ -77,13 +77,14 @@ const Login = () => {
 
           <input
             type="email"
-            placeholder="Email & case sensitive"
+            placeholder="Email (case sensitive)"
             className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
 
+          {/* Password Field */}
           <div className="flex items-center border border-gray-300 rounded-lg px-3 mb-4 focus-within:ring-2 focus-within:ring-blue-500">
             <input
               type={showPassword ? "text" : "password"}
@@ -95,15 +96,16 @@ const Login = () => {
             />
             <button
               type="button"
-              className="text-gray-600 ml-2"
               onClick={() => setShowPassword(!showPassword)}
+              className="text-gray-600 ml-2"
+              aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
 
-
           <button
+            type="submit"
             className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-200 disabled:opacity-50"
             disabled={loading}
           >
@@ -111,7 +113,7 @@ const Login = () => {
           </button>
 
           <p className="mt-4 text-center text-gray-600">
-            Don't have an account?{" "}
+            Don’t have an account?{" "}
             <Link to="/signup" className="text-blue-500 hover:underline">
               Sign up
             </Link>
@@ -127,7 +129,7 @@ const Login = () => {
       </div>
 
       {/* Right Image Side */}
-      <div className="hidden md:block w-full md:w-1/2 h-[500px] relative overflow-hidden">
+      <div className="hidden md:block w-full md:w-1/2 h-screen relative overflow-hidden">
         <div
           className="absolute inset-0 bg-no-repeat bg-cover bg-center"
           style={{
@@ -137,7 +139,6 @@ const Login = () => {
         />
       </div>
     </div>
-
   );
 };
 
