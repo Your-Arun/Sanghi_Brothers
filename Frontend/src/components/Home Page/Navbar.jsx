@@ -15,8 +15,8 @@ const Navbar = () => {
         <nav className="bg-black shadow-md">
             <div className="flex items-center justify-between px-4 py-3 md:py-0">
                 {/* Left Logo */}
-                <div className="bg-yellow-500 px-6 py-3 flex items-center">
-                    <span className="text-black font-semibold text-xl flex items-center">
+                <div className="px-6 py-3 flex items-center">
+                    <span className="text-white font-semibold text-xl flex items-center">
                         <span className="mr-2">⛽</span> Sanghi Brothers
                     </span>
                 </div>
