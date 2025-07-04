@@ -84,23 +84,24 @@ const Login = () => {
             required
           />
 
-          <div className="relative mb-4">
+          <div className="flex items-center border border-gray-300 rounded-lg px-3 mb-4 focus-within:ring-2 focus-within:ring-blue-500">
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full p-3 outline-none bg-transparent"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
             <button
               type="button"
-              className="absolute right-2 top-2 cursor-pointer text-gray-600 bg-transparent"
+              className="text-gray-600 ml-2"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
+
 
           <button
             className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-200 disabled:opacity-50"
