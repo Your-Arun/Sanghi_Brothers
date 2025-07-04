@@ -64,7 +64,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex flex-col md:flex-row items-center justify-between min-h-screen">
       {/* Left Form Side */}
       <div className="w-full md:w-1/2 flex justify-center items-center px-6">
         <form
@@ -126,9 +126,9 @@ const Login = () => {
       </div>
 
       {/* Right Image Side */}
-      <div className="hidden md:block w-1/2 h-full relative">
+      <div className="hidden md:block w-full md:w-1/2 h-[500px] relative overflow-hidden">
         <div
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-no-repeat bg-cover bg-center"
           style={{
             backgroundImage: `url(${loginBg})`,
             clipPath: "polygon(10% 0%, 100% 0%, 100% 100%, 0% 100%)",
