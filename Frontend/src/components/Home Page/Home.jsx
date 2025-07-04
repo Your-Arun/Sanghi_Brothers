@@ -4,6 +4,7 @@ import homeImage from "/petrol.png"; // Make sure this image exists in public or
 import AboutUs from "./AboutsUs";
 import ServicesPage from "./ServicesPage";
 import ContactUs from "./ContactUs";
+import Footer from "./Footer";
 
 const Home = () => {
   return (
@@ -47,6 +48,7 @@ const Home = () => {
       <AboutUs />
       <ServicesPage />
       <ContactUs />
+      <Footer/>
     </>
   );
 };
