@@ -134,15 +134,15 @@ const Login = () => {
       </div>
 
       {/* Right Image Side */}
-      <div className="hidden md:block w-full md:w-1/2 h-screen relative overflow-hidden">
-        <div
-          className="absolute inset-0 bg-no-repeat bg-cover bg-center"
-          style={{
-            backgroundImage: `url(${loginBg})`,
-            clipPath: "polygon(10% 0%, 100% 0%, 100% 100%, 0% 100%)",
-          }}
-        />
-      </div>
+      <div className="hidden md:block w-full md:w-1/2 h-[500px] relative overflow-hidden">
+          <div
+            className="absolute inset-0 bg-no-repeat bg-cover bg-center"
+            style={{
+              backgroundImage: `url(${loginBg})`,
+              clipPath: "polygon(10% 0%, 100% 0%, 100% 100%, 0% 100%)",
+            }}
+          />
+        </div>
     </div>
   );
 };
