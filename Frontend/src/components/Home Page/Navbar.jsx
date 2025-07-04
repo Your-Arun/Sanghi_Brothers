@@ -25,7 +25,7 @@ const Navbar = () => {
                 {/* Logo */}
                 <div className="px-6 py-3 flex items-center">
                     <span className="text-white font-bold text-2xl flex items-center">
-                        <span className="mr-2">⛽</span> SANGHI BROTHER<span className='text-yellow-500'>s</span>
+                        <span className="mr-2 text-4xl">⛽</span> SANGHI BROTHER<span className='text-yellow-500'>s</span>
                     </span>
                 </div>
 

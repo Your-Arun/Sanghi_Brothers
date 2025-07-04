@@ -14,7 +14,7 @@ const Home = () => {
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-black mb-6 leading-tight">
             We are happily saying <br /> we are awesome
           </h1>
-          <p className="text-gray-600 mb-8 text-base md:text-lg max-w-md">
+          <p className="text-gray-600 mb-8 text-base md:text-lg max-w-md font-bold">
             THIS IS NOT THE YEAR YOU GET EVERYTHING YOU WANT THIS IS THE YEAR TO APPRECIATE EVERYTHING YOU HAVE
           </p>
           <div className="flex flex-wrap gap-4">
