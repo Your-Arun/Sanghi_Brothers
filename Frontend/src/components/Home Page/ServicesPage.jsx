@@ -57,7 +57,7 @@ const Services = () => {
             <h2 className="text-xl font-bold text-center text-gray-900">{service.title}</h2>
             <p className="text-gray-600 text-center mt-2">{service.description}</p>
             <div className="mt-6 flex justify-center">
-              <button className="flex bg-blue-500 items-center gap-2 border border-blue-500 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white transition duration-300">
+              <button className="flex bg-blue-500 text-white items-center gap-2 border border-blue-500 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white transition duration-300">
                 Learn More <ArrowRight className="h-4 w-4" />
               </button>
             </div>
