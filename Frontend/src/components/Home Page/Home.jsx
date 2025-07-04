@@ -1,6 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import homeImage from "/petrol.png"; // Make sure this image exists in public or src
+import AboutUs from "./AboutsUs";
+import ServicesPage from "./ServicesPage";
+import ContactUs from "./ContactUs";
 
 const Home = () => {
   return (
@@ -11,7 +14,7 @@ const Home = () => {
           We are happily saying <br /> we are awesome
         </h1>
         <p className="text-gray-600 mb-8 text-base md:text-lg max-w-md">
-          Dictum voluptatibus, erat pharetra scelerisque, nisl faucibus eu mus, blandit at suscipit. Eu a. A vel hymenaeos
+          THIS IS NOT THE YEAR YOU GET EVERYTHING YOU WANT THIS IS THE YEAR TO APPRECIATE EVERYTHING YOU HAVE
         </p>
         <div className="flex flex-wrap gap-4">
           <Link
@@ -39,6 +42,9 @@ const Home = () => {
           }}
         />
       </div>
+      <AboutUs />
+      <ServicesPage />
+      <ContactUs />
     </div>
   );
 };
