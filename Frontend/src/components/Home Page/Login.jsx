@@ -97,12 +97,17 @@ const Login = () => {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="buttonn"
+              className="buttonn flex items-center justify-center w-9 h-9"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
-              {showPassword ? <EyeOff size={20} className="text-gray-600 border-none" /> : <Eye size={20} className="text-gray-600 border-none" />}
+              {showPassword ? (
+                <EyeOff size={20} className="text-gray-600" />
+              ) : (
+                <Eye size={20} className="text-gray-600" />
+              )}
             </button>
           </div>
+
 
           <button
             type="submit"
