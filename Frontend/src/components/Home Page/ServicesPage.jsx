@@ -35,7 +35,7 @@ const Services = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-gray-100 px-6 py-16">
+    <div className="min-h-screen px-6 py-16">
       {/* Header Section */}
       <div className="text-center mb-16">
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">

@@ -24,7 +24,7 @@ const AboutUs = () => {
   ];
 
   return (
-    <div className="bg-gradient-to-b from-gray-100 to-gray-200 py-16 px-6">
+    <div className=" py-16 px-6">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-12">

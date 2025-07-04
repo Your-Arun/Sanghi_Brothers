@@ -56,7 +56,7 @@ const ContactUs = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row justify-center items-center min-h-screen bg-gradient-to-br from-blue-100 to-green-200 px-6 py-12">
+    <div className="flex flex-col lg:flex-row justify-center items-center min-h-screen px-6 py-12">
       {/* Contact Form Section */}
       <div className="w-full lg:w-2/5 bg-white p-8 rounded-xl shadow-xl">
         <h2 className="text-3xl font-bold text-center text-indigo-600 mb-5">
