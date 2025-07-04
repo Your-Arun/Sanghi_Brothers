@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import homeImage from "/home.png"; // Make sure this image exists in public or src
+import homeImage from "/petrol.png"; // Make sure this image exists in public or src
 
 const Home = () => {
   return (
