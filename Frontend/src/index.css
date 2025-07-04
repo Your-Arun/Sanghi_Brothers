@@ -5,22 +5,20 @@
 /* General body styles */
 body {
   font-family: serif;
-  background-color: #000000;
-  color: #333; /* Dark gray text for readability */
+  /* Dark gray text for readability */
   margin: 0;
-  padding: 0px;
-  overflow-x: hidden; /* Hide horizontal scrolling */
+  padding: 0;
+  overflow-x: hidden;
+  /* Hide horizontal scrolling */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Hide scrollbar but allow scrolling */
 ::-webkit-scrollbar {
-  display: none; 
+  display: none;
 }
 
-body {
-  -ms-overflow-style: none; 
-    scrollbar-width: none; 
-}
 
 /* Table container */
 .table-container {
@@ -57,7 +55,8 @@ th {
 }
 
 /* Cell styles */
-th, td {
+th,
+td {
   padding: 10px;
   text-align: center;
   font-size: 13px;
@@ -91,6 +90,7 @@ table {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -98,7 +98,8 @@ table {
 }
 
 /* Input styles */
-input[type="number"], input[type="text"] {
+input[type="number"],
+input[type="text"] {
   background-color: #f9f9f9;
   color: #333;
   border: 1px solid #ccc;
@@ -106,7 +107,8 @@ input[type="number"], input[type="text"] {
   border-radius: 4px;
 }
 
-input[type="number"]:focus, input[type="text"]:focus {
+input[type="number"]:focus,
+input[type="text"]:focus {
   border-color: #4caf50;
   outline: none;
 }
@@ -116,7 +118,9 @@ input[type="number"]:focus, input[type="text"]:focus {
   table {
     font-size: 14px;
   }
-  th, td {
+
+  th,
+  td {
     padding: 10px;
   }
 }
@@ -125,7 +129,9 @@ input[type="number"]:focus, input[type="text"]:focus {
   table {
     font-size: 13px;
   }
-  th, td {
+
+  th,
+  td {
     padding: 8px;
   }
 }
@@ -134,7 +140,9 @@ input[type="number"]:focus, input[type="text"]:focus {
   table {
     font-size: 12px;
   }
-  th, td {
+
+  th,
+  td {
     padding: 6px;
   }
 }
@@ -143,7 +151,9 @@ input[type="number"]:focus, input[type="text"]:focus {
   table {
     font-size: 11px;
   }
-  th, td {
+
+  th,
+  td {
     padding: 4px;
   }
 }
@@ -152,7 +162,9 @@ input[type="number"]:focus, input[type="text"]:focus {
   table {
     font-size: 10px;
   }
-  th, td {
+
+  th,
+  td {
     padding: 2px;
   }
 }
@@ -161,7 +173,9 @@ input[type="number"]:focus, input[type="text"]:focus {
   table {
     font-size: 9px;
   }
-  th, td {
+
+  th,
+  td {
     padding: 1px;
   }
 }
@@ -170,7 +184,9 @@ input[type="number"]:focus, input[type="text"]:focus {
   table {
     font-size: 8px;
   }
-  th, td {
+
+  th,
+  td {
     padding: 0.5px;
   }
 }
@@ -179,7 +195,9 @@ input[type="number"]:focus, input[type="text"]:focus {
   table {
     font-size: 7px;
   }
-  th, td {
+
+  th,
+  td {
     padding: 0.2px;
   }
 }
@@ -188,7 +206,9 @@ input[type="number"]:focus, input[type="text"]:focus {
   table {
     font-size: 6px;
   }
-  th, td {
+
+  th,
+  td {
     padding: 0.1px;
   }
 }
@@ -226,11 +246,11 @@ button {
 }
 
 /* Hide spin buttons in number input fields */
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
-} 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
 /* Additional styles for accessibility */
 a {
@@ -251,7 +271,7 @@ label {
   label {
     font-size: 12px;
   }
-} 
+}
 
 /* Flexbox adjustments for better layout on smaller screens */
 .flex-container {
@@ -261,18 +281,21 @@ label {
 }
 
 .flex-item {
-  flex: 1 1 100%; /* Full width on small screens */
+  flex: 1 1 100%;
+  /* Full width on small screens */
 }
 
 @media (min-width: 768px) {
   .flex-item {
-    flex: 1 1 48%; /* Two items per row on larger screens */
+    flex: 1 1 48%;
+    /* Two items per row on larger screens */
   }
 }
 
 @media (min-width: 1024px) {
   .flex-item {
-    flex: 1 1 30%; /* Three items per row on larger screens */
+    flex: 1 1 30%;
+    /* Three items per row on larger screens */
   }
 }
 
@@ -283,15 +306,7 @@ label {
   box-sizing: border-box;
 }
 
-body {
-  font-family: serif;
-  color: #333;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
+
 
 ::-webkit-scrollbar {
   display: none;
@@ -305,7 +320,8 @@ body {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   margin: 2rem auto;
   border: 1px solid #e0e0e0;
-  overflow-x: auto; /* ✅ Important for mobile scroll */
+  overflow-x: auto;
+  /* ✅ Important for mobile scroll */
   width: 100%;
   max-width: 100%;
 }
@@ -313,7 +329,8 @@ body {
 /* ===== Table ===== */
 table {
   width: 100%;
-  min-width: 600px; /* ✅ Prevent layout break on small screen */
+  min-width: 600px;
+  /* ✅ Prevent layout break on small screen */
   border-collapse: collapse;
   background-color: #ffffff;
   border-radius: 0.75rem;
@@ -332,7 +349,8 @@ th {
   letter-spacing: 1px;
 }
 
-th, td {
+th,
+td {
   padding: 0.75rem;
   text-align: center;
   font-size: 0.875rem;
@@ -359,6 +377,7 @@ tr:hover {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -366,7 +385,8 @@ tr:hover {
 }
 
 /* ===== Inputs ===== */
-input[type="number"], input[type="text"] {
+input[type="number"],
+input[type="text"] {
   background-color: #f9f9f9;
   color: #333;
   border: 1px solid #ccc;
@@ -375,12 +395,13 @@ input[type="number"], input[type="text"] {
   font-size: 0.875rem;
 }
 
-input[type="number"]:focus, input[type="text"]:focus {
+input[type="number"]:focus,
+input[type="text"]:focus {
   border-color: #4caf50;
   outline: none;
 }
 
-input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
@@ -476,7 +497,8 @@ label {
 
 /* Table Styles */
 .responsive-table {
-  min-width: 1000px; /* Forces horizontal scroll */
+  min-width: 1000px;
+  /* Forces horizontal scroll */
   border-collapse: collapse;
   width: 100%;
   background-color: white;
@@ -509,6 +531,7 @@ label {
 .table-wrapper::-webkit-scrollbar {
   height: 6px;
 }
+
 .table-wrapper::-webkit-scrollbar-thumb {
   background-color: #9ca3af;
   border-radius: 10px;
@@ -522,15 +545,18 @@ label {
 
 /* General table styling */
 .sales-table {
-  width: 1000px; /* or max-content if dynamic */
+  width: 1000px;
+  /* or max-content if dynamic */
   border-collapse: collapse;
-  font-size: 0.875rem; /* same as text-sm */
+  font-size: 0.875rem;
+  /* same as text-sm */
   background-color: white;
 }
 
 .sales-table th,
 .sales-table td {
-  border: 1px solid #d1d5db; /* Tailwind gray-300 */
+  border: 1px solid #d1d5db;
+  /* Tailwind gray-300 */
   padding: 0.5rem;
   text-align: center;
 }
