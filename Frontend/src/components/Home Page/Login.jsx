@@ -71,7 +71,7 @@ const Login = () => {
           className="bg-white bg-opacity-60 p-6 md:p-8 rounded-lg shadow-xl w-full max-w-sm md:max-w-md"
           onSubmit={handleSubmit}
         >
-          <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">
+          <h2 className="text-5xl font-bold mb-6 text-center text-blue-600">
             Login
           </h2>
 
@@ -101,7 +101,7 @@ const Login = () => {
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? (
-                <EyeOff size={20} className="text-gray-600 border-none outline-none" />
+                <EyeOff size={20} className="text-gray-600 border-none outline-none " />
               ) : (
                 <Eye size={20} className="text-gray-600 border-none outline-none" />
               )}

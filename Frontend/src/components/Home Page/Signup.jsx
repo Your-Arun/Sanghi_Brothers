@@ -84,7 +84,7 @@ const Signup = () => {
           className="bg-white bg-opacity-60 p-6 md:p-8 rounded-lg shadow-xl w-full max-w-sm md:max-w-md"
           onSubmit={isValidInviteCode ? handleSubmit : handleInviteCodeVerification}
         >
-          <h2 className="text-3xl font-bold text-center text-blue-600 mb-6">
+          <h2 className="text-5xl font-bold text-center text-blue-600 mb-6">
             Signup
           </h2>
 
