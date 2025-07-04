@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import axiosInstance from "../Dashboard/axiosInstance";
+import axiosInstance from '../Dashboard/axiosInstance';
 import { Link, useNavigate } from "react-router-dom";
-import signupBg from "/petrol.png"; // ✅ Make sure image path is correct
+import signupBg from "/bghome.png";
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -77,28 +77,30 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row">
-      {/* Left Section */}
-      <div className="w-full md:w-1/2 flex items-center justify-center px-6 py-12">
+    <div className="flex h-screen overflow-hidden">
+      {/* Left Form Section */}
+      <div className="w-full md:w-1/2 flex items-center justify-center px-6">
         <form
-          className="w-full max-w-sm md:max-w-md lg:max-w-lg bg-white bg-opacity-90 p-6 md:p-8 rounded-lg shadow-lg"
+          className="bg-white bg-opacity-60 p-6 md:p-8 rounded-lg shadow-xl w-full max-w-sm md:max-w-md"
           onSubmit={isValidInviteCode ? handleSubmit : handleInviteCodeVerification}
         >
-          <h2 className="text-3xl font-bold text-blue-600 text-center mb-6">Signup</h2>
+          <h2 className="text-3xl font-bold text-center text-blue-600 mb-6">
+            Signup
+          </h2>
 
           {!isValidInviteCode ? (
             <>
               <input
                 type="text"
                 placeholder="Enter Invitation Code"
-                className="w-full px-4 py-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full px-3 py-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
                 value={inviteCode}
                 onChange={(e) => setInviteCode(e.target.value)}
                 required
               />
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-200 disabled:opacity-50"
+                className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-200"
                 disabled={loading}
               >
                 {loading ? "Verifying..." : "Verify Invitation Code"}
@@ -106,14 +108,14 @@ const Signup = () => {
             </>
           ) : (
             <>
-              <h3 className="text-xl font-semibold text-green-600 text-center mb-4">
+              <h1 className="text-xl font-semibold text-green-600 text-center mb-4">
                 Welcome as <span className="uppercase text-red-600">{type}❗</span>
-              </h3>
+              </h1>
 
               <input
                 type="text"
                 placeholder="Full Name"
-                className="w-full px-4 py-3 mb-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full px-3 py-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -122,7 +124,7 @@ const Signup = () => {
               <input
                 type="text"
                 placeholder="Username"
-                className="w-full px-4 py-3 mb-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full px-3 py-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
@@ -131,7 +133,7 @@ const Signup = () => {
               <input
                 type="email"
                 placeholder="Email"
-                className="w-full px-4 py-3 mb-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full px-3 py-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -140,35 +142,33 @@ const Signup = () => {
               <input
                 type="tel"
                 placeholder="Phone"
-                className="w-full px-4 py-3 mb-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                className="w-full px-3 py-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 required
               />
 
-              <div className="relative mb-3">
+              <div className="relative mb-4">
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full px-3 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
                 <button
                   type="button"
-                  className="absolute right-3 top-3 text-gray-600 text-sm"
+                  className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 text-sm"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? "Hide" : "Show"}
                 </button>
               </div>
 
-              {type === "staff" ? (
-                <input type="hidden" value="staff" />
-              ) : (
+              {type !== "staff" && (
                 <select
-                  className="w-full px-4 py-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                   value={department}
                   onChange={(e) => setDepartment(e.target.value)}
                   required
@@ -182,7 +182,7 @@ const Signup = () => {
 
               <button
                 type="submit"
-                className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-200 disabled:opacity-50"
+                className="w-full bg-green-500 text-white px-3 py-3 rounded-md hover:bg-green-600 transition duration-200"
                 disabled={loading}
               >
                 {loading ? "Signing up..." : "Signup"}
@@ -200,7 +200,7 @@ const Signup = () => {
       </div>
 
       {/* Right Image Section */}
-      <div className="hidden md:block w-full md:w-1/2 h-[500px] relative overflow-hidden">
+      <div className="hidden md:block w-1/2 h-full relative">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{

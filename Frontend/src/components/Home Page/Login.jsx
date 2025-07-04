@@ -4,7 +4,7 @@ import { Eye, EyeOff } from "lucide-react";
 import UserContext from "./UserContext";
 import axiosInstance from "../Dashboard/axiosInstance";
 import { toast } from "react-toastify";
-import loginBg from "/petrol.png"; // make sure path is correct
+import loginBg from "/bghome.png";
 
 const Login = () => {
   const { setUser } = useContext(UserContext);
@@ -64,31 +64,31 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row">
-      {/* Left Form Section */}
-      <div className="w-full md:w-1/2 flex items-center justify-center px-6 py-12">
+    <div className="flex h-screen overflow-hidden">
+      {/* Left Form Side */}
+      <div className="w-full md:w-1/2 flex justify-center items-center px-6">
         <form
-          className="w-full max-w-sm md:max-w-md lg:max-w-lg bg-white bg-opacity-90 p-6 md:p-8 rounded-lg shadow-lg"
+          className="bg-white bg-opacity-60 p-6 md:p-8 rounded-lg shadow-xl w-full max-w-sm md:max-w-md"
           onSubmit={handleSubmit}
         >
-          <h2 className="text-3xl font-bold mb-6 text-blue-600 text-center">Login</h2>
+          <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">
+            Login
+          </h2>
 
-          {/* Email Field */}
           <input
             type="email"
-            placeholder="Email (case-sensitive)"
-            className="w-full p-3 mb-4 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+            placeholder="Email & case sensitive"
+            className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
 
-          {/* Password Field */}
           <div className="relative mb-4">
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className="w-full p-3 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -102,33 +102,31 @@ const Login = () => {
             </button>
           </div>
 
-          {/* Submit Button */}
           <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-200"
+            className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-200 disabled:opacity-50"
             disabled={loading}
           >
             {loading ? "Logging in..." : "Login"}
           </button>
 
-          {/* Additional Links */}
-          <p className="mt-4 text-center text-sm text-gray-600">
-            Don’t have an account?{" "}
+          <p className="mt-4 text-center text-gray-600">
+            Don't have an account?{" "}
             <Link to="/signup" className="text-blue-500 hover:underline">
               Sign up
             </Link>
           </p>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Forgot password?{" "}
+
+          <p className="mt-2 text-center text-gray-600">
+            Forgot your password?{" "}
             <Link to="/forgot-password" className="text-blue-500 hover:underline">
-              Reset here
+              Reset it here
             </Link>
           </p>
         </form>
       </div>
 
-      {/* Right Image Section */}
-      <div className="hidden md:block w-full md:w-1/2 h-[500px] relative overflow-hidden">
+      {/* Right Image Side */}
+      <div className="hidden md:block w-1/2 h-full relative">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
