@@ -95,7 +95,7 @@ const Login = () => {
             />
             <button
               type="button"
-              className="absolute right-3 top-3 text-gray-600"
+              className="absolute right-2 top-2 cursor-pointer text-gray-600 bg-transparent"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -136,7 +136,7 @@ const Login = () => {
         />
       </div>
     </div>
-    
+
   );
 };
 
