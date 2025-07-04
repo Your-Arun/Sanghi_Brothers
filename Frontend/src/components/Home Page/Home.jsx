@@ -1,40 +1,45 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import homeLogo from "/home.jpg";
+import homeImage from "/home.png"; // Make sure this image exists in public or src
 
 const Home = () => {
   return (
-    <>
-
-      <div
-        className="flex flex-col justify-center items-center min-h-screen bg-cover bg-center px-4"
-        style={{ backgroundImage: `url(${homeLogo})` }}
-      >
-        <div className="bg-white bg-opacity-60 text-center p-6 md:p-8 rounded-lg shadow-lg w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg transition-transform transform">
-          <h1 className="text-3xl md:text-4xl font-bold text-blue-600 mb-4">
-            Welcome Home
-          </h1>
-          <p className="text-gray-700 mb-6 text-base md:text-lg">
-            Switch between <span className="font-semibold">Login</span> or{" "}
-            <span className="font-semibold">Signup</span> below.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/login"
-              className="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-600 transition duration-300 transform hover:scale-105 active:scale-95 text-sm md:text-base w-full sm:w-auto text-center"
-            >
-              Login
-            </Link>
-            <Link
-              to="/signup"
-              className="bg-green-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-green-600 transition duration-300 transform hover:scale-105 active:scale-95 text-sm md:text-base w-full sm:w-auto text-center"
-            >
-              Signup
-            </Link>
-          </div>
+    <div className="flex flex-col md:flex-row items-center justify-between min-h-screen">
+      {/* Left Section */}
+      <div className="w-full md:w-1/2 px-6 md:px-12 lg:px-20 py-12">
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-black mb-6 leading-tight">
+          We are happily saying <br /> we are awesome
+        </h1>
+        <p className="text-gray-600 mb-8 text-base md:text-lg max-w-md">
+          Dictum voluptatibus, erat pharetra scelerisque, nisl faucibus eu mus, blandit at suscipit. Eu a. A vel hymenaeos
+        </p>
+        <div className="flex flex-wrap gap-4">
+          <Link
+            to="/login"
+            className="bg-yellow-500 text-black px-6 py-3 rounded shadow hover:bg-yellow-400 transition duration-300 font-semibold"
+          >
+            LOGIN
+          </Link>
+          <Link
+            to="/signup"
+            className="border-2 border-black px-6 py-3 rounded shadow hover:bg-black hover:text-white transition duration-300 font-semibold"
+          >
+            SIGNUP
+          </Link>
         </div>
       </div>
-    </>
+
+      {/* Right Section - Image with Diagonal Cut */}
+      <div className="hidden md:block w-full md:w-1/2 h-[500px] relative overflow-hidden">
+        <div
+          className="absolute inset-0 bg-no-repeat bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${homeImage})`,
+            clipPath: "polygon(10% 0%, 100% 0%, 100% 100%, 0% 100%)",
+          }}
+        />
+      </div>
+    </div>
   );
 };
 
