@@ -100,7 +100,7 @@ const Login = () => {
               className="buttonn"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              {showPassword ? <EyeOff size={20} className="text-gray-600 border-none" /> : <Eye size={20} className="text-gray-600 border-none" />}
             </button>
           </div>
 
