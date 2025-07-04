@@ -5,7 +5,7 @@
 /* General body styles */
 body {
   font-family: serif;
-  background-color: #b6c4d0;
+  background-color: #000000;
   color: #333; /* Dark gray text for readability */
   margin: 0;
   padding: 0px;
@@ -285,7 +285,6 @@ label {
 
 body {
   font-family: serif;
-  background-color: #b6c4d0;
   color: #333;
   margin: 0;
   padding: 0;
