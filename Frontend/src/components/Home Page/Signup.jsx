@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axiosInstance from '../Dashboard/axiosInstance';
 import { Link, useNavigate } from "react-router-dom";
-import signupBg from "/bghome.png";
+import signupBg from "/petrol.png";
 
 const Signup = () => {
   const [name, setName] = useState("");
