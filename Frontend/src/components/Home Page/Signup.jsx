@@ -77,7 +77,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-white">
+    <div className="flex flex-col md:flex-row">
       {/* Left Section */}
       <div className="w-full md:w-1/2 flex items-center justify-center px-6 py-12">
         <form
