@@ -85,28 +85,29 @@ const Login = () => {
           />
 
           {/* Password Field */}
-          <div className=" passwordinput">
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              className=""
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="buttonn "
-              aria-label={showPassword ? "Hide password" : "Show password"}
-            >
-              {showPassword ? (
-                <EyeOff size={20} className="" />
-              ) : (
-                <Eye size={20} className="" />
-              )}
-            </button>
-          </div>
+          <div className="passwordinput">
+  <input
+    type={showPassword ? "text" : "password"}
+    placeholder="Password"
+    className="passwordinput-field"
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    required
+  />
+  <button
+    type="button"
+    onClick={() => setShowPassword(!showPassword)}
+    className="buttonn"
+    aria-label={showPassword ? "Hide password" : "Show password"}
+  >
+    {showPassword ? (
+      <EyeOff size={20} className="icon-eye" />
+    ) : (
+      <Eye size={20} className="icon-eye" />
+    )}
+  </button>
+</div>
+
 
 
           <button

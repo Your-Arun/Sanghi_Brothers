@@ -103,26 +103,20 @@ button {
   border-radius: 0.375rem;
 }
 
-
-/* Password input wrapper */
 .passwordinput {
-  transition: box-shadow 0.3s ease;
+  @apply w-full flex items-center border border-gray-300 rounded-lg px-3 mb-4 shadow-sm focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition duration-150 ease-in-out;
+  background-color: white;
 }
 
-/* Optional glow effect on focus */
-.passwordinput:focus-within {
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Tailwind's blue-500 ring */
+.passwordinput-field {
+  @apply flex-1 px-4 py-3 text-gray-800 placeholder-gray-500 outline-none bg-transparent;
 }
 
-/* Password toggle button */
 .buttonn {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  border-radius: 0.5rem;
-  transition: background-color 0.2s ease;
+  @apply flex items-center justify-center w-9 h-9 bg-transparent border-none text-gray-600 rounded-md cursor-pointer;
 }
 
-.buttonn:hover {
-  background-color: rgba(0, 0, 0, 0.05); /* subtle hover effect */
+.icon-eye {
+  @apply text-gray-600;
 }
+
