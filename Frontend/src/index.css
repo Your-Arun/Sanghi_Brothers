@@ -123,4 +123,29 @@ button {
 .icon-eye {
   @apply text-gray-600;
 }
+@media (max-width: 350px) {
+  .home-heading {
+    font-size: 1.5rem; /* ~24px */
+    line-height: 1.6;
+  }
+
+  .home-subtext {
+    font-size: 0.875rem; /* ~14px */
+    padding: 0 0.5rem;
+    line-height: 1.4;
+  }
+
+  .home-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .home-image {
+    height: 200px !important;
+    clip-path: none !important;
+  }
+}
+
 
