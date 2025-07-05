@@ -7,7 +7,7 @@ const Footer = () => {
         
         {/* Company Info */}
         <div>
-          <h2 className="text-xl font-bold mb-4">🚗 Sanghi Bros.</h2>
+          <h2 className="text-xl font-bold mb-4">⛽ Sanghi Bros.</h2>
           <p className="mb-4 text-sm">
             Trusted dealer and service provider. We offer best-in-class vehicle servicing and customer support.
           </p>
