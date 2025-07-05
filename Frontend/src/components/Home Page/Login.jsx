@@ -85,11 +85,11 @@ const Login = () => {
           />
 
           {/* Password Field */}
-          <div className="flex items-center border border-gray-300 rounded-lg px-3 mb-4 focus-within:ring-2 focus-within:ring-blue-500">
+          <div className=" passwordinput">
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className="w-full p-3 outline-none bg-transparent"
+              className=""
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -97,13 +97,13 @@ const Login = () => {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="buttonn flex items-center justify-center w-9 h-9"
+              className="buttonn "
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? (
-                <EyeOff size={20} className="text-gray-600 border-none outline-none " />
+                <EyeOff size={20} className="" />
               ) : (
-                <Eye size={20} className="text-gray-600 border-none outline-none" />
+                <Eye size={20} className="" />
               )}
             </button>
           </div>

@@ -102,3 +102,27 @@ button {
   justify-content: center;
   border-radius: 0.375rem;
 }
+
+
+/* Password input wrapper */
+.passwordinput {
+  transition: box-shadow 0.3s ease;
+}
+
+/* Optional glow effect on focus */
+.passwordinput:focus-within {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Tailwind's blue-500 ring */
+}
+
+/* Password toggle button */
+.buttonn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+.buttonn:hover {
+  background-color: rgba(0, 0, 0, 0.05); /* subtle hover effect */
+}

@@ -1,6 +1,5 @@
 import axiosInstance from '../Dashboard/axiosInstance'
 import React, { useState } from "react";
-import Footer from './Footer';
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -126,7 +125,6 @@ const ContactUs = () => {
           </div>
         </div>
       </div>
-      <Footer/>
     </>
   );
 };

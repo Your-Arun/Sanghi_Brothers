@@ -1,6 +1,5 @@
 import React from "react";
 import { Users, Briefcase, Globe } from "lucide-react";
-import Footer from "./Footer";
 
 const AboutUs = () => {
   const aboutItems = [
@@ -101,7 +100,6 @@ const AboutUs = () => {
         </div>
       </div>
     </div>
-    <Footer/>
     </>
   );
 };
