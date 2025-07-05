@@ -103,20 +103,23 @@ button {
   border-radius: 0.375rem;
 }
 
+/* Wrapper to hold input and icon */
 .passwordinput {
   @apply w-full flex items-center border border-gray-300 rounded-lg px-3 mb-4 focus-within:ring-2 focus-within:ring-blue-500 bg-white;
 }
 
+/* Password input */
 .passwordinput-field {
   @apply flex-1 px-4 py-3 text-gray-800 placeholder-gray-500 outline-none bg-transparent;
 }
 
-/* 👇 FIX for icon button toggle */
+/* Eye toggle button - FIXES shrinking & default styles */
 .buttonn {
-  all: unset; /* STRIPS all default button styles */
-  @apply flex items-center justify-center w-9 h-9 text-gray-600 cursor-pointer;
+  all: unset; /* remove default button styles (border, padding, etc) */
+  @apply flex items-center justify-center w-10 h-10 cursor-pointer text-gray-600;
 }
 
+/* Eye Icon Styling */
 .icon-eye {
   @apply text-gray-600;
 }
