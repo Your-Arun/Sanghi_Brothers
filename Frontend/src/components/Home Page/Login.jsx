@@ -86,27 +86,28 @@ const Login = () => {
 
           {/* Password Field */}
           <div className="passwordinput">
-  <input
-    type={showPassword ? "text" : "password"}
-    placeholder="Password"
-    className="passwordinput-field"
-    value={password}
-    onChange={(e) => setPassword(e.target.value)}
-    required
-  />
-  <button
-    type="button"
-    onClick={() => setShowPassword(!showPassword)}
-    className="buttonn"
-    aria-label={showPassword ? "Hide password" : "Show password"}
-  >
-    {showPassword ? (
-      <EyeOff size={20} className="icon-eye" />
-    ) : (
-      <Eye size={20} className="icon-eye" />
-    )}
-  </button>
-</div>
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              className="passwordinput-field"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="buttonn"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? (
+                <EyeOff className="icon-eye" size={20} />
+              ) : (
+                <Eye className="icon-eye" size={20} />
+              )}
+            </button>
+          </div>
+
 
 
 
@@ -136,14 +137,14 @@ const Login = () => {
 
       {/* Right Image Side */}
       <div className="hidden md:block w-full md:w-1/2 h-[500px] relative overflow-hidden">
-          <div
-            className="absolute inset-0 bg-no-repeat bg-cover bg-center"
-            style={{
-              backgroundImage: `url(${loginBg})`,
-              clipPath: "polygon(10% 0%, 100% 0%, 100% 100%, 0% 100%)",
-            }}
-          />
-        </div>
+        <div
+          className="absolute inset-0 bg-no-repeat bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${loginBg})`,
+            clipPath: "polygon(10% 0%, 100% 0%, 100% 100%, 0% 100%)",
+          }}
+        />
+      </div>
     </div>
   );
 };
