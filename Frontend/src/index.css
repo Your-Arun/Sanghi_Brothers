@@ -149,3 +149,30 @@ button {
 }
 
 
+
+@media (max-width: 400px) {
+  .home-heading {
+    font-size: 1.4rem; /* ~24px */
+    line-height: 1.4;
+  }
+
+  .home-subtext {
+    font-size: 0.7rem; /* ~14px */
+    padding: 0 0.4rem;
+    line-height: 1.2;
+  }
+
+  .home-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.6rem;
+    width: 100%;
+    margin-bottom: 0.4rem;
+  }
+
+  .home-image {
+    height: 150px !important;
+    clip-path: none !important;
+  }
+}
+
+
