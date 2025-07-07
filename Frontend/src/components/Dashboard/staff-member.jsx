@@ -102,14 +102,24 @@ const StaffDashboard = () => {
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Toggle Button */}
-      {showToggleButton && (
+      {showToggleButton && !isSidebarOpen && (
         <button
-          className="toggle-btn fixed top-12 left-4 md:hidden"
-          onClick={() => setSidebarOpen(!isSidebarOpen)}
+          className="fixed top-4 left-4 z-50 p-2 bg-white rounded-full shadow-md text-blue-600 text-3xl md:hidden transition-transform hover:scale-110"
+          onClick={() => setSidebarOpen(true)}
         >
-          {isSidebarOpen ? <FaTimes /> : <FaBars />}
+          <FaBars />
         </button>
       )}
+
+      {isSidebarOpen && (
+        <button
+          className="fixed top-4 left-64 z-50 p-2 bg-white rounded-full shadow-md text-blue-600 text-3xl md:hidden transition-transform hover:scale-110"
+          onClick={() => setSidebarOpen(false)}
+        >
+          <FaTimes />
+        </button>
+      )}
+
 
       <aside
         className={`fixed inset-y-0 left-0 bg-gradient-to-b from-blue-700 to-blue-500 text-white p-6 w-64 md:w-1/4 lg:w-1/5 xl:w-1/6 z-40 shadow-xl transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
