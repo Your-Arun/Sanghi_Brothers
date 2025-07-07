@@ -64,7 +64,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-between min-h-screen md:mt-15">
+    <div className="flex flex-col md:flex-row items-center md:mt-10 justify-between min-h-screen md:mt-15">
       {/* Left Form Side */}
       <div className="w-full md:w-1/2 flex justify-center items-center px-6">
         <form
@@ -107,11 +107,6 @@ const Login = () => {
               )}
             </button>
           </div>
-
-
-
-
-
           <button
             type="submit"
             className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-200 disabled:opacity-50"
