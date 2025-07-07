@@ -222,110 +222,109 @@ const StaffDashboard = () => {
 
         {/* ---------------- Complaints ---------------- */}
         {activeTab === "complaint" && (
-          <div className="mt-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-3xl font-bold text-blue-700 flex items-center gap-2">
-                <FaExclamationTriangle />
-                Complaints
-              </h2>
-              <img
-                src={addIcon}
-                alt="Add"
-                className="w-10 cursor-pointer hover:scale-110 transition-transform"
-                onClick={() => navigate("/report")}
-              />
+          <>
+          <div className="bg-white p-6 mt-6 rounded-lg shadow-lg">
+            <h2 className="text-3xl font-bold text-blue-700">📒 Complaints</h2>
+            <img
+              src={addIcon}
+              alt="Create"
+              width={50}
+              className="mt-4 bg-purple-600 text-white px-6 text-2xl py-2 rounded-lg shadow hover:bg-purple-700 transition-transform hover:scale-105"
+              onClick={() => navigate("/report")}
+            />
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {reports.map((report) => (
-                <div
-                  key={report._id}
-                  className="rounded-lg bg-white border border-gray-200 shadow hover:shadow-lg p-4 transition text-center"
-                >
-                  <h3 className="text-lg font-bold text-green-700">{report.title}</h3>
-                  <p className="text-gray-800 text-sm">📂 {report.department}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
+              {loading ? (
+                <p className="text-gray-500 text-center mt-4">Loading complaints...</p>
+              ) : reports.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
+                  {reports.map((report) => (
+                    <div
+                      key={report._id}
+                      className="bg-gray-50 p-4 rounded-lg shadow hover:shadow-md transition cursor-pointer text-center"
+                    >
+                      <h3 className="text-lg font-bold text-green-700">{report.title}</h3>
+                      <p className="text-gray-800">📂 {report.department}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <p className="text-center text-gray-500 italic mt-4">No complaints available.</p>
+              )}
             </div>
-          </div>
+            </>
         )}
-
 
         {/* ---------------- Cash Slip ---------------- */}
         {activeTab === "cashslip" && (
-          <div className="mt-6">
-            <h2 className="text-3xl font-bold text-center text-gray-800 mb-6 flex justify-center items-center gap-2">
-              <FaMoneyBill className="text-green-600" />
-              Cash Slips
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {cashslip.map((slip, index) => (
+          <>
+            <div className="bg-white p-6 rounded-lg shadow-md mt-6 text-center">
+              <h2 className="text-3xl font-bold text-gray-800">💵 Cash Slips</h2>
+              <button
+                onClick={() => navigate("/Cashslip")}
+                className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-lg shadow hover:bg-purple-700 transition-transform hover:scale-105"
+              >
+                Submit New Cash Slip
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
+              {cashslip.map((cashSlip, index) => (
                 <div
                   key={index}
-                  className="rounded-lg bg-white border border-gray-200 shadow hover:shadow-lg p-4 transition"
+                  className="bg-white border p-4 rounded-lg shadow hover:shadow-md transition"
                 >
-                  <h3 className="text-xl font-bold text-center text-blue-600 mb-2">{slip.name}</h3>
-                  <div className="text-gray-700 text-sm space-y-1">
-                    <p><strong>Shift:</strong> {slip.shift}</p>
-                    <p><strong>Nozzle No:</strong> {slip.nozzleNo}</p>
-                    <p><strong>Opening:</strong> {slip.openingReading}</p>
-                    <p><strong>Closing:</strong> {slip.closingReading}</p>
-                    <p><strong>Sales:</strong> {slip.salesInLtr} L</p>
-                  </div>
-                  <p className="text-lg font-semibold mt-2 text-center text-gray-900">
-                    ₹{slip.total}
+                  <h3 className="text-blue-600 font-bold text-lg mb-2">{cashSlip.name}</h3>
+                  <p><strong>Shift:</strong> {cashSlip.shift}</p>
+                  <p><strong>Nozzle No:</strong> {cashSlip.nozzleNo}</p>
+                  <p><strong>Opening:</strong> {cashSlip.openingReading}</p>
+                  <p><strong>Closing:</strong> {cashSlip.closingReading}</p>
+                  <p><strong>Sales:</strong> {cashSlip.salesInLtr} L</p>
+                  <p className="mt-2 font-bold text-lg text-gray-900">
+                    Total: ₹{cashSlip.total}
                   </p>
                 </div>
               ))}
             </div>
-          </div>
+          </>
         )}
-
 
         {/* ---------------- Lekha Jokha ---------------- */}
         {activeTab === "lekhajokha" && (
-          <div className="mt-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
-                <BsOpencollective className="text-purple-600" />
-                Lekha Jokha
-              </h2>
+          <>
+            <div className="bg-white flex items-center justify-between p-6 rounded-lg shadow-md mt-6">
+              <h2 className="text-3xl font-bold text-gray-800">⛽ Lekha Jokha</h2>
               <button
                 onClick={() => navigate("/newlekhajokha")}
-                className="text-2xl text-blue-600 hover:text-blue-800"
+                className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-lg shadow hover:bg-purple-700 transition-transform hover:scale-105"
               >
                 <IoCreateSharp />
               </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
               {lekha.map((item) => (
                 <div
                   key={item.id}
-                  className="rounded-lg bg-white border border-gray-200 shadow hover:shadow-lg p-4 transition text-center"
+                  className="bg-white p-4 rounded-lg shadow-md border hover:shadow-lg transition text-center"
                 >
-                  <h3 className="text-lg font-bold text-blue-600">{item.username}</h3>
-                  <p className="text-sm text-red-500">{item.department}</p>
-                  <p className="text-gray-600 text-sm">
+                  <h3 className="text-blue-600 font-bold text-lg">{item.username}</h3>
+                  <p className="text-red-500">{item.department}</p>
+                  <p className="text-gray-600">
                     {new Date(item.date).toLocaleDateString("en-GB")}
                   </p>
                 </div>
               ))}
             </div>
-          </div>
+          </>
         )}
 
         {/* ---------------- Shifting ---------------- */}
         {activeTab === "shifting" && (
-          <div className="mt-6">
-            <h2 className="text-3xl font-bold text-center text-gray-800 mb-6 flex justify-center items-center gap-2">
-              <FaTruck className="text-yellow-600" />
-              Shifting
-            </h2>
+          <div className="mt-4">
             <ShiftComponent />
           </div>
         )}
-
       </main>
 
 
