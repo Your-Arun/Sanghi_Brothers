@@ -144,46 +144,63 @@ const StaffDashboard = () => {
         </nav>
       </aside>
 
-      <main className="flex-1 p-4 overflow-y-auto max-h-screen">
-        <h1 className="text-2xl text-center font-bold mb-4 text-gray-800">
-          Welcome, <span className="text-blue-600">{user.username}</span>
+      <main className="flex-1 p-4 overflow-y-auto max-h-screen bg-gray-50">
+        <h1 className="text-2xl text-center font-bold mb-6 text-gray-800">
+          Welcome, <span className="text-blue-600 mb-10">{user.username}</span>
         </h1>
 
         {/* ---------------- Dashboard ---------------- */}
         {activeTab === "dashboard" && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <div
-              onClick={() => setActiveTab("complaint")}
-              className="card-dashboard bg-blue-500"
-            >
-              <FaExclamationTriangle size={36} />
-              <h3>Complaints</h3>
-              <p>{reports.length}</p>
-            </div>
-            <div
-              onClick={() => setActiveTab("cashslip")}
-              className="card-dashboard bg-green-500"
-            >
-              <FaMoneyBill size={36} />
-              <h3>Cash Slips</h3>
-              <p>{cashslip.length}</p>
-            </div>
-            <div
-              onClick={() => setActiveTab("shifting")}
-              className="card-dashboard bg-yellow-500"
-            >
-              <FaTruck size={36} />
-              <h3>Shifting</h3>
-              <p>-</p>
-            </div>
-            <div
-              onClick={() => setActiveTab("lekhajokha")}
-              className="card-dashboard bg-purple-500"
-            >
-              <BsOpencollective size={36} />
-              <h3>Lekha Jokha</h3>
-              <p>{lekha.length}</p>
-            </div>
+            {[
+              {
+                id: "cashslip",
+                label: "Cash Slips",
+                count: cashslip.length,
+                icon: <FaMoneyBill size={30} />,
+              },
+              {
+                id: "shifting",
+                label: "Shifting",
+                count: "-",
+                icon: <FaTruck size={30} />,
+              },
+              {
+                id: "complaint",
+                label: "Complaints",
+                count: reports.length,
+                icon: <FaExclamationTriangle size={30} />,
+              },
+              {
+                id: "lekhajokha",
+                label: "Lekha Jokha",
+                count: lekha.length,
+                icon: <BsOpencollective size={30} />,
+              },
+            ].map((item) => (
+              <div
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className="cursor-pointer rounded-lg shadow-md overflow-hidden bg-white border border-gray-200 transition-transform hover:scale-105"
+              >
+                {/* Yellow curved top */}
+                <div className="bg-yellow-400 p-4 relative">
+                  <div className="text-black text-center">{item.icon}</div>
+                  <div className="absolute bottom-0 left-0 w-full h-3 bg-white rounded-t-full"></div>
+                </div>
+
+                {/* Bottom content */}
+                <div className="p-4 text-center">
+                  <h3 className="text-lg font-bold text-gray-800">{item.label}</h3>
+                  <p className="text-2xl font-semibold text-gray-700">
+                    {item.count}
+                    {item.id === "cashslip" || item.id === "lekhajokha" ? (
+                      <span className="text-sm text-gray-500 ml-1">entries</span>
+                    ) : null}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         )}
 
@@ -292,6 +309,7 @@ const StaffDashboard = () => {
           </div>
         )}
       </main>
+
 
 
       {showModal2 && (
