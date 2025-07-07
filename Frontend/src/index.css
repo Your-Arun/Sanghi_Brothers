@@ -166,7 +166,7 @@ button {
 
 .sidebar-btn {
   display: flex;
-  background: white;
+  background: transparent;
   align-items: center;
   gap: 0.75rem;
   width: 100%;
