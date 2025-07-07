@@ -162,7 +162,7 @@ const StaffDashboard = () => {
 
       <main className="flex-1 p-4 overflow-y-auto max-h-screen bg-gray-50">
         <h1 className="text-2xl text-center font-bold mb-6 text-gray-800">
-          Welcome, <span className="text-blue-600">{user.username}</span>
+          Welcome, <span className="text-blue-600 mb-10">{user.username}</span>
         </h1>
 
         {/* ---------------- Dashboard ---------------- */}
