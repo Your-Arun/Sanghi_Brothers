@@ -24,9 +24,9 @@ const Footer = () => {
           <h3 className="text-lg font-bold mb-4">Get in Touch</h3>
           <ul className="space-y-2 text-sm">
             <li><span className="text-yellow-400">📍</span> Sanghi Brothers,Olympic circle near station road, Jodhpur(Rajasthan)</li>
-            <li><span className="text-yellow-400">📞</span> 0935131*****</li>
-            <li><span className="text-yellow-400">✉️</span> sanghibrothers@gmail.com</li>
-            <li><span className="text-yellow-400">🔗</span> www.sanghibros.com</li>
+            <li><span className="text-yellow-400">📞</span><a href="#" className="hover:text-yellow-400"> 0935131*****</a></li>
+            <li><span className="text-yellow-400">✉️</span><a href="#" className="hover:text-yellow-400"> sanghibrothers@gmail.com </a></li>
+            <li><span className="text-yellow-400">🔗</span><a href="#" className="hover:text-yellow-400"> www.sanghibros.com</a></li>
           </ul>
         </div>
 
@@ -42,12 +42,12 @@ const Footer = () => {
         </div>
 
         {/* Partners */}
-        <div>
+        {/* <div>
           <h3 className="text-lg font-bold mb-4">Others</h3>
           <ul className="space-y-2 text-sm">
             <li></li>
           </ul>
-        </div>
+        </div> */}
       </div>
 
       <div className="border-t border-gray-700 mt-10 pt-6 text-center text-sm text-gray-500">
