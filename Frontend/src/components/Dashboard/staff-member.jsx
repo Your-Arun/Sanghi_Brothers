@@ -143,7 +143,7 @@ const StaffDashboard = () => {
       </aside>
       {showToggleButton && !isSidebarOpen && (
         <button
-          className="fixed top-4 left-4 z-50 p-2 bg-white rounded-full shadow-md text-blue-600 text-3xl md:hidden hover:scale-110 transition-transform"
+          className="fixed top-4 left-4 z-50 p-2 bg-white rounded-full shadow-md text-blue-600 text-xl md:hidden hover:scale-110 transition-transform"
           onClick={() => setSidebarOpen(true)}
         >
           <FaBars />
