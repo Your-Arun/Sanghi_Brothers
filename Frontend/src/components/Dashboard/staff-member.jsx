@@ -132,19 +132,6 @@ const StaffDashboard = () => {
               <span>{item.label}</span>
             </button>
           ))}
-
-          <button
-            onClick={() => {
-              setProfileOpen(true);
-              setSidebarOpen(false);
-            }}
-            className="profile-btn w-full mt-4 flex items-center justify-center gap-2"
-          >
-            <FaUser />
-            Profile
-          </button>
-
-
           <button
             onClick={() => {
               setProfileOpen(true);
@@ -366,6 +353,8 @@ const StaffDashboard = () => {
           </div>
         </div>
       )}
+
+      {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
     </div>
   );
 };
