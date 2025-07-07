@@ -85,7 +85,7 @@ const Signup = () => {
 
     <>
 
-      <div className="flex flex-col md:flex-row items-center md:mt-6 justify-between min-h-screen">
+      <div className="flex flex-col md:flex-row items-center justify-between min-h-screen">
         {/* Left Form Section */}
         <div className="w-full md:w-1/2 flex items-center justify-center px-6">
           <form
