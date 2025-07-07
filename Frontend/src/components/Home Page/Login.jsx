@@ -14,7 +14,6 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Session key setup
   const sessionKey =
     sessionStorage.getItem("activeSession") ||
     `userSession_${Math.random().toString(36).substring(2, 11)}`;
@@ -41,7 +40,6 @@ const Login = () => {
 
     try {
       const { data } = await axiosInstance.post("/login", { email, password });
-
       sessionStorage.setItem(sessionKey, JSON.stringify(data.user));
       sessionStorage.setItem("authToken", data.token);
       setUser(data.user);
@@ -64,32 +62,42 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-center md:mt-10 justify-between min-h-screen md:mt-15">
-      {/* Left Form Side */}
-      <div className="w-full md:w-1/2 flex justify-center items-center px-6">
+    <div className="flex flex-col-reverse md:flex-row min-h-screen">
+      {/* Left Image Section */}
+      <div className="w-full md:w-1/2 hidden md:block">
+        <div
+          className="h-full bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${loginBg})`,
+            clipPath: "polygon(10% 0%, 100% 0%, 100% 100%, 0% 100%)",
+          }}
+        />
+      </div>
+
+      {/* Right Form Section */}
+      <div className="w-full md:w-1/2 flex items-center justify-center px-6 py-12 bg-gray-50">
         <form
-          className="bg-white bg-opacity-60 p-6 md:p-8 rounded-lg shadow-xl w-full max-w-sm md:max-w-md"
           onSubmit={handleSubmit}
+          className="w-full max-w-sm bg-white p-6 md:p-8 rounded-lg shadow-md"
         >
-          <h2 className="text-5xl font-bold mb-6 text-center text-blue-600">
+          <h2 className="text-3xl font-bold text-center mb-6 text-blue-600">
             Login
           </h2>
 
           <input
             type="email"
-            placeholder="Email (case sensitive)"
-            className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+            placeholder="Email"
+            className="w-full p-3 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
 
-          {/* Password Field */}
-          <div className="passwordinput">
+          <div className="relative mb-4">
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className="passwordinput-field"
+              className="w-full p-3 pr-10 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -97,49 +105,34 @@ const Login = () => {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="buttonn"
-              aria-label={showPassword ? "Hide password" : "Show password"}
+              className="absolute top-3 right-3 text-gray-600"
             >
-              {showPassword ? (
-                <EyeOff className="icon-eye" size={20} />
-              ) : (
-                <Eye className="icon-eye" size={20} />
-              )}
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
+
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-200 disabled:opacity-50"
+            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition"
             disabled={loading}
           >
             {loading ? "Logging in..." : "Login"}
           </button>
 
-          <p className="mt-4 text-center text-gray-600">
+          <p className="mt-4 text-sm text-center text-gray-600">
             Don’t have an account?{" "}
             <Link to="/signup" className="text-blue-500 hover:underline">
               Sign up
             </Link>
           </p>
 
-          <p className="mt-2 text-center text-gray-600">
+          <p className="mt-2 text-sm text-center text-gray-600">
             Forgot your password?{" "}
             <Link to="/forgot-password" className="text-blue-500 hover:underline">
-              Reset it here
+              Reset here
             </Link>
           </p>
         </form>
-      </div>
-
-      {/* Right Image Side */}
-      <div className="hidden md:block w-full md:w-1/2 h-[500px] relative overflow-hidden">
-        <div
-          className="absolute inset-0 bg-no-repeat bg-cover bg-center"
-          style={{
-            backgroundImage: `url(${loginBg})`,
-            clipPath: "polygon(10% 0%, 100% 0%, 100% 100%, 0% 100%)",
-          }}
-        />
       </div>
     </div>
   );
