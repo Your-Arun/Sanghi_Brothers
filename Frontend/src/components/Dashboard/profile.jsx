@@ -59,8 +59,7 @@ const ProfileModal = ({ closeModal }) => {
           {/* Name */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">Name:</label>
-            <input
-              type="text"
+            <p 
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-sm"
