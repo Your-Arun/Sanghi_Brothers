@@ -70,7 +70,7 @@ const Login = () => {
   return (
 
     <>
-      <div className="flex flex-col md:flex-row items-center md:mt-6 justify-between min-h-screen md:mt-15">
+      <div className="flex flex-col md:flex-row items-center md:mt-6 justify-between min-h-screen">
         {/* Left Form Side */}
         <div className="w-full md:w-1/2 flex justify-center items-center px-6">
           <form
