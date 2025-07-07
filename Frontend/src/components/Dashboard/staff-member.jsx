@@ -126,7 +126,7 @@ const StaffDashboard = () => {
         className={`fixed inset-y-0 left-0 bg-blue-600 text-white p-6 w-64 md:w-1/4 lg:w-1/5 xl:w-1/6 transition-transform duration-300 ease-in-out z-40 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           } md:relative md:translate-x-0`}
       >
-        <h2 className="text-2xl font-bold">Staff Dashboard</h2>
+        <h2 className="text-4xl font-bold text-center">Staff Dashboard</h2>
         <nav className="space-y-3 bg-transparent">
           {navItems.map((item) => (
             <button
@@ -135,7 +135,7 @@ const StaffDashboard = () => {
                 setActiveTab(item.id);
                 setSidebarOpen(false); // Hide sidebar after navigation
               }}
-              className={`flex bg-transparent items-center gap-2 p-2 w-full rounded-lg transition ${activeTab === item.id ? "bg-blue-700" : "hover:bg-blue-500"
+              className={`flex bg-transparent items-center gap-2 p-2 w-full rounded-lg transition wrap ${activeTab === item.id ? "bg-blue-700" : "hover:bg-blue-500"
                 }`}
             >
               {item.icon} {item.label}
