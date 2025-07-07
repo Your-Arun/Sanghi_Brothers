@@ -229,7 +229,7 @@ const StaffDashboard = () => {
                 src={addIcon}
                 alt="Create"
                 width={50}
-                className="cursor-pointer transition-transform hover:scale-110 hover:rotate-12"
+                className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-lg shadow hover:bg-purple-700 transition-transform hover:scale-105"
                 onClick={() => navigate("/report")}
               />
             </div>
@@ -295,7 +295,7 @@ const StaffDashboard = () => {
               <h2 className="text-3xl font-bold text-gray-800">⛽ Lekha Jokha</h2>
               <button
                 onClick={() => navigate("/newlekhajokha")}
-                className="text-2xl text-blue-600 hover:text-blue-800"
+                className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-lg shadow hover:bg-purple-700 transition-transform hover:scale-105"
               >
                 <IoCreateSharp />
               </button>
