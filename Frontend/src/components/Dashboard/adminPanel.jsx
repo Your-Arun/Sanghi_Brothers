@@ -155,7 +155,7 @@ const AdminPanel = () => {
                   <td className="p-2">{user.email}</td>
                   <td className="p-2">{user.department || "N/A"}</td>
                   <td className="p-2">{user.phone || "N/A"}</td>
-                  <td className="p-2 space-x-2">
+                  <td className="p-2 space-x-2 gap-2">
                     <button
                       onClick={() => handleEditClick(user)}
                       className="bg-yellow-500 text-white px-3 py-1 rounded"
