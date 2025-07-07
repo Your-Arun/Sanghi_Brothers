@@ -122,7 +122,7 @@ const AdminPanel = () => {
         ← Back
       </button>
 
-      <h1 className="text-6xl sm:text-3xl font-bold text-blue-600 text-center mb-6">
+      <h1 className="text-2xl sm:text-3xl font-bold text-blue-600 text-center mb-6">
         Admin Panel - Manage Users
       </h1>
 
