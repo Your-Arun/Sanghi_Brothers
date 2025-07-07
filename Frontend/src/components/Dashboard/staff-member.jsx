@@ -109,7 +109,7 @@ const StaffDashboard = () => {
         />
       )}
       <aside
-        className={`fixed inset-y-0 left-0 bg-gradient-to-b from-blue-700 to-blue-500 text-white p-6 w-64 md:w-1/4 lg:w-1/5 xl:w-1/6 z-40 shadow-xl transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed inset-y-0 left-0 bg-gradient-to-b from-blue-700 to-blue-500 text-white p-6 w-64 md:w-1/4 lg:w-1/5 xl:w-1/6 z-40 shadow-xl transition-transform duration-300 ease-in-out  z-40${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           } md:relative md:translate-x-0`}
       >
         <h2 className="text-2xl font-bold mb-6 text-center border-b border-blue-300 pb-4">
@@ -143,7 +143,7 @@ const StaffDashboard = () => {
       {showToggleButton && !isSidebarOpen && (
         <button onClick={() => setSidebarOpen(true)} className="..."> <FaBars /> </button>
       )}
-
+  
       {isSidebarOpen && (
         <button onClick={() => setSidebarOpen(false)} className="..."> <FaTimes /> </button>
       )}
