@@ -108,9 +108,10 @@ const StaffDashboard = () => {
           onClick={() => setSidebarOpen(false)}
         />
       )}
+
       <aside
-        className={`fixed inset-y-0 left-0 bg-gradient-to-b from-blue-700 to-blue-500 text-white p-6 w-64 md:w-1/4 lg:w-1/5 xl:w-1/6 z-40 shadow-xl transition-transform duration-300 ease-in-out  z-40${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          } md:relative md:translate-x-0`}
+        className={`fixed inset-y-0 left-0 w-64 bg-gradient-to-b from-blue-700 to-blue-500 text-white p-6 z-40 shadow-xl transform transition-transform duration-300 ease-in-out
+    ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:relative md:translate-x-0`}
       >
         <h2 className="text-2xl font-bold mb-6 text-center border-b border-blue-300 pb-4">
           STAFF PANEL
@@ -141,11 +142,22 @@ const StaffDashboard = () => {
         </nav>
       </aside>
       {showToggleButton && !isSidebarOpen && (
-        <button onClick={() => setSidebarOpen(true)} className="..."> <FaBars /> </button>
+        <button
+          className="fixed top-4 left-4 z-50 p-2 bg-white rounded-full shadow-md text-blue-600 text-3xl md:hidden hover:scale-110 transition-transform"
+          onClick={() => setSidebarOpen(true)}
+        >
+          <FaBars />
+        </button>
       )}
-  
+
+
       {isSidebarOpen && (
-        <button onClick={() => setSidebarOpen(false)} className="..."> <FaTimes /> </button>
+        <button
+          className="fixed top-4 left-64 z-50 p-2 bg-white rounded-full shadow-md text-blue-600 text-3xl md:hidden hover:scale-110 transition-transform"
+          onClick={() => setSidebarOpen(false)}
+        >
+          <FaTimes />
+        </button>
       )}
 
       <main className="flex-1 p-4 overflow-y-auto max-h-screen bg-gray-50">
