@@ -231,7 +231,8 @@ const StaffDashboard = () => {
                 width={50}
                 className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-lg shadow hover:bg-purple-700 transition-transform hover:scale-105"
                 onClick={() => navigate("/report")}
-              />
+              />  <IoCreateSharp />
+
             </div>
 
             {loading ? (
