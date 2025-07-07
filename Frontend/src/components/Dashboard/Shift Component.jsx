@@ -103,17 +103,20 @@ const ShiftList = () => {
                         <td className="py-2 px-3 border">
                           {nozzle.member || "Unassigned"}
                         </td>
-                        <td className="py-2 px-3 border">
+                        <td className="py-2 px-3 border text-center">
                           <span
-                            className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                              nozzle.overtime
-                                ? "bg-green-100 text-green-700"
-                                : "bg-red-100 text-red-700"
-                            }`}
+                            className={`inline-block w-3 h-3 rounded-full sm:hidden ${nozzle.overtime ? "bg-green-500" : "bg-red-500"
+                              }`}
+                          ></span>
+
+                          <span
+                            className={`hidden sm:inline-block px-2 py-1 rounded-full text-xs font-semibold ${nozzle.overtime ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                              }`}
                           >
                             {nozzle.overtime ? "Overtime ✅" : "No Overtime"}
                           </span>
                         </td>
+
                       </tr>
                     ))}
                   </tbody>
