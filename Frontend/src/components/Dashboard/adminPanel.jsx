@@ -185,8 +185,13 @@ const AdminPanel = () => {
               className="w-full mb-2 p-2 border rounded" placeholder="Username" />
             <input type="email" name="email" value={formData.email} onChange={handleChange}
               className="w-full mb-2 p-2 border rounded" placeholder="Email" />
-            <input type="text" name="department" value={formData.department} onChange={handleChange}
-              className="w-full mb-2 p-2 border rounded" placeholder="Department" />
+            <select name="department" value={formData.department} onChange={handleChange}
+              className="w-full mb-2 p-2 border rounded">
+              <option value="manager">Manager</option>
+              <option value="accounts/finance">Accounts/Finance</option>
+              <option value="backoffice">Back Office</option>
+              <option value="staff">Staff</option>
+            </select>
             <input type="tel" name="phone" value={formData.phone} onChange={handleChange}
               className="w-full mb-4 p-2 border rounded" placeholder="Phone" />
             <div className="flex justify-between">
@@ -230,3 +235,8 @@ const AdminPanel = () => {
 };
 
 export default AdminPanel;
+
+
+
+
+//department shi krna hai option wala 
