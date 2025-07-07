@@ -20,7 +20,7 @@ const Home = () => {
             THIS IS NOT THE YEAR YOU GET EVERYTHING YOU WANT, THIS IS THE YEAR TO APPRECIATE EVERYTHING YOU HAVE.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
+          <div className="flex flex-col sm:flex-row mt-10 items-center justify-center md:justify-start gap-4">
             <Link
               to="/login"
               className="home-button bg-yellow-500 text-black px-6 py-3 rounded shadow hover:bg-yellow-400 transition duration-300 font-semibold text-center"
