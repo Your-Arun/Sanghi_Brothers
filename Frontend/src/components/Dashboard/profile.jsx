@@ -9,27 +9,25 @@ const ProfileModal = ({ closeModal }) => {
   const { user, setUser, handleLogout } = useContext(UserContext);
   const [username, setUsername] = useState(user?.username || "");
   const [loading, setLoading] = useState(false);
-  const [isChanged, setIsChanged] = useState(false); // Track if name is changed
+  const [isChanged, setIsChanged] = useState(false);
 
-  // Track changes in username
   useEffect(() => {
     setIsChanged(username !== user?.username);
   }, [username, user]);
 
-  // Handle profile update
   const handleProfileSave = async (e) => {
     e.preventDefault();
-    if (!isChanged) return; // Prevent unnecessary API calls
+    if (!isChanged) return;
 
     setLoading(true);
     try {
       const { data } = await axiosInstance.put("/profile", { username });
       setUser(data.user);
-      sessionStorage.setItem("activeSession", JSON.stringify(data.user)); // ✅ Save updated user session
+      sessionStorage.setItem("activeSession", JSON.stringify(data.user));
       toast.success("Profile updated successfully!");
       closeModal();
     } catch (err) {
-      console.error("❌ Profile Update Error:", err);
+      console.error("Profile Update Error:", err);
       toast.error("Failed to update profile.");
     } finally {
       setLoading(false);
@@ -37,67 +35,97 @@ const ProfileModal = ({ closeModal }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm md:max-w-md relative">
-        <button className="absolute bg-transparent top-4 right-4 text-gray-500" onClick={closeModal}>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-4 z-50">
+      <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md relative">
+        {/* Close Button */}
+        <button
+          className="absolute top-3 right-3 text-gray-500 text-xl"
+          onClick={closeModal}
+          aria-label="Close"
+        >
           ❌
         </button>
 
-        <h2 className="text-2xl font-bold mb-4 text-center text-blue-600">Edit Profile</h2>
-        <h2 className="text-xl font-bold mb-2 mt-[-20px] text-center text-red-600">Only admin can edit profile</h2>
+        {/* Title */}
+        <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4 text-center text-blue-600">
+          Edit Profile
+        </h2>
+        <p className="text-sm sm:text-base text-center text-red-600 mb-4 -mt-2">
+          Only admin can edit profile
+        </p>
 
-        <form onSubmit={handleProfileSave}>
-          {/* Editable Name Field */}
-          <div className="mb-4">
-            <label className="block text-gray-700 font-semibold">Name:</label>
+        {/* Form */}
+        <form onSubmit={handleProfileSave} className="space-y-4">
+          {/* Name */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Name:</label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-sm"
             />
           </div>
 
-          {/* Non-Editable Email */}
-          <div className="mb-4">
-            <label className="block text-gray-700 font-semibold">Email:</label>
-            <p className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100">{user.email}</p>
+          {/* Email */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Email:</label>
+            <p className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-sm">
+              {user.email}
+            </p>
           </div>
 
-          {/* Non-Editable Role */}
-          <div className="mb-4">
-            <label className="block text-gray-700 font-semibold">Role:</label>
-            <p className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100">{user.department}</p>
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 font-semibold">Mobile Number:</label>
-            <p className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100">{user.phone}</p>
+          {/* Department */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Role:</label>
+            <p className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-sm">
+              {user.department}
+            </p>
           </div>
 
-          {/* Show Admin Panel Button only for Managers */}
+          {/* Phone */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Mobile Number:</label>
+            <p className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-sm">
+              {user.phone}
+            </p>
+          </div>
+
+          {/* Manager-only Button */}
           {user.department === "manager" && (
-            <div className="mb-4 text-center">
+            <div className="text-center">
               <button
                 onClick={() => navigate("/admin-panel")}
-                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                className="w-full px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition text-sm"
               >
                 Go to Admin Panel
               </button>
             </div>
           )}
 
-          <div className="flex justify-between">
-            <button type="button" className="px-4 py-2 bg-red-500 text-white rounded-lg" onClick={handleLogout}>
+          {/* Bottom Buttons */}
+          <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
+            <button
+              type="button"
+              className="w-full sm:w-auto px-4 py-2 bg-red-500 text-white rounded-md text-sm"
+              onClick={handleLogout}
+            >
               Logout
             </button>
-            <div>
-              <button type="button" className="px-4 py-2 bg-gray-300 text-black rounded-lg mr-2" onClick={closeModal}>
+            <div className="flex gap-2 justify-end w-full sm:w-auto">
+              <button
+                type="button"
+                className="px-4 py-2 bg-gray-300 text-black rounded-md text-sm"
+                onClick={closeModal}
+              >
                 Cancel
               </button>
               <button
                 type="submit"
-                className={`px-4 py-2 rounded-lg ${
-                  isChanged ? "bg-blue-500 text-white" : "bg-gray-400 text-gray-700 cursor-not-allowed"
+                className={`px-4 py-2 text-sm rounded-md ${
+                  isChanged
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-400 text-gray-700 cursor-not-allowed"
                 }`}
                 disabled={!isChanged || loading}
               >
