@@ -149,4 +149,50 @@ button {
 }
 
 
+.toggle-btn {
+  background: white;
+  color: #2563eb;
+  padding: 10px;
+  border-radius: 9999px;
+  font-size: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  z-index: 9999;
+}
 
+.toggle-btn:hover {
+  transform: scale(1.1);
+}
+
+.sidebar-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  color: white;
+}
+
+.sidebar-btn:hover {
+  background-color: rgba(59, 130, 246, 0.7);
+}
+
+.sidebar-btn.active {
+  background-color: #1e40af;
+  color: white;
+}
+
+.profile-btn {
+  background-color: white;
+  color: #2563eb;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+}
+
+.profile-btn:hover {
+  background-color: #ebf4ff;
+}
