@@ -153,7 +153,7 @@ const StaffDashboard = () => {
 
       {isSidebarOpen && (
         <button
-          className="fixed top-4 left-55 z-50 p-2 bg-white rounded-full shadow-md text-blue-600 text-sm md:hidden hover:scale-110 transition-transform"
+          className="fixed top-4 left-60 z-50 p-2 bg-white rounded-full shadow-md text-blue-600 text-sm md:hidden hover:scale-110 transition-transform"
           onClick={() => setSidebarOpen(false)}
         >
           <FaTimes />
