@@ -111,7 +111,6 @@ const StaffDashboard = () => {
         </button>
       )}
 
-
       <aside
         className={`fixed inset-y-0 left-0 bg-gradient-to-b from-blue-700 to-blue-500 text-white p-6 w-64 md:w-1/4 lg:w-1/5 xl:w-1/6 z-40 shadow-xl transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           } md:relative md:translate-x-0`}
@@ -159,8 +158,8 @@ const StaffDashboard = () => {
       </aside>
 
       <main className="flex-1 p-4">
-        <h1 className="text-2xl font-bold mb-4">Welcome, {user.username}</h1>
-        {activeTab === '' && (
+        <h1 className="text-2xl text-center font-bold mb-4">Welcome, {user.username}</h1>
+        {activeTab === 'dashboard' && (
           <>
             {/* Dashboard Stats */}
             <div className="grid bg-transparent grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
@@ -321,8 +320,6 @@ const StaffDashboard = () => {
           </>
         )}
 
-
-
         {activeTab === "shifting" && <ShiftComponent />}
       </main>
 
@@ -369,8 +366,6 @@ const StaffDashboard = () => {
           </div>
         </div>
       )}
-
-      {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
     </div>
   );
 };
