@@ -102,25 +102,12 @@ const StaffDashboard = () => {
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Toggle Button */}
-      {showToggleButton && !isSidebarOpen && (
-        <button
-          className="fixed top-4 left-4 z-50 p-2 bg-white rounded-full shadow-md text-blue-600 text-3xl md:hidden transition-transform hover:scale-110"
-          onClick={() => setSidebarOpen(true)}
-        >
-          <FaBars />
-        </button>
-      )}
-
       {isSidebarOpen && (
-        <button
-          className="fixed top-4 left-64 z-50 p-2 bg-white rounded-full shadow-md text-blue-600 text-3xl md:hidden transition-transform hover:scale-110"
+        <div
+          className="fixed inset-0 bg-black bg-opacity-40 z-30 md:hidden"
           onClick={() => setSidebarOpen(false)}
-        >
-          <FaTimes />
-        </button>
+        />
       )}
-
-
       <aside
         className={`fixed inset-y-0 left-0 bg-gradient-to-b from-blue-700 to-blue-500 text-white p-6 w-64 md:w-1/4 lg:w-1/5 xl:w-1/6 z-40 shadow-xl transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           } md:relative md:translate-x-0`}
@@ -153,6 +140,13 @@ const StaffDashboard = () => {
           </button>
         </nav>
       </aside>
+      {showToggleButton && !isSidebarOpen && (
+        <button onClick={() => setSidebarOpen(true)} className="..."> <FaBars /> </button>
+      )}
+
+      {isSidebarOpen && (
+        <button onClick={() => setSidebarOpen(false)} className="..."> <FaTimes /> </button>
+      )}
 
       <main className="flex-1 p-4 overflow-y-auto max-h-screen bg-gray-50">
         <h1 className="text-2xl text-center font-bold mb-6 text-gray-800">
