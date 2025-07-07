@@ -122,13 +122,13 @@ const AdminPanel = () => {
         ← Back
       </button>
 
-      <h1 className="text-2xl sm:text-3xl font-bold text-blue-600 text-center mb-6">
+      <h1 className="text-6xl sm:text-3xl font-bold text-blue-600 text-center mb-6">
         Admin Panel - Manage Users
       </h1>
 
       <div className="w-full mx-auto bg-white p-4 sm:p-6 rounded-lg shadow-md overflow-x-auto">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
-          <h2 className="text-lg sm:text-xl font-bold">Users List</h2>
+          <h2 className="text-3xl sm:text-xl font-bold">👤User Lists</h2>
           <button
             onClick={() => setIsAddingUser(true)}
             className="bg-green-500 text-white px-4 py-2 rounded text-sm sm:text-base"
