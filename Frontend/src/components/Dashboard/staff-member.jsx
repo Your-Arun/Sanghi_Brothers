@@ -144,127 +144,110 @@ const StaffDashboard = () => {
         </nav>
       </aside>
 
-      <main className="flex-1 p-4">
-        <h1 className="text-2xl text-center font-bold mb-4">Welcome, {user.username}</h1>
-        {activeTab === 'dashboard' && (
-          <>
-            {/* Dashboard Stats */}
-            <div className="grid bg-transparent grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
-              <div onClick={() => setActiveTab("complaint")} // 👈 Complaint tab open hoga
-                className="bg-blue-500 text-white p-6 rounded-lg shadow-md flex flex-col items-center">
-                <FaExclamationTriangle size={40} />
-                <h3 className="text-xl font-bold"  >Complaints</h3>
-                <p className="text-3xl font-semibold">{reports.length}</p>
-              </div>
-              <div onClick={() => setActiveTab("cashslip")} className="bg-green-500 text-white p-6 rounded-lg shadow-md flex flex-col items-center">
-                <FaMoneyBill size={40} />
-                <h3 className="text-xl font-bold">Cash Slips</h3>
-                <p className="text-3xl font-semibold">{cashslip.length}</p>
-              </div>
-              <div onClick={() => setActiveTab("shifting")} className="bg-yellow-500 text-white p-6 rounded-lg shadow-md flex flex-col items-center">
-                <FaTruck size={40} />
-                <h3 className="text-xl font-bold">Shifting Arrangements</h3>
-                <p className="text-3xl font-semibold"></p> {/* Replace with actual count if available */}
-              </div>
-              <div onClick={() => setActiveTab("lekhajokha")} className="bg-purple-500 text-white p-6 rounded-lg shadow-md flex flex-col items-center">
-                <BsOpencollective size={40} />
-                <h3 className="text-xl font-bold">Lekha Jokha</h3>
-                <p className="text-3xl font-semibold">{lekha.length}</p>
-              </div>
-            </div>
-          </>
-        )}
+      <main className="flex-1 p-4 overflow-y-auto max-h-screen">
+        <h1 className="text-2xl text-center font-bold mb-4 text-gray-800">
+          Welcome, <span className="text-blue-600">{user.username}</span>
+        </h1>
 
-        {activeTab === "complaint" && (
-          <div className="bg-white p-6 rounded-lg shadow-md ">
-            <div className="flex flex-col items-center justify-center sm:flex-row">
-              <div>
-                <h2 className="text-3xl font-bold mb-4 mt-4 text-blue-700">
-                  COMPLAINTS
-                </h2>
-              </div>
-              <div><img
-                src={addIcon}
-                alt="Create"
-                width={50}
-                className="ml-4 cursor-pointer transform transition hover:scale-110 hover:rotate-12"
-                onClick={() => (navigate('/report'))}
-              /></div>
+        {/* ---------------- Dashboard ---------------- */}
+        {activeTab === "dashboard" && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div
+              onClick={() => setActiveTab("complaint")}
+              className="card-dashboard bg-blue-500"
+            >
+              <FaExclamationTriangle size={36} />
+              <h3>Complaints</h3>
+              <p>{reports.length}</p>
             </div>
-            <div>
-              {loading ? (
-                <p className="text-gray-500 text-center mt-4">
-                  Loading complaints...
-                </p>
-              ) : reports.length > 0 ? (
-                <div className="flex flex-wrap justify-center gap-4 pb-3">
-                  {reports.map((report) => (
-                    <div
-                      key={report._id}
-                      className="w-48 p-4 border rounded-xl shadow-md bg-white hover:bg-gray-100 cursor-pointer transform hover:scale-105"
-                    >
-                      <h3 className="text-xl text-green-700 font-bold text-center">
-                        {report.title}
-                      </h3>
-                      <p className="text-md font-semibold text-center text-gray-800">
-                        📂 {report.department}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-gray-500 text-center mt-4 italic">
-                  No complaints available.
-                </p>
-              )}
+            <div
+              onClick={() => setActiveTab("cashslip")}
+              className="card-dashboard bg-green-500"
+            >
+              <FaMoneyBill size={36} />
+              <h3>Cash Slips</h3>
+              <p>{cashslip.length}</p>
+            </div>
+            <div
+              onClick={() => setActiveTab("shifting")}
+              className="card-dashboard bg-yellow-500"
+            >
+              <FaTruck size={36} />
+              <h3>Shifting</h3>
+              <p>-</p>
+            </div>
+            <div
+              onClick={() => setActiveTab("lekhajokha")}
+              className="card-dashboard bg-purple-500"
+            >
+              <BsOpencollective size={36} />
+              <h3>Lekha Jokha</h3>
+              <p>{lekha.length}</p>
             </div>
           </div>
         )}
 
-        {activeTab === "cashslip" && (
-          <>
-            {/* Title */}
-            <div className="bg-white p-4 rounded-lg shadow-md text-center text-3xl font-bold text-gray-800 mt-4 md:mt-0">
-              💵 CASH SLIPS
+        {/* ---------------- Complaints ---------------- */}
+        {activeTab === "complaint" && (
+          <div className="bg-white p-6 mt-6 rounded-lg shadow-lg">
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+              <h2 className="text-3xl font-bold text-blue-700">Complaints</h2>
+              <img
+                src={addIcon}
+                alt="Create"
+                width={50}
+                className="cursor-pointer transition-transform hover:scale-110 hover:rotate-12"
+                onClick={() => navigate("/report")}
+              />
             </div>
 
-            {/* Navigation Button */}
-            <div className="flex justify-center mt-4">
+            {loading ? (
+              <p className="text-gray-500 text-center mt-4">Loading complaints...</p>
+            ) : reports.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {reports.map((report) => (
+                  <div
+                    key={report._id}
+                    className="bg-gray-50 p-4 rounded-lg shadow hover:shadow-md transition cursor-pointer text-center"
+                  >
+                    <h3 className="text-lg font-bold text-green-700">{report.title}</h3>
+                    <p className="text-gray-800">📂 {report.department}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-center text-gray-500 italic mt-4">No complaints available.</p>
+            )}
+          </div>
+        )}
+
+        {/* ---------------- Cash Slip ---------------- */}
+        {activeTab === "cashslip" && (
+          <>
+            <div className="bg-white p-6 rounded-lg shadow-md mt-6 text-center">
+              <h2 className="text-3xl font-bold text-gray-800">💵 Cash Slips</h2>
               <button
                 onClick={() => navigate("/Cashslip")}
-                className="bg-purple-500 text-white flex items-center px-6 py-3 rounded-lg shadow-lg hover:bg-purple-600 transform hover:scale-105 transition-all ease-in-out"
-                aria-label="Cash Slip"
+                className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-lg shadow hover:bg-purple-700 transition-transform hover:scale-105"
               >
-                <span className="text-xl">💵</span>
-                <span className="ml-2 text-lg font-semibold">Submit Cash Slip</span>
+                Submit New Cash Slip
               </button>
             </div>
 
-            {/* Cash Slip Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
               {cashslip.map((cashSlip, index) => (
                 <div
                   key={index}
-                  className="bg-white shadow-md p-6 rounded-lg border border-gray-200 hover:shadow-lg transition-all"
+                  className="bg-white border p-4 rounded-lg shadow hover:shadow-md transition"
                 >
-                  <h3 className="text-xl font-semibold text-blue-600 mb-2">{cashSlip.name}</h3>
-                  <p className="text-gray-700">
-                    <strong className="text-gray-900">Shift:</strong> {cashSlip.shift}
-                  </p>
-                  <p className="text-gray-700">
-                    <strong className="text-gray-900">Nozzle No:</strong> {cashSlip.nozzleNo}
-                  </p>
-                  <p className="text-gray-700">
-                    <strong className="text-gray-900">Opening:</strong> {cashSlip.openingReading}
-                  </p>
-                  <p className="text-gray-700">
-                    <strong className="text-gray-900">Closing:</strong> {cashSlip.closingReading}
-                  </p>
-                  <p className="text-gray-700">
-                    <strong className="text-gray-900">Sales:</strong> {cashSlip.salesInLtr} L
-                  </p>
-                  <p className="text-gray-900 text-lg font-semibold mt-2">
-                    <strong>Total:</strong> ₹{cashSlip.total}
+                  <h3 className="text-blue-600 font-bold text-lg mb-2">{cashSlip.name}</h3>
+                  <p><strong>Shift:</strong> {cashSlip.shift}</p>
+                  <p><strong>Nozzle No:</strong> {cashSlip.nozzleNo}</p>
+                  <p><strong>Opening:</strong> {cashSlip.openingReading}</p>
+                  <p><strong>Closing:</strong> {cashSlip.closingReading}</p>
+                  <p><strong>Sales:</strong> {cashSlip.salesInLtr} L</p>
+                  <p className="mt-2 font-bold text-lg text-gray-900">
+                    Total: ₹{cashSlip.total}
                   </p>
                 </div>
               ))}
@@ -272,43 +255,44 @@ const StaffDashboard = () => {
           </>
         )}
 
+        {/* ---------------- Lekha Jokha ---------------- */}
         {activeTab === "lekhajokha" && (
           <>
-            <div className="bg-white flex p-6 rounded-lg shadow-md text-center text-3xl font-bold text-gray-800 justify-center gap-8">
-              <div className="flex flex-col mt-4 gap-4 items-center justify-center sm:flex-row sm:mt-0">
-                <div>⛽Lekha Jokha</div>
-                <div className="cursor-pointer" onClick={() => (navigate("/newlekhajokha"))}><IoCreateSharp />
+            <div className="bg-white flex items-center justify-between p-6 rounded-lg shadow-md mt-6">
+              <h2 className="text-3xl font-bold text-gray-800">⛽ Lekha Jokha</h2>
+              <button
+                onClick={() => navigate("/newlekhajokha")}
+                className="text-2xl text-blue-600 hover:text-blue-800"
+              >
+                <IoCreateSharp />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+              {lekha.map((item) => (
+                <div
+                  key={item.id}
+                  className="bg-white p-4 rounded-lg shadow-md border hover:shadow-lg transition text-center"
+                >
+                  <h3 className="text-blue-600 font-bold text-lg">{item.username}</h3>
+                  <p className="text-red-500">{item.department}</p>
+                  <p className="text-gray-600">
+                    {new Date(item.date).toLocaleDateString("en-GB")}
+                  </p>
                 </div>
-              </div>
+              ))}
             </div>
-            <div>
-              {/* Reports Grid */}
-              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-4xl">
-                {lekha.map((item) => (
-                  <div
-                    key={item.id}
-                    className="bg-white shadow-md p-4 rounded-lg border border-gray-200 hover:shadow-lg transition-all text-center"
-                  >
-                    <h3 className="text-lg font-bold text-blue-600">{item.username}</h3>
-                    <p className="text-md font-medium text-red-500">{item.department}</p>
-                    <p className="text-md font-medium text-gray-700">
-                      {new Date(item.date).toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-            </div>
-
           </>
         )}
 
-        {activeTab === "shifting" && <ShiftComponent />}
+        {/* ---------------- Shifting ---------------- */}
+        {activeTab === "shifting" && (
+          <div className="mt-4">
+            <ShiftComponent />
+          </div>
+        )}
       </main>
+
 
       {showModal2 && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">

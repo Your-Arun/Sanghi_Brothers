@@ -196,3 +196,8 @@ button {
 .profile-btn:hover {
   background-color: #ebf4ff;
 }
+@layer components {
+  .card-dashboard {
+    @apply text-white p-6 rounded-xl shadow-md flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-all gap-2 text-center;
+  }
+}
