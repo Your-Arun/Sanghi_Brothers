@@ -153,7 +153,7 @@ const StaffDashboard = () => {
 
       {isSidebarOpen && (
         <button
-          className="fixed top-4 left-60 z-50 p-2 bg-white rounded-full shadow-md text-blue-600 text-sm md:hidden hover:scale-110 transition-transform"
+          className="fixed top-4 left-4 z-50 p-2 bg-white rounded-full shadow-md text-blue-600 text-sm md:hidden hover:scale-110 transition-transform"
           onClick={() => setSidebarOpen(false)}
         >
           <FaTimes />
@@ -162,7 +162,7 @@ const StaffDashboard = () => {
 
       <main className="flex-1 p-4 overflow-y-auto max-h-screen bg-gray-50">
         <h1 className="text-2xl text-center font-bold mb-6 text-gray-800">
-          Welcome, <span className="text-blue-600 mb-10">{user.username}</span>
+          Welcome, <span className="text-blue-600">{user.username}</span>
         </h1>
 
         {/* ---------------- Dashboard ---------------- */}
@@ -199,21 +199,13 @@ const StaffDashboard = () => {
                 onClick={() => setActiveTab(item.id)}
                 className="cursor-pointer rounded-lg shadow-md overflow-hidden bg-white border border-gray-200 transition-transform hover:scale-105"
               >
-                {/* Yellow curved top */}
                 <div className="bg-yellow-400 p-4 relative">
                   <div className="text-black text-center">{item.icon}</div>
-                  <div className="absolute bottom-0 left-0 w-full h-3 bg-white rounded-t-full"></div>
+                  <div className="absolute bottom-0 left-0 w-full h-3 bg-white rounded-t-full" />
                 </div>
-
-                {/* Bottom content */}
                 <div className="p-4 text-center">
                   <h3 className="text-lg font-bold text-gray-800">{item.label}</h3>
-                  <p className="text-2xl font-semibold text-gray-700">
-                    {item.count}
-                    {item.id === "cashslip" || item.id === "lekhajokha" ? (
-                      <span className="text-sm text-gray-500 ml-1">entries</span>
-                    ) : null}
-                  </p>
+                  <p className="text-2xl font-semibold text-gray-700">{item.count}</p>
                 </div>
               </div>
             ))}
@@ -223,36 +215,27 @@ const StaffDashboard = () => {
         {/* ---------------- Complaints ---------------- */}
         {activeTab === "complaint" && (
           <>
-          <div className="bg-white p-6 mt-6 rounded-lg shadow-lg">
-            <h2 className="text-3xl font-bold text-blue-700">📒 Complaints</h2>
-            <img
-              src={addIcon}
-              alt="Create"
-              width={50}
-              className="mt-4 bg-purple-600 text-white px-6 text-2xl py-2 rounded-lg shadow hover:bg-purple-700 transition-transform hover:scale-105"
-              onClick={() => navigate("/report")}
-            />
+            <div className="bg-white p-6 rounded-lg shadow-md mt-6 text-center">
+              <h2 className="text-3xl font-bold text-gray-800">📒 Complaints</h2>
+              <button
+                onClick={() => navigate("/report")}
+                className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-lg shadow hover:bg-purple-700 transition-transform hover:scale-105"
+              >
+                Create Complaint
+              </button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-              {loading ? (
-                <p className="text-gray-500 text-center mt-4">Loading complaints...</p>
-              ) : reports.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-                  {reports.map((report) => (
-                    <div
-                      key={report._id}
-                      className="bg-gray-50 p-4 rounded-lg shadow hover:shadow-md transition cursor-pointer text-center"
-                    >
-                      <h3 className="text-lg font-bold text-green-700">{report.title}</h3>
-                      <p className="text-gray-800">📂 {report.department}</p>
-                    </div>
-                  ))}
+              {reports.map((report) => (
+                <div
+                  key={report._id}
+                  className="bg-white p-4 rounded-lg shadow-md border hover:shadow-lg transition text-center"
+                >
+                  <h3 className="text-green-700 font-bold text-lg">{report.title}</h3>
+                  <p className="text-gray-800">📂 {report.department}</p>
                 </div>
-              ) : (
-                <p className="text-center text-gray-500 italic mt-4">No complaints available.</p>
-              )}
+              ))}
             </div>
-            </>
+          </>
         )}
 
         {/* ---------------- Cash Slip ---------------- */}
@@ -292,17 +275,17 @@ const StaffDashboard = () => {
         {/* ---------------- Lekha Jokha ---------------- */}
         {activeTab === "lekhajokha" && (
           <>
-            <div className="bg-white flex items-center justify-between p-6 rounded-lg shadow-md mt-6">
+            <div className="bg-white p-6 rounded-lg shadow-md mt-6 text-center">
               <h2 className="text-3xl font-bold text-gray-800">⛽ Lekha Jokha</h2>
               <button
                 onClick={() => navigate("/newlekhajokha")}
                 className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-lg shadow hover:bg-purple-700 transition-transform hover:scale-105"
               >
-                <IoCreateSharp />
+                Create Entry
               </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
               {lekha.map((item) => (
                 <div
                   key={item.id}
@@ -321,11 +304,17 @@ const StaffDashboard = () => {
 
         {/* ---------------- Shifting ---------------- */}
         {activeTab === "shifting" && (
-          <div className="mt-4">
-            <ShiftComponent />
-          </div>
+          <>
+            <div className="bg-white p-6 rounded-lg shadow-md mt-6 text-center">
+              <h2 className="text-3xl font-bold text-gray-800">🚚 Shifting Arrangement</h2>
+            </div>
+            <div className="mt-6">
+              <ShiftComponent />
+            </div>
+          </>
         )}
       </main>
+
 
 
 
