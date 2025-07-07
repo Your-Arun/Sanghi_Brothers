@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import axiosInstance from '../Dashboard/axiosInstance';
 import { Link, useNavigate } from "react-router-dom";
 import signupBg from "/petrol.png";
+import AboutUs from "./AboutsUs";
+import Services from "./ServicesPage";
+import ContactUs from "./ContactUs";
+import Footer from "./Footer";
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -77,7 +81,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-between min-h-screen">
+    <div className="flex flex-col md:flex-row items-center md:mt-6 justify-between min-h-screen">
       {/* Left Form Section */}
       <div className="w-full md:w-1/2 flex items-center justify-center px-6">
         <form
@@ -209,6 +213,13 @@ const Signup = () => {
           }}
         />
       </div>
+
+
+      {/* Other Sections */}
+      <AboutUs />
+      <Services />
+      <ContactUs />
+      <Footer />
     </div>
   );
 };
