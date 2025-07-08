@@ -5,7 +5,7 @@ import UserContext from "./UserContext";
 import axiosInstance from "../Dashboard/axiosInstance";
 import { toast } from "react-toastify";
 
-const Login = ({ embedMode }) => {
+const Login = ({ embedMode, onClose }) => {
   const { setUser } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -117,9 +117,10 @@ const Login = ({ embedMode }) => {
             </button>
 
             <p className="mt-3 text-sm text-center">
-              Don’t have an account?{" "}
-              <button onClick={onClose} className="text-blue-500 underline">Close</button>
-            </p>
+  Don’t have an account?{" "}
+  <button onClick={onClose} className="text-blue-500 underline">Close</button>
+</p>
+
 
             <p className="mt-2 text-center text-gray-600">
               Forgot your password?{" "}

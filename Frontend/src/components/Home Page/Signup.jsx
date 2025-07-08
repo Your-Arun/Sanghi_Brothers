@@ -3,7 +3,7 @@ import axiosInstance from '../Dashboard/axiosInstance';
 import {  useNavigate } from "react-router-dom";
 
 
-const Signup = ({ embedMode }) => {
+const Signup = ({ embedMode, onClose }) => {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -194,10 +194,11 @@ const Signup = ({ embedMode }) => {
               </>
             )}
 
-            <p className="mt-3 text-sm text-center">
-              Already have an account?{" "}
-              <button onClick={onClose} className="text-blue-500 underline">Close</button>
-            </p>
+<p className="mt-3 text-sm text-center">
+  Don’t have an account?{" "}
+  <button onClick={onClose} className="text-blue-500 underline">Close</button>
+</p>
+
           </form>
         </div>
       </div>
