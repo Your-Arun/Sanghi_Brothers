@@ -83,7 +83,7 @@ const Signup = ({ embedMode, onClose }) => {
         onSubmit={isValidInviteCode ? handleSubmit : handleInviteCodeVerification}
       >
         <h2 className="text-5xl font-bold text-center text-blue-600 mb-6">Signup</h2>
-  
+
         {!isValidInviteCode ? (
           <>
             <input
@@ -107,7 +107,7 @@ const Signup = ({ embedMode, onClose }) => {
             <h1 className="text-xl font-semibold text-green-600 text-center mb-4">
               Welcome as <span className="uppercase text-red-600">{type}❗</span>
             </h1>
-  
+
             <input
               type="text"
               placeholder="Full Name"
@@ -116,7 +116,7 @@ const Signup = ({ embedMode, onClose }) => {
               onChange={(e) => setName(e.target.value)}
               required
             />
-  
+
             <input
               type="text"
               placeholder="Username"
@@ -125,7 +125,7 @@ const Signup = ({ embedMode, onClose }) => {
               onChange={(e) => setUsername(e.target.value)}
               required
             />
-  
+
             <input
               type="email"
               placeholder="Email"
@@ -134,7 +134,7 @@ const Signup = ({ embedMode, onClose }) => {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-  
+
             <input
               type="tel"
               placeholder="Phone"
@@ -143,7 +143,7 @@ const Signup = ({ embedMode, onClose }) => {
               onChange={(e) => setPhone(e.target.value)}
               required
             />
-  
+
             <div className="relative mb-4">
               <input
                 type={showPassword ? "text" : "password"}
@@ -161,7 +161,7 @@ const Signup = ({ embedMode, onClose }) => {
                 {showPassword ? "Hide" : "Show"}
               </button>
             </div>
-  
+
             {type !== "staff" && (
               <select
                 className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
@@ -175,7 +175,7 @@ const Signup = ({ embedMode, onClose }) => {
                 <option value="backoffice">BACK OFFICE</option>
               </select>
             )}
-  
+
             <button
               type="submit"
               className="w-full bg-green-500 text-white px-3 py-3 rounded-md hover:bg-green-600 transition duration-200"
@@ -185,16 +185,17 @@ const Signup = ({ embedMode, onClose }) => {
             </button>
           </>
         )}
-  
-        <p className="mt-3 text-sm text-center">
-          <button onClick={onClose} type="button" className="text-blue-500 underline">
-            Close
+
+        <div className="flex justify-end mb-2">
+          <button onClick={onClose} className="text-gray-600 hover:text-black text-sm font-semibold">
+            ✖
           </button>
-        </p>
+        </div>
+
       </form>
     </div>
   );
-  
+
 };
 
 export default Signup;

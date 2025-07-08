@@ -116,11 +116,12 @@ const Login = ({ embedMode, onClose }) => {
           </Link>
         </p>
   
-        <p className="mt-3 text-sm text-center">
-          <button type="button" onClick={onClose} className="text-blue-500 underline">
-            Close
-          </button>
-        </p>
+        <div className="flex justify-end mb-2">
+  <button onClick={onClose} className="text-gray-600 hover:text-black text-sm font-semibold">
+    ✖
+  </button>
+</div>
+
       </form>
     </div>
   );
