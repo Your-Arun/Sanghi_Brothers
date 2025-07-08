@@ -121,11 +121,9 @@ const Login = ({ onClose }) => {
               {loading ? "Logging in..." : "Login"}
             </button>
 
-            <p className="mt-4 text-center text-gray-600">
+            <p className="mt-3 text-sm text-center">
               Don’t have an account?{" "}
-              <Link to="/signup" className="text-blue-500 hover:underline">
-                Sign up
-              </Link>
+              <button onClick={onClose} className="text-blue-500 underline">Close</button>
             </p>
 
             <p className="mt-2 text-center text-gray-600">
@@ -135,17 +133,6 @@ const Login = ({ onClose }) => {
               </Link>
             </p>
           </form>
-        </div>
-
-        {/* Right Image Side */}
-        <div className="hidden md:block w-full md:w-1/2 h-[500px] relative overflow-hidden">
-          <div
-            className="absolute inset-0 bg-no-repeat bg-cover bg-center"
-            style={{
-              backgroundImage: `url(${loginBg})`,
-              clipPath: "polygon(10% 0%, 100% 0%, 100% 100%, 0% 100%)",
-            }}
-          />
         </div>
 
 

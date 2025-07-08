@@ -198,25 +198,14 @@ const Signup = ({ onClose }) => {
               </>
             )}
 
-            <p className="mt-4 text-center text-gray-600">
+            <p className="mt-3 text-sm text-center">
               Already have an account?{" "}
-              <Link to="/login" className="text-blue-500 hover:underline">
-                Login
-              </Link>
+              <button onClick={onClose} className="text-blue-500 underline">Close</button>
             </p>
           </form>
         </div>
 
-        {/* Right Image Section */}
-        <div className="hidden md:block w-full md:w-1/2 h-[500px] relative overflow-hidden">
-          <div
-            className="absolute inset-0 bg-no-repeat bg-cover bg-center"
-            style={{
-              backgroundImage: `url(${signupBg})`,
-              clipPath: "polygon(10% 0%, 100% 0%, 100% 100%, 0% 100%)",
-            }}
-          />
-        </div>
+       
 
 
 

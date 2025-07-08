@@ -18,6 +18,7 @@ const Home = () => {
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-6 leading-snug">
             We are happily saying <br /> we are awesome
           </h1>
+
           <p className="text-gray-600 mb-8 text-base sm:text-lg max-w-md mx-auto md:mx-0 font-semibold">
             THIS IS NOT THE YEAR YOU GET EVERYTHING YOU WANT, THIS IS THE YEAR TO APPRECIATE EVERYTHING YOU HAVE.
           </p>
@@ -38,21 +39,29 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Right Section Image */}
-        <div className="hidden md:block w-full md:w-1/2 h-72 sm:h-96 md:h-[500px] relative overflow-hidden">
+        {/* Right Section with Image and Floating Form */}
+        <div className="relative hidden md:block w-full md:w-1/2 h-[500px]">
           <div
-            className="absolute inset-0 bg-no-repeat bg-cover bg-center"
+            className="absolute inset-0 bg-cover bg-center"
             style={{
               backgroundImage: `url(${homeImage})`,
               clipPath: "polygon(10% 0%, 100% 0%, 100% 100%, 0% 100%)",
             }}
           />
+
+          {/* Floating Login or Signup Form */}
+          {activeForm === "login" && (
+            <div className="absolute top-8 right-8 bg-white bg-opacity-90 p-6 rounded-lg shadow-xl w-[90%] max-w-sm">
+              <Login onClose={() => setActiveForm(null)} />
+            </div>
+          )}
+          {activeForm === "signup" && (
+            <div className="absolute top-8 right-8 bg-white bg-opacity-90 p-6 rounded-lg shadow-xl w-[90%] max-w-sm">
+              <Signup onClose={() => setActiveForm(null)} />
+            </div>
+          )}
         </div>
       </div>
-
-      {/* Conditionally Render Login or Signup */}
-      {activeForm === "login" && <Login onClose={() => setActiveForm(null)} />}
-      {activeForm === "signup" && <Signup onClose={() => setActiveForm(null)} />}
 
       {/* Other Sections */}
       <AboutUs />
