@@ -77,133 +77,124 @@ const Signup = ({ embedMode, onClose }) => {
   };
 
   return (
-
-
-    <>
-
-      <div className="flex flex-col md:flex-row items-center justify-between">
-        {/* Left Form Section */}
-        <div className="w-full md:w-1/2 flex items-center justify-center px-6">
-          <form
-            className="bg-white bg-opacity-60 p-6 md:p-8 rounded-lg shadow-xl w-full max-w-sm md:max-w-md"
-            onSubmit={isValidInviteCode ? handleSubmit : handleInviteCodeVerification}
-          >
-            <h2 className="text-5xl font-bold text-center text-blue-600 mb-6">
-              Signup
-            </h2>
-
-            {!isValidInviteCode ? (
-              <>
-                <input
-                  type="text"
-                  placeholder="Enter Invitation Code"
-                  className="w-full px-3 py-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
-                  value={inviteCode}
-                  onChange={(e) => setInviteCode(e.target.value)}
-                  required
-                />
-                <button
-                  type="submit"
-                  className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-200"
-                  disabled={loading}
-                >
-                  {loading ? "Verifying..." : "Verify Invitation Code"}
-                </button>
-              </>
-            ) : (
-              <>
-                <h1 className="text-xl font-semibold text-green-600 text-center mb-4">
-                  Welcome as <span className="uppercase text-red-600">{type}❗</span>
-                </h1>
-
-                <input
-                  type="text"
-                  placeholder="Full Name"
-                  className="w-full px-3 py-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
-
-                <input
-                  type="text"
-                  placeholder="Username"
-                  className="w-full px-3 py-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                />
-
-                <input
-                  type="email"
-                  placeholder="Email"
-                  className="w-full px-3 py-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-
-                <input
-                  type="tel"
-                  placeholder="Phone"
-                  className="w-full px-3 py-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  required
-                />
-
-                <div className="relative mb-4">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Password"
-                    className="w-full px-3 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                  <button
-                    type="button"
-                    className="absolute top-1/2 right-3 text-gray-600 text-sm cursor-pointer bg-transparent"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? "Hide" : "Show"}
-                  </button>
-                </div>
-
-                {type !== "staff" && (
-                  <select
-                    className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                    value={department}
-                    onChange={(e) => setDepartment(e.target.value)}
-                    required
-                  >
-                    <option value="">Select Department</option>
-                    <option value="manager">MANAGER</option>
-                    <option value="accounts/finance">ACCOUNTS/FINANCE</option>
-                    <option value="backoffice">BACK OFFICE</option>
-                  </select>
-                )}
-
-                <button
-                  type="submit"
-                  className="w-full bg-green-500 text-white px-3 py-3 rounded-md hover:bg-green-600 transition duration-200"
-                  disabled={loading}
-                >
-                  {loading ? "Signing up..." : "Signup"}
-                </button>
-              </>
+    <div className="w-full">
+      <form
+        className="bg-white bg-opacity-90 backdrop-blur-md p-6 md:p-8 rounded-lg shadow-xl w-full max-w-sm md:max-w-md mx-auto"
+        onSubmit={isValidInviteCode ? handleSubmit : handleInviteCodeVerification}
+      >
+        <h2 className="text-5xl font-bold text-center text-blue-600 mb-6">Signup</h2>
+  
+        {!isValidInviteCode ? (
+          <>
+            <input
+              type="text"
+              placeholder="Enter Invitation Code"
+              className="w-full px-3 py-3 mb-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
+              value={inviteCode}
+              onChange={(e) => setInviteCode(e.target.value)}
+              required
+            />
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-200"
+              disabled={loading}
+            >
+              {loading ? "Verifying..." : "Verify Invitation Code"}
+            </button>
+          </>
+        ) : (
+          <>
+            <h1 className="text-xl font-semibold text-green-600 text-center mb-4">
+              Welcome as <span className="uppercase text-red-600">{type}❗</span>
+            </h1>
+  
+            <input
+              type="text"
+              placeholder="Full Name"
+              className="w-full px-3 py-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+  
+            <input
+              type="text"
+              placeholder="Username"
+              className="w-full px-3 py-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+  
+            <input
+              type="email"
+              placeholder="Email"
+              className="w-full px-3 py-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+  
+            <input
+              type="tel"
+              placeholder="Phone"
+              className="w-full px-3 py-3 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              required
+            />
+  
+            <div className="relative mb-4">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                className="w-full px-3 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                className="absolute top-1/2 right-3 text-gray-600 text-sm cursor-pointer bg-transparent"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
+            </div>
+  
+            {type !== "staff" && (
+              <select
+                className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                value={department}
+                onChange={(e) => setDepartment(e.target.value)}
+                required
+              >
+                <option value="">Select Department</option>
+                <option value="manager">MANAGER</option>
+                <option value="accounts/finance">ACCOUNTS/FINANCE</option>
+                <option value="backoffice">BACK OFFICE</option>
+              </select>
             )}
-
-            <p className="mt-3 text-sm text-center">
-              
-              <button onClick={onClose} className="text-blue-500 underline">Close</button>
-            </p>
-
-          </form>
-        </div>
-      </div>
-    </>
+  
+            <button
+              type="submit"
+              className="w-full bg-green-500 text-white px-3 py-3 rounded-md hover:bg-green-600 transition duration-200"
+              disabled={loading}
+            >
+              {loading ? "Signing up..." : "Signup"}
+            </button>
+          </>
+        )}
+  
+        <p className="mt-3 text-sm text-center">
+          <button onClick={onClose} type="button" className="text-blue-500 underline">
+            Close
+          </button>
+        </p>
+      </form>
+    </div>
   );
+  
 };
 
 export default Signup;

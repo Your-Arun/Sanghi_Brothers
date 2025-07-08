@@ -63,77 +63,68 @@ const Login = ({ embedMode, onClose }) => {
   };
 
   return (
-
-    <>
-      <div className="flex flex-col md:flex-row items-center justify-between">
-        {/* Left Form Side */}
-        <div className="w-full md:w-1/2 flex justify-center items-center px-6">
-          <form
-            className="bg-white bg-opacity-60 p-6 md:p-8 rounded-lg shadow-xl w-full max-w-sm md:max-w-md"
-            onSubmit={handleSubmit}
+    <div className="w-full">
+      <form
+        className="bg-white bg-opacity-90 backdrop-blur-md p-6 md:p-8 rounded-lg shadow-xl w-full max-w-sm md:max-w-md mx-auto"
+        onSubmit={handleSubmit}
+      >
+        <h2 className="text-5xl font-bold mb-6 text-center text-blue-600">
+          Login
+        </h2>
+  
+        <input
+          type="email"
+          placeholder="Email (case sensitive)"
+          className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+  
+        {/* Password Field */}
+        <div className="relative mb-4">
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            className="w-full px-3 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 text-sm"
+            aria-label={showPassword ? "Hide password" : "Show password"}
           >
-            <h2 className="text-5xl font-bold mb-6 text-center text-blue-600">
-              Login
-            </h2>
-
-            <input
-              type="email"
-              placeholder="Email (case sensitive)"
-              className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-
-            {/* Password Field */}
-            <div className="passwordinput">
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                className="passwordinput-field"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="buttonn"
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? (
-                  <EyeOff className="icon-eye" size={20} />
-                ) : (
-                  <Eye className="icon-eye" size={20} />
-                )}
-              </button>
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-200 disabled:opacity-50"
-              disabled={loading}
-            >
-              {loading ? "Logging in..." : "Login"}
-            </button>
-
-
-
-            <p className="mt-2 text-center text-gray-600">
-              Forgot your password?{" "}
-              <Link to="/forgot-password" className="text-blue-500 hover:underline">
-                Reset it here
-              </Link>
-            </p>
-
-            <p className="mt-3 text-sm text-center">
-              <button onClick={onClose} className="text-blue-500 underline">Close</button>
-            </p>
-
-          </form>
+            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+          </button>
         </div>
-      </div>
-    </>
+  
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-200 disabled:opacity-50"
+          disabled={loading}
+        >
+          {loading ? "Logging in..." : "Login"}
+        </button>
+  
+        <p className="mt-2 text-center text-gray-600">
+          Forgot your password?{" "}
+          <Link to="/forgot-password" className="text-blue-500 hover:underline">
+            Reset it here
+          </Link>
+        </p>
+  
+        <p className="mt-3 text-sm text-center">
+          <button type="button" onClick={onClose} className="text-blue-500 underline">
+            Close
+          </button>
+        </p>
+      </form>
+    </div>
   );
+  
 };
 
 export default Login;

@@ -51,18 +51,17 @@ const Home = () => {
             }}
           ></div>
 
-          {/* Overlaid Auth Form */}
+          {/* Overlaid Form */}
           {authMode && (
-            <div className="absolute top-10 left-1/2 transform -translate-x-1/2 w-[90%] sm:w-[80%] md:w-[75%] lg:w-[60%] xl:w-[50%]">
-              <div className="bg-white bg-opacity-90 backdrop-blur-md p-6 sm:p-8 rounded-lg shadow-2xl">
-                {authMode === "login" ? (
-                  <Login embedMode onClose={() => setAuthMode(null)} />
-                ) : (
-                  <Signup embedMode onClose={() => setAuthMode(null)} />
-                )}
-              </div>
+            <div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-[90%] sm:w-[80%] md:w-[75%] lg:w-[60%] xl:w-[50%] z-20">
+              {authMode === "login" ? (
+                <Login embedMode onClose={() => setAuthMode(null)} />
+              ) : (
+                <Signup embedMode onClose={() => setAuthMode(null)} />
+              )}
             </div>
           )}
+
         </div>
 
       </div>
