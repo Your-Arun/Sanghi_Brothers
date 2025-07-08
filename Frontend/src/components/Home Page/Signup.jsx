@@ -7,7 +7,7 @@ import Services from "./ServicesPage";
 import ContactUs from "./ContactUs";
 import Footer from "./Footer";
 
-const Signup = () => {
+const Signup = ({ onClose }) => {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");

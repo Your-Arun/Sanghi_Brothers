@@ -10,7 +10,7 @@ import Services from "./ServicesPage";
 import ContactUs from "./ContactUs";
 import Footer from "./Footer";
 
-const Login = () => {
+const Login = ({ onClose }) => {
   const { setUser } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
