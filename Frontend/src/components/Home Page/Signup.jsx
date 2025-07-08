@@ -81,7 +81,7 @@ const Signup = ({ embedMode, onClose }) => {
 
     <>
 
-      <div className="w-full">
+      <div className="flex flex-col md:flex-row items-center justify-between">
         {/* Left Form Section */}
         <div className="w-full md:w-1/2 flex items-center justify-center px-6">
           <form
