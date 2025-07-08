@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import axiosInstance from '../Dashboard/axiosInstance';
-import { Link, useNavigate } from "react-router-dom";
-import signupBg from "/petrol.png";
-import AboutUs from "./AboutsUs";
-import Services from "./ServicesPage";
-import ContactUs from "./ContactUs";
-import Footer from "./Footer";
+import {  useNavigate } from "react-router-dom";
+
 
 const Signup = ({ onClose }) => {
   const [name, setName] = useState("");
@@ -204,17 +200,7 @@ const Signup = ({ onClose }) => {
             </p>
           </form>
         </div>
-
-       
-
-
-
       </div>
-      {/* Other Sections */}
-      <AboutUs />
-      <Services />
-      <ContactUs />
-      <Footer />
     </>
   );
 };

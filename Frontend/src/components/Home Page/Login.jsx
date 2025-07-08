@@ -4,11 +4,6 @@ import { Eye, EyeOff } from "lucide-react";
 import UserContext from "./UserContext";
 import axiosInstance from "../Dashboard/axiosInstance";
 import { toast } from "react-toastify";
-import loginBg from "/petrol.png";
-import AboutUs from "./AboutsUs";
-import Services from "./ServicesPage";
-import ContactUs from "./ContactUs";
-import Footer from "./Footer";
 
 const Login = ({ onClose }) => {
   const { setUser } = useContext(UserContext);
@@ -134,16 +129,7 @@ const Login = ({ onClose }) => {
             </p>
           </form>
         </div>
-
-
-
-
       </div>
-      {/* Other Sections */}
-      <AboutUs />
-      <Services />
-      <ContactUs />
-      <Footer />
     </>
   );
 };
