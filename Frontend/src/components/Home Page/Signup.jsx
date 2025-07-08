@@ -155,7 +155,7 @@ const Signup = ({ embedMode, onClose }) => {
               />
               <button
                 type="button"
-                className="absolute top-1/2 right-3 text-gray-600 text-sm cursor-pointer bg-transparent"
+                className="absolute top-1/2 right-3 text-gray-600 text-sm cursor-pointer bg-white"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? "Hide" : "Show"}
@@ -186,8 +186,8 @@ const Signup = ({ embedMode, onClose }) => {
           </>
         )}
 
-        <div className="flex justify-end mb-2 bg-transparent">
-          <button onClick={onClose} className="text-gray-600 hover:text-black text-sm font-semibold">
+        <div className="flex justify-end mb-2">
+          <button onClick={onClose} className="text-gray-600 bg-transparent hover:text-black text-sm font-semibold">
             ✖
           </button>
         </div>
