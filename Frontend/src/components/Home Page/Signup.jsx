@@ -155,7 +155,7 @@ const Signup = ({ embedMode, onClose }) => {
               />
               <button
                 type="button"
-                className="absolute top-1/2 right-3 text-gray-600 text-sm cursor-pointer bg-white"
+                className="absolute butoonn top-1/2 right-3 text-gray-600 text-sm cursor-pointer"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? "Hide" : "Show"}
