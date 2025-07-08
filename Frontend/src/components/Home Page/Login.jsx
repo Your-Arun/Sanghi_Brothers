@@ -5,7 +5,7 @@ import UserContext from "./UserContext";
 import axiosInstance from "../Dashboard/axiosInstance";
 import { toast } from "react-toastify";
 
-const Login = ({ onClose }) => {
+const Login = ({ embedMode }) => {
   const { setUser } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
