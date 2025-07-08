@@ -186,7 +186,7 @@ const Signup = ({ embedMode, onClose }) => {
           </>
         )}
 
-        <div className="flex justify-end mb-2">
+        <div className="flex justify-end mb-2 bg-transparent">
           <button onClick={onClose} className="text-gray-600 hover:text-black text-sm font-semibold">
             ✖
           </button>

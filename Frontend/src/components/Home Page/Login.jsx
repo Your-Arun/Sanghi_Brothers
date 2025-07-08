@@ -71,7 +71,7 @@ const Login = ({ embedMode, onClose }) => {
         <h2 className="text-5xl font-bold mb-6 text-center text-blue-600">
           Login
         </h2>
-  
+
         <input
           type="email"
           placeholder="Email (case sensitive)"
@@ -80,7 +80,7 @@ const Login = ({ embedMode, onClose }) => {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-  
+
         {/* Password Field */}
         <div className="relative mb-4">
           <input
@@ -100,7 +100,7 @@ const Login = ({ embedMode, onClose }) => {
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
         </div>
-  
+
         <button
           type="submit"
           className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-200 disabled:opacity-50"
@@ -108,24 +108,24 @@ const Login = ({ embedMode, onClose }) => {
         >
           {loading ? "Logging in..." : "Login"}
         </button>
-  
+
         <p className="mt-2 text-center text-gray-600">
           Forgot your password?{" "}
           <Link to="/forgot-password" className="text-blue-500 hover:underline">
             Reset it here
           </Link>
         </p>
-  
-        <div className="flex justify-end mb-2">
-  <button onClick={onClose} className="text-gray-600 hover:text-black text-sm font-semibold">
-    ✖
-  </button>
-</div>
+
+        <div className="flex justify-end mb-2 bg-transparent ">
+          <button onClick={onClose} className="text-gray-600 hover:text-black text-sm font-semibold">
+            ✖
+          </button>
+        </div>
 
       </form>
     </div>
   );
-  
+
 };
 
 export default Login;

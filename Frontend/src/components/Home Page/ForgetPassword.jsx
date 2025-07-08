@@ -129,7 +129,7 @@ const ForgotPassword = () => {
           {step === 1 ? (
             <>
               Remembered your password?{" "}
-              <Link to="/home" className="text-blue-500 hover:underline">
+              <Link to="/" className="text-blue-500 hover:underline">
                 Login
               </Link>
             </>
