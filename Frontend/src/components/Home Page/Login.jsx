@@ -116,10 +116,6 @@ const Login = ({ embedMode, onClose }) => {
               {loading ? "Logging in..." : "Login"}
             </button>
 
-            <p className="mt-3 text-sm text-center">
-  Don’t have an account?{" "}
-  <button onClick={onClose} className="text-blue-500 underline">Close</button>
-</p>
 
 
             <p className="mt-2 text-center text-gray-600">
@@ -128,6 +124,11 @@ const Login = ({ embedMode, onClose }) => {
                 Reset it here
               </Link>
             </p>
+
+            <p className="mt-3 text-sm text-center">
+              <button onClick={onClose} className="text-blue-500 underline">Close</button>
+            </p>
+
           </form>
         </div>
       </div>

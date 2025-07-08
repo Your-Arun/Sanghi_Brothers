@@ -52,7 +52,7 @@ const Home = () => {
 
           {/* Login/Signup Overlay */}
           {authMode && (
-            <div className="absolute inset-0 bg-black bg-opacity-60 flex items-start justify-center pt-10 px-4 md:px-10">
+            <div className="absolute inset-0 bg-black flex items-start justify-center md:px-10">
               <div className="w-full max-w-md">
                 {authMode === "login" ? (
                   <Login embedMode onClose={() => setAuthMode(null)} />
