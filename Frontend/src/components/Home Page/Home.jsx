@@ -39,21 +39,22 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Right Image Section */}
-        <div className="w-full md:w-1/2 h-[400px] md:h-[480px] relative">
+        {/* Right Image Section with Overlaid Form */}
+        <div className="relative w-full md:w-1/2 h-[480px]">
+          {/* Background Image */}
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{
               backgroundImage: `url(${homeImage})`,
               clipPath: "polygon(10% 0%, 100% 0%, 100% 100%, 0% 100%)",
-              filter: "brightness(0.95)",
+              filter: "brightness(0.9)",
             }}
           ></div>
 
-          {/* Login/Signup Overlay */}
+          {/* Overlaid Auth Form */}
           {authMode && (
-            <div className="absolute inset-0 bg-black bg-transparent flex items-start justify-center pt-4 px-4 md:px-10">
-              <div className="w-full max-w-md">
+            <div className="absolute top-10 left-1/2 transform -translate-x-1/2 w-[90%] sm:w-[80%] md:w-[75%] lg:w-[60%] xl:w-[50%]">
+              <div className="bg-white bg-opacity-90 backdrop-blur-md p-6 sm:p-8 rounded-lg shadow-2xl">
                 {authMode === "login" ? (
                   <Login embedMode onClose={() => setAuthMode(null)} />
                 ) : (
@@ -63,6 +64,7 @@ const Home = () => {
             </div>
           )}
         </div>
+
       </div>
 
       {/* Other Sections */}

@@ -65,7 +65,7 @@ const Login = ({ embedMode, onClose }) => {
   return (
 
     <>
-      <div className="flex flex-col md:flex-row items-center justify-between min-h-screen">
+      <div className="w-full">
         {/* Left Form Side */}
         <div className="w-full md:w-1/2 flex justify-center items-center px-6">
           <form
