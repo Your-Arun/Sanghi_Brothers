@@ -76,33 +76,34 @@ Router.post("/signup", async (req, res) => {
 });
 // ✅ Login Route (Fixed double response issue)
 Router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
   try {
-    // ✅ Hardcoded Admin Credentials
-    if (email === process.env.GMAIL && password === process.env.Password) {
-      const token = jwt.sign({ department: "admin" }, process.env.JWT_SECRET, { expiresIn: "4h" });
+    const { identifier, password } = req.body;
 
-      res.cookie("token", token, { httpOnly: true, secure: false, sameSite: "lax" });
-      return res.json({ user: { email, department: "admin" }, token });
+    // Check if identifier is an email or phone
+    const isEmail = /\S+@\S+\.\S+/.test(identifier);
+    const query = isEmail ? { email: identifier } : { phone: identifier };
+
+    const user = await User.findOne(query);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
     }
 
-    // ✅ Normal User Login (Database Check)
-    const user = await User.findOne({ email });
-    if (!user) return res.status(401).json({ message: "Invalid email" });
-
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ message: "Wrong password" });
+    if (!isMatch) {
+      return res.status(400).json({ message: "Incorrect password" });
+    }
 
-    const token = jwt.sign({ userId: user._id, role: "user" }, process.env.JWT_SECRET, { expiresIn: "4h" });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
 
-    res.cookie("token", token, { httpOnly: true, secure: false, sameSite: "lax" });
-    res.json({ user, token });
-
+    res.status(200).json({ user, token });
   } catch (err) {
-    res.status(500).json({ message: "Login failed" });
+    console.error("Login Error:", err);
+    res.status(500).json({ message: "Something went wrong" });
   }
 });
+
 
 // ✅ Profile Route (Fixed missing token vali  dation)
 Router.get("/profile", verifyToken, async (req, res) => {

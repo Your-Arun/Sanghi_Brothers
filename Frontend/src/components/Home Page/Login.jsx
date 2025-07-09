@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 
 const Login = ({ embedMode, onClose }) => {
   const { setUser } = useContext(UserContext);
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState(""); // email or phone
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -38,7 +38,10 @@ const Login = ({ embedMode, onClose }) => {
     setLoading(true);
 
     try {
-      const { data } = await axiosInstance.post("/login", { email, password });
+      const { data } = await axiosInstance.post("/login", {
+        identifier,
+        password,
+      });
 
       sessionStorage.setItem(sessionKey, JSON.stringify(data.user));
       sessionStorage.setItem("authToken", data.token);
@@ -61,7 +64,6 @@ const Login = ({ embedMode, onClose }) => {
 
   return (
     <div className="w-full relative">
-      {/* Close Button */}
       {embedMode && onClose && (
         <div
           onClick={onClose}
@@ -80,15 +82,14 @@ const Login = ({ embedMode, onClose }) => {
         </h2>
 
         <input
-          type="email"
-          placeholder="Email (case sensitive)"
+          type="text"
+          placeholder="Email or Phone"
           className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={identifier}
+          onChange={(e) => setIdentifier(e.target.value)}
           required
         />
 
-        {/* Password Field */}
         <div className="relative mb-4">
           <input
             type={showPassword ? "text" : "password"}
@@ -101,7 +102,6 @@ const Login = ({ embedMode, onClose }) => {
           <div
             onClick={() => setShowPassword(!showPassword)}
             className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 cursor-pointer"
-            aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </div>
