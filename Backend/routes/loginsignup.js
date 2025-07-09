@@ -45,7 +45,7 @@ const verifyToken = (req, res, next) => {
   }
 };
 // ✅ Secure Signup Route
-Router.post("/", async (req, res) => {
+Router.post("/signup", async (req, res) => {
   try {
     let { name, username, email,phone, password, department } = req.body;
     name = name;
@@ -75,7 +75,7 @@ Router.post("/", async (req, res) => {
   }
 });
 // ✅ Login Route (Fixed double response issue)
-Router.post("/", async (req, res) => {
+Router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
