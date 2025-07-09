@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axiosInstance from '../Dashboard/axiosInstance';
 import { useNavigate } from "react-router-dom";
 
-
 const Signup = ({ embedMode, onClose }) => {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -20,7 +19,6 @@ const Signup = ({ embedMode, onClose }) => {
   const handleInviteCodeVerification = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       const response = await axiosInstance.post("/verify-invite", {
         invitecode: inviteCode,
@@ -29,7 +27,6 @@ const Signup = ({ embedMode, onClose }) => {
       if (response.data) {
         setIsValidInviteCode(response.data.valid);
         setType(response.data.type);
-
         if (response.data.type === "staff") {
           setDepartment("staff");
         }
@@ -54,7 +51,7 @@ const Signup = ({ embedMode, onClose }) => {
     setLoading(true);
 
     try {
-      const response = await axiosInstance.post("/", {
+      const response = await axiosInstance.post("/signup", {
         name,
         username,
         email,
@@ -77,7 +74,17 @@ const Signup = ({ embedMode, onClose }) => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full relative">
+      {/* Close Button */}
+      {onClose && (
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-2 text-2xl font-bold text-gray-600 hover:text-red-600 z-50"
+        >
+          &times;
+        </button>
+      )}
+
       <form
         className="bg-white bg-opacity-90 backdrop-blur-md p-6 md:p-8 rounded-lg shadow-xl w-full max-w-sm md:max-w-md mx-auto"
         onSubmit={isValidInviteCode ? handleSubmit : handleInviteCodeVerification}
@@ -155,7 +162,7 @@ const Signup = ({ embedMode, onClose }) => {
               />
               <button
                 type="button"
-                className="absolute butoonn top-1/2 right-3 text-gray-600 text-sm cursor-pointer"
+                className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 text-sm"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? "Hide" : "Show"}
@@ -185,13 +192,9 @@ const Signup = ({ embedMode, onClose }) => {
             </button>
           </>
         )}
-
-       
-
       </form>
     </div>
   );
-
 };
 
 export default Signup;

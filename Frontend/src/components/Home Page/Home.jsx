@@ -10,7 +10,9 @@ import Footer from "./Footer";
 const Home = () => {
   const [authMode, setAuthMode] = useState(null); // 'login' or 'signup'
 
-  const handleClose = () => setAuthMode(null);
+  const handleClose = () => {
+    setAuthMode(null);
+  };
 
   return (
     <>
@@ -42,7 +44,7 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Right Section for larger screens only */}
+        {/* Right Section (image on large screens only) */}
         <div className="relative w-full md:w-1/2 h-[480px] hidden md:block">
           <div
             className="absolute inset-0 bg-cover bg-center"
@@ -53,7 +55,7 @@ const Home = () => {
             }}
           ></div>
 
-          {/* Embedded Form on large screens */}
+          {/* Inline Form on Desktop */}
           {authMode && (
             <div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-[90%] sm:w-[80%] md:w-[75%] lg:w-[60%] xl:w-[50%] z-20">
               {authMode === "login" ? (
@@ -66,10 +68,18 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Modal Popup for Mobile */}
+      {/* Mobile Full-Screen Modal */}
       {authMode && (
         <div className="fixed inset-0 bg-white z-50 flex items-center justify-center px-4 md:hidden">
-          <div className="w-full max-w-sm p-4">
+          <div className="absolute top-4 right-4">
+            <button
+              onClick={handleClose}
+              className="text-black text-2xl font-bold"
+            >
+              &times;
+            </button>
+          </div>
+          <div className="w-full max-w-sm p-4 pt-12">
             {authMode === "login" ? (
               <Login embedMode onClose={handleClose} />
             ) : (

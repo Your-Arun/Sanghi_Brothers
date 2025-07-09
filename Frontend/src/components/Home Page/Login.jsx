@@ -13,7 +13,6 @@ const Login = ({ embedMode, onClose }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Session key setup
   const sessionKey =
     sessionStorage.getItem("activeSession") ||
     `userSession_${Math.random().toString(36).substring(2, 11)}`;
@@ -39,7 +38,7 @@ const Login = ({ embedMode, onClose }) => {
     setLoading(true);
 
     try {
-      const { data } = await axiosInstance.post("/", { email, password });
+      const { data } = await axiosInstance.post("/login", { email, password });
 
       sessionStorage.setItem(sessionKey, JSON.stringify(data.user));
       sessionStorage.setItem("authToken", data.token);
@@ -49,9 +48,7 @@ const Login = ({ embedMode, onClose }) => {
       if (data.user.department === "admin") {
         navigate("/admin-panel");
       } else {
-        navigate(
-          data.user.department === "staff" ? "/staff-dashboard" : "/dashboard"
-        );
+        navigate(data.user.department === "staff" ? "/staff-dashboard" : "/dashboard");
       }
     } catch (err) {
       toast.error(
@@ -63,7 +60,17 @@ const Login = ({ embedMode, onClose }) => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full relative">
+      {/* Close Button */}
+      {embedMode && onClose && (
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-2 text-2xl font-bold text-gray-600 hover:text-red-600 z-50"
+        >
+          &times;
+        </button>
+      )}
+
       <form
         className="bg-white bg-opacity-90 backdrop-blur-md p-6 md:p-8 rounded-lg shadow-xl w-full max-w-sm md:max-w-md mx-auto"
         onSubmit={handleSubmit}
@@ -93,7 +100,7 @@ const Login = ({ embedMode, onClose }) => {
           />
           <div
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 text-sm"
+            className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 cursor-pointer"
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -114,13 +121,9 @@ const Login = ({ embedMode, onClose }) => {
             Reset it here
           </Link>
         </p>
-
-       
-
       </form>
     </div>
   );
-
 };
 
 export default Login;
