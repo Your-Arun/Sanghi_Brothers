@@ -39,7 +39,7 @@ const Login = ({ embedMode, onClose }) => {
     setLoading(true);
 
     try {
-      const { data } = await axiosInstance.post("/login", { email, password });
+      const { data } = await axiosInstance.post("/", { email, password });
 
       sessionStorage.setItem(sessionKey, JSON.stringify(data.user));
       sessionStorage.setItem("authToken", data.token);

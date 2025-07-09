@@ -54,7 +54,7 @@ const Signup = ({ embedMode, onClose }) => {
     setLoading(true);
 
     try {
-      const response = await axiosInstance.post("/signup", {
+      const response = await axiosInstance.post("/", {
         name,
         username,
         email,
