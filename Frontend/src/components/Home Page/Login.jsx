@@ -91,14 +91,13 @@ const Login = ({ embedMode, onClose }) => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button
-            type="button"
+          <div
             onClick={() => setShowPassword(!showPassword)}
             className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 text-sm"
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-          </button>
+          </div>
         </div>
 
         <button
@@ -116,11 +115,7 @@ const Login = ({ embedMode, onClose }) => {
           </Link>
         </p>
 
-        <div className="flex justify-end mb-2  ">
-          <button onClick={onClose} className="text-gray-600 bg-transparent hover:text-black text-sm font-semibold">
-            ✖
-          </button>
-        </div>
+       
 
       </form>
     </div>
