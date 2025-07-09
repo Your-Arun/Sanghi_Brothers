@@ -10,6 +10,8 @@ import Footer from "./Footer";
 const Home = () => {
   const [authMode, setAuthMode] = useState(null); // 'login' or 'signup'
 
+  const handleClose = () => setAuthMode(null);
+
   return (
     <>
       <div className="relative flex flex-col md:flex-row items-center justify-between min-h-screen overflow-hidden">
@@ -39,7 +41,7 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Right Image Section with Overlaid Form */}
+        {/* Right Image Section */}
         <div className="relative w-full md:w-1/2 h-[480px]">
           {/* Background Image */}
           <div
@@ -51,20 +53,31 @@ const Home = () => {
             }}
           ></div>
 
-          {/* Overlaid Form */}
+          {/* Overlaid form for medium and up screens */}
           {authMode && (
-            <div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-[90%] sm:w-[80%] md:w-[75%] lg:w-[60%] xl:w-[50%] z-20">
+            <div className="hidden md:block absolute top-8 left-1/2 transform -translate-x-1/2 w-[90%] sm:w-[80%] md:w-[75%] lg:w-[60%] xl:w-[50%] z-20">
               {authMode === "login" ? (
-                <Login embedMode onClose={() => setAuthMode(null)} />
+                <Login embedMode onClose={handleClose} />
               ) : (
-                <Signup embedMode onClose={() => setAuthMode(null)} />
+                <Signup embedMode onClose={handleClose} />
               )}
             </div>
           )}
-
         </div>
-
       </div>
+
+      {/* Modal Popup for mobile (below md) */}
+      {authMode && (
+        <div className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center px-4">
+          <div className="bg-white p-4 rounded-lg w-full max-w-sm shadow-xl">
+            {authMode === "login" ? (
+              <Login embedMode onClose={handleClose} />
+            ) : (
+              <Signup embedMode onClose={handleClose} />
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Other Sections */}
       <AboutUs />
