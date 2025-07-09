@@ -83,7 +83,7 @@ const Login = ({ embedMode, onClose }) => {
 
         <input
           type="text"
-          placeholder="Email or Phone"
+          placeholder="Email(CASE SENSITIVE) or Phone"
           className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
           value={identifier}
           onChange={(e) => setIdentifier(e.target.value)}
