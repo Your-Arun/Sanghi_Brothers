@@ -68,7 +68,7 @@ const Signup = ({ embedMode, onClose }) => {
       }
 
       alert(response.data.message || "User registered successfully");
-      navigate("/login");
+      navigate("/");
     } catch (err) {
       alert(err.response?.data?.message || "Signup failed");
     } finally {
