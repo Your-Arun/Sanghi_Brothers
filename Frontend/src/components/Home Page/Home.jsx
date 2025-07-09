@@ -14,6 +14,7 @@ const Home = () => {
 
   return (
     <>
+      {/* Main Layout */}
       <div className="relative flex flex-col md:flex-row items-center justify-between min-h-screen overflow-hidden">
         {/* Left Section */}
         <div className="w-full md:w-1/2 px-4 sm:px-6 md:px-12 lg:px-20 py-10 md:py-12">
@@ -41,9 +42,8 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Right Image Section */}
-        <div className="relative w-full md:w-1/2 h-[480px]">
-          {/* Background Image */}
+        {/* Right Section for larger screens only */}
+        <div className="relative w-full md:w-1/2 h-[480px] hidden md:block">
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{
@@ -53,9 +53,9 @@ const Home = () => {
             }}
           ></div>
 
-          {/* Overlaid form for medium and up screens */}
+          {/* Embedded Form on large screens */}
           {authMode && (
-            <div className="hidden md:block absolute top-8 left-1/2 transform -translate-x-1/2 w-[90%] sm:w-[80%] md:w-[75%] lg:w-[60%] xl:w-[50%] z-20">
+            <div className="absolute top-8 left-1/2 transform -translate-x-1/2 w-[90%] sm:w-[80%] md:w-[75%] lg:w-[60%] xl:w-[50%] z-20">
               {authMode === "login" ? (
                 <Login embedMode onClose={handleClose} />
               ) : (
@@ -66,10 +66,10 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Modal Popup for mobile (below md) */}
+      {/* Modal Popup for Mobile */}
       {authMode && (
-        <div className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center px-4">
-          <div className="bg-white p-4 rounded-lg w-full max-w-sm shadow-xl">
+        <div className="fixed inset-0 bg-white z-50 flex items-center justify-center px-4 md:hidden">
+          <div className="w-full max-w-sm p-4">
             {authMode === "login" ? (
               <Login embedMode onClose={handleClose} />
             ) : (
