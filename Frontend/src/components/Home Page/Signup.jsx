@@ -160,13 +160,12 @@ const Signup = ({ embedMode, onClose }) => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-              <button
-                type="button"
+              <div
                 className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 text-sm"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? "Hide" : "Show"}
-              </button>
+              </div>
             </div>
 
             {type !== "staff" && (
