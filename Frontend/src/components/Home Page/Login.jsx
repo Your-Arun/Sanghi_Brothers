@@ -63,12 +63,12 @@ const Login = ({ embedMode, onClose }) => {
     <div className="w-full relative">
       {/* Close Button */}
       {embedMode && onClose && (
-        <button
+        <div
           onClick={onClose}
           className="absolute top-2 right-2 text-2xl font-bold text-gray-600 hover:text-red-600 z-50"
         >
           &times;
-        </button>
+        </div>
       )}
 
       <form

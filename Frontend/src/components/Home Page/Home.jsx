@@ -71,14 +71,14 @@ const Home = () => {
       {/* Mobile Full-Screen Modal */}
       {authMode && (
         <div className="fixed inset-0 bg-white z-50 flex items-center justify-center px-4 md:hidden">
-          <div className="absolute top-4 right-4">
+          {/* <div className="absolute top-4 right-4">
             <button
               onClick={handleClose}
               className="text-black text-2xl font-bold"
             >
               &times;
             </button>
-          </div>
+          </div> */}
           <div className="w-full max-w-sm p-4 pt-12">
             {authMode === "login" ? (
               <Login embedMode onClose={handleClose} />
