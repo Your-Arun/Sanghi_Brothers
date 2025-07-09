@@ -15,7 +15,7 @@ export const UserProvider = ({ children }) => {
     sessionStorage.removeItem("activeSession");
     setUser(null);
     toast.info("👋 Logged out successfully!"); // ✅ Toast should work here
-      window.location.href = "/login";
+      window.location.href = "/";
   };
 
 
