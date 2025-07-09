@@ -57,7 +57,7 @@ const Home = () => {
 
           {/* Inline Form on Desktop */}
           {authMode && (
-            <div className="absolute left-1/2 transform -translate-x-1/2 w-[90%] sm:w-[80%] md:w-[75%] lg:w-[60%] xl:w-[50%] z-20">
+            <div className="absolute left-1/2 top-2 transform -translate-x-1/2 w-[90%] sm:w-[80%] md:w-[75%] lg:w-[60%] xl:w-[50%] z-20">
               {authMode === "login" ? (
                 <Login embedMode onClose={handleClose} />
               ) : (

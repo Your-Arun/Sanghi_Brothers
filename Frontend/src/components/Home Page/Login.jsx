@@ -65,7 +65,7 @@ const Login = ({ embedMode, onClose }) => {
       {embedMode && onClose && (
         <div
           onClick={onClose}
-          className="absolute top-2 right-2 text-2xl font-bold text-gray-600 hover:text-red-600 z-50"
+          className="absolute top-2 right-2 cursor-pointer text-2xl font-bold text-gray-600 hover:text-red-600 z-50"
         >
           &times;
         </div>
