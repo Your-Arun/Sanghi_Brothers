@@ -66,7 +66,7 @@ mongoose
   .catch((err) => console.error(err));
 
 // ✅ Public Routes (No Authentication Required)
-app.use("/", LoginSignup);
+app.use("", LoginSignup);
 app.use("/", Contactus);
 
 // ✅ Protected Routes (Authentication Required)

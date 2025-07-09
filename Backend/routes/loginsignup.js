@@ -45,47 +45,37 @@ const verifyToken = (req, res, next) => {
   }
 };
 // ✅ Secure Signup Route
-Router.post("", async (req, res) => {
+Router.post("/", async (req, res) => {
   try {
-    const { name, username, email, phone, password, department } = req.body;
+    let { name, username, email,phone, password, department } = req.body;
+    name = name;
+    username = username;
+    email = email;
+    phone =phone;
+    department = department.toLowerCase();
 
-    const normalizedDept = department.toLowerCase();
     const validDepartments = ["manager", "backoffice", "accounts/finance", "staff"];
-
-    if (!validDepartments.includes(normalizedDept)) {
+    if (!validDepartments.includes(department)) {
       return res.status(400).json({ message: "Invalid department selected" });
     }
 
-    const existingUser = await User.findOne({
-      $or: [{ email }, { username }]
-    });
-
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
       return res.status(400).json({ message: "Username or email already taken" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = new User({
-      name,
-      username,
-      email,
-      phone,
-      password: hashedPassword,
-      department: normalizedDept,
-    });
-
+    const newUser = new User({ name, username, email,phone, password: hashedPassword, department });
     await newUser.save();
 
-    return res.status(201).json({ message: "User registered successfully" });
+    res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
     console.error("Signup Error:", err);
-    return res.status(500).json({ message: "Internal server error. Please try again later." });
+    res.status(500).json({ message: "Internal server error. Please try again later." });
   }
 });
-
 // ✅ Login Route (Fixed double response issue)
-Router.post("", async (req, res) => {
+Router.post("/", async (req, res) => {
   const { email, password } = req.body;
 
   try {
