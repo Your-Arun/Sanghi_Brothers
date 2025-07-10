@@ -43,7 +43,7 @@ const ForgotPassword = () => {
         setTimeout(() => setResendDisabled(false), 60000);
       } else {
         setMessage(response.data.message);
-        setTimeout(() => navigate("/login"), 2000);
+        setTimeout(() => navigate("/"), 2000);
       }
     } catch (error) {
       setError(error.response?.data?.message || error.message);
