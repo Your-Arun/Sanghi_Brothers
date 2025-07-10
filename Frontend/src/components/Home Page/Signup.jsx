@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axiosInstance from '../Dashboard/axiosInstance';
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 
 const Signup = ({ embedMode, onClose }) => {
   const [name, setName] = useState("");
@@ -64,10 +66,10 @@ const Signup = ({ embedMode, onClose }) => {
         localStorage.setItem("token", response.data.token);
       }
 
-      alert(response.data.message || "User registered successfully");
+      toast.success(response.data.message || "User registered successfully");
       navigate("/");
     } catch (err) {
-      alert(err.response?.data?.message || "Signup failed");
+      toast.error(err.response?.data?.message || "Signup failed");
     } finally {
       setLoading(false);
     }

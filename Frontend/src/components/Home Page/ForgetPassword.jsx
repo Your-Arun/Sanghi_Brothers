@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../Dashboard/axiosInstance";
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState(""); // email or phone
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -14,7 +14,6 @@ const ForgotPassword = () => {
   const [resendDisabled, setResendDisabled] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ Send OTP or Reset Password
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -22,7 +21,7 @@ const ForgotPassword = () => {
     setLoading(true);
 
     try {
-      let requestData = { email };
+      let requestData = { identifier };
 
       if (step === 2) {
         if (!/^\d{6}$/.test(otp)) throw new Error("OTP must be 6 digits.");
@@ -39,7 +38,6 @@ const ForgotPassword = () => {
         setStep(2);
         setResendDisabled(true);
 
-        // Enable Resend OTP after 60 seconds
         setTimeout(() => setResendDisabled(false), 60000);
       } else {
         setMessage(response.data.message);
@@ -65,12 +63,13 @@ const ForgotPassword = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {step === 1 && (
             <div>
-              <label className="block text-sm font-medium mb-1">Email</label>
+              <label className="block text-sm font-medium mb-1">Email or Phone</label>
               <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
                 className="border rounded w-full p-2"
+                placeholder="Enter your email or phone number"
                 required
               />
             </div>
@@ -115,11 +114,11 @@ const ForgotPassword = () => {
           <button
             type="submit"
             className={`bg-blue-500 text-white p-2 rounded w-full ${
-              loading || (step === 1 && !email) || (step === 2 && (!otp || !newPassword || !confirmPassword))
+              loading || (step === 1 && !identifier) || (step === 2 && (!otp || !newPassword || !confirmPassword))
                 ? "opacity-50 cursor-not-allowed"
                 : ""
             }`}
-            disabled={loading || (step === 1 && !email) || (step === 2 && (!otp || !newPassword || !confirmPassword))}
+            disabled={loading || (step === 1 && !identifier) || (step === 2 && (!otp || !newPassword || !confirmPassword))}
           >
             {loading ? "Processing..." : step === 1 ? "Send OTP" : "Reset Password"}
           </button>
@@ -136,13 +135,13 @@ const ForgotPassword = () => {
           ) : (
             <>
               Didn't receive OTP?{" "}
-              <div
+              <button
                 onClick={() => setStep(1)}
                 className={`text-blue-500 hover:underline ${resendDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
                 disabled={resendDisabled}
               >
                 Resend OTP {resendDisabled && "(Wait 60s)"}
-              </div>
+              </button>
             </>
           )}
         </p>

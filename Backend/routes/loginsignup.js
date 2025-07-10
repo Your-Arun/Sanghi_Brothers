@@ -251,59 +251,67 @@ Router.post("/verify-invite", async (req, res) => {
 
 // ✅ Forgot Password - Send OTP
 Router.post("/forgot-password", async (req, res) => {
-  const { email, otp, newPassword } = req.body;
+  const { identifier, otp, newPassword } = req.body;
 
   try {
-    if (!email) return res.status(400).json({ message: "Email is required." });
+    if (!identifier) return res.status(400).json({ message: "Email or Phone is required." });
 
-    const user = await User.findOne({ email: email.toLowerCase() });
+    // Check if it's email or phone
+    const isEmail = /\S+@\S+\.\S+/.test(identifier);
+    const isPhone = /^\d{10}$/.test(identifier);
+
+    if (!isEmail && !isPhone) {
+      return res.status(400).json({ message: "Invalid email or phone format." });
+    }
+
+    const user = await User.findOne(isEmail ? { email: identifier.toLowerCase() } : { phone: identifier });
     if (!user) return res.status(404).json({ message: "User not found." });
 
-    // ✅ Step 1: Generate and send OTP
+    // ✅ STEP 1: Send OTP
     if (!otp && !newPassword) {
       const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
       const hashedOtp = await bcrypt.hash(generatedOtp, 10);
 
       user.otp = hashedOtp;
-      user.otpExpires = new Date(Date.now() + 10 * 60 * 1000); // FIXED ✅ Ensure proper Date format
+      user.otpExpires = new Date(Date.now() + 10 * 60 * 1000); // valid for 10 minutes
       await user.save();
 
-      // Email Transporter Setup
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
-        },
-      });
+      if (isEmail) {
+        // Send OTP via email
+        const transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+          },
+        });
 
-      // Send OTP Email
-      await transporter.sendMail({
-        to: email,
-        subject: "Password Reset OTP",
-        text: `Your OTP for password reset is: ${generatedOtp} (valid for 10 minutes). If you did not request this, ignore this email.`,
-      });
+        await transporter.sendMail({
+          to: identifier,
+          subject: "Password Reset OTP",
+          text: `Your OTP is: ${generatedOtp} (valid for 10 minutes).`,
+        });
 
-      return res.status(200).json({ message: "OTP sent to your email." });
+        return res.status(200).json({ message: "OTP sent to your email." });
+      } else {
+        // Mock SMS (you can use Twilio or similar here)
+        console.log(`Sending OTP "${generatedOtp}" to phone ${identifier}`);
+        return res.status(200).json({ message: "OTP sent to your phone." });
+      }
     }
 
-    // ✅ Step 2: Verify OTP and reset password
+    // ✅ STEP 2: Verify OTP and Reset Password
     if (otp && newPassword) {
-    
-      // Check if OTP is expired
       if (!user.otp || !user.otpExpires || new Date(user.otpExpires) < new Date()) {
-      
         user.otp = null;
         user.otpExpires = null;
         await user.save();
         return res.status(400).json({ message: "OTP expired. Request a new one." });
       }
 
-      // Verify OTP
       const isOtpValid = await bcrypt.compare(otp, user.otp);
       if (!isOtpValid) return res.status(400).json({ message: "Invalid OTP." });
 
-      // Hash new password and update user record
       const hashedPassword = await bcrypt.hash(newPassword, 12);
       user.password = hashedPassword;
       user.otp = null;
@@ -315,8 +323,8 @@ Router.post("/forgot-password", async (req, res) => {
 
     res.status(400).json({ message: "Invalid request." });
   } catch (error) {
-    console.error("Error in forgot-password API:", error);
-    res.status(500).json({ message: "Server error. Try again later." });
+    console.error("Forgot-password error:", error);
+    res.status(500).json({ message: "Server error. Please try again later." });
   }
 });
 
