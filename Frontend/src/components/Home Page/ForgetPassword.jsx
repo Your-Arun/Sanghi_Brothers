@@ -136,13 +136,13 @@ const ForgotPassword = () => {
           ) : (
             <>
               Didn't receive OTP?{" "}
-              <button
+              <div
                 onClick={() => setStep(1)}
                 className={`text-blue-500 hover:underline ${resendDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
                 disabled={resendDisabled}
               >
                 Resend OTP {resendDisabled && "(Wait 60s)"}
-              </button>
+              </div>
             </>
           )}
         </p>
