@@ -156,7 +156,7 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col items-center justify-center m-6">
-      <div className="flex items-center justify-between w-full max-w-4xl mb-8 px-4">
+      <div className="flex  justify-between w-full max-w-4xl mb-8 px-4">
         {/* Dashboard Title */}
         <h1 className="text-3xl md:text-5xl font-extrabold uppercase font-serif 
         text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-500 
