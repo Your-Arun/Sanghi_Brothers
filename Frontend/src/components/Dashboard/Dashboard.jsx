@@ -155,7 +155,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex flex-col bg-gradient-to-r from-blue-400 to-yellow-400 items-center justify-center min-h-screen p-6">
+    <div className="flex flex-col items-center justify-center">
       <div className="flex items-center justify-between w-full max-w-4xl mx-auto mb-8 px-4">
         {/* Dashboard Title */}
         <h1 className="text-3xl md:text-5xl font-extrabold uppercase font-serif 
