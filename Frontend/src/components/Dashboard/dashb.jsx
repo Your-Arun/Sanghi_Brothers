@@ -174,7 +174,7 @@ const UpdateDashboard = () => {
                 <img src={add} alt="Add" className="w-6 cursor-pointer" onClick={card.onAdd} />
               )}
             </div>
-            <div className="flex flex-wrap gap-4 pb-3">
+            <div className="flex flex-wrap gap-2 pb-2 font-bold ">
             {card.items.slice(0, 4).map(card.renderItem)}
             </div>
             {card.count > 4 && (
