@@ -86,6 +86,25 @@ const UpdateDashboard = () => {
         ...inOutFlow.map((item) => ({ ...item, type: "In-Out Flow" })),
         ...masterSheet.map((item) => ({ ...item, type: "Master Checklist" }))
     ];
+    const handleBankItemClick = (item) => {
+        switch (item.type) {
+          case "SB Bank Report":
+            navigate(`/bank/monthlyfundflow/${item._id}`);
+            break;
+          case "Fund Position":
+            navigate(`/fundposition/${item._id}`);
+            break;
+          case "In-Out Flow":
+            navigate(`/bank/monthlyflow/${item._id}`);
+            break;
+          case "Master Checklist":
+            navigate(`/mastersheet/finance/${item._id}`);
+            break;
+          default:
+            toast.error("Invalid report type");
+        }
+      };
+      
 
     const cards = [
         {
@@ -99,6 +118,7 @@ const UpdateDashboard = () => {
             renderItem: (item, index) => (
                 <div
                     key={item._id || index}
+                    onClick={() => handleBankItemClick(item)}
                     className="min-w-[180px] p-3 bg-gray-50 rounded shadow"
                 >
                     <div className="font-bold text-sm text-gray-700">{item.type}</div>
