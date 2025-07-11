@@ -1,14 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaTimes, FaFolderOpen, FaWallet, FaComments, FaUniversity } from "react-icons/fa";
+import {
+  FaTimes,
+  FaFolderOpen,
+  FaWallet,
+  FaComments,
+  FaUniversity,
+} from "react-icons/fa";
 import add from "/add.png";
 import ProfileModal from "./profile";
-import axiosInstance from './axiosInstance';
-import UserContext from '../Home Page/UserContext';
-import { toast } from 'react-toastify';
+import axiosInstance from "./axiosInstance";
+import UserContext from "../Home Page/UserContext";
+import { toast } from "react-toastify";
 
 const UpdateDashboard = () => {
-  const [departments, setDepartments] = useState([]);
   const [reports, setReports] = useState([]);
   const [reportfile, setReportFile] = useState([]);
   const [cashier, setCashier] = useState([]);
@@ -23,15 +28,14 @@ const UpdateDashboard = () => {
   useEffect(() => {
     const fetchAll = async () => {
       try {
-        const [departmentRes, reportRes, cashierRes, reportfileRes, bankRes] = await Promise.all([
-          axiosInstance.get("/departments", { withCredentials: true }),
-          axiosInstance.get("/reports", { withCredentials: true }),
-          axiosInstance.get("/cashier", { withCredentials: true }),
-          axiosInstance.get("/reportfile", { withCredentials: true }),
-          axiosInstance.get("/bank/monthlyfundflow", { withCredentials: true }),
-        ]);
+        const [reportRes, cashierRes, reportfileRes, bankRes] =
+          await Promise.all([
+            axiosInstance.get("/reports", { withCredentials: true }),
+            axiosInstance.get("/cashier", { withCredentials: true }),
+            axiosInstance.get("/reportfile", { withCredentials: true }),
+            axiosInstance.get("/bank/monthlyfundflow", { withCredentials: true }),
+          ]);
 
-        setDepartments(departmentRes.data);
         setReports(reportRes.data);
         setCashier(cashierRes.data);
         setReportFile(reportfileRes.data);
@@ -51,36 +55,15 @@ const UpdateDashboard = () => {
     }
     const userDept = user.department.toLowerCase();
     const departmentNormalized = department.toLowerCase();
-  
+
     if (userDept === "manager" || userDept === departmentNormalized) {
       navigate(`/department-reports?department=${department}`);
     } else {
       toast.error("Not authorized for this department.");
     }
   };
-  
 
   const cards = [
-    {
-        title: "Departments",
-        icon: <FaUniversity className="text-4xl text-purple-500" />,
-        count: 3,
-        onAdd: null,
-        onView: () => setActiveModal("departments"),
-        items: ["Manager", "Accounts/Finance", "Backoffice"],
-        more: activeModal === "departments",
-        renderItem: (name) => (
-          <div
-            key={name}
-            onClick={() => viewReports(name)}
-            className="min-w-[180px] p-3 bg-yellow-100 rounded shadow cursor-pointer hover:bg-yellow-200 transition-all duration-300 text-center"
-          >
-            <div className="font-semibold text-indigo-700 uppercase">{name}</div>
-          </div>
-        ),
-      }
-      
-,      
     {
       title: "Bank Reports",
       icon: <FaFolderOpen className="text-4xl text-red-500" />,
@@ -90,9 +73,14 @@ const UpdateDashboard = () => {
       items: bankReport,
       more: activeModal === "bank",
       renderItem: (item) => (
-        <div key={item._id} className="min-w-[180px] p-3 bg-gray-50 rounded shadow">
+        <div
+          key={item._id}
+          className="min-w-[180px] p-3 bg-gray-50 rounded shadow"
+        >
           <div className="font-bold text-green-700">₹{item.amount}</div>
-          <div className="text-sm text-gray-600">{new Date(item.date).toLocaleDateString()}</div>
+          <div className="text-sm text-gray-600">
+            {new Date(item.date).toLocaleDateString()}
+          </div>
         </div>
       ),
     },
@@ -105,9 +93,14 @@ const UpdateDashboard = () => {
       items: reportfile,
       more: activeModal === "reportfile",
       renderItem: (item) => (
-        <div key={item._id} className="min-w-[180px] p-3 bg-gray-50 rounded shadow">
+        <div
+          key={item._id}
+          className="min-w-[180px] p-3 bg-gray-50 rounded shadow"
+        >
           <div className="font-bold text-green-700">{item.department}</div>
-          <div className="text-sm text-gray-600">{new Date(item.entryDate).toLocaleDateString()}</div>
+          <div className="text-sm text-gray-600">
+            {new Date(item.entryDate).toLocaleDateString()}
+          </div>
           <div className="text-sm">Cash Sales: ₹{item.reports.cashsales}</div>
         </div>
       ),
@@ -121,10 +114,15 @@ const UpdateDashboard = () => {
       items: cashier,
       more: activeModal === "cashier",
       renderItem: (item) => (
-        <div key={item._id} className="min-w-[180px] p-3 bg-gray-50 rounded shadow">
+        <div
+          key={item._id}
+          className="min-w-[180px] p-3 bg-gray-50 rounded shadow"
+        >
           <div className="font-bold">₹{item.amount}</div>
           <div className="text-sm text-gray-600">{item.bank}</div>
-          <div className="text-sm">{new Date(item.date).toLocaleDateString()}</div>
+          <div className="text-sm">
+            {new Date(item.date).toLocaleDateString()}
+          </div>
         </div>
       ),
     },
@@ -163,22 +161,49 @@ const UpdateDashboard = () => {
         {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
       </div>
 
+      {/* Department Section */}
+      <div className="bg-white p-6 rounded-xl shadow-md mb-8">
+        <div className="flex items-center gap-3 mb-4">
+          <FaUniversity className="text-4xl text-purple-500" />
+          <h2 className="text-2xl font-semibold text-gray-800">Departments</h2>
+        </div>
+        <div className="flex flex-wrap gap-4">
+          {["Manager", "Accounts/Finance", "Backoffice"].map((name) => (
+            <div
+              key={name}
+              onClick={() => viewReports(name)}
+              className="cursor-pointer min-w-[160px] flex-1 sm:flex-none sm:w-[180px] bg-yellow-100 hover:bg-yellow-200 p-4 rounded shadow text-center transition-all duration-300"
+            >
+              <div className="font-semibold text-indigo-700 uppercase">{name}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Card Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {cards.map((card) => (
           <div key={card.title} className="bg-white p-5 rounded-xl shadow-md">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex justify-between items-center mb-4">
               <div>{card.icon}</div>
-              <div className="text-xl  font-semibold">{card.title}</div>
+              <div className="text-xl font-semibold">{card.title}</div>
               {card.onAdd && (
-                <img src={add} alt="Add" className="w-6 cursor-pointer" onClick={card.onAdd} />
+                <img
+                  src={add}
+                  alt="Add"
+                  className="w-6 cursor-pointer"
+                  onClick={card.onAdd}
+                />
               )}
             </div>
-            <div className="flex flex-wrap gap-2 pb-2 font-bold ">
-            {card.items.slice(0, 4).map(card.renderItem)}
+            <div className="flex space-x-4 overflow-x-auto pb-3 scrollbar-hide">
+              {card.items.slice(0, 4).map(card.renderItem)}
             </div>
             {card.count > 4 && (
-              <button onClick={card.onView} className="mt-3 text-blue-500 hover:underline">
+              <button
+                onClick={card.onView}
+                className="mt-3 text-blue-500 hover:underline"
+              >
                 See All
               </button>
             )}
@@ -187,7 +212,10 @@ const UpdateDashboard = () => {
             {card.more && (
               <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
                 <div className="bg-white w-[90%] max-w-xl p-6 rounded-lg relative overflow-auto max-h-[80vh]">
-                  <button onClick={() => setActiveModal(null)} className="absolute top-3 right-3">
+                  <button
+                    onClick={() => setActiveModal(null)}
+                    className="absolute top-3 right-3"
+                  >
                     <FaTimes />
                   </button>
                   <h2 className="text-2xl font-semibold mb-4">{card.title}</h2>
@@ -205,7 +233,10 @@ const UpdateDashboard = () => {
       {selectedReport && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white w-[90%] max-w-md p-6 rounded-lg relative">
-            <button className="absolute top-3 right-3" onClick={() => setSelectedReport(null)}>
+            <button
+              className="absolute top-3 right-3"
+              onClick={() => setSelectedReport(null)}
+            >
               <FaTimes />
             </button>
             <h2 className="text-xl font-bold mb-2">{selectedReport.title}</h2>
