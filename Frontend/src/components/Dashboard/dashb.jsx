@@ -174,8 +174,8 @@ const UpdateDashboard = () => {
                 <img src={add} alt="Add" className="w-6 cursor-pointer" onClick={card.onAdd} />
               )}
             </div>
-            <div className="flex space-x-4 overflow-x-auto pb-3 scrollbar-hide">
-              {card.items.slice(0, 4).map(card.renderItem)}
+            <div className="flex flex-wrap gap-4 pb-3">
+            {card.items.slice(0, 4).map(card.renderItem)}
             </div>
             {card.count > 4 && (
               <button onClick={card.onView} className="mt-3 text-blue-500 hover:underline">
