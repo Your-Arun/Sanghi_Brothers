@@ -73,7 +73,7 @@ const UpdateDashboard = () => {
           <div
             key={name}
             onClick={() => viewReports(name)}
-            className="min-w-[180px]  grid grid-cols-2 p-3 bg-yellow-100 rounded shadow cursor-pointer hover:bg-yellow-200 transition-all duration-300 text-center"
+            className="grid grid-row-2 min-w-[180px]  p-3 bg-yellow-100 rounded shadow cursor-pointer hover:bg-yellow-200 transition-all duration-300 text-center"
           >
             <div className="font-semibold text-indigo-700 uppercase">{name}</div>
           </div>
