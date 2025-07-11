@@ -58,6 +58,7 @@ import AdminPanel from "./components/Dashboard/adminPanel.jsx";
 import AllShifts from "./components/Dashboard/ShiftDisplay.jsx";
 import SessionTimeout from "./components/Home Page/SessionTimeout.jsx";
 import Notfound from "./components/Layouts/NotFound";
+import Dashboarddd from "./components/Dashboard/dashb.jsx";
 
 
 
@@ -102,6 +103,7 @@ const AppContent = () => {
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashb" element={< Dashboarddd/>} />
           <Route path="/admin-panel" element={<AdminPanel />} />
           <Route path="/staff-dashboard" element={<Staffmember />} />
           <Route path="/bankreport" element={<MergingSbSection />} />
