@@ -73,7 +73,7 @@ const UpdateDashboard = () => {
             count: bankReport.length + fundposiii.length ,// total count from all sources
             onAdd: () => setActiveModal("bankOptions"),
             onView: () => setActiveModal("bank"),
-            items: [...bankReport, ...fundposiii, ...masterChecklist], // combine all items
+            items: [...bankReport, ...fundposiii, ], // combine all items
             more: activeModal === "bank",
             renderItem: (item, index) => (
                 <div
