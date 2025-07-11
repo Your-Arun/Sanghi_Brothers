@@ -51,33 +51,35 @@ const UpdateDashboard = () => {
     }
     const userDept = user.department.toLowerCase();
     const departmentNormalized = department.toLowerCase();
-
+  
     if (userDept === "manager" || userDept === departmentNormalized) {
       navigate(`/department-reports?department=${department}`);
     } else {
       toast.error("Not authorized for this department.");
     }
   };
+  
 
   const cards = [
     {
-      title: "Departments",
-      icon: <FaUniversity className="text-4xl text-purple-500" />,
-      count: departments.length,
-      onAdd: null,
-      onView: () => setActiveModal("departments"),
-      items: departments,
-      more: activeModal === "departments",
-      renderItem: (item) => (
-        <div
-          key={item}
-          onClick={() => viewReports(item)}
-          className="min-w-[180px] p-3 bg-yellow-100 rounded shadow cursor-pointer hover:bg-yellow-200 transition-all duration-300 text-center"
-        >
-          <div className="font-semibold text-indigo-700 uppercase">{item}</div>
-        </div>
-      ),
-    },
+        title: "Departments",
+        icon: <FaUniversity className="text-4xl text-purple-500" />,
+        count: 3,
+        onAdd: null,
+        onView: () => setActiveModal("departments"),
+        items: ["Manager", "Accounts/Finance", "Backoffice"],
+        more: activeModal === "departments",
+        renderItem: (name) => (
+          <div
+            key={name}
+            onClick={() => viewReports(name)}
+            className="min-w-[180px] p-3 bg-yellow-100 rounded shadow cursor-pointer hover:bg-yellow-200 transition-all duration-300 text-center"
+          >
+            <div className="font-semibold text-indigo-700 uppercase">{name}</div>
+          </div>
+        ),
+      }
+,      
     {
       title: "Bank Reports",
       icon: <FaFolderOpen className="text-4xl text-red-500" />,
