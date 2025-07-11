@@ -31,7 +31,7 @@ const UpdateDashboard = () => {
           axiosInstance.get("/bank/monthlyfundflow", { withCredentials: true }),
         ]);
 
-        setDepartments(departmentRes.data);
+        setDepartments(departmentRes.data.sort((a, b) => a.name.localeCompare(b.name)));
         setReports(reportRes.data);
         setCashier(cashierRes.data);
         setReportFile(reportfileRes.data);
@@ -51,31 +51,32 @@ const UpdateDashboard = () => {
     }
     const userDept = user.department.toLowerCase();
     const targetDept = department.toLowerCase();
-
+  
     if (userDept === "manager" || userDept === targetDept) {
       navigate(`/department-reports?department=${department}`);
     } else {
       toast.error("Not authorized for this department.");
     }
   };
+  
 
   const cards = [
     {
-      title: "Departments",
-      icon: <FaUniversity className="text-4xl text-purple-500" />,
-      count: departments.length,
-      onAdd: () => {},
-      onView: () => setActiveModal("departments"),
-      items: departments,
-      more: activeModal === "departments",
-      renderItem: (item) => (
-        <div
-          key={item._id}
-          onClick={() => viewReports(item.name)}
-          className="min-w-[180px] p-3 bg-gray-50 rounded shadow cursor-pointer hover:bg-gray-100"
-        >
-          <div className="font-semibold text-center text-indigo-600">{item.name}</div>
-        </div>
+        title: "Departments",
+        icon: <FaUniversity className="text-4xl text-purple-500" />,
+        count: departments.length,
+        onAdd: null,
+        onView: () => setActiveModal("departments"),
+        items: departments,
+        more: activeModal === "departments",
+        renderItem: (item) => (
+          <div
+            key={item._id}
+            onClick={() => viewReports(item.name)}
+            className="min-w-[180px] p-3 bg-yellow-100 rounded shadow cursor-pointer hover:bg-yellow-200 transition-all duration-300 text-center"
+          >
+            <div className="font-semibold text-indigo-700 uppercase">{item.name}</div>
+          </div>
       ),
     },
     {
