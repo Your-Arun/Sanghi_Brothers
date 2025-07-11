@@ -73,12 +73,13 @@ const UpdateDashboard = () => {
           <div
             key={name}
             onClick={() => viewReports(name)}
-            className="min-w-[180px]  p-3 bg-yellow-100 rounded shadow cursor-pointer hover:bg-yellow-200 transition-all duration-300 text-center"
+            className="min-w-[180px] p-3 bg-yellow-100 rounded shadow cursor-pointer hover:bg-yellow-200 transition-all duration-300 text-center"
           >
             <div className="font-semibold text-indigo-700 uppercase">{name}</div>
           </div>
         ),
       }
+      
 ,      
     {
       title: "Bank Reports",
@@ -168,7 +169,7 @@ const UpdateDashboard = () => {
           <div key={card.title} className="bg-white p-5 rounded-xl shadow-md">
             <div className="flex items-center justify-between mb-4">
               <div>{card.icon}</div>
-              <div className="text-xl grid grid-cols-2  font-semibold">{card.title}</div>
+              <div className="text-xl  font-semibold">{card.title}</div>
               {card.onAdd && (
                 <img src={add} alt="Add" className="w-6 cursor-pointer" onClick={card.onAdd} />
               )}
