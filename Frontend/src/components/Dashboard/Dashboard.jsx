@@ -155,28 +155,11 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center m-6">
-      <div className="flex  justify-between w-full max-w-4xl mb-8 px-4">
-        {/* Dashboard Title */}
-        <h1 className="text-3xl md:text-5xl font-extrabold uppercase font-serif 
-        text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-500 
-        drop-shadow-lg text-left">
-          Dashboard
-        </h1>
-
-        {/* User Menu */}
-        <div className="relative user-menu">
-          <div className="flex items-center justify-center">
-            <img
-              src="/user.png"
-              alt="User"
-              className="w-9 h-9 md:w-10 md:h-10 rounded-full border border-gray-400 shadow cursor-pointer
-          hover:scale-105 transition-transform duration-300"
-              onClick={() => setProfileOpen(true)}
-            />
-            {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
-          </div>
-        </div>
+    <div className="min-h-screen bg-gray-100 p-6">
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-4xl font-bold text-gray-800">Dashboard</h1>
+        <img src="/user.png" alt="Profile" className="w-10 h-10 rounded-full cursor-pointer" onClick={() => setProfileOpen(true)} />
+        {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
       </div>
 
 
