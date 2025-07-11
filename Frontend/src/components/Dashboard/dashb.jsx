@@ -77,7 +77,7 @@ const UpdateDashboard = () => {
             more: activeModal === "bank",
             renderItem: (item) => (
                 <div key={item._id} className="min-w-[180px] p-3 bg-gray-50 rounded shadow">
-                    <div className="text-sm text-gray-600" onClick={()=>navigate(`/bank/monthlyfundflow/${fund._id}`)}>
+                    <div className="text-sm text-gray-600" onClick={()=>navigate(`/bank/monthlyfundflow/${item._id}`)}>
                         {new Date(item.Date)
                             .toLocaleString("en-GB", {
                                 day: "2-digit",
