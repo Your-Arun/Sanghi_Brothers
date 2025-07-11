@@ -21,6 +21,7 @@ const UpdateDashboard = () => {
     const [isProfileOpen, setProfileOpen] = useState(false);
     const [selectedReport, setSelectedReport] = useState(null);
     const [activeModal, setActiveModal] = useState(null);
+    const [fundposiii, setFundposii] = useState(null);
 
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
@@ -28,18 +29,20 @@ const UpdateDashboard = () => {
     useEffect(() => {
         const fetchAll = async () => {
             try {
-                const [reportRes, cashierRes, reportfileRes, bankRes] =
+                const [reportRes, cashierRes, reportfileRes, bankRes, fundpos,] =
                     await Promise.all([
                         axiosInstance.get("/reports", { withCredentials: true }),
                         axiosInstance.get("/cashier", { withCredentials: true }),
                         axiosInstance.get("/reportfile", { withCredentials: true }),
                         axiosInstance.get("/bank/monthlyfundflow", { withCredentials: true }),
+                        axiosInstance.get("/fundposition", { withCredentials: true }),
                     ]);
 
                 setReports(reportRes.data);
                 setCashier(cashierRes.data);
                 setReportFile(reportfileRes.data);
                 setBankReport(bankRes.data);
+                setFundposii(fundpos.data);
             } catch (err) {
                 console.error("Error loading data:", err);
                 toast.error("Failed to fetch dashboard data.");
@@ -67,16 +70,21 @@ const UpdateDashboard = () => {
         {
             title: "Bank Reports",
             icon: <FaFolderOpen className="text-4xl text-red-500" />,
-            count: bankReport.length,
+            count: bankReport.length + fundposiii.length,
             onAdd: () => setActiveModal("bankOptions"), // Show option modal
             onView: () => setActiveModal("bank"),
             items: bankReport,
             more: activeModal === "bank",
             renderItem: (item) => (
                 <div key={item._id} className="min-w-[180px] p-3 bg-gray-50 rounded shadow">
-                    <div className="font-bold text-green-700">₹{item.amount}</div>
                     <div className="text-sm text-gray-600">
-                        {new Date(item.date).toLocaleDateString()}
+                        {new Date(item.Date)
+                            .toLocaleString("en-GB", {
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "numeric",
+                            })
+                            .replace(/\//g, "/")}
                     </div>
                 </div>
             ),
