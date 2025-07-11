@@ -178,7 +178,8 @@
             </div>
           </div>
 
-          <div><Link to='/dashb'>Dashboarddd Update</Link></div>
+          <div className="w-9 h-9 md:w-10 md:h-10 rounded-full border border-gray-400 shadow cursor-pointer
+            hover:scale-105 transition-transform duration-300" onClick={()=>navigate('/dashb')}>Dashboard Update</div>
         </div>
 
 
