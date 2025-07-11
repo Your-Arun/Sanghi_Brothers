@@ -26,6 +26,27 @@
     const [isProfileOpen, setProfileOpen] = useState(false);
     const { user } = useContext(UserContext); // Getting user from context
 
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const [reportfileRes, cashierRes, reportsRes] = await Promise.all([
+            axiosInstance.get("/reportfile", { withCredentials: true }),
+            axiosInstance.get("/cashier", { withCredentials: true }),
+            axiosInstance.get("/reports", { withCredentials: true }),
+          ]);
+          setReportFile(reportfileRes.data);
+          setCashier(cashierRes.data);
+          setReports(reportsRes.data);
+        } catch (err) {
+          console.error(err);
+          toast.error("Failed to fetch data.");
+        }
+      };
+      fetchData();
+    }, []);
+
+
+
     const confirmDeleteToast = (onConfirm) => {
       toast(
         ({ closeToast }) => (
