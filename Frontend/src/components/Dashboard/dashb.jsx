@@ -166,9 +166,9 @@ const UpdateDashboard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {cards.map((card) => (
           <div key={card.title} className="bg-white p-5 rounded-xl shadow-md">
-            <div className="grid grid-cols-2 items-center mb-4">
+            <div className="flex items-center justify-between mb-4">
               <div>{card.icon}</div>
-              <div className="text-xl font-semibold">{card.title}</div>
+              <div className="text-xl grid grid-cols-2  font-semibold">{card.title}</div>
               {card.onAdd && (
                 <img src={add} alt="Add" className="w-6 cursor-pointer" onClick={card.onAdd} />
               )}
