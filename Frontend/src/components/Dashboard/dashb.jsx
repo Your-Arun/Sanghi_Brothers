@@ -70,21 +70,21 @@ const UpdateDashboard = () => {
         {
             title: "Bank Reports",
             icon: <FaFolderOpen className="text-4xl text-red-500" />,
-            count: bankReport.length + fundposiii.length + masterChecklist.length, // total count from all sources
+            count: bankReport.length + fundposiii.length ,// total count from all sources
             onAdd: () => setActiveModal("bankOptions"),
             onView: () => setActiveModal("bank"),
             items: [...bankReport, ...fundposiii, ...masterChecklist], // combine all items
             more: activeModal === "bank",
             renderItem: (item, index) => (
-              <div
-                key={item._id || index}
-                className="min-w-[180px] p-3 bg-gray-50 rounded shadow flex justify-center items-center"
-              >
-                <div className="text-xl font-bold text-blue-700">{index + 1}</div>
-              </div>
+                <div
+                    key={item._id || index}
+                    className="min-w-[180px] p-3 bg-gray-50 rounded shadow flex justify-center items-center"
+                >
+                    <div className="text-xl font-bold text-blue-700">{index + 1}</div>
+                </div>
             ),
-          }
-          
+        }
+
 
         ,
         {
