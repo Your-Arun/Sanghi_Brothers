@@ -167,14 +167,14 @@ const UpdateDashboard = () => {
           <FaUniversity className="text-4xl text-purple-500" />
           <h2 className="text-2xl font-semibold text-gray-800">Departments</h2>
         </div>
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className=" relative flex flex-wrap justify-center gap-4">
           {["Manager", "Accounts/Finance", "Backoffice"].map((name) => (
             <div
               key={name}
               onClick={() => viewReports(name)}
               className="cursor-pointer min-w-[160px] flex-1 sm:flex-none sm:w-[180px] bg-yellow-100 hover:bg-yellow-200 p-4 rounded shadow text-center transition-all duration-300"
             >
-              <div className="font-semibold text-indigo-700 uppercase">{name}</div>
+              <div className="absolute font-semibold text-indigo-700 uppercase">{name}</div>
             </div>
           ))}
         </div>
