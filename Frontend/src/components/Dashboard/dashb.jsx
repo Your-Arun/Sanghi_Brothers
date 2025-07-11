@@ -31,7 +31,7 @@ const UpdateDashboard = () => {
           axiosInstance.get("/bank/monthlyfundflow", { withCredentials: true }),
         ]);
 
-        setDepartments(departmentRes.data.sort((a, b) => a.name.localeCompare(b.name)));
+        setDepartments(departmentRes.data);
         setReports(reportRes.data);
         setCashier(cashierRes.data);
         setReportFile(reportfileRes.data);
