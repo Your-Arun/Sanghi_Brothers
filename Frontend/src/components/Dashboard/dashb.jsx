@@ -68,22 +68,21 @@ const UpdateDashboard = () => {
             title: "Bank Reports",
             icon: <FaFolderOpen className="text-4xl text-red-500" />,
             count: bankReport.length,
-            onAdd: () => navigate("/bankreport"),
+            onAdd: () => setActiveModal("bankOptions"), // Show option modal
             onView: () => setActiveModal("bank"),
             items: bankReport,
             more: activeModal === "bank",
             renderItem: (item) => (
-                <div
-                    key={item._id}
-                    className="min-w-[180px] p-3 bg-gray-50 rounded shadow"
-                >
+                <div key={item._id} className="min-w-[180px] p-3 bg-gray-50 rounded shadow">
                     <div className="font-bold text-green-700">₹{item.amount}</div>
                     <div className="text-sm text-gray-600">
                         {new Date(item.date).toLocaleDateString()}
                     </div>
                 </div>
             ),
-        },
+        }
+
+        ,
         {
             title: "Report Files",
             icon: <FaFolderOpen className="text-4xl text-blue-500" />,
@@ -253,6 +252,40 @@ const UpdateDashboard = () => {
                     </div>
                 </div>
             )}
+
+            {/* Bank Report Option Modal */}
+            {activeModal === "bankOptions" && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white w-[90%] max-w-md p-6 rounded-lg relative">
+                        <button onClick={() => setActiveModal(null)} className="absolute top-3 right-3 text-gray-600 hover:text-black">
+                            <FaTimes />
+                        </button>
+                        <h2 className="text-xl font-bold mb-4 text-center text-indigo-600">Select Bank Report Type</h2>
+                        <div className="space-y-4">
+                            <div
+                                onClick={() => navigate("/sbbank")}
+                                className="p-4 bg-green-100 hover:bg-green-200 rounded shadow cursor-pointer transition"
+                            >
+                                <h3 className="text-lg font-semibold text-red-700">📊 SB Bank Report</h3>
+                            </div>
+                            <div
+                                onClick={() => navigate("/bank/monthlyfundflow")}
+                                className="p-4 bg-purple-100 hover:bg-purple-200 rounded shadow cursor-pointer transition"
+                            >
+                                <h3 className="text-lg font-semibold text-pink-700">📅 Monthly Fund Flow</h3>
+                            </div>
+                            <div
+                                onClick={() => navigate("/mastersheet")}
+                                className="p-4 bg-blue-100 hover:bg-blue-200 rounded shadow cursor-pointer transition"
+                            >
+                                <h3 className="text-lg font-semibold text-green-700">✅ SB Master CheckList</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+
         </div>
     );
 };
