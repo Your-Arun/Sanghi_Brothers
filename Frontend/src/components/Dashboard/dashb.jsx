@@ -70,11 +70,11 @@ const UpdateDashboard = () => {
       more: activeModal === "departments",
       renderItem: (item) => (
         <div
-          key={item._id}
-          onClick={() => viewReports(item.name)}
+          key={item}
+          onClick={() => viewReports(item)}
           className="min-w-[180px] p-3 bg-yellow-100 rounded shadow cursor-pointer hover:bg-yellow-200 transition-all duration-300 text-center"
         >
-          <div className="font-semibold text-indigo-700 uppercase">{item.name}</div>
+          <div className="font-semibold text-indigo-700 uppercase">{item}</div>
         </div>
       ),
     },
