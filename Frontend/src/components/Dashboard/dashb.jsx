@@ -73,7 +73,7 @@ const UpdateDashboard = () => {
           <div
             key={name}
             onClick={() => viewReports(name)}
-            className="flex jusitify-between min-w-[180px]  p-3 bg-yellow-100 rounded shadow cursor-pointer hover:bg-yellow-200 transition-all duration-300 text-center"
+            className="min-w-[180px]  p-3 bg-yellow-100 rounded shadow cursor-pointer hover:bg-yellow-200 transition-all duration-300 text-center"
           >
             <div className="font-semibold text-indigo-700 uppercase">{name}</div>
           </div>
@@ -166,7 +166,7 @@ const UpdateDashboard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {cards.map((card) => (
           <div key={card.title} className="bg-white p-5 rounded-xl shadow-md">
-            <div className="flex justify-between items-center mb-4">
+            <div className="grid grid-cols-2 items-center mb-4">
               <div>{card.icon}</div>
               <div className="text-xl font-semibold">{card.title}</div>
               {card.onAdd && (
