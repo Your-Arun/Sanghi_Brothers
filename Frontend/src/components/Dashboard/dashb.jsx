@@ -18,51 +18,38 @@ const UpdateDashboard = () => {
     const [reportfile, setReportFile] = useState([]);
     const [cashier, setCashier] = useState([]);
     const [bankReport, setBankReport] = useState([]);
-    const [fundposition, setFundPosition] = useState([]);
-    const [inOutFlow, setInOutFlow] = useState([]);
-    const [masterSheet, setMasterSheet] = useState([]);
     const [isProfileOpen, setProfileOpen] = useState(false);
     const [selectedReport, setSelectedReport] = useState(null);
     const [activeModal, setActiveModal] = useState(null);
+    const [fundposiii, setFundposii] = useState(null);
 
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
 
     useEffect(() => {
         const fetchAll = async () => {
-          try {
-            const [
-              reportRes,
-              cashierRes,
-              reportfileRes,
-              bankRes,
-              fundRes,
-              flowRes,
-              masterRes
-            ] = await Promise.all([
-              axiosInstance.get("/reports"),
-              axiosInstance.get("/cashier"),
-              axiosInstance.get("/reportfile"),
-              axiosInstance.get("/bank/monthlyfundflow"),
-              axiosInstance.get("/fundposition"),
-              axiosInstance.get("/bank/monthlyflow"),
-              axiosInstance.get("/mastersheet/finance")
-            ]);
-    
-            setReports(reportRes.data);
-            setCashier(cashierRes.data);
-            setReportFile(reportfileRes.data);
-            setBankReport(bankRes.data);
-            setFundPosition(fundRes.data);
-            setInOutFlow(flowRes.data);
-            setMasterSheet(masterRes.data);
-          } catch (err) {
-            console.error("Error loading data:", err);
-            toast.error("Failed to fetch dashboard data.");
-          }
+            try {
+                const [reportRes, cashierRes, reportfileRes, bankRes, fundpos,] =
+                    await Promise.all([
+                        axiosInstance.get("/reports", { withCredentials: true }),
+                        axiosInstance.get("/cashier", { withCredentials: true }),
+                        axiosInstance.get("/reportfile", { withCredentials: true }),
+                        axiosInstance.get("/bank/monthlyfundflow", { withCredentials: true }),
+                        axiosInstance.get("/fundposition", { withCredentials: true }),
+                    ]);
+
+                setReports(reportRes.data);
+                setCashier(cashierRes.data);
+                setReportFile(reportfileRes.data);
+                setBankReport(bankRes.data);
+                setFundposii(fundpos.data);
+            } catch (err) {
+                console.error("Error loading data:", err);
+                toast.error("Failed to fetch dashboard data.");
+            }
         };
         fetchAll();
-      }, []);
+    }, []);
 
     const viewReports = (department) => {
         if (!user || !user.department) {
@@ -78,34 +65,30 @@ const UpdateDashboard = () => {
             toast.error("Not authorized for this department.");
         }
     };
-    const bankItems = [
-        ...bankReport.map((item) => ({ ...item, type: "SB Bank Report" })),
-        ...fundposition.map((item) => ({ ...item, type: "Fund Position" })),
-        ...inOutFlow.map((item) => ({ ...item, type: "In-Out Flow" })),
-        ...masterSheet.map((item) => ({ ...item, type: "Master Checklist" }))
-      ];
 
     const cards = [
         {
             title: "Bank Reports",
             icon: <FaFolderOpen className="text-4xl text-red-500" />,
-            count: bankItems.length,
-            onAdd: () => navigate("/bankreport"),
+            count: bankReport.length ,
+            onAdd: () => setActiveModal("bankOptions"), // Show option modal
             onView: () => setActiveModal("bank"),
-            items: bankItems,
+            items: bankReport,
             more: activeModal === "bank",
-            renderItem: (item, index) => (
-              <div
-                key={item._id || index}
-                className="min-w-[180px] p-3 bg-gray-50 rounded shadow"
-              >
-                <div className="font-bold text-sm text-gray-700">{item.type}</div>
-                <div className="text-xs text-gray-500">
-                  {new Date(item.createdAt || item.Date || item.dat2 || item.date).toLocaleDateString("en-GB")}
+            renderItem: (item) => (
+                <div key={item._id} className="min-w-[180px] p-3 bg-gray-50 rounded shadow">
+                    <div className="text-sm text-gray-600" onClick={()=>navigate(`/bank/monthlyfundflow/${item._id}`)}>
+                        {new Date(item.Date)
+                            .toLocaleString("en-GB", {
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "numeric",
+                            })
+                            .replace(/\//g, "/")}
+                    </div>
                 </div>
-              </div>
-            )
-          }
+            ),
+        }
 
         ,
         {
