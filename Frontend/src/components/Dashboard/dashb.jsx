@@ -71,7 +71,7 @@ const UpdateDashboard = () => {
         more: activeModal === "departments",
         renderItem: (item) => (
           <div
-            key={item._id}
+            key={item}
             onClick={() => viewReports(item.name)}
             className="min-w-[180px] p-3 bg-yellow-100 rounded shadow cursor-pointer hover:bg-yellow-200 transition-all duration-300 text-center"
           >
