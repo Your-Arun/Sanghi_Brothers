@@ -380,10 +380,10 @@ const Sb03Update = () => {
 
   return (
     <>
-      <div className="bg-gradient-to-r from-blue-400 to-yellow-400 flex-col items-center justify-center min-h-screen p-6">
+      <div className="flex-col items-center justify-center p-6">
         <form onSubmit={handleSaveSB}>
-          <h1 className="text-center  text-3xl p-4 text-blue-600">
-            Monthly Data Flow
+        <h1 className="text-center  text-4xl font-bold p-4 text-blue-600">
+        Monthly Data Flow
           </h1>
 
           <h2 className="text-center mt-5 text-3xl p-4">
@@ -396,7 +396,7 @@ const Sb03Update = () => {
               .replace(/\//g, "/")}
           </h2>
           <div className="flex justify-evenly p-4">
-            <Link to={"/bankreport"}>
+            <Link to={"/dashboard"}>
               <div>
                 <img src={previousImage} width={50} alt="Back" />
               </div>
@@ -410,7 +410,7 @@ const Sb03Update = () => {
               </button>
             </div>
           </div>
-          <div className="table-wrapper sales-table-wrapper">
+          <div className="table-container">
             <table className="responsive-table">
               <thead>
                 <tr>
