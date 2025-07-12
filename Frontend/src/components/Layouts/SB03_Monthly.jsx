@@ -232,472 +232,472 @@ const SB03_Monthly = () => {
     <>
       <div className="flex-col items-center justify-center p-6">
         <form onSubmit={saveData}>
-         <div>
-         <h1 className="text-center  text-4xl font-bold p-4 text-blue-600">
-            Monthly Data Flow
-          </h1>
-          <div className="flex justify-evenly items-center  p-4">
-            <Link to={"/dashboard"}>
-              <div className="">
-                <img src={previousImage} width={50} alt="Back" />
+          <div>
+            <h1 className="text-center  text-4xl font-bold p-4 text-blue-600">
+              Monthly Data Flow
+            </h1>
+            <div className="flex justify-evenly items-center  p-4">
+              <Link to={"/dashboard"}>
+                <div className="">
+                  <img src={previousImage} width={50} alt="Back" />
+                </div>
+              </Link>
+              <div className="text-center mt-5 text-xl p-4">
+                <input type="date" id="datee" className='bg-transparent' />
               </div>
-            </Link>
-            <div className="text-center mt-5 text-xl p-4">
-              <input type="date" id="datee" className='bg-transparent'  />
-            </div>
-            <div>
-              <button type="submit" className='bg-transparent'>
-                <img src={saveImage} width={50} alt="Save" />
-              </button>{" "}
+              <div>
+                <button type="submit" className='bg-transparent'>
+                  <img src={saveImage} width={50} alt="Save" />
+                </button>{" "}
+              </div>
             </div>
           </div>
-         </div>
-         <div className="table-wrapper sales-table-wrapper">
-         <table className="responsive-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Op. Stock Tank 2</th>
-                <th> Op. Stock Tank 1</th>
-                <th>Pur. Tank 2</th>
-                <th>Pur. Tank 1</th>
-                <th>Total Stock Tank 2</th>
-                <th>Total Stock Tank 1</th>
-                <th>Sales Tank 2</th>
-                <th>Sales Tank 1</th>
-                <th>Closing Stock Tank 2</th>
-                <th>Closing Stock Tank 1</th>
-                <th>Total Stock</th>
-                <th>Sale</th>
-                <th>For the day +/-</th>
-                <th>Sale Shift 1</th>
-                <th>Sale Shift 2</th>
-                <th>Total Tank 1 + Tank 2</th>
-                <th>Tank 1 Actual Stock</th>
-                <th>Tank 1 Variance</th>
-                <th>Tank 2 Actual Stock</th>
-                <th>Tank 2 Variance</th>
-                <th>Both Tank Variance</th>
-                <th>Credit Sale</th>
-                <th>Tank 1 Daily Tank wise variance</th>
-                <th>Tank 2 Daily Tank wise variance</th>
-                <th>Total</th>
-                <th>Pur..</th>
-                <th>Loss %</th>
-                <th>Avg</th>
-                <th>Testing</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Array.from({ length: daysInMonth }, (_, dayIndex) => {
-                const date = new Date(
-                  new Date().getFullYear(),
-                  new Date().getMonth(),
-                  dayIndex + 1
-                );
-                return (
-                  <tr key={dayIndex}>
-                    <td>{date.toLocaleDateString()}</td>
-                    <td>
-                      <input
-                        type="number"
-                        id={`j${dayIndex + 1}`}
-                        value={inputs[dayIndex].j}
-                        onChange={(e) =>
-                          handleInputChange(dayIndex, "j", e.target.value)
-                        }
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        id={`k${dayIndex + 1}`}
-                        value={inputs[dayIndex].k}
-                        onChange={(e) =>
-                          handleInputChange(dayIndex, "k", e.target.value)
-                        }
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        id={`l${dayIndex + 1}`}
-                        value={inputs[dayIndex].l}
-                        onChange={(e) =>
-                          handleInputChange(dayIndex, "l", e.target.value)
-                        }
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        id={`m${dayIndex + 1}`}
-                        value={inputs[dayIndex].m}
-                        onChange={(e) =>
-                          handleInputChange(dayIndex, "m", e.target.value)
-                        }
-                      />
-                    </td>
-                    <td>{inputs[dayIndex].j + inputs[dayIndex].l}</td>
-                    <td>{inputs[dayIndex].k + inputs[dayIndex].m}</td>
-                    <td>
-                      <input
-                        type="number"
-                        id={`p${dayIndex + 1}`}
-                        value={inputs[dayIndex].p}
-                        onChange={(e) =>
-                          handleInputChange(dayIndex, "p", e.target.value)
-                        }
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        id={`q${dayIndex + 1}`}
-                        value={inputs[dayIndex].q}
-                        onChange={(e) =>
-                          handleInputChange(dayIndex, "q", e.target.value)
-                        }
-                      />
-                    </td>
-                    <td>
-                      {inputs[dayIndex].j +
-                        inputs[dayIndex].l -
-                        inputs[dayIndex].p}
-                    </td>
-                    <td>
-                      {inputs[dayIndex].k +
-                        inputs[dayIndex].m -
-                        inputs[dayIndex].q}
-                    </td>
-
-                    <td>
-                      {inputs[dayIndex].j +
-                        inputs[dayIndex].l -
-                        inputs[dayIndex].p +
-                        (inputs[dayIndex].k +
-                          inputs[dayIndex].m -
-                          inputs[dayIndex].q)}
-                    </td>
-                    <td>{inputs[dayIndex].p + inputs[dayIndex].q}</td>
-                    <td>
-                      <input
-                        type="number"
-                        id={`w${dayIndex + 1}`}
-                        value={inputs[dayIndex].w}
-                        onChange={(e) =>
-                          handleInputChange(dayIndex, "w", e.target.value)
-                        }
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        id={`x${dayIndex + 1}`}
-                        value={inputs[dayIndex].x}
-                        onChange={(e) =>
-                          handleInputChange(dayIndex, "x", e.target.value)
-                        }
-                      />
-                    </td>
-                    <td>
-                      {inputs[dayIndex].p +
-                        inputs[dayIndex].q -
-                        inputs[dayIndex].x}{" "}
-                    </td>
-                    <td>{inputs[dayIndex].aa + inputs[dayIndex].ac}</td>
-                    <td>
-                      <input
-                        type="number"
-                        id={`aa${dayIndex + 1}`}
-                        value={inputs[dayIndex].aa}
-                        onChange={(e) =>
-                          handleInputChange(dayIndex, "aa", e.target.value)
-                        }
-                      />
-                    </td>
-                    <td>
-                      {inputs[dayIndex].aa -
-                        (inputs[dayIndex].k +
-                          inputs[dayIndex].m -
-                          inputs[dayIndex].q)}
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        id={`ac${dayIndex + 1}`}
-                        value={inputs[dayIndex].ac}
-                        onChange={(e) =>
-                          handleInputChange(dayIndex, "ac", e.target.value)
-                        }
-                      />
-                    </td>
-                    <td>
-                      {inputs[dayIndex].ac -
-                        (inputs[dayIndex].j +
+          <div className="table-wrapper sales-table-wrapper">
+            <table className="responsive-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Op. Stock Tank 2</th>
+                  <th> Op. Stock Tank 1</th>
+                  <th>Pur. Tank 2</th>
+                  <th>Pur. Tank 1</th>
+                  <th>Total Stock Tank 2</th>
+                  <th>Total Stock Tank 1</th>
+                  <th>Sales Tank 2</th>
+                  <th>Sales Tank 1</th>
+                  <th>Closing Stock Tank 2</th>
+                  <th>Closing Stock Tank 1</th>
+                  <th>Total Stock</th>
+                  <th>Sale</th>
+                  <th>For the day +/-</th>
+                  <th>Sale Shift 1</th>
+                  <th>Sale Shift 2</th>
+                  <th>Total Tank 1 + Tank 2</th>
+                  <th>Tank 1 Actual Stock</th>
+                  <th>Tank 1 Variance</th>
+                  <th>Tank 2 Actual Stock</th>
+                  <th>Tank 2 Variance</th>
+                  <th>Both Tank Variance</th>
+                  <th>Credit Sale</th>
+                  <th>Tank 1 Daily Tank wise variance</th>
+                  <th>Tank 2 Daily Tank wise variance</th>
+                  <th>Total</th>
+                  <th>Pur..</th>
+                  <th>Loss %</th>
+                  <th>Avg</th>
+                  <th>Testing</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Array.from({ length: daysInMonth }, (_, dayIndex) => {
+                  const date = new Date(
+                    new Date().getFullYear(),
+                    new Date().getMonth(),
+                    dayIndex + 1
+                  );
+                  return (
+                    <tr key={dayIndex}>
+                      <td>{date.toLocaleDateString()}</td>
+                      <td>
+                        <input
+                          type="number"
+                          id={`j${dayIndex + 1}`}
+                          value={inputs[dayIndex].j}
+                          onChange={(e) =>
+                            handleInputChange(dayIndex, "j", e.target.value)
+                          }
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          id={`k${dayIndex + 1}`}
+                          value={inputs[dayIndex].k}
+                          onChange={(e) =>
+                            handleInputChange(dayIndex, "k", e.target.value)
+                          }
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          id={`l${dayIndex + 1}`}
+                          value={inputs[dayIndex].l}
+                          onChange={(e) =>
+                            handleInputChange(dayIndex, "l", e.target.value)
+                          }
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          id={`m${dayIndex + 1}`}
+                          value={inputs[dayIndex].m}
+                          onChange={(e) =>
+                            handleInputChange(dayIndex, "m", e.target.value)
+                          }
+                        />
+                      </td>
+                      <td>{inputs[dayIndex].j + inputs[dayIndex].l}</td>
+                      <td>{inputs[dayIndex].k + inputs[dayIndex].m}</td>
+                      <td>
+                        <input
+                          type="number"
+                          id={`p${dayIndex + 1}`}
+                          value={inputs[dayIndex].p}
+                          onChange={(e) =>
+                            handleInputChange(dayIndex, "p", e.target.value)
+                          }
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          id={`q${dayIndex + 1}`}
+                          value={inputs[dayIndex].q}
+                          onChange={(e) =>
+                            handleInputChange(dayIndex, "q", e.target.value)
+                          }
+                        />
+                      </td>
+                      <td>
+                        {inputs[dayIndex].j +
                           inputs[dayIndex].l -
-                          inputs[dayIndex].p)}
-                    </td>
-                    <td>
-                      {inputs[dayIndex].aa -
-                        (inputs[dayIndex].k +
+                          inputs[dayIndex].p}
+                      </td>
+                      <td>
+                        {inputs[dayIndex].k +
                           inputs[dayIndex].m -
-                          inputs[dayIndex].q) +
-                        (inputs[dayIndex].ac -
+                          inputs[dayIndex].q}
+                      </td>
+
+                      <td>
+                        {inputs[dayIndex].j +
+                          inputs[dayIndex].l -
+                          inputs[dayIndex].p +
+                          (inputs[dayIndex].k +
+                            inputs[dayIndex].m -
+                            inputs[dayIndex].q)}
+                      </td>
+                      <td>{inputs[dayIndex].p + inputs[dayIndex].q}</td>
+                      <td>
+                        <input
+                          type="number"
+                          id={`w${dayIndex + 1}`}
+                          value={inputs[dayIndex].w}
+                          onChange={(e) =>
+                            handleInputChange(dayIndex, "w", e.target.value)
+                          }
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          id={`x${dayIndex + 1}`}
+                          value={inputs[dayIndex].x}
+                          onChange={(e) =>
+                            handleInputChange(dayIndex, "x", e.target.value)
+                          }
+                        />
+                      </td>
+                      <td>
+                        {inputs[dayIndex].p +
+                          inputs[dayIndex].q -
+                          inputs[dayIndex].x}{" "}
+                      </td>
+                      <td>{inputs[dayIndex].aa + inputs[dayIndex].ac}</td>
+                      <td>
+                        <input
+                          type="number"
+                          id={`aa${dayIndex + 1}`}
+                          value={inputs[dayIndex].aa}
+                          onChange={(e) =>
+                            handleInputChange(dayIndex, "aa", e.target.value)
+                          }
+                        />
+                      </td>
+                      <td>
+                        {inputs[dayIndex].aa -
+                          (inputs[dayIndex].k +
+                            inputs[dayIndex].m -
+                            inputs[dayIndex].q)}
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          id={`ac${dayIndex + 1}`}
+                          value={inputs[dayIndex].ac}
+                          onChange={(e) =>
+                            handleInputChange(dayIndex, "ac", e.target.value)
+                          }
+                        />
+                      </td>
+                      <td>
+                        {inputs[dayIndex].ac -
                           (inputs[dayIndex].j +
                             inputs[dayIndex].l -
-                            inputs[dayIndex].p))}
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        id={`af${dayIndex + 1}`}
-                        value={inputs[dayIndex].af}
-                        onChange={(e) =>
-                          handleInputChange(dayIndex, "af", e.target.value)
-                        }
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        id={`ag${dayIndex + 1}`}
-                        value={inputs[dayIndex].ag}
-                        onChange={(e) =>
-                          handleInputChange(dayIndex, "ag", e.target.value)
-                        }
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        id={`ah${dayIndex + 1}`}
-                        value={inputs[dayIndex].ah}
-                        onChange={(e) =>
-                          handleInputChange(dayIndex, "ah", e.target.value)
-                        }
-                      />
-                    </td>
-                    <td>{inputs[dayIndex].ag + inputs[dayIndex].ah}</td>
-                    <td>
-                      <input
-                        type="number"
-                        id={`aj${dayIndex + 1}`}
-                        value={inputs[dayIndex].aj}
-                        onChange={(e) =>
-                          handleInputChange(dayIndex, "aj", e.target.value)
-                        }
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        id={`ak${dayIndex + 1}`}
-                        value={inputs[dayIndex].ak}
-                        onChange={(e) =>
-                          handleInputChange(dayIndex, "ak", e.target.value)
-                        }
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        id={`al${dayIndex + 1}`}
-                        value={inputs[dayIndex].al}
-                        onChange={(e) =>
-                          handleInputChange(dayIndex, "al", e.target.value)
-                        }
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        id={`am${dayIndex + 1}`}
-                        value={inputs[dayIndex].am}
-                        onChange={(e) =>
-                          handleInputChange(dayIndex, "am", e.target.value)
-                        }
-                      />
-                    </td>
-                  </tr>
-                );
-              })}
-              <tr>
-                <td>
-                  <strong>Total</strong>
-                </td>
-                <td></td>
-                <td></td>
-                <td>
-                  <strong>{sumofL}</strong>
-                </td>
-                <td>
-                  <strong>{sumofM}</strong>
-                </td>
-                <td></td>
-                <td></td>
-                <td>
-                  <strong>{sumofP}</strong>
-                </td>
-                <td>
-                  <strong>{sumofQ}</strong>
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>{totalsaleee}</td>
-                <td>{sumofW}</td>
-                <td>{sumofX}</td>
-                <td>{sumofY}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>% PUR</strong>
-                </td>
-                <td></td>
-                <td></td>
-                <td>
-                  <strong>{pureofL.toFixed(2)}</strong>
-                </td>
-                <td>
-                  <strong>{pureofM.toFixed(2)}</strong>
-                </td>
-                <td></td>
-                <td>
-                  <strong> % Sale</strong>
-                </td>
-                <td>
-                  <strong> {pureofP.toFixed(2)}</strong>
-                </td>
-                <td>
-                  <strong> {pureofQ.toFixed(2)}</strong>
-                </td>
-                <td></td>
-                <td></td>
-                <td>Act. Loss</td>
-                <td>{lossOfW}</td>
-                <td>{lossOfX}</td>
-                {/* krna h ye dono Y wala bhi */}
-                <td>{lossOfY}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>{SumofAF}</td>
-                <td>{SumofAG}</td>
-                <td>{SumofAH}</td>
-                <td>{SumofAI}</td>
-                <td>{SumofAJ}</td>
-                <td></td>
-                <td></td>
-                <td>{SumofAM}</td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>Target</strong>
-                </td>
-                <td></td>
-                <td></td>
-                <td>
-                  <input
-                    type="number"
-                    name="target1"
-                    value={target.target1 || 0}
-                    onChange={handleTargetChange}
-                  />
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>Water</td>
-                <td>
-                  {" "}
-                  <input
-                    type="number"
-                    name="target3"
-                    value={target.target3 || 0}
-                    onChange={handleTargetChange}
-                  />
-                </td>
-                <td></td>
-                <td></td>
-                <td>{totalXY.toFixed(2)}</td>
-                <td></td>
-                <td></td>
-                <td>
-                  <input
-                    type="number"
-                    name="target4"
-                    value={target.target4 || 0}
-                    onChange={handleTargetChange}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>Target</strong>
-                </td>
-                <td></td>
-                <td></td>
-                <td>
-                  <input
-                    type="number"
-                    name="target2"
-                    value={target.target2 || 0}
-                    onChange={handleTargetChange}
-                  />
-                </td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>
-                  <strong>May be acheived</strong>
-                </td>
-                <td></td>
-                <td></td>
-                <td>
-                  <strong>{maybeL}</strong>
-                </td>
-                <td></td>
-                <td></td>
-                <td>
-                  <strong>{maybeP}</strong>
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>{sumofXY}</td>
-                <td></td>
-                <td>{sumofvab51}</td>
-              </tr>
-            </tbody>
-          </table>
-         </div>
+                            inputs[dayIndex].p)}
+                      </td>
+                      <td>
+                        {inputs[dayIndex].aa -
+                          (inputs[dayIndex].k +
+                            inputs[dayIndex].m -
+                            inputs[dayIndex].q) +
+                          (inputs[dayIndex].ac -
+                            (inputs[dayIndex].j +
+                              inputs[dayIndex].l -
+                              inputs[dayIndex].p))}
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          id={`af${dayIndex + 1}`}
+                          value={inputs[dayIndex].af}
+                          onChange={(e) =>
+                            handleInputChange(dayIndex, "af", e.target.value)
+                          }
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          id={`ag${dayIndex + 1}`}
+                          value={inputs[dayIndex].ag}
+                          onChange={(e) =>
+                            handleInputChange(dayIndex, "ag", e.target.value)
+                          }
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          id={`ah${dayIndex + 1}`}
+                          value={inputs[dayIndex].ah}
+                          onChange={(e) =>
+                            handleInputChange(dayIndex, "ah", e.target.value)
+                          }
+                        />
+                      </td>
+                      <td>{inputs[dayIndex].ag + inputs[dayIndex].ah}</td>
+                      <td>
+                        <input
+                          type="number"
+                          id={`aj${dayIndex + 1}`}
+                          value={inputs[dayIndex].aj}
+                          onChange={(e) =>
+                            handleInputChange(dayIndex, "aj", e.target.value)
+                          }
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          id={`ak${dayIndex + 1}`}
+                          value={inputs[dayIndex].ak}
+                          onChange={(e) =>
+                            handleInputChange(dayIndex, "ak", e.target.value)
+                          }
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          id={`al${dayIndex + 1}`}
+                          value={inputs[dayIndex].al}
+                          onChange={(e) =>
+                            handleInputChange(dayIndex, "al", e.target.value)
+                          }
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          id={`am${dayIndex + 1}`}
+                          value={inputs[dayIndex].am}
+                          onChange={(e) =>
+                            handleInputChange(dayIndex, "am", e.target.value)
+                          }
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
+                <tr>
+                  <td>
+                    <strong>Total</strong>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <strong>{sumofL}</strong>
+                  </td>
+                  <td>
+                    <strong>{sumofM}</strong>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <strong>{sumofP}</strong>
+                  </td>
+                  <td>
+                    <strong>{sumofQ}</strong>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>{totalsaleee}</td>
+                  <td>{sumofW}</td>
+                  <td>{sumofX}</td>
+                  <td>{sumofY}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>% PUR</strong>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <strong>{pureofL.toFixed(2)}</strong>
+                  </td>
+                  <td>
+                    <strong>{pureofM.toFixed(2)}</strong>
+                  </td>
+                  <td></td>
+                  <td>
+                    <strong> % Sale</strong>
+                  </td>
+                  <td>
+                    <strong> {pureofP.toFixed(2)}</strong>
+                  </td>
+                  <td>
+                    <strong> {pureofQ.toFixed(2)}</strong>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td>Act. Loss</td>
+                  <td>{lossOfW}</td>
+                  <td>{lossOfX}</td>
+                  {/* krna h ye dono Y wala bhi */}
+                  <td>{lossOfY}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>{SumofAF}</td>
+                  <td>{SumofAG}</td>
+                  <td>{SumofAH}</td>
+                  <td>{SumofAI}</td>
+                  <td>{SumofAJ}</td>
+                  <td></td>
+                  <td></td>
+                  <td>{SumofAM}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Target</strong>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <input
+                      type="number"
+                      name="target1"
+                      value={target.target1 || 0}
+                      onChange={handleTargetChange}
+                    />
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>Water</td>
+                  <td>
+                    {" "}
+                    <input
+                      type="number"
+                      name="target3"
+                      value={target.target3 || 0}
+                      onChange={handleTargetChange}
+                    />
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td>{totalXY.toFixed(2)}</td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <input
+                      type="number"
+                      name="target4"
+                      value={target.target4 || 0}
+                      onChange={handleTargetChange}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Target</strong>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <input
+                      type="number"
+                      name="target2"
+                      value={target.target2 || 0}
+                      onChange={handleTargetChange}
+                    />
+                  </td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>May be acheived</strong>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <strong>{maybeL}</strong>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    <strong>{maybeP}</strong>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>{sumofXY}</td>
+                  <td></td>
+                  <td>{sumofvab51}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </form>
       </div>
     </>
