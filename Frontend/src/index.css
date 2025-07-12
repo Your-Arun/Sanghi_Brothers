@@ -41,15 +41,13 @@ th {
   background-color: #613a3a;
   color: #fff;
   font-weight: bold;
-  font-size: 1rem;
-  padding: 1rem;
+  padding: 2px;
   text-transform: uppercase;
 }
 
 th, td {
-  padding: 0.75rem;
+  padding: 2px;
   text-align: center;
-  font-size: 0.875rem;
   border: 1px solid #e0e0e0;
 }
 
