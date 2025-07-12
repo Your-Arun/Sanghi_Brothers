@@ -119,7 +119,7 @@ const UpdateDashboard = () => {
                 <div
                     key={item._id || index}
                     onClick={() => handleBankItemClick(item)}
-                    className="min-w-[180px] p-3 bg-gray-50 rounded shadow"
+                    className="min-w-[180px] p-3 bg-gray-50 rounded shadow cursor-pointer"
                 >
                     <div className="font-bold text-sm text-gray-700">{item.type}</div>
                     <div className="text-xs text-gray-500">

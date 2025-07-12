@@ -1,8 +1,8 @@
-import axiosInstance from '../Dashboard/axiosInstance'
+import axiosInstance from '../Dashboard/axiosInstance';
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaArrowLeft } from "react-icons/fa"; // Using React Icons
-import { toast } from 'react-toastify'
+import { FaArrowLeft } from "react-icons/fa";
+import { toast } from 'react-toastify';
 
 const MergeSBInflo = () => {
   const [sbiUpdate, setSbiUpdate] = useState([]);
@@ -12,114 +12,104 @@ const MergeSBInflo = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = sessionStorage.getItem("authToken"); // ✅ Use sessionStorage
+        const token = sessionStorage.getItem("authToken");
         if (!token) {
           toast.warn("No valid session found. Please log in.");
           return;
         }
-        // Fetch Fund Position Data
-        const sbiResponse = await axiosInstance.get("/fundposition", {
-        });
+
+        const [sbiResponse, flowResponse] = await Promise.all([
+          axiosInstance.get("/fundposition"),
+          axiosInstance.get("/bank/monthlyflow")
+        ]);
+
         setSbiUpdate(sbiResponse.data);
-        // Fetch Monthly Flow Data
-        const flowResponse = await axiosInstance.get("/bank/monthlyflow", {
-        });
         setInOutFlow(flowResponse.data);
       } catch (error) {
         toast.warn("Failed to fetch data. Please try again.");
       }
     };
+
     fetchData();
   }, []);
 
   return (
-    <div className="flex flex-col bg-gradient-to-r from-blue-400 to-yellow-400  items-center justify-center min-h-screen bg-gray-100 p-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
-        {/* SB Bank Report Section */}
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-semibold mb-4 text-center text-blue-600">
-            🏦 SB Bank Report
-          </h2>
-          <div className="flex flex-col items-center">
-            <Link
-              to="/fundposition"
-              className="p-4 border bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition duration-300 text-center w-full"
-            >
-              <h3 className="text-xl font-bold">Fund Position</h3>
-            </Link>
+    <div className="min-h-screen p-6 flex flex-col items-center">
+      <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-10 text-center">
+        🏦 Bank Related Reports
+      </h1>
 
-            <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 justify-center">
-              {sbiUpdate.length > 0 ? (
-                sbiUpdate.map((sbii) => (
-                  <Link
-                    to={`/fundposition/${sbii._id}`}
-                    key={sbii._id}
-                    className="p-4 border bg-gray-200 text-xl rounded-lg shadow-md hover:bg-blue-200 transition duration-300 hover:scale-105 text-center"
-                  >
-                    <h1 className=" text-gray-800 font-semibold">{sbii.username}</h1>
-                    <h3 className="font-medium text-gray-700">
-                      {new Date(sbii.createdAt).toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })}
-                    </h3>
-                  </Link>
-                ))
-              ) : (
-                <div className="p-4 border bg-gray-200 rounded-lg shadow-md text-center">
-                  No SB Updates
-                </div>
-              )}
-            </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-screen-xl">
+
+        {/* SB Bank Report */}
+        <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
+          <h2 className="text-xl font-semibold text-blue-600 mb-4 text-center">📘 SB Bank Report</h2>
+          <Link
+            to="/fundposition"
+            className="block mb-6 w-full bg-blue-500 hover:bg-blue-600 text-white text-center font-medium py-2.5 rounded-md transition"
+          >
+            + Fund Position
+          </Link>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {sbiUpdate.length > 0 ? (
+              sbiUpdate.map((item) => (
+                <Link
+                  to={`/fundposition/${item._id}`}
+                  key={item._id}
+                  className="bg-gray-50 hover:bg-blue-100 p-4 rounded-md border border-gray-200 shadow-sm text-center transition-all duration-200"
+                >
+                  <div className="font-semibold text-gray-800">{item.username}</div>
+                  <div className="text-sm text-gray-600 mt-1">
+                    {new Date(item.createdAt).toLocaleDateString("en-GB")}
+                  </div>
+                </Link>
+              ))
+            ) : (
+              <p className="text-center text-gray-500 col-span-full">No SB Updates Found</p>
+            )}
           </div>
         </div>
 
-        {/* In-Out Flow Section */}
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-semibold mb-4 text-center text-blue-600">
-            💰 In-Out Flow
-          </h2>
-          <div className="flex flex-col items-center">
-            <Link
-              to="/bank/monthlyflow"
-              className="p-4 border bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 transition duration-300 text-center w-full"
-            >
-              <h3 className="text-xl font-bold">In-Out Flow</h3>
-            </Link>
+        {/* In-Out Flow */}
+        <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
+          <h2 className="text-xl font-semibold text-green-600 mb-4 text-center">💰 In-Out Flow</h2>
+          <Link
+            to="/bank/monthlyflow"
+            className="block mb-6 w-full bg-green-500 hover:bg-green-600 text-white text-center font-medium py-2.5 rounded-md transition"
+          >
+            + In-Out Flow
+          </Link>
 
-            <div className="grid mt-4 grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 justify-center">
-              {inOutFlow.length > 0 ? (
-                inOutFlow.map((flow) => (
-                  <div
-                    onClick={() => navigate(`/bank/monthlyflow/${flow._id}`)}
-                    key={flow._id}
-                    className="p-4 border bg-gray-200 rounded-lg shadow-md hover:bg-green-200 transition duration-300 hover:scale-105 cursor-pointer text-center"
-                  >
-                    <h1 className=" text-gray-800 font-semibold">{flow.User}</h1>
-                    <h3 className=" font-medium text-gray-700">
-                      {new Date(flow.createdAt).toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })}
-                    </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {inOutFlow.length > 0 ? (
+              inOutFlow.map((flow) => (
+                <div
+                  key={flow._id}
+                  onClick={() => navigate(`/bank/monthlyflow/${flow._id}`)}
+                  className="bg-gray-50 hover:bg-green-100 p-4 rounded-md border border-gray-200 shadow-sm text-center transition cursor-pointer"
+                >
+                  <div className="font-semibold text-gray-800">{flow.User}</div>
+                  <div className="text-sm text-gray-600 mt-1">
+                    {new Date(flow.createdAt).toLocaleDateString("en-GB")}
                   </div>
-                ))
-              ) : (
-                <p className="p-4 border bg-gray-200 rounded-lg shadow-md text-center">
-                  Not available.</p>
-              )}
-            </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-center text-gray-500 col-span-full">No In-Out Flow Records</p>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white rounded-t-lg shadow-md flex justify-center">
-        <Link to="/bankreport" className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition">
-          <FaArrowLeft className="text-2xl" />
-          <span className="text-lg font-semibold">Back</span>
+      {/* Back Button */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 shadow-md flex justify-center">
+        <Link
+          to="/dashboard"
+          className="flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium transition"
+        >
+          <FaArrowLeft className="text-lg" />
+          <span>Back to Dashboard</span>
         </Link>
       </div>
     </div>
