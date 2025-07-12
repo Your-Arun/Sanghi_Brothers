@@ -34,7 +34,7 @@ const MergeSBInflo = () => {
   }, []);
 
   return (
-    <div className="min-h-screen p-6 flex flex-col items-center">
+    <div className="min-h-screen p-6         flex flex-col items-center">
       <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-10 text-center">
         🏦 Bank Related Reports
       </h1>
