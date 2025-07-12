@@ -338,8 +338,8 @@ const SB03_Monthly = () => {
                           }
                         />
                       </td>
-                      <td>{inputs[dayIndex].j + inputs[dayIndex].l}</td>
-                      <td>{inputs[dayIndex].k + inputs[dayIndex].m}</td>
+                      <td className='font-bold'>{inputs[dayIndex].j + inputs[dayIndex].l}</td>
+                      <td className='font-bold'>{inputs[dayIndex].k + inputs[dayIndex].m}</td>
                       <td>
                         <input
                           type="number"
@@ -360,18 +360,18 @@ const SB03_Monthly = () => {
                           }
                         />
                       </td>
-                      <td>
+                      <td className='font-bold'>
                         {inputs[dayIndex].j +
                           inputs[dayIndex].l -
                           inputs[dayIndex].p}
                       </td>
-                      <td>
+                      <td  className='font-bold'>
                         {inputs[dayIndex].k +
                           inputs[dayIndex].m -
                           inputs[dayIndex].q}
                       </td>
 
-                      <td>
+                      <td className='font-bold'>
                         {inputs[dayIndex].j +
                           inputs[dayIndex].l -
                           inputs[dayIndex].p +
@@ -379,7 +379,7 @@ const SB03_Monthly = () => {
                             inputs[dayIndex].m -
                             inputs[dayIndex].q)}
                       </td>
-                      <td>{inputs[dayIndex].p + inputs[dayIndex].q}</td>
+                      <td  className='font-bold'>{inputs[dayIndex].p + inputs[dayIndex].q}</td>
                       <td>
                         <input
                           type="number"
@@ -400,12 +400,12 @@ const SB03_Monthly = () => {
                           }
                         />
                       </td>
-                      <td>
+                      <td className='font-bold'>
                         {inputs[dayIndex].p +
                           inputs[dayIndex].q -
                           inputs[dayIndex].x}{" "}
                       </td>
-                      <td>{inputs[dayIndex].aa + inputs[dayIndex].ac}</td>
+                      <td className='font-bold'>{inputs[dayIndex].aa + inputs[dayIndex].ac}</td>
                       <td>
                         <input
                           type="number"
@@ -416,7 +416,7 @@ const SB03_Monthly = () => {
                           }
                         />
                       </td>
-                      <td>
+                      <td className='font-bold'>
                         {inputs[dayIndex].aa -
                           (inputs[dayIndex].k +
                             inputs[dayIndex].m -
@@ -432,13 +432,13 @@ const SB03_Monthly = () => {
                           }
                         />
                       </td>
-                      <td>
+                      <td className='font-bold'>
                         {inputs[dayIndex].ac -
                           (inputs[dayIndex].j +
                             inputs[dayIndex].l -
                             inputs[dayIndex].p)}
                       </td>
-                      <td>
+                      <td className='font-bold'>
                         {inputs[dayIndex].aa -
                           (inputs[dayIndex].k +
                             inputs[dayIndex].m -
@@ -478,7 +478,7 @@ const SB03_Monthly = () => {
                           }
                         />
                       </td>
-                      <td>{inputs[dayIndex].ag + inputs[dayIndex].ah}</td>
+                      <td className='font-bold'>{inputs[dayIndex].ag + inputs[dayIndex].ah}</td>
                       <td>
                         <input
                           type="number"
@@ -545,10 +545,10 @@ const SB03_Monthly = () => {
                   <td></td>
                   <td></td>
                   <td></td>
-                  <td>{totalsaleee}</td>
-                  <td>{sumofW}</td>
-                  <td>{sumofX}</td>
-                  <td>{sumofY}</td>
+                  <td className='font-bold'>{totalsaleee}</td>
+                  <td  className='font-bold'>{sumofW}</td>
+                  <td className='font-bold'>{sumofX}</td>
+                  <td className='font-bold'>{sumofY}</td>
                   <td></td>
                   <td></td>
                   <td></td>
@@ -589,10 +589,10 @@ const SB03_Monthly = () => {
                   <td></td>
                   <td></td>
                   <td>Act. Loss</td>
-                  <td>{lossOfW}</td>
-                  <td>{lossOfX}</td>
+                  <td className='font-bold'>{lossOfW}</td>
+                  <td className='font-bold'>{lossOfX}</td>
                   {/* krna h ye dono Y wala bhi */}
-                  <td>{lossOfY}</td>
+                  <td className='font-bold'>{lossOfY}</td>
                   <td></td>
                   <td></td>
                   <td></td>
@@ -600,14 +600,14 @@ const SB03_Monthly = () => {
                   <td></td>
                   <td></td>
                   <td></td>
-                  <td>{SumofAF}</td>
-                  <td>{SumofAG}</td>
-                  <td>{SumofAH}</td>
-                  <td>{SumofAI}</td>
-                  <td>{SumofAJ}</td>
+                  <td className='font-bold'>{SumofAF}</td>
+                  <td className='font-bold'>{SumofAG}</td>
+                  <td className='font-bold'>{SumofAH}</td>
+                  <td className='font-bold'>{SumofAI}</td>
+                  <td className='font-bold'>{SumofAJ}</td>
                   <td></td>
                   <td></td>
-                  <td>{SumofAM}</td>
+                  <td className='font-bold'>{SumofAM}</td>
                 </tr>
                 <tr>
                   <td>
@@ -642,7 +642,7 @@ const SB03_Monthly = () => {
                   </td>
                   <td></td>
                   <td></td>
-                  <td>{totalXY.toFixed(2)}</td>
+                  <td className='font-bold'>{totalXY.toFixed(2)}</td>
                   <td></td>
                   <td></td>
                   <td>
@@ -691,9 +691,9 @@ const SB03_Monthly = () => {
                   <td></td>
                   <td></td>
                   <td></td>
-                  <td>{sumofXY}</td>
+                  <td className='font-bold'>{sumofXY}</td>
                   <td></td>
-                  <td>{sumofvab51}</td>
+                  <td className='font-bold'>{sumofvab51}</td>
                 </tr>
               </tbody>
             </table>
