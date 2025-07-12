@@ -230,14 +230,14 @@ const SB03_Monthly = () => {
 
   return (
     <>
-      <div className="bg-gradient-to-r from-blue-400 to-yellow-400 flex-col items-center justify-center min-h-screen p-6">
+      <div className="flex-col items-center justify-center p-6">
         <form onSubmit={saveData}>
          <div>
-         <h1 className="text-center  text-3xl p-4 text-blue-600">
+         <h1 className="text-center  text-4xl font-bold p-4 text-blue-600">
             Monthly Data Flow
           </h1>
           <div className="flex justify-evenly items-center  p-4">
-            <Link to={"/bankreport"}>
+            <Link to={"/dashboard"}>
               <div className="">
                 <img src={previousImage} width={50} alt="Back" />
               </div>
