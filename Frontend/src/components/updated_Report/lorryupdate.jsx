@@ -39,7 +39,7 @@ const tanklorryupdate = () => {
         points: prevPurchasemgnemt.points.map((point, pointIndex) => {
           if (pointIndex === index) {
             if (type === "checkbox") {
-              return { ...point, [name]: checked  }
+              return { ...point, [name]: checked }
             } else {
               return { ...point, [name]: value }
             }
@@ -87,17 +87,17 @@ const tanklorryupdate = () => {
   const handleDelete = async (e) => {
     e.preventDefault()
     confirmDeleteToast(async () => {
-    try {
- 
+      try {
+
         const response = await axiosInstance.delete(`/mastersheet/tanklorry/${id}`)
         navigate("/mastersheet")
         toast.success("Purchase management sheet deleted successfully!")
-       
-    } catch (error) {
-      toast.warn("Error deleting purchase management sheet!")
-    }
-  })
-}
+
+      } catch (error) {
+        toast.warn("Error deleting purchase management sheet!")
+      }
+    })
+  }
 
   const handleSave = async (e) => {
     e.preventDefault()
@@ -153,9 +153,10 @@ const tanklorryupdate = () => {
   }
 
   return (
-    <div className="flex flex-col items-center  bg-gradient-to-r from-blue-400 to-yellow-400 justify-center min-h-screen bg-gray-100 p-6">
+    <div className="flex flex-col items-center justify-center p-6">
+      <h1 className="text-center  text-4xl p-4 font-bold">TANK LORRY MANAGEMENT</h1>
       <form onSubmit={handleSave}>
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-evenly items-center p-4">
           <Link to={"/mastersheet"}>
             <div className="">
               <img src={previousImage || "/placeholder.svg"} width={50} alt="Back" />
@@ -182,74 +183,74 @@ const tanklorryupdate = () => {
             </button>{" "}
           </div>
         </div>
-        <div className="overflow-x-auto w-full max-w-screen-lg mx-auto">
-          <table  className="table-auto w-full border-collapse border border-gray-300 text-sm">
-          <thead>
-                        <th className="p-2 border">Point</th>
-                        <th className="p-2 border"> Item to Check</th>
-                        <th className="p-2 border">Ok</th>
-                        <th className="p-2 border">Responsible</th>
-                        <th className="p-2 border">Defect Person</th>
-                        <th className="p-2 border">Defect Delays Days</th>
-                        <th className="p-2 border">Deadline</th>
-                    </thead>
-          <tbody>
-            {lorrymgnemt.points.map((item, index) => (
-              <tr key={index}>
-                                <td className='p-2 border'>
-                                {index + 1}</td>
-                                <td className='p-2 border'>
-                  <input
-                    type="text"
-                    name="itemToCheck"
-                    value={item.itemToCheck}
-                    onChange={(e) => handleItemChange(e, index)}
-                  />
-                </td>
-                <td className='p-2 border'>
-                <input
-                    type="checkbox"
-                    name="ok"
-                    checked={item.ok === true || item.ok === "Yes" || item.ok === "true"}
-                    onChange={(e) => handleInputChnge(e, index)}
-                  />
-                </td>
-                <td className='p-2 border'>
-                <input
-                    type="text"
-                    name="responsible"
-                    value={item.responsible}
-                    onChange={(e) => handleInputChnge(e, index)}
-                  />
-                </td>
-                <td className='p-2 border'>
-                <input
-                    type="text"
-                    name="defectPerson"
-                    value={item.defectPerson}
-                    onChange={(e) => handleInputChnge(e, index)}
-                  />
-                </td>
-                <td className='p-2 border'>
-                <input
-                    type="text"
-                    name="defectDelaysDays"
-                    value={item.defectDelaysDays}
-                    onChange={(e) => handleInputChnge(e, index)}
-                  />
-                </td>
-                <td className='p-2 border'>
-                <input
-                    type="text"
-                    name="deadline"
-                    value={item.deadline}
-                    onChange={(e) => handleInputChnge(e, index)}
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="table-container">
+          <table className="">
+            <thead>
+              <th className="p-2 border">Point</th>
+              <th className="p-2 border"> Item to Check</th>
+              <th className="p-2 border">Ok</th>
+              <th className="p-2 border">Responsible</th>
+              <th className="p-2 border">Defect Person</th>
+              <th className="p-2 border">Defect Delays Days</th>
+              <th className="p-2 border">Deadline</th>
+            </thead>
+            <tbody>
+              {lorrymgnemt.points.map((item, index) => (
+                <tr key={index}>
+                  <td className='p-2 border'>
+                    {index + 1}</td>
+                  <td className='p-2 border'>
+                    <input
+                      type="text"
+                      name="itemToCheck"
+                      value={item.itemToCheck}
+                      onChange={(e) => handleItemChange(e, index)}
+                    />
+                  </td>
+                  <td className='p-2 border'>
+                    <input
+                      type="checkbox"
+                      name="ok"
+                      checked={item.ok === true || item.ok === "Yes" || item.ok === "true"}
+                      onChange={(e) => handleInputChnge(e, index)}
+                    />
+                  </td>
+                  <td className='p-2 border'>
+                    <input
+                      type="text"
+                      name="responsible"
+                      value={item.responsible}
+                      onChange={(e) => handleInputChnge(e, index)}
+                    />
+                  </td>
+                  <td className='p-2 border'>
+                    <input
+                      type="text"
+                      name="defectPerson"
+                      value={item.defectPerson}
+                      onChange={(e) => handleInputChnge(e, index)}
+                    />
+                  </td>
+                  <td className='p-2 border'>
+                    <input
+                      type="text"
+                      name="defectDelaysDays"
+                      value={item.defectDelaysDays}
+                      onChange={(e) => handleInputChnge(e, index)}
+                    />
+                  </td>
+                  <td className='p-2 border'>
+                    <input
+                      type="text"
+                      name="deadline"
+                      value={item.deadline}
+                      onChange={(e) => handleInputChnge(e, index)}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </form>
     </div>
