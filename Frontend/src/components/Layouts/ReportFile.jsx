@@ -898,12 +898,12 @@ function ReportFile() {
                     </td>
                   </tr>
                 </tbody>
-              </tableclassName=>
+              </table>
             </div>
-            <div className="table-wraper sales-table-wraper">
+            <div className="table-container">
               <div className="text-center mb-20">
                 <h2 className="text-2xl font-bold p-4">This Month , Last year</h2>
-                <table className="responsive-table">
+                <table>
                   <thead>
                     {" "}
                     <tr>
