@@ -153,7 +153,7 @@ const updatesalemanagemnet = () => {
     <div className="flex flex-col items-center justify-center p-6">
       <h1 className="text-center  text-4xl p-4 font-bold">BPCL & STATUTORY MANAGEMENT</h1>
       <form onSubmit={handleSave}>
-        <div className="flex justify-evenly items-center mb-6">
+        <div className="flex justify-evenly items-center p-4">
           <Link to={"/mastersheet"}>
             <div className="">
               <img src={previousImage || "/placeholder.svg"} width={50} alt="Back" />
