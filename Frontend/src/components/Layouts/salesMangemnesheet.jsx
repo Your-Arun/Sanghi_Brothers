@@ -98,8 +98,8 @@ const salesMangemnesheet = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center bg-gradient-to-r from-blue-400 to-yellow-400 justify-center bg-gray-100 p-6">
-        <h1 className="text-center mt-[-30px] text-2xl p-4 font-bold">SALES MANAGEMENT SHEET</h1>
+      <div className="flex flex-col items-center justify-center ">
+        <h1 className="text-center mb-5 text-4xl p-4 font-bold">SALES MANAGEMENT SHEET</h1>
         <form onSubmit={handleSave}>
           <div className="flex justify-evenly items-center  p-4">
             <Link to={"/mastersheet"}>
@@ -115,8 +115,8 @@ const salesMangemnesheet = () => {
               </button>{" "}
             </div>
           </div>
-          <div className="overflow-x-auto w-full max-w-screen-lg mx-auto">
-            <table className="table-auto w-full border-collapse border border-gray-300 text-sm">
+          <div className="table-container">
+            <table className="">
               <thead className="bg-gray-200">
                 <tr>
                   <th className="p-2 border">Point</th>
