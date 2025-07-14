@@ -251,7 +251,7 @@ function ReportFile() {
             </h1>
             <div className="flex justify-evenly items-center  p-4">
               <Link to={"/dashboard"}>
-                <div className=" rounded-md p-2">
+                <div className="">
                   <img src={previousImage} width={50} alt="Back" />
                 </div>
               </Link>
