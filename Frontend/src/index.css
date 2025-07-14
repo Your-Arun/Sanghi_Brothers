@@ -25,9 +25,11 @@ body {
   max-width: 100%;
   overflow-x: auto; /* horizontal scroll on small screens */
 }
-.table-container >input{
-width: 20%;
+.table-container input[type="number"],
+.table-container input[type="text"] {
+  width: 30px;
 }
+
 
 /* Prevent table from expanding beyond screen */
 table {
