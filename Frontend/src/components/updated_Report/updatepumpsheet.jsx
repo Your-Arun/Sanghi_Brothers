@@ -159,6 +159,7 @@ const UpdatePumpSheet = () => {
           </div>
         </div>
 
+        <div className='tbble table-container'>
         <table>
           <thead>
             <th>Name</th>
@@ -566,6 +567,7 @@ const UpdatePumpSheet = () => {
             </tr>
           </tbody>
         </table>
+        </div>
       </form>
     </div>
   );

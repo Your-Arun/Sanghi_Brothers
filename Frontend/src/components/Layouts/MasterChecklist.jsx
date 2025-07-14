@@ -115,7 +115,7 @@ const MasterChecklist = () => {
             </button>{" "}
           </div>
         </div>
-        <div className='tbble'> 
+        <div className='tbble table-container'> 
         <table>
           <thead>
             <th>Name</th>
