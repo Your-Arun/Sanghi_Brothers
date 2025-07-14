@@ -142,7 +142,7 @@ const UpdateDashboard = () => {
                 <div
                     key={item._id}
                     onClick={() => navigate(`/reportfile/${item._id}`)}
-                    className="grid grid-cols-2 min-w-[180px] p-3 bg-gray-50 rounded shadow cursor-pointer"
+                    className="min-w-[180px] p-3 bg-gray-50 rounded shadow cursor-pointer"
                 >
                     <div className="font-bold text-green-700">{item.department}</div>
                     <div className="text-sm text-gray-600">
@@ -269,7 +269,7 @@ const UpdateDashboard = () => {
                                         <FaTimes />
                                     </button>
                                     <h2 className="text-2xl font-semibold mb-4">{card.title}</h2>
-                                    <div className="grid grid-cols-1 gap-4">
+                                    <div className="grid grid-cols-2 gap-4">
                                         {card.items.map(card.renderItem)}
                                     </div>
                                 </div>
