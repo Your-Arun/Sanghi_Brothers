@@ -142,7 +142,7 @@ const UpdateDashboard = () => {
                 <div
                     key={item._id}
                     onClick={() => navigate(`/reportfile/${item._id}`)}
-                    className="flex flex-cols min-w-[180px] p-3 bg-gray-50 rounded shadow cursor-pointer"
+                    className="grid grid-cols-2 min-w-[180px] p-3 bg-gray-50 rounded shadow cursor-pointer"
                 >
                     <div className="font-bold text-green-700">{item.department}</div>
                     <div className="text-sm text-gray-600">
