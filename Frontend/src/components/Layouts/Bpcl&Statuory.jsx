@@ -3,6 +3,7 @@ import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import { Link } from "react-router-dom";
 import axiosInstance from '../Dashboard/axiosInstance'
+import { toast } from 'react-toastify'
 
 const bpclstatutory = () => {
     const [date, setDate] = useState('');
@@ -77,9 +78,9 @@ const bpclstatutory = () => {
         };
         try {
             const response = await axiosInstance.post("/mastersheet/bpcl&statutory", data);
-            alert("BPCL % Statutory management sheet saved successfully!");
+            toast.success("BPCL % Statutory management sheet saved successfully!");
         } catch (error) {
-            alert("Error saving sales management sheet!");
+            toast.error("Error saving sales management sheet!");
         }
     };
 
@@ -90,8 +91,8 @@ const bpclstatutory = () => {
     };
     return (
         <>
-            <div className="flex flex-col items-center  bg-gradient-to-r from-blue-400 to-yellow-400 justify-center bg-gray-100 p-6">
-                <h1 className="text-center  text-2xl p-4 font-bold">BPCL & STATUTORY MANAGEMENT</h1>
+            <div className="flex flex-col items-center justify-center p-6">
+                <h1 className="text-center  text-4xl p-4 font-bold">BPCL & STATUTORY MANAGEMENT</h1>
                 <form onSubmit={handleSave}>
                     <div className="flex justify-evenly items-center  p-4">
                         <Link to={"/mastersheet"}>
@@ -107,8 +108,8 @@ const bpclstatutory = () => {
                             </button>{" "}
                         </div>
                     </div>
-                    <div className="overflow-x-auto w-full max-w-screen-lg mx-auto">
-                    <table  className="table-auto w-full border-collapse border border-gray-300 text-sm">
+                    <div className="table-container">
+                    <table >
                         <thead>
                         <th className="p-2 border">Point</th>
                         <th className="p-2 border"> Item to Check</th>
