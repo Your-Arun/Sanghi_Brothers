@@ -182,7 +182,7 @@ const updatesalemanagemnet = () => {
     return (
         <>
             <div className="flex flex-col items-center justify-center ">
-                <h1 className="text-center mt-[-30px] text-4xl p-4 font-bold">SALES MANAGEMENT SHEET</h1>
+                <h1 className="text-center text-4xl p-4 font-bold">SALES MANAGEMENT SHEET</h1>
                 <form onSubmit={handleSave}>
                     <div className="flex justify-evenly items-center  p-4">
                         <Link to={"/mastersheet"}>
