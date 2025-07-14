@@ -213,7 +213,7 @@ function SBI01Update() {
 
   return (
     <>
-      <div className="text-center text-3xl p-4">
+      <div className="text-center text-4xl p-4">
         <h1>
           Updated Fund Position of{" "}
           <span className="text-red-600">Sanghi Brothers</span>
@@ -241,8 +241,8 @@ function SBI01Update() {
       </div>
       <div>
         <form>
-          <div className="table-wrapper sales-table-wrapper">
-            <table className="responsive-table">
+          <div className="table-container">
+            <table className="">
               <tbody>
                 <tr>
                   <th>

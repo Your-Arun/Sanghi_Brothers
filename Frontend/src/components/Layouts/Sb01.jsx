@@ -205,10 +205,10 @@ const Sb01 = () => {
 
   return (
     <>
-      <div className="bg-gradient-to-r from-blue-400 to-yellow-400 items-center justify-center p-6">
+      <div className="items-center justify-center p-6">
         <form onSubmit={handleSave}>
           <div>
-            <div className="text-center text-3xl p-4">
+            <div className="text-center text-4xl p-4">
               <h1>
                 Fund Position of <span className="text-red-600">Sanghi Brothers</span>{" "}
               </h1>
@@ -230,8 +230,8 @@ const Sb01 = () => {
               </div>
             </div>
           </div>
-          <div className="table-wrapper sales-table-wrapper">
-            <table className="responsive-table">
+          <div className="table-container">
+            <table className="">
               <thead>
                 <tr>
                   <th className="border p-2"><br /></th>

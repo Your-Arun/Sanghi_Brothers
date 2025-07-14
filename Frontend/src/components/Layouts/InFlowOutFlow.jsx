@@ -145,8 +145,8 @@ const InFlowOutFlow = () => {
   };
 
   return (
-    <div className="flex bg-gradient-to-r from-blue-400 to-yellow-400 flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-      <div className="text-center mt-10 text-2xl font-serif">
+    <div className="flex flex-col items-center justify-center p-6">
+      <div className="text-center mt-10 text-4xl font-serif">
         <h1>
           {" "}
           <span className="text-green-600">In</span> Flow{" "}
@@ -155,7 +155,7 @@ const InFlowOutFlow = () => {
         <h2>{date}</h2>
       </div>
 
-      <div>
+      <div className='table-container'>
         <form onSubmit={handleSavee}>
           <div className="flex justify-evenly p-4">
             <Link to={"/sbbank"}>

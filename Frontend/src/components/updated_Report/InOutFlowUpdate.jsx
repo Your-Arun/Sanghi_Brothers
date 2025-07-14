@@ -191,7 +191,7 @@ const InOutFlowUpdate = () => {
 
   return (
     <>
-      <div className="text-center mt-10 text-2xl font-serif">
+      <div className="text-center mt-10 text-4xl font-serif">
         <h1>
           {" "}
           <span className="text-green-600">In</span> Flow{" "}
@@ -200,7 +200,7 @@ const InOutFlowUpdate = () => {
         <h2>{floww.createdAt}</h2>
       </div>
 
-      <div>
+      <div className='table-container'>
         <form onSubmit={handleSavee}>
           <div className="flex justify-evenly p-4">
             <Link to={"/sbbank"}>
