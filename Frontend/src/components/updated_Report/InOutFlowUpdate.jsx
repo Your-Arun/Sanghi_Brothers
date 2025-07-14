@@ -191,7 +191,7 @@ const InOutFlowUpdate = () => {
 
   return (
     <div className="flex flex-col items-center justify-center p-6">
-      <div className="text-center mt-10 text-4xl font-serif">
+      <div className="text-center mt-5 text-4xl font-serif">
         <h1>
           {" "}
           <span className="text-green-600">In</span> Flow{" "}

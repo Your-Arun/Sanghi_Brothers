@@ -57,13 +57,13 @@ const ChekList = () => {
   };
 
   return (
-    <div className="flex flex-col bg-gradient-to-r from-blue-400 to-yellow-400 items-center justify-center min-h-screen bg-gray-100 p-6">
-      <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">MASTER SHEET</h1>
+    <div className="flex flex-col items-center justify-center p-6">
+      <h1 className="text-6xl font-bold text-center text-gray-80 mt-5">MASTER SHEET</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {sections.map(({ key, title, route }) => (
           <div key={key} className="bg-white shadow-lg rounded-xl p-6 border border-gray-200">
-            <h2 className="text-2xl font-semibold text-center text-blue-600 mb-4">{title}</h2>
+            <h2 className="text-2xl font-semibold text-center text-blue-600 font-serif mb-4">{title}</h2>
             <div className="flex flex-col items-center">
               <Link
                 to={`/mastersheet/${route}`}
