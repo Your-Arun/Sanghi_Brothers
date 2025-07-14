@@ -58,7 +58,6 @@ tr:nth-child(odd) { background-color: #ffffff; }
 input[type="number"],
 input[type="text"] {
   background-color: #f9f9f9;
-  width: 100px;
   color: #333;
   border: 1px solid #ccc;
   border-radius: 0.25rem;

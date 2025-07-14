@@ -79,7 +79,7 @@ const Home = () => {
               &times;
             </button>
           </div> */}
-          <div className="max-w-sm p-4 pt-12">
+          <div className="w-full max-w-sm p-4 pt-12">
             {authMode === "login" ? (
               <Login embedMode onClose={handleClose} />
             ) : (
