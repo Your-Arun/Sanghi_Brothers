@@ -190,7 +190,7 @@ const InOutFlowUpdate = () => {
   }
 
   return (
-    <>
+    <div className="flex flex-col items-center justify-center p-6">
       <div className="text-center mt-10 text-4xl font-serif">
         <h1>
           {" "}
@@ -810,7 +810,7 @@ const InOutFlowUpdate = () => {
           </div>
         </form>
       </div>
-    </>
+    </div>
   );
 };
 
