@@ -41,10 +41,7 @@ table {
   color: #333;
   animation: fadeIn 0.8s ease-in-out;
 }
-.tbble input[type="number"],
-.tabble input[type="text"] {
-  width: 70%;
-}
+
 th {
   background-color: #1b1962;
   color: #fff;
