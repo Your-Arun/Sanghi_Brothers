@@ -141,6 +141,7 @@ const UpdateDashboard = () => {
             renderItem: (item) => (
                 <div
                     key={item._id}
+                    onClick={() => navigate(`/reportfile/${item._id}`)}
                     className="min-w-[180px] p-3 bg-gray-50 rounded shadow"
                 >
                     <div className="font-bold text-green-700">{item.department}</div>
