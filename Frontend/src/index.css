@@ -27,7 +27,7 @@ body {
 }
 .table-container input[type="number"],
 .table-container input[type="text"] {
-  width: 40%;
+  width: 60%;
 }
 
 
@@ -43,15 +43,14 @@ table {
 }
 
 th {
-  background-color: #613a3a;
+  background-color: #1b1962;
   color: #fff;
   font-weight: bold;
-  padding: 2px;
   text-transform: uppercase;
 }
 
 th, td {
-  padding: 2px;
+  padding: 2px 1px;
   text-align: center;
   border: 1px solid #e0e0e0;
 }
