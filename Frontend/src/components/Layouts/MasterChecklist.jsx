@@ -80,10 +80,10 @@ const MasterChecklist = () => {
     }
   };
   return (
-  <div className="flex flex-col items-center  bg-gradient-to-r from-blue-400 to-yellow-400 justify-center p-6">
-      <h1 className="text-center  text-xl p-4">PUMP REPORT SHEET</h1>
+    <div className="flex flex-col items-center justify-center p-6">
+      <h1 className="text-center text-4xl">PUMP REPORT SHEET</h1>
       <form onSubmit={handlesave}>
-        <div className="text-center text-xl p-4">
+        <div className="text-center text-3xl p-4">
           <h1 >
             Exceptional Report of{" "}
             <input
@@ -115,6 +115,7 @@ const MasterChecklist = () => {
             </button>{" "}
           </div>
         </div>
+        <div className='tbble'> 
         <table>
           <thead>
             <th>Name</th>
@@ -538,6 +539,7 @@ const MasterChecklist = () => {
             </tr>
           </tbody>
         </table>
+        </div>
       </form>
     </div>
   );
