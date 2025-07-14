@@ -101,7 +101,7 @@ const bpclstatutory = () => {
     };
     return (
         <div className="flex flex-col items-center justify-center p-6">
-            <h1 className="text-center text-2xl p-4 font-bold">FINANCE MANAGEMENT</h1>
+            <h1 className="text-center text-4xl p-4 font-bold">FINANCE MANAGEMENT</h1>
             <form onSubmit={handleSave}>
                 <div className="flex justify-evenly items-center  p-4">
                     <Link to={"/mastersheet"}>
