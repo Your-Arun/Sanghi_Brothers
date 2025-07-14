@@ -25,7 +25,7 @@ const UpdateReportFile = () => {
     const fetchReport = async () => {
       try {
         const response = await axiosInstance.get(`/reportfile/${id}`);
-        setUpReportfile(response.data); 
+        setUpReportfile(response.data);
       } catch (error) {
         toast.warning("Not fetching");
       } finally {
@@ -69,10 +69,10 @@ const UpdateReportFile = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-  
+
     const parsedValue =
       value === "" ? "" : !isNaN(value) && value.trim() !== "" ? Number(value) : value;
-  
+
     setUpReportfile((prev) => ({
       ...prev,
       inputs: {
@@ -81,7 +81,7 @@ const UpdateReportFile = () => {
       },
     }));
   };
-  
+
 
 
   const handleSave = async (e) => {
@@ -232,820 +232,822 @@ const UpdateReportFile = () => {
   const year2 = currentYear - 2;
   const year3 = currentYear - 3;
   return (
-    <div className="bg-gradient-to-r from-blue-400 to-yellow-400 p-6 ">
-      <div>
-        <h1 className="text-5xl text-center font-bold  mb-4">
-          Report File
-        </h1>
-        <div className="flex justify-evenly items-center  p-4">
-          <Link to={"/dashboard"}>
-            <div className="">
-              <img src={previousImage} width={50} alt="Back" />
+    <>
+      <div className="flex items-center justify-center p-6 ">
+        <div>
+          <h1 className="text-5xl text-center font-bold  mb-4">
+            Report File
+          </h1>
+          <div className="flex justify-evenly items-center  p-4">
+            <Link to={"/dashboard"}>
+              <div className="">
+                <img src={previousImage} width={50} alt="Back" />
+              </div>
+            </Link>
+            <div className="bg-transparent">
+              <img src={binImage} alt="BIN" width={50} onClick={handleDelete} />
             </div>
-          </Link>
-          <div className="bg-transparent">
-            <img src={binImage} alt="BIN" width={50} onClick={handleDelete} />
+            <div className="py-3 text-black  px-4 inline-flex items-center gap-x-2 text-xl rounded-lg">
+              {upreportfile.entryDate.split("T")[0]}
+            </div>
+            <button type="submit" className="bg-transparent" >
+              <img src={saveImage} onClick={handleSave} width={50} alt="Save" />
+            </button>
           </div>
-          <div className="py-3 text-black  px-4 inline-flex items-center gap-x-2 text-xl rounded-lg">
-            {upreportfile.entryDate.split("T")[0]}
-          </div>
-          <button type="submit" className="bg-transparent" >
-            <img src={saveImage} onClick={handleSave} width={50} alt="Save" />
-          </button>
         </div>
-      </div>
-      <div className="flex flex-col justify-center items-center">
-        <div className="sales-table-container">
-          <table className="sales-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Sales</th>
-                <th>Road</th>
-                <th>Road</th>
-                <th>Showroom</th>
-                <th>Showroom</th>
-                <th>Ns </th>
-                <th>Ns </th>
-              </tr>
-              <tr>
-                <td>Nozzele No.</td>
-                <td></td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>4</td>
-                <td>5</td>
-                <td>6</td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Opening Stock</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b3"
-                    value={upreportfile.inputs.b3}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                  Litre
-                </td>
-              </tr>
-              <tr>
-                <td>Shift -1</td>
-                <td className="bfour" id="b4">
-                  <div id="b4results">{upreportfile.reports.b4result}</div>
-                </td>
-                <td>
-                  <input
-                    type="Number"
-                    name="c4"
-                    value={upreportfile.inputs.c4}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="Number"
-                    name="d4"
-                    value={upreportfile.inputs.d4}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="Number"
-                    name="e4"
-                    value={upreportfile.inputs.e4}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="Number"
-                    name="f4"
-                    value={upreportfile.inputs.f4}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="Number"
-                    name="g4"
-                    value={upreportfile.inputs.g4}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="Number"
-                    name="h4"
-                    value={upreportfile.inputs.h4}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Shift -2</td>
-                <td className="bfive" id="b5">
-                  <div id="b5results">{upreportfile.reports.b5result}</div>
-                </td>
-                <td>
-                  <input
-                    type="Number"
-                    name="c5"
-                    value={upreportfile.inputs.c5}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="Number"
-                    name="d5"
-                    value={upreportfile.inputs.d5}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="Number"
-                    name="e5"
-                    value={upreportfile.inputs.e5}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="Number"
-                    name="f5"
-                    value={upreportfile.inputs.f5}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="Number"
-                    name="g5"
-                    value={upreportfile.inputs.g5}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="Number"
-                    name="h5"
-                    value={upreportfile.inputs.h5}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr className="font-bold">
-                <td>Total Sales</td>
-                <td className="bsix" id="b6">
-                  {upreportfile.reports.b6result}
-                </td>
-                <td>{upreportfile.reports.c6result}</td>
-                <td>{upreportfile.reports.d6result}</td>
-                <td>{upreportfile.reports.e6result}</td>
-                <td>{upreportfile.reports.f6result}</td>
-                <td>{upreportfile.reports.g6result}</td>
-                <td>{upreportfile.reports.h6result}</td>
-              </tr>
-              <tr>
-                <td>Stock as per Record</td>
-                <td>
-                  <div>{upreportfile.reports.stockrecord}</div>
-                </td>
-                <td>Tank 1</td>
-                <td>Tank 2</td>
-                <td>In lorry</td>
-                <td>water/ms</td>
-              </tr>
-              <tr>
-                <td>Stock as per dip</td>
-                <td>{upreportfile.reports.perdip}</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="c8"
-                    value={upreportfile.inputs.c8}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="Number"
-                    name="e8"
-                    value={upreportfile.inputs.e8}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="Number"
-                    name="d8"
-                    value={upreportfile.inputs.d8}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="Number"
-                    name="f8"
-                    value={upreportfile.inputs.f8}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Vairance +/-</td>
-                <td>{upreportfile.reports.variance}</td>
-                <td>{upreportfile.reports.perVar}</td>
-              </tr>
-              <tr>
-                <td>Avg. for the month</td>
-                <td>{upreportfile.reports.avgmonth}</td>
-              </tr>
-              <tr>
-                <td>Sale target</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b11"
-                    value={upreportfile.inputs.b11}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Actual sale till date</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b12"
-                    value={upreportfile.inputs.b12}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Pur. target last yr</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b13"
-                    value={upreportfile.inputs.b13}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Pur till date</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b14"
-                    value={upreportfile.inputs.b14}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Our Target</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b15"
-                    value={upreportfile.inputs.b15}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>If avg is</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b16"
-                    value={upreportfile.inputs.b16}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Avg Diff.</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b17"
-                    value={upreportfile.inputs.b17}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Pdp for Today</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b18"
-                    value={upreportfile.inputs.b18}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Pdp for Next day <span>{getNextDay()}</span>
-                </td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b19"
-                    value={upreportfile.inputs.b19}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>New Rate Today</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b20"
-                    value={upreportfile.inputs.b20}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Old Rate</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b21"
-                    value={upreportfile.inputs.b21}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>2T 1ltr</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b22"
-                    value={upreportfile.inputs.b22}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>2t 500ml</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b23"
-                    value={upreportfile.inputs.b23}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>2T 250ml</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b24"
-                    value={upreportfile.inputs.b24}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>60ml pouch sold</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b25"
-                    value={upreportfile.inputs.b25}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>40ml pouch sold</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b26"
-                    value={upreportfile.inputs.b26}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>20ml pouch sold</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b27"
-                    value={upreportfile.inputs.b27}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Classic 1 Ltr sold</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b28"
-                    value={upreportfile.inputs.b28}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Nxt 1 Ltr</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b29"
-                    value={upreportfile.inputs.b29}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Nxt 900ml</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b30"
-                    value={upreportfile.inputs.b30}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>4T Plus 1 ltr</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b31"
-                    value={upreportfile.inputs.b31}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>4T Plus 900ml</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b32"
-                    value={upreportfile.inputs.b32}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>4T Zipp 1 Ltr</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b33"
-                    value={upreportfile.inputs.b33}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>4T Zipp 900ml</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b34"
-                    value={upreportfile.inputs.b34}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Stotech</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b35"
-                    value={upreportfile.inputs.b35}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Hero Honda 800ml</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b36"
-                    value={upreportfile.inputs.b36}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Hero Honda 900ml</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b37"
-                    value={upreportfile.inputs.b37}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Ready cool 1 Ltr</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b38"
-                    value={upreportfile.inputs.b38}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Ready cool 500ml</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b39"
-                    value={upreportfile.inputs.b39}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>60ml pouch leakage</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b40"
-                    value={upreportfile.inputs.b40}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>40ml pouch leakage</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b41"
-                    value={upreportfile.inputs.b41}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>20ml pouch leakage</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b42"
-                    value={upreportfile.inputs.b42}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Today Credit Sold</td>
-                <td>
-                  <input
-                    type="Number"
-                    name="b43"
-                    value={upreportfile.inputs.b43}
-                    onChange={handleInputChange}
-                    className="border rounded p-1"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Today Cash Sales</td>
-                <td id="b44">{upreportfile.reports.cashsales}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div className="table-wraper sales-table-wraper">
-          <div className="text-center mb-20">
-            <h2 className="text-2xl font-bold  p-4">This Month , Last year</h2>
-            <table className="responsive-table">
+        <div className="table-container">
+          <div className="">
+            <table>
               <thead>
-                {" "}
                 <tr>
-                  <th>{year1}</th>
-                  <th>{year2}</th>
-                  <th>{year3}</th>
-                  <th>Last 3 Years</th>
+                  <th>Name</th>
+                  <th>Sales</th>
+                  <th>Road</th>
+                  <th>Road</th>
+                  <th>Showroom</th>
+                  <th>Showroom</th>
+                  <th>Ns </th>
+                  <th>Ns </th>
+                </tr>
+                <tr>
+                  <td>Nozzele No.</td>
+                  <td></td>
+                  <td>1</td>
+                  <td>2</td>
+                  <td>3</td>
+                  <td>4</td>
+                  <td>5</td>
+                  <td>6</td>
                 </tr>
               </thead>
               <tbody>
-                {" "}
                 <tr>
+                  <td>Opening Stock</td>
                   <td>
                     <input
-                      type="number"
-                    name="f12"
-                      value={upreportfile.inputs.f12}
+                      type="Number"
+                      name="b3"
+                      value={upreportfile.inputs.b3}
                       onChange={handleInputChange}
+                      className="border rounded p-1"
                     />
+                    Litre
                   </td>
-                  <td>
-                    <input
-                      type="number"
-                      name="g12"
-                      value={upreportfile.inputs.g12}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      name="h12"
-                      value={upreportfile.inputs.h12}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                  <td className="font-bold">
-                      <input
-                          type="text"
-                          name="i12"
-                          value={upreportfile.inputs.i12}
-                          onChange={handleInputChange}
-                        />
-                      </td>
                 </tr>
                 <tr>
-                  <td className="font-bold">{upreportfile.reports.ftera}</td>
-                  <td className="font-bold">{upreportfile.reports.gtera}</td>
-                  <td className="font-bold">{upreportfile.reports.htera}</td>
-                  <td className="font-bold">
-                      <input
-                          type="text"
-                          name="i13"
-                          value={upreportfile.inputs.i13}
-                          onChange={handleInputChange}
-                        />
-                      </td>
+                  <td>Shift -1</td>
+                  <td className="bfour" id="b4">
+                    <div id="b4results">{upreportfile.reports.b4result}</div>
+                  </td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="c4"
+                      value={upreportfile.inputs.c4}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="d4"
+                      value={upreportfile.inputs.d4}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="e4"
+                      value={upreportfile.inputs.e4}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="f4"
+                      value={upreportfile.inputs.f4}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="g4"
+                      value={upreportfile.inputs.g4}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="h4"
+                      value={upreportfile.inputs.h4}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Shift -2</td>
+                  <td className="bfive" id="b5">
+                    <div id="b5results">{upreportfile.reports.b5result}</div>
+                  </td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="c5"
+                      value={upreportfile.inputs.c5}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="d5"
+                      value={upreportfile.inputs.d5}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="e5"
+                      value={upreportfile.inputs.e5}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="f5"
+                      value={upreportfile.inputs.f5}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="g5"
+                      value={upreportfile.inputs.g5}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="h5"
+                      value={upreportfile.inputs.h5}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr className="font-bold">
+                  <td>Total Sales</td>
+                  <td className="bsix" id="b6">
+                    {upreportfile.reports.b6result}
+                  </td>
+                  <td>{upreportfile.reports.c6result}</td>
+                  <td>{upreportfile.reports.d6result}</td>
+                  <td>{upreportfile.reports.e6result}</td>
+                  <td>{upreportfile.reports.f6result}</td>
+                  <td>{upreportfile.reports.g6result}</td>
+                  <td>{upreportfile.reports.h6result}</td>
+                </tr>
+                <tr>
+                  <td>Stock as per Record</td>
+                  <td>
+                    <div>{upreportfile.reports.stockrecord}</div>
+                  </td>
+                  <td>Tank 1</td>
+                  <td>Tank 2</td>
+                  <td>In lorry</td>
+                  <td>water/ms</td>
+                </tr>
+                <tr>
+                  <td>Stock as per dip</td>
+                  <td>{upreportfile.reports.perdip}</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="c8"
+                      value={upreportfile.inputs.c8}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="e8"
+                      value={upreportfile.inputs.e8}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="d8"
+                      value={upreportfile.inputs.d8}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="f8"
+                      value={upreportfile.inputs.f8}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Vairance +/-</td>
+                  <td>{upreportfile.reports.variance}</td>
+                  <td>{upreportfile.reports.perVar}</td>
+                </tr>
+                <tr>
+                  <td>Avg. for the month</td>
+                  <td>{upreportfile.reports.avgmonth}</td>
+                </tr>
+                <tr>
+                  <td>Sale target</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b11"
+                      value={upreportfile.inputs.b11}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Actual sale till date</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b12"
+                      value={upreportfile.inputs.b12}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Pur. target last yr</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b13"
+                      value={upreportfile.inputs.b13}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Pur till date</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b14"
+                      value={upreportfile.inputs.b14}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Our Target</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b15"
+                      value={upreportfile.inputs.b15}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>If avg is</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b16"
+                      value={upreportfile.inputs.b16}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Avg Diff.</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b17"
+                      value={upreportfile.inputs.b17}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Pdp for Today</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b18"
+                      value={upreportfile.inputs.b18}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
                 </tr>
                 <tr>
                   <td>
-
+                    Pdp for Next day <span>{getNextDay()}</span>
                   </td>
-                  <td> </td>
-                  <td></td>
-                  <td></td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b19"
+                      value={upreportfile.inputs.b19}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
                 </tr>
                 <tr>
+                  <td>New Rate Today</td>
                   <td>
                     <input
-                      type="number"
-                      name="f13"
-                      value={upreportfile.inputs.f13}
+                      type="Number"
+                      name="b20"
+                      value={upreportfile.inputs.b20}
                       onChange={handleInputChange}
+                      className="border rounded p-1"
                     />
                   </td>
-                  <td>
-                    <input
-                      type="number"
-                      name ="g13"
-                      value={upreportfile.inputs.g13}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      name="h13"
-                      value={upreportfile.inputs.h13}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                  <td className="font-bold">
-                      <input
-                          type="text"
-                          name="i14"
-                          value={upreportfile.inputs.i14}
-                          onChange={handleInputChange}
-                        />
-                      </td>
                 </tr>
                 <tr>
+                  <td>Old Rate</td>
                   <td>
                     <input
-                      type="number"
-                      name="f14"
-                      value={upreportfile.inputs.f14}
+                      type="Number"
+                      name="b21"
+                      value={upreportfile.inputs.b21}
                       onChange={handleInputChange}
+                      className="border rounded p-1"
                     />
                   </td>
-                  <td>
-                    <input
-                      type="number"
-                      name="g14"
-                      value={upreportfile.inputs.g14}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      name="h14"
-                      value={upreportfile.inputs.h14}
-                      onChange={handleInputChange}
-                    />
-                  </td>
-                  <td className="font-bold">
-                      <input
-                          type="text"
-                          name="i15"
-                          value={upreportfile.inputs.i15}
-                          onChange={handleInputChange}
-                        />
-                      </td>
                 </tr>
                 <tr>
-                  <td>{upreportfile.reports.feighteen}</td>
-                  <td>{upreportfile.reports.geighteen}</td>
-                  <td>{upreportfile.reports.heighteen}</td>
-                  <td className="font-bold">
-                      <input
-                          type="text"
-                          name="i16"
-                          value={upreportfile.inputs.i16}
-                          onChange={handleInputChange}
-                        />
-                      </td>
+                  <td>2T 1ltr</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b22"
+                      value={upreportfile.inputs.b22}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>2t 500ml</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b23"
+                      value={upreportfile.inputs.b23}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>2T 250ml</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b24"
+                      value={upreportfile.inputs.b24}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>60ml pouch sold</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b25"
+                      value={upreportfile.inputs.b25}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>40ml pouch sold</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b26"
+                      value={upreportfile.inputs.b26}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>20ml pouch sold</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b27"
+                      value={upreportfile.inputs.b27}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Classic 1 Ltr sold</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b28"
+                      value={upreportfile.inputs.b28}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Nxt 1 Ltr</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b29"
+                      value={upreportfile.inputs.b29}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Nxt 900ml</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b30"
+                      value={upreportfile.inputs.b30}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>4T Plus 1 ltr</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b31"
+                      value={upreportfile.inputs.b31}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>4T Plus 900ml</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b32"
+                      value={upreportfile.inputs.b32}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>4T Zipp 1 Ltr</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b33"
+                      value={upreportfile.inputs.b33}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>4T Zipp 900ml</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b34"
+                      value={upreportfile.inputs.b34}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Stotech</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b35"
+                      value={upreportfile.inputs.b35}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Hero Honda 800ml</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b36"
+                      value={upreportfile.inputs.b36}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Hero Honda 900ml</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b37"
+                      value={upreportfile.inputs.b37}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Ready cool 1 Ltr</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b38"
+                      value={upreportfile.inputs.b38}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Ready cool 500ml</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b39"
+                      value={upreportfile.inputs.b39}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>60ml pouch leakage</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b40"
+                      value={upreportfile.inputs.b40}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>40ml pouch leakage</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b41"
+                      value={upreportfile.inputs.b41}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>20ml pouch leakage</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b42"
+                      value={upreportfile.inputs.b42}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Today Credit Sold</td>
+                  <td>
+                    <input
+                      type="Number"
+                      name="b43"
+                      value={upreportfile.inputs.b43}
+                      onChange={handleInputChange}
+                      className="border rounded p-1"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Today Cash Sales</td>
+                  <td id="b44">{upreportfile.reports.cashsales}</td>
                 </tr>
               </tbody>
             </table>
           </div>
+          <div className="table-wraper sales-table-wraper">
+            <div className="text-center mb-20">
+              <h2 className="text-2xl font-bold  p-4">This Month , Last year</h2>
+              <table className="responsive-table">
+                <thead>
+                  {" "}
+                  <tr>
+                    <th>{year1}</th>
+                    <th>{year2}</th>
+                    <th>{year3}</th>
+                    <th>Last 3 Years</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {" "}
+                  <tr>
+                    <td>
+                      <input
+                        type="number"
+                        name="f12"
+                        value={upreportfile.inputs.f12}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        name="g12"
+                        value={upreportfile.inputs.g12}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        name="h12"
+                        value={upreportfile.inputs.h12}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td className="font-bold">
+                      <input
+                        type="text"
+                        name="i12"
+                        value={upreportfile.inputs.i12}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="font-bold">{upreportfile.reports.ftera}</td>
+                    <td className="font-bold">{upreportfile.reports.gtera}</td>
+                    <td className="font-bold">{upreportfile.reports.htera}</td>
+                    <td className="font-bold">
+                      <input
+                        type="text"
+                        name="i13"
+                        value={upreportfile.inputs.i13}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+
+                    </td>
+                    <td> </td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <input
+                        type="number"
+                        name="f13"
+                        value={upreportfile.inputs.f13}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        name="g13"
+                        value={upreportfile.inputs.g13}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        name="h13"
+                        value={upreportfile.inputs.h13}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td className="font-bold">
+                      <input
+                        type="text"
+                        name="i14"
+                        value={upreportfile.inputs.i14}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <input
+                        type="number"
+                        name="f14"
+                        value={upreportfile.inputs.f14}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        name="g14"
+                        value={upreportfile.inputs.g14}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        name="h14"
+                        value={upreportfile.inputs.h14}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                    <td className="font-bold">
+                      <input
+                        type="text"
+                        name="i15"
+                        value={upreportfile.inputs.i15}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{upreportfile.reports.feighteen}</td>
+                    <td>{upreportfile.reports.geighteen}</td>
+                    <td>{upreportfile.reports.heighteen}</td>
+                    <td className="font-bold">
+                      <input
+                        type="text"
+                        name="i16"
+                        value={upreportfile.inputs.i16}
+                        onChange={handleInputChange}
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
