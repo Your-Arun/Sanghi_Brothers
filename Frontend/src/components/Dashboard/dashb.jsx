@@ -269,7 +269,7 @@ const UpdateDashboard = () => {
                                         <FaTimes />
                                     </button>
                                     <h2 className="text-2xl font-semibold mb-4">{card.title}</h2>
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 gap-4">
                                         {card.items.map(card.renderItem)}
                                     </div>
                                 </div>
