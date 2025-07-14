@@ -411,7 +411,7 @@ const Sb03Update = () => {
             </div>
           </div>
           <div className="table-container">
-            <table className="responsive-table">
+            <table className="">
               <thead>
                 <tr>
                   <th>Date</th>
