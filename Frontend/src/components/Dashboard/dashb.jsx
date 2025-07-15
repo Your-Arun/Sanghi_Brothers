@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
     FaTimes,
     FaFolderOpen,
-    FaWallet,
+    FaWallet,FaTrash,
     FaComments,
     FaUniversity,
 } from "react-icons/fa";
