@@ -144,9 +144,9 @@ const UpdateDashboard = () => {
                     onClick={() => navigate(`/reportfile/${item._id}`)}
                     className="min-w-[180px] p-3 bg-gray-100 rounded shadow cursor-pointer"
                 >
-                    <div className="text-bold">Cash Sales:
-                         ₹ {item.reports.cashsales}</div>
-                    <div className="text-sm text-gray-600">
+                    <div className="text-bold text-sm text-gray-700">Cash Sales:</div>
+                     <div className='text-sm text-gray-700'>₹ {item.reports.cashsales}</div>
+                    <div className="text-xs text-gray-500">
                         {new Date(item.entryDate).toLocaleDateString()}
                     </div>
 
@@ -249,7 +249,7 @@ const UpdateDashboard = () => {
                         </div>
 
                         {/* Only first 4 items shown here */}
-                        <div className="grid grid-cols-2 gap-3 overflow-x-auto pb-3 scrollbar-hide">
+                        <div className="grid grid-cols-2 gap-4 overflow-x-auto p-4 scrollbar-hide">
                             {card.items.slice(0, 4).map((item, idx) => card.renderItem(item, idx))}
                         </div>
 
