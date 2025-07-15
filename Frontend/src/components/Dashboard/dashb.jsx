@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
     FaTimes,
     FaFolderOpen,
-    FaWallet,FaTrash,
+    FaWallet, FaTrash,
     FaComments,
     FaUniversity,
 } from "react-icons/fa";
@@ -338,6 +338,45 @@ const UpdateDashboard = () => {
                 ))}
             </div>
 
+            {/* Quick Access Buttons Section */}
+            <div className="relative flex flex-col items-center mt-6">
+                <div className="bg-white p-6 rounded-xl shadow-lg grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-6xl">
+                    <button
+                        onClick={() => navigate("/shifting")}
+                        className="bg-red-500 text-white flex items-center px-6 py-3 rounded-full shadow-lg hover:bg-red-600 transform hover:scale-105 transition-all ease-in-out w-full"
+                    >
+                        👫 <span className="ml-2">SHIFTING ARRANGEMENT</span>
+                    </button>
+                    <button
+                        onClick={() => navigate("/lekhajokha")}
+                        className="bg-orange-500 text-white flex items-center px-6 py-3 rounded-full shadow-lg hover:bg-orange-600 transform hover:scale-105 transition-all ease-in-out w-full"
+                    >
+                        📄 <span className="ml-2">LEKHA JOKHA</span>
+                    </button>
+                    <button
+                        onClick={() => navigate("/exceluploader")}
+                        className="bg-blue-500 text-white flex items-center px-6 py-3 rounded-full shadow-lg hover:bg-blue-600 transform hover:scale-105 transition-all ease-in-out w-full"
+                        aria-label="Upload File"
+                    >
+                        📤 <span className="ml-2">UPLOAD FILE</span>
+                    </button>
+                    <button
+                        onClick={() => navigate("/createmeterclose")}
+                        className="bg-purple-500 text-white flex items-center px-6 py-3 rounded-full shadow-lg hover:bg-purple-600 transform hover:scale-105 transition-all ease-in-out w-full"
+                        aria-label="Meter Close"
+                    >
+                        🔒 <span className="ml-2">METER CLOSE</span>
+                    </button>
+                    <button
+                        onClick={() => navigate("/Cashslip")}
+                        className="bg-purple-500 text-white flex items-center px-6 py-3 rounded-full shadow-lg hover:bg-purple-600 transform hover:scale-105 transition-all ease-in-out w-full"
+                        aria-label="Cash Slip"
+                    >
+                        💵 <span className="ml-2">Cash Slip</span>
+                    </button>
+                </div>
+            </div>
+
 
             {/* Report Modal */}
             {selectedReport && (
@@ -351,12 +390,7 @@ const UpdateDashboard = () => {
                         </button>
                         <h2 className="text-xl font-bold mb-2">{selectedReport.title}</h2>
                         <p className="text-gray-700">{selectedReport.content}</p>
-                        <button
-                            className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
-                            onClick={() => setSelectedReport(null)}
-                        >
-                            Close
-                        </button>
+
                         <button
                             className="mt-2 px-3 py-1 bg-red-500 text-white rounded-lg w-full hover:bg-red-600 flex items-center justify-center gap-2"
                             onClick={(e) => {
