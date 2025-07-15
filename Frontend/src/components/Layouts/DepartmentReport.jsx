@@ -56,7 +56,7 @@ const DepartmentReports = () => {
   }, [user, navigate]);
 
   return (
-    <div className="flex flex-col  bg-gradient-to-r from-blue-400 to-yellow-400 items-center justify-center min-h-screen bg-gray-100 p-6">
+    <div className="flex flex-col  items-center justify-center p-6">
       <div className="w-full bg-teal-700 text-white py-6 text-center shadow-lg">
         {user && (
           <h2 className="text-3xl font-semibold">

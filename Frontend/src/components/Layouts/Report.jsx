@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from '../Dashboard/axiosInstance'
 import UserContext from "../Home Page/UserContext"; // Import UserContext
 import { toast } from 'react-toastify'
+import BackButton from "../Home Page/backbutton";
 
 const Report = () => {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ const Report = () => {
 
   return (
     <>
-      <div className="flex flex-col bg-gradient-to-r from-blue-400 to-yellow-400 p-6 items-center justify-center min-h-screen">
+      <div className="flex flex-col p-6 items-center justify-center">
         <form className="bg-white p-6 rounded shadow-md " onSubmit={handleSubmit}>
           <h2 className="text-4xl bg-gradient-to-r from-orange-600 to-yellow-600 text-center text-transparent bg-clip-text font-bold mb-4">
             COMPLAINTs
@@ -64,6 +65,7 @@ const Report = () => {
             Create Report
           </button>
         </form>
+        <div><BackButton previousImage="/previous.png" /></div>
       </div>
     </>
   );

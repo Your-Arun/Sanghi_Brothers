@@ -179,7 +179,7 @@ const UpdateDashboard = () => {
             ),
             // ✅ Add custom extraContent to show total
             extraContent: (
-                <div className="text-sm font-medium text-gray-700 mt-1">
+                <div className="text-sm font-bold text-gray-700 mt-1">
                     Total: ₹{cashierTotal.toLocaleString("en-IN")}
                 </div>
             )
