@@ -138,7 +138,7 @@ const CashierDeposit = ({ token }) => {
 
 
     return (
-        <div className="flex flex-col items-center justify-center p-6">
+        <div className="flex flex-col bg-gradient-to-r from-blue-400 to-yellow-400 items-center justify-center bg-gray-100 p-6">
             <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-lg">
                 {/* Today's Date */}
                 <p className="text-center text-lg font-semibold text-gray-700 mb-2">📅 {todayDate}</p>
