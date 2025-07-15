@@ -25,6 +25,8 @@ const UpdateDashboard = () => {
     const [fundposition, setFundPosition] = useState([]);
     const [inOutFlow, setInOutFlow] = useState([]);
     const [masterSheet, setMasterSheet] = useState([]);
+    const [cashierTotal, setCashierTotal] = useState(0);
+
 
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
@@ -57,6 +59,10 @@ const UpdateDashboard = () => {
                 setFundPosition(fundRes.data);
                 setInOutFlow(flowRes.data);
                 setMasterSheet(masterRes.data);
+
+                // ✅ Calculate cashier total here
+                const total = cashierRes.data.reduce((sum, item) => sum + item.amount, 0);
+                setCashierTotal(total);
             } catch (err) {
                 console.error("Error loading data:", err);
                 toast.error("Failed to fetch dashboard data.");
@@ -145,7 +151,7 @@ const UpdateDashboard = () => {
                     className="min-w-[180px] p-3 bg-gray-100 rounded shadow cursor-pointer"
                 >
                     <div className="text-bold text-sm text-gray-700">Cash Sales:</div>
-                     <div className='text-sm text-gray-700'>₹ {item.reports.cashsales}</div>
+                    <div className='text-sm text-gray-700'>₹ {item.reports.cashsales}</div>
                     <div className="text-xs text-gray-500">
                         {new Date(item.entryDate).toLocaleDateString()}
                     </div>
@@ -168,12 +174,17 @@ const UpdateDashboard = () => {
                 >
                     <div className="font-bold">₹{item.amount}</div>
                     <div className="text-sm text-gray-600">{item.bank}</div>
-                    <div className="text-sm">
-                        {new Date(item.date).toLocaleDateString()}
-                    </div>
+                    <div className="text-sm">{new Date(item.date).toLocaleDateString()}</div>
                 </div>
             ),
-        },
+            // ✅ Add custom extraContent to show total
+            extraContent: (
+                <div className="text-sm font-medium text-gray-700 mt-1">
+                    Total: ₹{cashierTotal.toLocaleString("en-IN")}
+                </div>
+            )
+        }
+        ,
         {
             title: "Complaints",
             icon: <FaComments className="text-4xl text-red-500" />,
@@ -247,7 +258,8 @@ const UpdateDashboard = () => {
                                 />
                             )}
                         </div>
-
+                        {/* ✅ Show total amount if present */}
+                        {card.extraContent && card.extraContent}
                         {/* Only first 4 items shown here */}
                         <div className="grid grid-cols-2 gap-2 overflow-x-auto p-4 scrollbar-hide">
                             {card.items.slice(0, 4).map((item, idx) => card.renderItem(item, idx))}
