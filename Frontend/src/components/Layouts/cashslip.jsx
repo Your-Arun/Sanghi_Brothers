@@ -2,19 +2,41 @@ import React, { useState, useEffect, useContext } from 'react';
 import axiosInstance from '../Dashboard/axiosInstance'
 import BackButton from '../Home Page/backbutton';
 import { toast } from 'react-toastify'
-import UserContext from "../Home Page/UserContext";
+import UserContext from "../Home Page/UserContext"; // Import UserContext
 
 const CashSlip = () => {
     const [fecthcashSlip, setFecthcashSlip] = useState([]);
-    const { user } = useContext(UserContext);
+    const { user } = useContext(UserContext); // Get user from context
 
     const [selectedDate, setSelectedDate] = useState(() => {
         const today = new Date();
         return today.toISOString().split("T")[0];
     });
+    useEffect(() => {
+        const fetchCashSlip = async () => {
+            try {
+                const response = await axiosInstance.get('/Cashslip');
+                setFecthcashSlip(response.data);
+            } catch (error) {
+                toast.warn("Not Found CashSlips");
+            }
+        };
+        fetchCashSlip();
+    }, []);
 
-    const [actualAmount, setActualAmount] = useState(0);
-    const [difference, setDifference] = useState(0);
+    useEffect(() => {
+        fetchCashSlipByDate(selectedDate);
+    }, [selectedDate]);
+
+    const fetchCashSlipByDate = async (date) => {
+        try {
+            let url = `/Cashslip?date=${date}`;
+            const response = await axiosInstance.get(url);
+            setFecthcashSlip(response.data);
+        } catch (error) {
+            toast.warning("Error fetching cash slip:");
+        }
+    };
 
     const [cashSlip, setCashSlip] = useState({
         date: "",
@@ -34,29 +56,11 @@ const CashSlip = () => {
         expenses: "",
         total: "",
     });
-
-    const [totalAmount, setTotalAmount] = useState(0);
     const shifts = ["First Shift", "Second Shift"];
-
-    useEffect(() => {
-        fetchCashSlipByDate(selectedDate);
-    }, [selectedDate]);
-
-    useEffect(() => {
-        const total = Object.entries(cashSlip.cashDetails).reduce(
-            (acc, [denom, count]) => acc + (Number(denom) * Number(count || 0)), 0
-        ) + Number(cashSlip.uFill) + Number(cashSlip.iciciSlip) + Number(cashSlip.sbiSlip) + Number(cashSlip.paytm) + Number(cashSlip.expenses);
-        setTotalAmount(total);
-    }, [cashSlip]);
-
-    useEffect(() => {
-        setDifference(actualAmount - totalAmount);
-    }, [actualAmount, totalAmount]);
-
+    const [totalAmount, setTotalAmount] = useState(0);
     const handleChange = (e) => {
         setCashSlip((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
-
     const handleCashChange = (e, denomination) => {
         const value = e.target.value === "" ? 0 : e.target.value;
         setCashSlip(prev => ({
@@ -64,28 +68,63 @@ const CashSlip = () => {
             cashDetails: { ...prev.cashDetails, [denomination]: value }
         }));
     };
-
-    const handleNumberField = (field) => (e) => {
+    const handleUFillChange = (e) => {
         const value = e.target.value === "" ? 0 : e.target.value;
-        setCashSlip(prev => ({ ...prev, [field]: value }));
+        setCashSlip(prev => ({ ...prev, uFill: value }));
     };
+    const handleIciciSlipChange = (e) => {
+        const value = e.target.value === "" ? 0 : e.target.value;
+        setCashSlip(prev => ({ ...prev, iciciSlip: value }));
+    };
+    const handleSbiSlipChange = (e) => {
+        const value = e.target.value === "" ? 0 : e.target.value;
+        setCashSlip(prev => ({ ...prev, sbiSlip: value }));
+    };
+    const handlePaytmChange = (e) => {
+        const value = e.target.value === "" ? 0 : e.target.value;
+        setCashSlip(prev => ({ ...prev, paytm: value }));
+    };
+    const handleExpensesChange = (e) => {
+        const value = e.target.value === "" ? 0 : e.target.value;
+        setCashSlip(prev => ({ ...prev, expenses: value }));
+    };
+    useEffect(() => {
+        const total = Object.entries(cashSlip.cashDetails).reduce(
+            (acc, [denom, count]) => acc + (Number(denom) * Number(count || 0)), 0
+        ) + Number(cashSlip.uFill) + Number(cashSlip.iciciSlip) + Number(cashSlip.sbiSlip) + Number(cashSlip.paytm) + Number(cashSlip.expenses);
+        setTotalAmount(total);
+    }, [cashSlip]);
+    useEffect(() => {
+        fetchCashSlip();
+    }, []);
 
-    const fetchCashSlipByDate = async (date) => {
+    const fetchCashSlip = async () => {
         try {
-            const response = await axiosInstance.get(`/Cashslip?date=${date}`);
+            const response = await axiosInstance.get('/Cashslip');
             setFecthcashSlip(response.data);
         } catch (error) {
             toast.warning("Error fetching cash slip:");
         }
-    };
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const cashdata = {
-                ...cashSlip,
+                date: cashSlip.date,
+                shift: cashSlip.shift,
+                name: cashSlip.name,
+                nozzleNo: cashSlip.nozzleNo,
+                openingReading: cashSlip.openingReading,
+                closingReading: cashSlip.closingReading,
+                salesInLtr: cashSlip.salesInLtr,
+                testing: cashSlip.testing,
+                pending: cashSlip.pending,
                 cashDetails: Object.fromEntries(
-                    Object.entries(cashSlip.cashDetails).map(([denom, count]) => [denom, count === "" ? 0 : count])
+                    Object.entries(cashSlip.cashDetails).map(([denom, count]) => [
+                        denom,
+                        count === "" ? 0 : count,
+                    ])
                 ),
                 uFill: cashSlip.uFill === "" ? 0 : cashSlip.uFill,
                 iciciSlip: cashSlip.iciciSlip === "" ? 0 : cashSlip.iciciSlip,
@@ -98,16 +137,19 @@ const CashSlip = () => {
             await axiosInstance.post("/Cashslip", cashdata);
             toast.success("Cash Slip saved successfully!");
             fetchCashSlipByDate(selectedDate);
+
+            // ✅ Data save hone ke turant baad fetch karna
+            fetchCashSlip();
+
         } catch (error) {
-            toast.warn("Error saving cash slip:");
+            toast.warn("Error saving cash slip: ");
         }
     };
-
     const confirmDeleteToast = (onConfirm) => {
         toast(
             ({ closeToast }) => (
                 <div className="flex flex-col gap-2">
-                    <p>Are you sure you want to delete this?</p>
+                    <p>Are you sure you want to delete this ?</p>
                     <div className="flex gap-4 mt-2">
                         <button
                             onClick={() => {
@@ -135,6 +177,20 @@ const CashSlip = () => {
             }
         )
     }
+    // const handleDelete = async (id) => {
+    //     e.preventDefault()
+    //     confirmDeleteToast(async () => {
+    //         try {
+    //             await axiosInstance.delete(`/Cashslip/${id}`);
+    //             toast.success("Cash Slip deleted successfully!");
+    //             fetchCashSlipByDate(selectedDate);
+    //         } catch (error) {
+    //             toast.warn("Error deleting cash slip: ");
+    //         }
+    //     })
+    // }
+
+
 
     const handleDelete = async (id) => {
         confirmDeleteToast(async () => {
@@ -151,7 +207,7 @@ const CashSlip = () => {
     return (
         <div className="flex flex-col items-center justify-center p-6">
             <div className="bg-white shadow-lg rounded-lg p-6 max-w-2xl w-full">
-                <h2 className="text-4xl font-bold text-center text-blue-600 mb-8">Daily Cash Slip</h2>
+                <h2 className="text-4xl font-bold text-center text-blue-600 mb-8 ">Daily Cash Slip</h2>
                 <form onSubmit={handleSubmit} className="space-y-4 font-bold">
                     {/* Date & Shift */}
                     <div className="flex flex-col sm:flex-row gap-4">
@@ -197,51 +253,34 @@ const CashSlip = () => {
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label>U Fill:</label>
-                            <input type="number" value={cashSlip.uFill} onChange={handleNumberField("uFill")} className="border p-2 rounded-md w-full" />
+                            <input type="number" value={cashSlip.uFill} onChange={handleUFillChange} className="border p-2 rounded-md w-full" />
                         </div>
                         <div>
                             <label>ICICI Slip:</label>
-                            <input type="number" value={cashSlip.iciciSlip} onChange={handleNumberField("iciciSlip")} className="border p-2 rounded-md w-full" />
+                            <input type="number" value={cashSlip.iciciSlip} onChange={handleIciciSlipChange} className="border p-2 rounded-md w-full" />
                         </div>
                         <div>
                             <label>SBI Slip:</label>
-                            <input type="number" value={cashSlip.sbiSlip} onChange={handleNumberField("sbiSlip")} className="border p-2 rounded-md w-full" />
+                            <input type="number" value={cashSlip.sbiSlip} onChange={handleSbiSlipChange} className="border p-2 rounded-md w-full" />
                         </div>
                         <div>
                             <label>Paytm:</label>
-                            <input type="number" value={cashSlip.paytm} onChange={handleNumberField("paytm")} className="border p-2 rounded-md w-full" />
+                            <input type="number" value={cashSlip.paytm} onChange={handlePaytmChange} className="border p-2 rounded-md w-full" />
                         </div>
                         <div>
                             <label>Expenses:</label>
-                            <input type="number" value={cashSlip.expenses} onChange={handleNumberField("expenses")} className="border p-2 rounded-md w-full" />
-                        </div>
-                        <div>
-                            <label>Actual Amount:</label>
-                            <input type="number" value={actualAmount} onChange={(e) => setActualAmount(Number(e.target.value))} className="border p-2 rounded-md w-full" />
+                            <input type="number" value={cashSlip.expenses} onChange={handleExpensesChange} className="border p-2 rounded-md w-full" />
                         </div>
                     </div>
 
-                    {/* Totals Display */}
-                    <div className="text-center space-y-1 mt-2">
-                        <p className="text-lg font-semibold text-blue-700">Total Amount: ₹{totalAmount}</p>
-                        <p className="text-lg font-semibold text-gray-700">Actual Amount: ₹{actualAmount}</p>
-                        <p className={`text-lg font-bold ${
-                            difference === 0 ? "text-green-600" :
-                            difference > 0 ? "text-blue-600" : "text-red-600"
-                        }`}>
-                            {difference === 0
-                                ? "✔ No Difference"
-                                : difference > 0
-                                ? `+₹${difference} Extra`
-                                : `-₹${Math.abs(difference)} Less`}
-                        </p>
-                    </div>
+                    {/* Total Amount */}
+                    <p className="text-xl font-bold text-center text-green-600">Total Amount: ₹{totalAmount}</p>
 
+                    {/* Submit Button */}
                     <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md w-full hover:bg-blue-600 transition">Save Cash Slip</button>
                 </form>
             </div>
-
-            {/* Display Saved Slips */}
+            {/* Cash Slips Display */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6 mt-6">
                 {fecthcashSlip.map((cashSlip, index) => (
                     <div key={index} className="bg-white shadow-md p-4 rounded-lg border border-gray-200 relative group">
@@ -252,6 +291,8 @@ const CashSlip = () => {
                         <p><strong>Closing:</strong> {cashSlip.closingReading}</p>
                         <p><strong>Sales:</strong> {cashSlip.salesInLtr} L</p>
                         <p><strong>Total:</strong> ₹{cashSlip.total}</p>
+
+                        {/* Delete button only for manager */}
                         {user.department === "manager" && (
                             <button
                                 onClick={() => handleDelete(cashSlip._id)}
@@ -264,7 +305,10 @@ const CashSlip = () => {
                 ))}
             </div>
 
-            <div><BackButton previousImage="/previous.png" /></div>
+            {/* Back Button */}
+            <div>
+                <BackButton previousImage="/previous.png" />
+            </div>
         </div>
     );
 };
