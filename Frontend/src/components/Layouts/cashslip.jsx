@@ -191,7 +191,7 @@ const CashSlip = () => {
 
                     <p className="text-center font-bold text-green-700">Total: ₹{totalAmount}</p>
                     <p className={`text-center font-bold ${amountDiff === 0 ? "text-blue-600" : amountDiff > 0 ? "text-green-600" : "text-red-600"}`}>
-                        {amountDiff === 0 ? "Perfectly Matched" : amountDiff > 0 ? `Surplus ₹${amountDiff}` : `Deficit ₹${Math.abs(amountDiff)}`}
+                        {amountDiff === 0 ? "Perfectly Matched" : amountDiff > 0 ? `Plus ₹${amountDiff}` : `Minus ₹${Math.abs(amountDiff)}`}
                     </p>
 
                     <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-md w-full hover:bg-blue-700 transition">Save Cash Slip</button>
@@ -206,7 +206,7 @@ const CashSlip = () => {
 
             {/* Display filtered results */}
             {fecthcashSlip.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full px-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full px-4 mb-5">
                     {fecthcashSlip.map((item, index) => (
                         <div key={index} className="bg-white shadow-md p-4 rounded-lg border border-gray-200 relative">
                             <h3 className="text-lg font-bold text-blue-600">{item.name}</h3>
