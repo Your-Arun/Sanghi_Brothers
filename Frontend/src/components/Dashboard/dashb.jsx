@@ -119,7 +119,7 @@ const UpdateDashboard = () => {
                 <div
                     key={item._id || index}
                     onClick={() => handleBankItemClick(item)}
-                    className="min-w-[180px] p-3 bg-gray-50 rounded shadow cursor-pointer"
+                    className="min-w-[180px] p-3 bg-gray-100 rounded shadow cursor-pointer"
                 >
                     <div className="font-bold text-sm text-gray-700">{item.type}</div>
                     <div className="text-xs text-gray-500">
@@ -142,13 +142,14 @@ const UpdateDashboard = () => {
                 <div
                     key={item._id}
                     onClick={() => navigate(`/reportfile/${item._id}`)}
-                    className="min-w-[180px] p-3 bg-gray-50 rounded shadow cursor-pointer"
+                    className="min-w-[180px] p-3 bg-gray-100 rounded shadow cursor-pointer"
                 >
-                    <div className="font-bold text-green-700">{item.department}</div>
+                    <div className="text-bold">Cash Sales:
+                         ₹ {item.reports.cashsales}</div>
                     <div className="text-sm text-gray-600">
                         {new Date(item.entryDate).toLocaleDateString()}
                     </div>
-                    <div className="text-sm">Cash Sales: ₹{item.reports.cashsales}</div>
+
                 </div>
             ),
         },
@@ -163,7 +164,7 @@ const UpdateDashboard = () => {
             renderItem: (item) => (
                 <div
                     key={item._id}
-                    className="min-w-[180px] p-3 bg-gray-50 rounded shadow"
+                    className="min-w-[180px] p-3 bg-gray-100 rounded shadow"
                 >
                     <div className="font-bold">₹{item.amount}</div>
                     <div className="text-sm text-gray-600">{item.bank}</div>
@@ -185,7 +186,7 @@ const UpdateDashboard = () => {
                 <div
                     key={item._id}
                     onClick={() => setSelectedReport(item)}
-                    className="min-w-[180px] p-3 bg-gray-50 rounded shadow cursor-pointer"
+                    className="min-w-[180px] p-3 bg-gray-100 rounded shadow cursor-pointer"
                 >
                     <div className="font-bold">{item.title}</div>
                     <div className="text-sm text-gray-600">{item.department}</div>
@@ -254,12 +255,12 @@ const UpdateDashboard = () => {
 
                         {/* See All button if more than 4 items */}
                         {card.items.length > 4 && (
-                            <button
+                            <div
                                 onClick={card.onView}
-                                className="mt-3 text-blue-500 hover:underline"
+                                className="mt-3 text-blue-500 cursor-pointer hover:underline"
                             >
                                 See All
-                            </button>
+                            </div>
                         )}
 
                         {/* Full List Modal */}
