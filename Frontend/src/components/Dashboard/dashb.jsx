@@ -246,7 +246,7 @@ const UpdateDashboard = () => {
                                 />
                             )}
                         </div>
-                        <div className="grid grid-cols-2 space-y-2 space-x-4 overflow-x-auto pb-3 scrollbar-hide">
+                        <div className="grid grid-cols-2 overflow-x-auto pb-3 scrollbar-hide">
                             {card.items.slice(0, 4).map(card.renderItem)}
                         </div>
                         {card.count > 4 && (
