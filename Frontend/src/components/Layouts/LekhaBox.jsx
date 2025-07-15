@@ -65,7 +65,7 @@ const ChekList = () => {
   }
 
     return (
-        <div className="flex flex-col items-center justify-center bg-gradient-to-r from-blue-400 to-yellow-400 min-h-screen p-6">
+        <div className="flex flex-col items-center justify-center p-6">
             {/* Page Title */}
             <h1 className="text-4xl font-bold text-blue-600 mb-6">LEKHA JOKHA</h1>
 

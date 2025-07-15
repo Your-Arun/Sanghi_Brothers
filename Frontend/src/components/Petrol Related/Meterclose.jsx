@@ -192,7 +192,7 @@ const Meterclose = () => {
 
 
     return (
-        <div className="flex flex-col items-center bg-gradient-to-r from-blue-400 to-yellow-400 justify-center min-h-screen p-6">
+        <div className="flex flex-col items-center justify-center p-6">
             <form onSubmit={handleSubmit}>
                 <div className="flex justify-between items-center mb-6">
                     <Link to={'/createmeterclose'}>

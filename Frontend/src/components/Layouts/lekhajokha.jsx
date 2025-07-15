@@ -109,7 +109,7 @@ const Lekhajokha = () => {
     };
 
     return (
-        <div className="relative p-6 bg-gradient-to-r from-blue-400 to-yellow-400 min-h-screen">
+        <div className="relative p-6 ">
             <form onSubmit={handleSubmit}>
                 <h1 className="text-5xl font-bold text-gray-800 text-center">Lekha Jokha</h1>
                 <div className="flex justify-end mb-6">

@@ -205,7 +205,7 @@ const CashSlip = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center bg-gradient-to-r from-blue-400 to-yellow-400 p-6">
+        <div className="flex flex-col items-center justify-center p-6">
             <div className="bg-white shadow-lg rounded-lg p-6 max-w-2xl w-full">
                 <h2 className="text-4xl font-bold text-center text-blue-600 mb-8 ">Daily Cash Slip</h2>
                 <form onSubmit={handleSubmit} className="space-y-4 font-bold">

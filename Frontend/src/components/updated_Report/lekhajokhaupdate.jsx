@@ -180,7 +180,7 @@ const UpdateSaleManagement = () => {
     };
 
     return (
-        <div className="relative p-6 dashboard bg-gray-100">
+        <div className="relative p-6">
             <form onSubmit={handleSubmit}>
                 <div>
                     <h1 className="text-4xl mb-10 font-bold text-center">Lekha Jokha</h1>

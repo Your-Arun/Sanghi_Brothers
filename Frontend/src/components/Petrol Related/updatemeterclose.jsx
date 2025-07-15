@@ -265,7 +265,7 @@ const UpdateMeterclose = () => {
     const totalCredit = parseInt(cashUnknown) + parseInt(cashMs) + parseInt(cashSp) + parseInt(crSalesMs) + parseInt(u2) || 0;
 
     return (
-        <div className="relative p-6 bg-gradient-to-r from-blue-400 to-yellow-400 min-h-screen">
+        <div className="relative p-6 ">
             <form onSubmit={handleSubmit}>
                 <div className="flex justify-between items-center mb-6">
                     <Link to={'/createmeterclose'}>

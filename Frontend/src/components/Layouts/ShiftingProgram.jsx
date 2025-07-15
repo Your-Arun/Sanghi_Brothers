@@ -315,7 +315,7 @@ const ShiftManagementSystem = () => {
   );
 
   return (
-    <div className="flex flex-col items-center  bg-gradient-to-r from-blue-400 to-yellow-400 justify-center min-h-screen p-6">
+    <div className="flex flex-col items-center justify-center p-6">
       <h1 className="text-3xl fo nt-bold  bg-gradient-to-r from-blue-800 to-yellow-800 text-transparent bg-clip-text text-center mb-5">SHIFT MANAGEMENT SYSTEM</h1>
 
 
