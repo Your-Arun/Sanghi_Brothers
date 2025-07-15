@@ -471,7 +471,7 @@ const ShiftManagementSystem = () => {
 
 
 
-      <div className="w-full px-4 py-6 min-h-screen">
+      <div className="w-full px-4 py-6 ">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {shifts.map((shift) => {
             const nozzles = shift.nozzles || [1, 2, 3, 4, 5, 6];
@@ -564,12 +564,6 @@ const ShiftManagementSystem = () => {
           })}
         </div>
       </div>
-
-
-
-
-
-
 
       <div>
         <BackButton previousImage="/previous.png" />
