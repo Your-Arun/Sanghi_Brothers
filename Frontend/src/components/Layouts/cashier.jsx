@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import axiosInstance from '../Dashboard/axiosInstance'
+import axiosInstance from '../Dashboard/axiosInstance';
 import BackButton from "../Home Page/backbutton";
-import { toast } from 'react-toastify'
+import { toast } from 'react-toastify';
 import numWords from 'num-words';
+
 const CashierDeposit = ({ token }) => {
     const [amount, setAmount] = useState("");
     const [selectedBank, setSelectedBank] = useState("");
@@ -10,48 +11,45 @@ const CashierDeposit = ({ token }) => {
     const [deposits, setDeposits] = useState([]);
     const [totalAmount, setTotalAmount] = useState(0);
     const [todayDate, setTodayDate] = useState("");
-    // List of banks
-    const banks = ["HDFC Bank", "ICICI Bank", "SBI Bank", "SBI Bank (Current Account)", "UCO Bank", "Axis Bank", "IDBI Bank", "Punjab National Bank", "Bank of Baroda", "Indus Valley Bank",];
-    // Fetch deposits on mount
+
+    const banks = [
+        "HDFC Bank", "ICICI Bank", "SBI Bank", "SBI Bank (Current Account)",
+        "UCO Bank", "Axis Bank", "IDBI Bank", "Punjab National Bank",
+        "Bank of Baroda", "Indus Valley Bank",
+    ];
+
     useEffect(() => {
         fetchDeposits();
         updateTodayDate();
     }, []);
 
-    // Function to update today's date
     const updateTodayDate = () => {
         const today = new Date();
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         setTodayDate(today.toLocaleDateString("en-IN", options));
     };
 
-    // Fetch Deposits from API
     const fetchDeposits = async () => {
         try {
-            const response = await axiosInstance.get("/cashier", {
-
-            });
+            const response = await axiosInstance.get("/cashier");
             setDeposits(response.data);
             calculateTotal(response.data);
         } catch (error) {
-            alert("Error fetching deposits:");
+            toast.error("Error fetching deposits.");
         }
     };
 
-    // Calculate total deposited amount
     const calculateTotal = (data) => {
-        const total = data.reduce((sum, deposit) => sum + deposit.amount, 0);
+        const total = data.reduce((sum, deposit) => sum + (Number(deposit.amount) || 0), 0);
         setTotalAmount(total);
     };
 
-    // Check if today is Sunday or Saturday
     const isBankClosed = () => {
         const today = new Date();
-        const day = today.getDay(); // 0 = Sunday, 6 = Saturday
+        const day = today.getDay();
         return day === 0 || day === 6;
     };
 
-    // Handle deposit submission
     const handleDeposit = async () => {
         if (!amount || !selectedBank) {
             setMessage("❌ Please enter amount and select a bank.");
@@ -63,14 +61,14 @@ const CashierDeposit = ({ token }) => {
             return;
         }
 
-        const depositData = { amount: parseFloat(amount), bank: selectedBank, totalamount: totalAmount };
+        const depositData = {
+            amount: parseFloat(amount),
+            bank: selectedBank,
+            totalamount: totalAmount,
+        };
 
         try {
-            const response = await axiosInstance.post(
-                "/cashier",
-                depositData,
-            );
-
+            const response = await axiosInstance.post("/cashier", depositData);
             setMessage(`${response.data.message}`);
             setAmount("");
             setSelectedBank("");
@@ -80,12 +78,9 @@ const CashierDeposit = ({ token }) => {
         }
     };
 
-    // Auto-hide message after 3 seconds
     useEffect(() => {
         if (message) {
-            const timer = setTimeout(() => {
-                setMessage("");
-            }, 3000);
+            const timer = setTimeout(() => setMessage(""), 3000);
             return () => clearTimeout(timer);
         }
     }, [message]);
@@ -94,12 +89,12 @@ const CashierDeposit = ({ token }) => {
         toast(
             ({ closeToast }) => (
                 <div className="flex flex-col gap-2">
-                    <p>Are you sure you want to delete this ?</p>
+                    <p>Are you sure you want to delete this?</p>
                     <div className="flex gap-4 mt-2">
                         <button
                             onClick={() => {
-                                onConfirm()
-                                closeToast()
+                                onConfirm();
+                                closeToast();
                             }}
                             className="bg-red-500 text-white px-3 py-1 rounded"
                         >
@@ -120,32 +115,27 @@ const CashierDeposit = ({ token }) => {
                 closeOnClick: false,
                 closeButton: false,
             }
-        )
-    }
+        );
+    };
 
     const handleDelete = async (id) => {
         confirmDeleteToast(async () => {
             try {
                 await axiosInstance.delete(`/cashier/${id}`);
                 toast.success("Deposit deleted successfully.");
-                fetchDeposits(); // refresh list
+                fetchDeposits();
             } catch (error) {
                 toast.warn("Failed to delete deposit.");
             }
-        })
-
+        });
     };
 
-
     return (
-        <div className="flex flex-col bg-gradient-to-r from-blue-400 to-yellow-400 items-center justify-center bg-gray-100 p-6">
+        <div className="flex flex-col items-center justify-center p-6">
             <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-lg">
-                {/* Today's Date */}
                 <p className="text-center text-lg font-semibold text-gray-700 mb-2">📅 {todayDate}</p>
-
                 <h2 className="text-2xl font-semibold text-gray-800 text-center mb-5">🏦 Cashier Deposit</h2>
 
-                {/* Amount Input */}
                 <input
                     type="number"
                     placeholder="Enter Amount"
@@ -154,7 +144,6 @@ const CashierDeposit = ({ token }) => {
                     onChange={(e) => setAmount(e.target.value)}
                 />
 
-                {/* Bank Selection */}
                 <select
                     className="w-full p-3 border rounded-lg mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     value={selectedBank}
@@ -168,7 +157,6 @@ const CashierDeposit = ({ token }) => {
                     ))}
                 </select>
 
-                {/* Deposit Button */}
                 <button
                     onClick={handleDeposit}
                     className="w-full bg-green-500 text-white p-3 rounded-lg font-semibold text-lg hover:bg-green-600 transition"
@@ -176,7 +164,6 @@ const CashierDeposit = ({ token }) => {
                     💰 Deposit Amount
                 </button>
 
-                {/* Status Message */}
                 {message && (
                     <p className={`mt-3 text-center text-sm font-medium ${message.startsWith("✅") ? "text-green-600" : "text-red-600"}`}>
                         {message}
@@ -184,7 +171,6 @@ const CashierDeposit = ({ token }) => {
                 )}
             </div>
 
-            {/* Deposits List */}
             <div className="mt-8 bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl">
                 <h3 className="text-lg font-semibold text-gray-800 mb-4">📜 Deposit History</h3>
 
@@ -196,34 +182,32 @@ const CashierDeposit = ({ token }) => {
                             <div key={deposit._id || index} className="bg-gray-100 p-4 rounded-lg shadow-md relative">
                                 <div
                                     onClick={() => handleDelete(deposit._id)}
-                                    className="absolute  cursor-pointer top-2 right-2 text-red-600 hover:text-red-800 font-bold text-sm"
+                                    className="absolute top-2 right-2 text-red-600 hover:text-red-800 font-bold text-sm cursor-pointer"
                                     title="Delete"
                                 >
                                     ❌
                                 </div>
                                 <p className="text-lg font-semibold text-gray-800">💰 ₹{deposit.amount}</p>
                                 <p className="text-sm text-gray-600">🏦 {deposit.bank}</p>
-                                <p className="text-xs text-gray-500">{new Date(deposit.date).toLocaleDateString()}</p>
+                                <p className="text-xs text-gray-500">
+                                    {(deposit.date || deposit.createdAt) &&
+                                        new Date(deposit.date || deposit.createdAt).toLocaleDateString("en-IN")}
+                                </p>
                             </div>
-
                         ))}
                     </div>
                 )}
 
-                {/* Total Amount */}
-                {/* <h4 className="text-lg font-semibold text-blue-700">
-                    Total Deposited: ₹{totalAmount.toLocaleString('en-IN')}
-                </h4> */}
-                <h4 className="text-lg font-semibold text-center text-blue-700">
-                    Total Deposited: ₹{totalAmount.toLocaleString('en-IN')}<br />
+                <h4 className="text-lg font-semibold text-center text-blue-700 mt-6">
+                    Total Deposited: ₹{totalAmount.toLocaleString("en-IN")}<br />
                     ({numWords(totalAmount, { lang: 'en-in' }).toUpperCase()})
                 </h4>
             </div>
+
             <div>
                 <BackButton previousImage="/previous.png" />
             </div>
         </div>
-
     );
 };
 

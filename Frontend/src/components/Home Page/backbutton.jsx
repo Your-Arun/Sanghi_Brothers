@@ -10,14 +10,16 @@ const BackButton = ({ previousImage }) => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY + window.innerHeight;
       const pageHeight = document.documentElement.scrollHeight;
-
-      // Check if user is at the bottom of the page
-      setShowButton(scrollPosition >= pageHeight - 10);
+      const showAnyway = pageHeight <= window.innerHeight + 20; // fallback for short pages
+  
+      setShowButton(scrollPosition >= pageHeight - 10 || showAnyway);
     };
-
+  
+    handleScroll(); // run once immediately
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+  
 
   if (!showButton) return null; // Hide button when not at bottom
 
