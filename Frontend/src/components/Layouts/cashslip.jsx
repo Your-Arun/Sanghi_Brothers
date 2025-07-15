@@ -206,7 +206,7 @@ const CashSlip = () => {
 
             {/* Display filtered results */}
             {fecthcashSlip.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full px-4 mb-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full px-4">
                     {fecthcashSlip.map((item, index) => (
                         <div key={index} className="bg-white shadow-md p-4 rounded-lg border border-gray-200 relative">
                             <h3 className="text-lg font-bold text-blue-600">{item.name}</h3>
@@ -229,7 +229,7 @@ const CashSlip = () => {
                 <p className="text-gray-500 mt-6">No cash slips found for {selectedDate}</p>
             )}
 
-            <div className="mt-8">
+            <div className="">
                 <BackButton previousImage="/previous.png" />
             </div>
         </div>
