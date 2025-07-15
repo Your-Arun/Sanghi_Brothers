@@ -249,7 +249,7 @@ const UpdateDashboard = () => {
                         </div>
 
                         {/* Only first 4 items shown here */}
-                        <div className="grid grid-cols-2 gap-4 overflow-x-auto p-4 scrollbar-hide">
+                        <div className="grid grid-cols-2 gap-2 space-x-4 space-y-2 overflow-x-auto p-4 scrollbar-hide">
                             {card.items.slice(0, 4).map((item, idx) => card.renderItem(item, idx))}
                         </div>
 
