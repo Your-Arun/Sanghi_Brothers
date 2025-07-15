@@ -88,23 +88,23 @@ const UpdateDashboard = () => {
     ];
     const handleBankItemClick = (item) => {
         switch (item.type) {
-          case "SB Bank Report":
-            navigate(`/bank/monthlyfundflow/${item._id}`);
-            break;
-          case "Fund Position":
-            navigate(`/fundposition/${item._id}`);
-            break;
-          case "In-Out Flow":
-            navigate(`/bank/monthlyflow/${item._id}`);
-            break;
-          case "Master Checklist":
-            navigate(`/mastersheet/finance/${item._id}`);
-            break;
-          default:
-            toast.error("Invalid report type");
+            case "SB Bank Report":
+                navigate(`/bank/monthlyfundflow/${item._id}`);
+                break;
+            case "Fund Position":
+                navigate(`/fundposition/${item._id}`);
+                break;
+            case "In-Out Flow":
+                navigate(`/bank/monthlyflow/${item._id}`);
+                break;
+            case "Master Checklist":
+                navigate(`/mastersheet/finance/${item._id}`);
+                break;
+            default:
+                toast.error("Invalid report type");
         }
-      };
-      
+    };
+
 
     const cards = [
         {
@@ -246,10 +246,14 @@ const UpdateDashboard = () => {
                                 />
                             )}
                         </div>
-                        <div className="grid grid-cols-2 overflow-x-auto pb-3 scrollbar-hide">
-                            {card.items.slice(0, 4).map(card.renderItem)}
+
+                        {/* Only first 4 items shown here */}
+                        <div className="grid grid-cols-2 gap-3 overflow-x-auto pb-3 scrollbar-hide">
+                            {card.items.slice(0, 4).map((item, idx) => card.renderItem(item, idx))}
                         </div>
-                        {card.count > 4 && (
+
+                        {/* See All button if more than 4 items */}
+                        {card.items.length > 4 && (
                             <button
                                 onClick={card.onView}
                                 className="mt-3 text-blue-500 hover:underline"
@@ -258,19 +262,19 @@ const UpdateDashboard = () => {
                             </button>
                         )}
 
-                        {/* Modal */}
+                        {/* Full List Modal */}
                         {card.more && (
-                            <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-                                <div className="bg-white w-[90%] max-w-xl p-6 rounded-lg relative overflow-auto max-h-[80vh]">
+                            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+                                <div className="bg-white w-[90%] max-w-2xl max-h-[80vh] overflow-y-auto rounded-lg shadow-lg relative p-6">
                                     <button
                                         onClick={() => setActiveModal(null)}
-                                        className="absolute top-3 right-3"
+                                        className="absolute top-3 right-3 text-gray-500 hover:text-black"
                                     >
                                         <FaTimes />
                                     </button>
-                                    <h2 className="text-2xl font-semibold mb-4">{card.title}</h2>
+                                    <h2 className="text-2xl font-bold mb-4">{card.title}</h2>
                                     <div className="grid grid-cols-1 gap-4">
-                                        {card.items.map(card.renderItem)}
+                                        {card.items.map((item, idx) => card.renderItem(item, idx))}
                                     </div>
                                 </div>
                             </div>
@@ -278,6 +282,7 @@ const UpdateDashboard = () => {
                     </div>
                 ))}
             </div>
+
 
             {/* Report Modal */}
             {selectedReport && (
