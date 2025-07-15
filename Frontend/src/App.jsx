@@ -82,7 +82,7 @@ const App = () => {
 const AppContent = () => {
   const location = useLocation();
   // ✅ Show Navbar Only on These Routes
-  const showNavbarRoutes = ["/", "/contact", "/services", "/about", ];
+  const showNavbarRoutes = ["/", "/contact", "/services", "/about", "/login", "/signup"];
   const shouldShowNavbar = showNavbarRoutes.includes(location.pathname);
 
   return (

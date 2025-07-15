@@ -9,10 +9,8 @@ import {
 } from "react-icons/fa";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { BsOpencollective } from "react-icons/bs";
-import { IoCreateSharp } from "react-icons/io5";
 import ProfileModal from "./profile";
 import { useNavigate } from "react-router-dom";
-import addIcon from "/add.png";
 import axiosInstance from "./axiosInstance";
 import { toast } from "react-toastify";
 import UserContext from "../Home Page/UserContext";
@@ -44,7 +42,7 @@ const StaffDashboard = () => {
         else throw new Error("Session expired");
       } catch (err) {
         toast.error("Session expired. Please log in again.");
-        navigate("/login");
+        navigate("/");
       } finally {
         setLoading(false);
       }
