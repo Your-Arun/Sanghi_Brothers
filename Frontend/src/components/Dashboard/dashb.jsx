@@ -110,7 +110,49 @@ const UpdateDashboard = () => {
                 toast.error("Invalid report type");
         }
     };
-
+    const confirmDeleteToast = (onConfirm) => {
+        toast(
+            ({ closeToast }) => (
+                <div className="flex flex-col gap-2">
+                    <p>Are you sure you want to delete this ?</p>
+                    <div className="flex gap-4 mt-2">
+                        <button
+                            onClick={() => {
+                                onConfirm()
+                                closeToast()
+                            }}
+                            className="bg-red-500 text-white px-3 py-1 rounded"
+                        >
+                            Yes
+                        </button>
+                        <button
+                            onClick={closeToast}
+                            className="bg-gray-300 px-3 py-1 rounded"
+                        >
+                            No
+                        </button>
+                    </div>
+                </div>
+            ),
+            {
+                position: "top-center",
+                autoClose: false,
+                closeOnClick: false,
+                closeButton: false,
+            }
+        )
+    }
+    const handleDeleteReport = async (reportId) => {
+        confirmDeleteToast(async () => {
+            try {
+                await axiosInstance.delete(`/reports/${reportId}`, { withCredentials: true });
+                setReports((prev) => prev.filter((report) => report._id !== reportId));
+                toast.success("Report deleted successfully!");
+            } catch (error) {
+                toast.error("Failed to delete report. Please try again.");
+            }
+        })
+    };
 
     const cards = [
         {
@@ -315,6 +357,17 @@ const UpdateDashboard = () => {
                         >
                             Close
                         </button>
+                        <button
+                            className="mt-2 px-3 py-1 bg-red-500 text-white rounded-lg w-full hover:bg-red-600 flex items-center justify-center gap-2"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteReport(selectedReport._id);
+                                setSelectedReport(null);
+                            }}
+                        >
+                            <FaTrash /> Delete
+                        </button>
+
                     </div>
                 </div>
             )}
