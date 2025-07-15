@@ -151,7 +151,7 @@ const Sb03Update = () => {
       try {
         await axiosInstance.delete(`/bank/monthlyfundflow/${id}`);
         toast.success("Report deleted successfully!");
-        navigate("/bankreport"); // Redirect to dashboard or another page
+        navigate("/dashboard"); // Redirect to dashboard or another page
       } catch (error) {
         toast.warning("Failed to delete report.");
       }

@@ -58,7 +58,6 @@ import AdminPanel from "./components/Dashboard/adminPanel.jsx";
 import AllShifts from "./components/Dashboard/ShiftDisplay.jsx";
 import SessionTimeout from "./components/Home Page/SessionTimeout.jsx";
 import Notfound from "./components/Layouts/NotFound";
-import Dashboarddd from "./components/Dashboard/dashb.jsx";
 
 
 
@@ -83,7 +82,7 @@ const App = () => {
 const AppContent = () => {
   const location = useLocation();
   // ✅ Show Navbar Only on These Routes
-  const showNavbarRoutes = ["/", "/contact", "/services", "/about", "/login", "/signup"];
+  const showNavbarRoutes = ["/", "/contact", "/services", "/about", ];
   const shouldShowNavbar = showNavbarRoutes.includes(location.pathname);
 
   return (
@@ -92,9 +91,9 @@ const AppContent = () => {
       <Routes>
         <Route path="*" element={<Notfound />} />
         {/* Public Routes */}
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/" element={<Home />} />
         <Route path="/services" element={<Services />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/contact" element={<ContactUs />} />
@@ -103,7 +102,7 @@ const AppContent = () => {
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dashb" element={< Dashboarddd/>} />
+          {/* <Route path="/dashb" element={< Dashboarddd/>} /> */}
           <Route path="/admin-panel" element={<AdminPanel />} />
           <Route path="/staff-dashboard" element={<Staffmember />} />
           <Route path="/bankreport" element={<MergingSbSection />} />
