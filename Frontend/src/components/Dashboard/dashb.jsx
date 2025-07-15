@@ -267,12 +267,12 @@ const UpdateDashboard = () => {
                         {card.more && (
                             <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
                                 <div className="bg-white w-[90%] max-w-2xl max-h-[80vh] overflow-y-auto rounded-lg shadow-lg relative p-6">
-                                    <button
+                                    <div
                                         onClick={() => setActiveModal(null)}
                                         className="absolute top-3 right-3 text-gray-500 hover:text-black"
                                     >
                                         <FaTimes />
-                                    </button>
+                                    </div>
                                     <h2 className="text-2xl font-bold mb-4">{card.title}</h2>
                                     <div className="grid grid-cols-1 gap-4">
                                         {card.items.map((item, idx) => card.renderItem(item, idx))}

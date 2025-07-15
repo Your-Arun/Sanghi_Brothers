@@ -66,6 +66,7 @@ input[type="text"] {
   padding: 4px 4px;
   border: 1px solid #ccc;
   border-radius: 0.25rem;
+  scroll-behavior: none;
 }
 
 input[type="number"]:focus,
