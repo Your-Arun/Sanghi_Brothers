@@ -32,23 +32,23 @@ const StaffDashboard = () => {
   const [showToggleButton, setShowToggleButton] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(window.scrollY);
 
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     try {
-  //       const { data } = await axiosInstance.get("/profile", {
-  //         withCredentials: true,
-  //       });
-  //       if (data?.user) setUser(data.user);
-  //       else throw new Error("Session expired");
-  //     } catch (err) {
-  //       toast.error("Session expired. Please log in again.");
-  //       navigate("/");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchUser();
-  // }, [setUser, navigate]);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const { data } = await axiosInstance.get("/profile", {
+          withCredentials: true,
+        });
+        if (data?.user) setUser(data.user);
+        else throw new Error("Session expired");
+      } catch (err) {
+        toast.error("Session expired. Please log in again.");
+        navigate("/");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUser();
+  }, [setUser, navigate]);
 
   useEffect(() => {
     const fetchData = async () => {
