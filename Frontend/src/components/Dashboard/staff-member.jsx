@@ -41,7 +41,7 @@ const StaffDashboard = () => {
         if (data?.user) setUser(data.user);
         else throw new Error("Session expired");
       } catch (err) {
-        toast.error("Session expired. Please log in again.");
+        toast.error("Session expired. Please log in again. ye wala aara ahi");
         navigate("/");
       } finally {
         setLoading(false);
@@ -95,7 +95,7 @@ const StaffDashboard = () => {
   ];
 
   if (loading) return <h3 className="text-center mt-20">Loading...</h3>;
-  if (!user) return navigate("/login");
+  if (!user) return navigate("/");
 
   return (
     <div className="flex min-h-screen bg-gray-50">
