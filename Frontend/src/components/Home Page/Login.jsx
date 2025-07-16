@@ -42,10 +42,10 @@ const Login = ({ embedMode, onClose }) => {
         identifier,
         password,
       });
-  const {user,token }= data;
-      sessionStorage.setItem(sessionKey, JSON.stringify(user));
-      sessionStorage.setItem("authToken", token);
-      setUser(user);
+
+      sessionStorage.setItem(sessionKey, JSON.stringify(data.user));
+      sessionStorage.setItem("authToken", data.token);
+      setUser(data.user);
       toast.success("Login Successful");
 
       if (data.user.department === "admin") {

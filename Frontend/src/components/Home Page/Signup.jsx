@@ -61,12 +61,12 @@ const Signup = ({ embedMode, onClose }) => {
         password,
         department,
       });
-   const token = response.data.token;
+
       if (response.data.token) {
-        sessionStorage.setItem("authToken", token);
+        localStorage.setItem("token", response.data.token);
       }
+
       toast.success(response.data.message || "User registered successfully");
-      console.log(response.data)
       navigate("/");
     } catch (err) {
       toast.error(err.response?.data?.message || "Signup failed");
