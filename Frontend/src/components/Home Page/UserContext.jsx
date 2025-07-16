@@ -8,6 +8,7 @@ export const UserProvider = ({ children }) => {
     const storedUser = sessionStorage.getItem("activeSession");
     return storedUser ? JSON.parse(storedUser) : null;
   });
+  
 
   const handleLogout = () => {
     sessionStorage.removeItem("authToken");

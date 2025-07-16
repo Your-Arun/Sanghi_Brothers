@@ -14,6 +14,7 @@ const Login = ({ embedMode, onClose }) => {
   const navigate = useNavigate();
 
 
+
   useEffect(() => {
     const fetchUser = async () => {
       const sessionData = sessionStorage.getItem(sessionKey);
