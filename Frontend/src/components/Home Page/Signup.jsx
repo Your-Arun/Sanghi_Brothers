@@ -61,9 +61,9 @@ const Signup = ({ embedMode, onClose }) => {
         password,
         department,
       });
-
+   const token = response.data.token;
       if (response.data.token) {
-        sessionStorage.setItem("authToken", response.data.token);
+        sessionStorage.setItem("authToken", token);
       }
       toast.success(response.data.message || "User registered successfully");
       console.log(response.data)
