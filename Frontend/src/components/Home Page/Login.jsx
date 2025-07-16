@@ -13,10 +13,6 @@ const Login = ({ embedMode, onClose }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const sessionKey =
-    sessionStorage.getItem("activeSession") ||
-    `userSession_${Math.random().toString(36).substring(2, 11)}`;
-  sessionStorage.setItem("activeSession", sessionKey);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -43,9 +39,12 @@ const Login = ({ embedMode, onClose }) => {
         password,
       });
 
-      sessionStorage.setItem(sessionKey, JSON.stringify(data.user));
-      sessionStorage.setItem("authToken", data.token);
-      setUser(data.user);
+      const { token, user } = data; // ✅ Extract from response
+
+      sessionStorage.setItem("authToken", token); // ✅ Store token
+      sessionStorage.setItem("activeSession", JSON.stringify(user)); // ✅ Store user
+      setUser(user); // ✅ Set context
+
       toast.success("Login Successful");
 
       if (data.user.department === "admin") {
