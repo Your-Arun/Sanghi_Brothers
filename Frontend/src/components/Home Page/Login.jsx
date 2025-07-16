@@ -43,8 +43,11 @@ const Login = ({ embedMode, onClose }) => {
         password,
       });
 
-      sessionStorage.setItem(sessionKey, JSON.stringify(data.user));
-      sessionStorage.setItem("authToken", data.token);
+      sessionStorage.setItem("authToken", data.token); // ✅ Save token
+      const userKey = `userSession_${data.user._id}`;
+      sessionStorage.setItem("activeSession", userKey);
+      sessionStorage.setItem(userKey, JSON.stringify(data.user));
+
       setUser(data.user);
       toast.success("Login Successful");
 
