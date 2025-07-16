@@ -108,12 +108,14 @@ Router.post("/login", async (req, res) => {
 // ✅ Profile Route (Fixed missing token vali  dation)
 Router.get("/profile", verifyToken, async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId).select("-password");
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
     res.json({ user });
   } catch {
     res.status(500).json({ message: "User not found" });
   }
 });
+
 // ✅ Update Profile Route (Fixed userId usage)
 Router.put("/profile", authenticateUser, async (req, res) => {
   try {
