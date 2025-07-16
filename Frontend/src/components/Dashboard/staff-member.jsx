@@ -41,7 +41,7 @@ const StaffDashboard = () => {
         if (data?.user) setUser(data.user);
         else throw new Error("Session expired");
       } catch (err) {
-        toast.error("Session expired. Please log in again. ye wala aara ahi");
+        toast.error("Session expired. Please log in again.");
         navigate("/");
       } finally {
         setLoading(false);
