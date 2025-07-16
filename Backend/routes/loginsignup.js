@@ -92,9 +92,6 @@ Router.post("/login", async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: "Incorrect password" });
     }
-    if(process.env.GMAIL === identifier && process.env.Password===password){
-      return ('/admin-panel')
-    }
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
