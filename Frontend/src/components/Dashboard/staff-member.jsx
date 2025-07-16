@@ -35,9 +35,7 @@ const StaffDashboard = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const { data } = await axiosInstance.get("/profile", {
-          withCredentials: true,
-        });
+        const { data } = await axiosInstance.get("/profile");
         if (data?.user) setUser(data.user);
         else throw new Error("Session expired");
       } catch (err) {
@@ -49,6 +47,7 @@ const StaffDashboard = () => {
     };
     fetchUser();
   }, [setUser, navigate]);
+  
 
   useEffect(() => {
     const fetchData = async () => {

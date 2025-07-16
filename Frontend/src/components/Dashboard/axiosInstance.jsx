@@ -24,7 +24,7 @@ axiosInstance.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       sessionStorage.removeItem("authToken"); // Clear token
-      window.location.href = "/login"; // Redirect to login page
+      window.location.href = "/"; // Redirect to login page
     }
     return Promise.reject(error);
   }
