@@ -35,7 +35,9 @@ const StaffDashboard = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const { data } = await axiosInstance.get("/profile");
+        const { data } = await axiosInstance.get("/profile", {
+          withCredentials: true,
+        });
         if (data?.user) setUser(data.user);
         else throw new Error("Session expired");
       } catch (err) {
@@ -47,17 +49,16 @@ const StaffDashboard = () => {
     };
     fetchUser();
   }, [setUser, navigate]);
-  
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [departmentRes, reportRes, cashierRes, lekhajokha] =
           await Promise.all([
-            axiosInstance.get("/departments"),
-            axiosInstance.get("/reports"),
-            axiosInstance.get("/Cashslip"),
-            axiosInstance.get("/newlekhajokha"),
+            axiosInstance.get("/departments", { withCredentials: true }),
+            axiosInstance.get("/reports", { withCredentials: true }),
+            axiosInstance.get("/Cashslip", { withCredentials: true }),
+            axiosInstance.get("/newlekhajokha", { withCredentials: true }),
           ]);
         setDepartments(departmentRes.data);
         setReports(reportRes.data);

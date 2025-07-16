@@ -10,9 +10,9 @@ const axiosInstance = axios.create({
 // ✅ Add Authorization token in headers for every request
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = sessionStorage.getItem("authToken");
+    const token = sessionStorage.getItem("authToken"); // Get token from sessionStorage
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`; // Attach token
     }
     return config;
   },

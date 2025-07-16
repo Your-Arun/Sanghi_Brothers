@@ -6,10 +6,9 @@ const UserContext = createContext();
 export const UserProvider = ({ children }) => {
 
   const [user, setUser] = useState(() => {
-    const key = sessionStorage.getItem("activeSession");
-    return key ? JSON.parse(sessionStorage.getItem(key)) : null;
+    const sessionKey = sessionStorage.getItem("activeSession");
+    return sessionKey ? JSON.parse(sessionStorage.getItem(sessionKey)) : null;
   });
-  
 
   const handleLogout = () => {
     sessionStorage.removeItem("authToken");
