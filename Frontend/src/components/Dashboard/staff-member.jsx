@@ -35,20 +35,21 @@ const StaffDashboard = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const { data } = await axiosInstance.get("/profile", {
-          withCredentials: true,
-        });
-        if (data?.user) setUser(data.user);
-        else throw new Error("Session expired");
+        const { data } = await axiosInstance.get("/profile"); // ✅ No withCredentials
+        setUser(data.user);
+        sessionStorage.setItem("activeSession", JSON.stringify(data.user));
       } catch (err) {
         toast.error("Session expired. Please log in again.");
+        sessionStorage.removeItem("authToken");
+        sessionStorage.removeItem("activeSession");
         navigate("/");
       } finally {
         setLoading(false);
       }
     };
     fetchUser();
-  }, [setUser, navigate]);
+  }, []);
+  
 
   useEffect(() => {
     const fetchData = async () => {
