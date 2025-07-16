@@ -23,7 +23,7 @@ app.use(express.json());
 
 app.use(session({
   secret: process.env.JWT_SECRET,
-  resave: false,
+  resave: false, 
   saveUninitialized: false,
   store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }), // ✅ Session per user alag hoga
   cookie: { secure: false, httpOnly: true, maxAge: 1000 * 60 * 60 } // 1 hour session
