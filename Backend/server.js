@@ -16,14 +16,14 @@ app.use(
   cors({
     origin: "https://sanghibros.vercel.app", // Frontend URL
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: false, // ✅ Allow cookies & authentication headers
+    credentials: true, // ✅ Allow cookies & authentication headers
   })
 );
 app.use(express.json());
 
 app.use(session({
   secret: process.env.JWT_SECRET,
-  resave: false, 
+  resave: false,
   saveUninitialized: false,
   store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }), // ✅ Session per user alag hoga
   cookie: { secure: false, httpOnly: true, maxAge: 1000 * 60 * 60 } // 1 hour session

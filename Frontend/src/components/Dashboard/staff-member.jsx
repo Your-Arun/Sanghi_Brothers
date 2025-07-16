@@ -35,18 +35,13 @@ const StaffDashboard = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const { data } = await axiosInstance.get("/profile"); // ❌ REMOVE withCredentials
-        if (data?.user) {
-          setUser(data.user);
-          sessionStorage.setItem("activeSession", JSON.stringify(data.user)); // ✅ optional
-        } else {
-          throw new Error("No user returned");
-        }
+        const { data } = await axiosInstance.get("/profile", {
+          withCredentials: true,
+        });
+        if (data?.user) setUser(data.user);
+        else throw new Error("Session expired");
       } catch (err) {
-        console.error("Session error:", err);
         toast.error("Session expired. Please log in again.");
-        sessionStorage.removeItem("authToken");
-        sessionStorage.removeItem("activeSession");
         navigate("/");
       } finally {
         setLoading(false);
@@ -54,7 +49,6 @@ const StaffDashboard = () => {
     };
     fetchUser();
   }, [setUser, navigate]);
-  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -163,7 +157,6 @@ const StaffDashboard = () => {
           <FaTimes />
         </button>
       )}
-      
 
       <main className="flex-1 p-4 overflow-y-auto max-h-screen bg-gray-50">
         <h1 className="text-2xl text-center font-bold mb-6 text-gray-800">
