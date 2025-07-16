@@ -16,7 +16,7 @@ app.use(
   cors({
     origin: "https://sanghibros.vercel.app", // Frontend URL
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true, // ✅ Allow cookies & authentication headers
+    credentials: false, // ✅ Allow cookies & authentication headers
   })
 );
 app.use(express.json());

@@ -18,20 +18,20 @@ const Login = ({ embedMode, onClose }) => {
     `userSession_${Math.random().toString(36).substring(2, 11)}`;
   sessionStorage.setItem("activeSession", sessionKey);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const sessionData = sessionStorage.getItem(sessionKey);
-      if (!sessionData) return;
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     const sessionData = sessionStorage.getItem(sessionKey);
+  //     if (!sessionData) return;
 
-      try {
-        const { data } = await axiosInstance.get("/profile");
-        setUser(data.user);
-      } catch {
-        sessionStorage.removeItem(sessionKey);
-      }
-    };
-    fetchUser();
-  }, [setUser, sessionKey]);
+  //     try {
+  //       const { data } = await axiosInstance.get("/profile");
+  //       setUser(data.user);
+  //     } catch {
+  //       sessionStorage.removeItem(sessionKey);
+  //     }
+  //   };
+  //   fetchUser();
+  // }, [setUser, sessionKey]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,9 +43,11 @@ const Login = ({ embedMode, onClose }) => {
         password,
       });
 
-      sessionStorage.setItem(sessionKey, JSON.stringify(data.user));
-      sessionStorage.setItem("authToken", data.token);
-      setUser(data.user);
+      const { token, user } = data; // ✅ make sure your backend returns both
+
+      sessionStorage.setItem("authToken", token);
+      sessionStorage.setItem("activeSession", JSON.stringify(user));
+      setUser(user);
       toast.success("Login Successful");
 
       if (data.user.department === "admin") {
