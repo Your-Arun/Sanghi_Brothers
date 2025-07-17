@@ -26,6 +26,7 @@ const ProfileModal = ({ closeModal }) => {
 
     setLoading(true);
     try {
+
       const { data } = await axiosInstance.put("/profile", {
         username,
         email,
@@ -105,7 +106,7 @@ const ProfileModal = ({ closeModal }) => {
           </div>
 
           {/* Manager-only Admin Panel Button */}
-          {user.department === "manager" && (
+          {user?.department === "manager" && (
             <div className="text-center">
               <button
                 type="button"
