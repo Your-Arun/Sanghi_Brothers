@@ -78,6 +78,25 @@ Router.post("/signup", async (req, res) => {
 Router.post("/login", async (req, res) => {
   try {
     const { identifier, password } = req.body;
+    
+      const adminUser= process.env.GMAIL;
+      const adminPassword= process.env.password;
+
+      // ✅ Check if this is the admin user (from env)
+    if (identifier === adminUser && password === adminPassword) {
+      const adminUser = {
+        _id: "admin-id",
+        username: "SuperAdmin",
+        email: adminUser,
+        department: "admin",
+      };
+
+      const token = jwt.sign({ id: adminUser._id }, process.env.JWT_SECRET, {
+        expiresIn: "7d",
+      });
+
+      return res.status(200).json({ user: adminUser, token });
+    }
 
     // Check if identifier is an email or phone
     const isEmail = /\S+@\S+\.\S+/.test(identifier);
