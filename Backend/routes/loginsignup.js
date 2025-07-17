@@ -9,7 +9,7 @@ require("dotenv").config();
 
 
 // ✅ Middleware to verify token
-const authenticateUser = async(req, res, next) => {
+const authenticateUser = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ message: "Unauthorized: No token provided" });
@@ -47,11 +47,11 @@ const verifyToken = (req, res, next) => {
 // ✅ Secure Signup Route
 Router.post("/signup", async (req, res) => {
   try {
-    let { name, username, email,phone, password, department } = req.body;
+    let { name, username, email, phone, password, department } = req.body;
     name = name;
     username = username;
     email = email;
-    phone =phone;
+    phone = phone;
     department = department.toLowerCase();
 
     const validDepartments = ["manager", "backoffice", "accounts/finance", "staff"];
@@ -65,7 +65,7 @@ Router.post("/signup", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ name, username, email,phone, password: hashedPassword, department });
+    const newUser = new User({ name, username, email, phone, password: hashedPassword, department });
     await newUser.save();
 
     res.status(201).json({ message: "User registered successfully" });
@@ -78,16 +78,16 @@ Router.post("/signup", async (req, res) => {
 Router.post("/login", async (req, res) => {
   try {
     const { identifier, password } = req.body;
-    
-      const adminUser= process.env.GMAIL;
-      const adminPassword= process.env.password;
 
-      // ✅ Check if this is the admin user (from env)
-    if (identifier === adminUser && password === adminPassword) {
+    const adminEmail = process.env.GMAIL;
+    const adminPassword = process.env.Password;
+
+    // ✅ Check if this is the admin user (from env)
+    if (identifier === adminEmail && password === adminPassword) {
       const adminUser = {
         _id: "admin-id",
         username: "SuperAdmin",
-        email: adminUser,
+        email: adminEmail,
         department: "admin",
       };
 
@@ -184,7 +184,7 @@ Router.get("/departments", async (req, res) => {
   }
 });
 // ✅ Fetch all users
-Router.get("/users",  async (req, res) => {
+Router.get("/users", async (req, res) => {
   try {
     const users = await User.find().select("-password"); // Exclude passwords
     res.json(users);
@@ -193,12 +193,12 @@ Router.get("/users",  async (req, res) => {
   }
 });
 // ✅ Update user details
-Router.put("/users/:id",  async (req, res) => {
+Router.put("/users/:id", async (req, res) => {
   try {
-    const { username, email, department ,phone} = req.body;
+    const { username, email, department, phone } = req.body;
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
-      { username, email, department,phone },
+      { username, email, department, phone },
       { new: true }
     );
     res.json(updatedUser);
@@ -207,7 +207,7 @@ Router.put("/users/:id",  async (req, res) => {
   }
 });
 // ✅ Delete a user
-Router.delete("/users/:id",  async (req, res) => {
+Router.delete("/users/:id", async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.id);
     res.json({ message: "User deleted" });
@@ -367,30 +367,30 @@ Router.post("/google-auth", async (req, res) => {
     const payload = ticket.getPayload();
 
     const { email, name, picture } = payload;
- // 🔥 Check if user exists
- let user = await User.findOne({ email });
+    // 🔥 Check if user exists
+    let user = await User.findOne({ email });
 
- if (!user) {
-   // 👇 If not, create user with default role "member"
-   user = await User.create({
-     email,
-     name,
-     picture,
-     department: "", // default or update later using invite code
-     authType: "google"
-   });
- }
+    if (!user) {
+      // 👇 If not, create user with default role "member"
+      user = await User.create({
+        email,
+        name,
+        picture,
+        department: "", // default or update later using invite code
+        authType: "google"
+      });
+    }
 
- return res.status(200).json({
-   user: {
-     _id: user._id,
-     email: user.email,
-     name: user.name,
-     picture: user.picture,
-     department: user.department
-   },
-   message: "Google user authenticated",
- });
+    return res.status(200).json({
+      user: {
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+        picture: user.picture,
+        department: user.department
+      },
+      message: "Google user authenticated",
+    });
   } catch (error) {
     return res.status(401).json({ message: "Invalid Google token" });
   }
