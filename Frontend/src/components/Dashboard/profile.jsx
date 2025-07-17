@@ -7,13 +7,20 @@ import UserContext from "../Home Page/UserContext";
 const ProfileModal = ({ closeModal }) => {
   const navigate = useNavigate();
   const { user, setUser, handleLogout } = useContext(UserContext);
+
+  const [name, setName] = useState(user?.name || "");
   const [username, setUsername] = useState(user?.username || "");
+  const [phone, setPhone] = useState(user?.phone || "");
   const [loading, setLoading] = useState(false);
   const [isChanged, setIsChanged] = useState(false);
 
   useEffect(() => {
-    setIsChanged(username !== user?.username);
-  }, [username, user]);
+    setIsChanged(
+      name !== user?.name ||
+      username !== user?.username ||
+      phone !== user?.phone
+    );
+  }, [name, username, phone, user]);
 
   const handleProfileSave = async (e) => {
     e.preventDefault();
@@ -21,7 +28,12 @@ const ProfileModal = ({ closeModal }) => {
 
     setLoading(true);
     try {
-      const { data } = await axiosInstance.put("/profile", { username });
+      const { data } = await axiosInstance.put("/profile", {
+        name,
+        username,
+        phone,
+      });
+
       setUser(data.user);
       sessionStorage.setItem("activeSession", JSON.stringify(data.user));
       toast.success("Profile updated successfully!");
@@ -33,6 +45,8 @@ const ProfileModal = ({ closeModal }) => {
       setLoading(false);
     }
   };
+
+  if (!user) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-4 z-50">
@@ -50,20 +64,34 @@ const ProfileModal = ({ closeModal }) => {
         <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4 text-center text-blue-600">
           Edit Profile
         </h2>
-        <p className="text-sm sm:text-base text-center text-red-600 mb-4 -mt-2">
-          Only admin can edit profile
-        </p>
 
         {/* Form */}
         <form onSubmit={handleProfileSave} className="space-y-4">
           {/* Name */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">Name:</label>
-            <p className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-sm"
-            >{username}</p>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+              required
+            />
           </div>
 
-          {/* Email */}
+          {/* Username */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Username:</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+              required
+            />
+          </div>
+
+          {/* Email - Read-only */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">Email:</label>
             <p className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-sm">
@@ -71,23 +99,27 @@ const ProfileModal = ({ closeModal }) => {
             </p>
           </div>
 
-          {/* Department */}
+          {/* Department - Read-only */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">Role:</label>
             <p className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-sm">
-              {user.department}
+              {user.department || "N/A"}
             </p>
           </div>
 
-          {/* Phone */}
+          {/* Phone Number */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">Mobile Number:</label>
-            <p className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-sm">
-              {user.phone}
-            </p>
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+              required
+            />
           </div>
 
-          {/* Manager-only Button */}
+          {/* Admin Panel Shortcut */}
           {user.department === "manager" && (
             <div className="text-center">
               <button
