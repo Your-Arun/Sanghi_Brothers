@@ -432,6 +432,12 @@ const UpdateDashboard = () => {
                             >
                                 <h3 className="text-lg font-semibold text-green-700">✅ SB Master CheckList</h3>
                             </div>
+                            <div
+                                onClick={() => navigate("/attendance-sheet")}
+                                className="p-4 bg-blue-100 hover:bg-blue-200 rounded shadow cursor-pointer transition"
+                            >
+                                <h3 className="text-lg font-semibold text-green-700">Attendance Sheet</h3>
+                            </div>
                         </div>
                     </div>
                 </div>
