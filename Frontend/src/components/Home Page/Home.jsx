@@ -42,38 +42,6 @@ const Home = () => {
               SIGNUP
             </button>
           </div>
-
-          <div className="mt-6">
-          <p className="text-center text-sm text-gray-600 mb-3">Or sign in with</p>
-          <div className="flex justify-center gap-4">
-            {/* Google */}
-            <button
-              type="button"
-              className="p-2 rounded-full border border-gray-300 hover:bg-gray-100 transition"
-              title="Login with Google"
-            >
-              <img src="/google.svg" alt="Google" className="w-6 h-6" />
-            </button>
-
-            {/* Facebook */}
-            <button
-              type="button"
-              className="p-2 rounded-full border border-gray-300 hover:bg-gray-100 transition"
-              title="Login with Facebook"
-            >
-              <img src="/facebook.svg" alt="Facebook" className="w-6 h-6" />
-            </button>
-
-            {/* LinkedIn */}
-            <button
-              type="button"
-              className="p-2 rounded-full border border-gray-300 hover:bg-gray-100 transition"
-              title="Login with LinkedIn"
-            >
-              <img src="/x.svg" alt="X" className="w-6 h-6" />
-            </button>
-          </div>
-        </div>
         </div>
 
         {/* Right Section (image on large screens only) */}
