@@ -6,10 +6,6 @@ const nodemailer = require("nodemailer");
 const Router = express.Router();
 require("dotenv").config();
 
-const { OAuth2Client } = require("google-auth-library");
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
-
 //google auth
 
 
@@ -361,47 +357,6 @@ Router.post("/forgot-password", async (req, res) => {
   } catch (error) {
     console.error("Forgot-password error:", error);
     res.status(500).json({ message: "Server error. Please try again later." });
-  }
-});
-
-
-Router.post("/google-login", async (req, res) => {
-  const { tokenId } = req.body;
-
-  try {
-    const ticket = await client.verifyIdToken({
-      idToken: tokenId,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
-
-    const { email_verified, email, name } = ticket.getPayload();
-
-    if (!email_verified) {
-      return res.status(403).json({ message: "Email not verified with Google" });
-    }
-
-    let user = await User.findOne({ email });
-
-    if (!user) {
-      user = new User({
-        name,
-        email,
-        username: email.split("@")[0],
-        password: await bcrypt.hash(email + process.env.JWT_SECRET, 10),
-        department: "staff", // default or ask later
-        phone: "",
-      });
-      await user.save();
-    }
-
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
-
-    res.status(200).json({ user, token });
-  } catch (err) {
-    console.error("Google Login Error:", err);
-    res.status(500).json({ message: "Google Login Failed" });
   }
 });
 
