@@ -66,6 +66,41 @@ const Home = () => {
             </div>
           )}
         </div>
+        <div className="mt-6">
+          <p className="text-center text-sm text-gray-600 mb-3">Or sign in with</p>
+          <div className="flex justify-center gap-4">
+            {/* Google */}
+            <button
+              type="button"
+              onClick={() => window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`}
+              className="p-2 rounded-full border border-gray-300 hover:bg-gray-100 transition"
+              title="Login with Google"
+            >
+              <img src="/google.svg" alt="Google" className="w-6 h-6" />
+            </button>
+
+            {/* Facebook */}
+            <button
+              type="button"
+              onClick={() => window.location.href = `${import.meta.env.VITE_API_URL}/auth/facebook`}
+              className="p-2 rounded-full border border-gray-300 hover:bg-gray-100 transition"
+              title="Login with Facebook"
+            >
+              <img src="/facebook.svg" alt="Facebook" className="w-6 h-6" />
+            </button>
+
+            {/* LinkedIn */}
+            <button
+              type="button"
+              onClick={() => window.location.href = `${import.meta.env.VITE_API_URL}/auth/linkedin`}
+              className="p-2 rounded-full border border-gray-300 hover:bg-gray-100 transition"
+              title="Login with LinkedIn"
+            >
+              <img src="/linkedin.svg" alt="LinkedIn" className="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+
       </div>
 
       {/* Mobile Full-Screen Modal */}
