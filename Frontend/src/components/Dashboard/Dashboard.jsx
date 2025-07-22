@@ -373,6 +373,13 @@ const UpdateDashboard = () => {
                     >
                         💵 <span className="ml-2">Cash Slip</span>
                     </button>
+                    <button
+                        onClick={() => navigate("/attendance-sheet")}
+                        className="bg-purple-500 text-white flex items-center px-6 py-3 rounded-full shadow-lg hover:bg-purple-600 transform hover:scale-105 transition-all ease-in-out w-full"
+                        aria-label="attendance-sheet"
+                    >
+                        💵 <span className="ml-2">Attendance Sheet</span>
+                    </button>
                 </div>
             </div>
 
@@ -432,12 +439,7 @@ const UpdateDashboard = () => {
                             >
                                 <h3 className="text-lg font-semibold text-green-700">✅ SB Master CheckList</h3>
                             </div>
-                            <div
-                                onClick={() => navigate("/attendance-sheet")}
-                                className="p-4 bg-blue-100 hover:bg-blue-200 rounded shadow cursor-pointer transition"
-                            >
-                                <h3 className="text-lg font-semibold text-green-700">Attendance Sheet</h3>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
