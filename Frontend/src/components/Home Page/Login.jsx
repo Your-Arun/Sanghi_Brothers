@@ -4,6 +4,7 @@ import { Eye, EyeOff } from "lucide-react";
 import UserContext from "./UserContext";
 import axiosInstance from "../Dashboard/axiosInstance";
 import { toast } from "react-toastify";
+import { GoogleLogin } from "@react-oauth/google";
 
 const Login = ({ embedMode, onClose }) => {
   const { setUser } = useContext(UserContext);
@@ -48,10 +49,14 @@ const Login = ({ embedMode, onClose }) => {
       setUser(data.user);
       toast.success("Login Successful");
 
-      if (data.user.department === "admin") {
+      if (!data.user.department) {
+        navigate("/choose-department");
+      } else if (data.user.department === "admin") {
         navigate("/admin-panel");
+      } else if (data.user.department === "staff") {
+        navigate("/staff-dashboard");
       } else {
-        navigate(data.user.department === "staff" ? "/staff-dashboard" : "/dashboard");
+        navigate("/dashboard");
       }
     } catch (err) {
       toast.error(
@@ -59,6 +64,34 @@ const Login = ({ embedMode, onClose }) => {
       );
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+    try {
+      const { credential } = credentialResponse;
+
+      const { data } = await axiosInstance.post("/google-login", {
+        tokenId: credential,
+      });
+
+      sessionStorage.setItem("authToken", data.token);
+      sessionStorage.setItem(sessionKey, JSON.stringify(data.user));
+      setUser(data.user);
+      toast.success("Login Successful via Google");
+
+      if (!data.user.department) {
+        navigate("/choose-department");
+      } else if (data.user.department === "admin") {
+        navigate("/admin-panel");
+      } else if (data.user.department === "staff") {
+        navigate("/staff-dashboard");
+      } else {
+        navigate("/dashboard");
+      }
+    } catch (err) {
+      console.error("Google Login Error:", err);
+      toast.error("Google login failed");
     }
   };
 
@@ -121,6 +154,15 @@ const Login = ({ embedMode, onClose }) => {
             Reset it here
           </Link>
         </p>
+
+        <div className="mt-6">
+          <GoogleLogin
+            onSuccess={handleGoogleLoginSuccess}
+            onError={() => {
+              toast.error("Google login failed");
+            }}
+          />
+        </div>
       </form>
     </div>
   );
