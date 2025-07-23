@@ -1,11 +1,5 @@
 const mongoose = require("mongoose");
 
-const attendanceSchema = new mongoose.Schema({
-  date: String,
-  checkIn: String,
-  checkOut: String,
-});
-
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, trim: true },
@@ -23,7 +17,6 @@ const userSchema = new mongoose.Schema(
     joiningDate: String,
     salary: Number,
     photo: String, // Base64 or URL
-    attendance: [attendanceSchema],
     authType: { type: String, default: "google" }
   },
   { timestamps: true }

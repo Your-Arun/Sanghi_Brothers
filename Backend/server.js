@@ -58,6 +58,7 @@ const ReportFile = require("./routes/reportfileroute");
 const FundPosition = require("./routes/fundposition");
 const ReportComplaint = require("./routes/reportcomlaint");
 const shiftApi = require("./models/shifting/shiftsapi");
+const Attendance = require('./models/attendancewala/userRoutes')
 
 // ✅ MongoDB Connection
 mongoose
@@ -68,6 +69,7 @@ mongoose
 // ✅ Public Routes (No Authentication Required)
 app.use("", LoginSignup);
 app.use("/", Contactus);
+app.use("/", Attendance);
 
 // ✅ Protected Routes (Authentication Required)
 app.use("/bank",  FlowRoute);
