@@ -21,7 +21,7 @@ const AttendancePage = () => {
     designation: "",
     joiningDate: "",
     salary: "",
-    password: "default123",
+    password: "",
     photo: "",
   });
 
@@ -54,7 +54,7 @@ const AttendancePage = () => {
       fetchUsers();
       setNewUser({
         name: "", username: "", email: "", phone: "", address: "", aadhaar: "",
-        department: "", designation: "", joiningDate: "", salary: "", password: "default123", photo: "",
+        department: "", designation: "", joiningDate: "", salary: "", password: "", photo: "",
       });
     } catch (err) {
       console.error("Error creating user:", err);
