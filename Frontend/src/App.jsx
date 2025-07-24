@@ -59,6 +59,7 @@ import AllShifts from "./components/Dashboard/ShiftDisplay.jsx";
 import SessionTimeout from "./components/Home Page/SessionTimeout.jsx";
 import Notfound from "./components/Layouts/NotFound";
 import AttendancePage from "./components/AttendanceSheet/AttendancePage.jsx";
+import ProfileDetailsPage from "./components/AttendanceSheet/ProfileDetailsPage.jsx";
 
 
 
@@ -106,6 +107,7 @@ const AppContent = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           {/* <Route path="/dashb" element={< Dashboarddd/>} /> */}
           <Route path="/admin-panel" element={<AdminPanel />} />
+          <Route path="/profile/:id" element={<ProfileDetailsPage />} />
           <Route path="/staff-dashboard" element={<Staffmember />} />
           <Route path="/attendance-sheet" element={<AttendancePage />} />
           <Route path="/bankreport" element={<MergingSbSection />} />

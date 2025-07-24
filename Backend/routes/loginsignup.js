@@ -195,6 +195,81 @@ Router.get("/departments", async (req, res) => {
   }
 });
 // ✅ Fetch all users
+
+Router.post("/users", async (req, res) => {
+  try {
+    const {
+      name,
+      username,
+      email,
+      phone,
+      password,
+      department,
+      address,
+      aadhaar,
+      designation,
+      joiningDate,
+      salary,
+      photo,
+    } = req.body;
+
+    // Check if user already exists
+    const existing = await User.findOne({ $or: [{ email }, { username }] });
+    if (existing) {
+      return res.status(400).json({ message: "User already exists with same email or username" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password || email + process.env.JWT_SECRET, 10);
+
+    const newUser = new User({
+      name,
+      username,
+      email,
+      phone,
+      password: hashedPassword,
+      department,
+      address,
+      aadhaar,
+      designation,
+      joiningDate,
+      salary,
+      photo,
+      authType: "manual", // or "google" if created from Google OAuth
+    });
+
+    await newUser.save();
+
+    res.status(201).json({ message: "User created successfully", user: newUser });
+  } catch (error) {
+    console.error("Error creating user:", error);
+    res.status(500).json({ message: "Server error while creating user" });
+  }
+});
+
+Router.get("/users/attendance", async (req, res) => {
+  const { month, year } = req.query;
+  try {
+    const start = new Date(year, month - 1, 1);
+    const end = new Date(year, month, 0);
+    const users = await User.find().lean();
+
+    const withAttendance = await Promise.all(
+      users.map(async (user) => {
+        const attendance = await Attendance.find({
+          userId: user._id,
+          date: { $gte: start, $lte: end },
+        });
+        return { ...user, attendance };
+      })
+    );
+
+    res.json(withAttendance);
+  } catch (err) {
+    res.status(500).json({ error: "Error fetching users" });
+  }
+});
+
+
 Router.get("/users", async (req, res) => {
   try {
     const users = await User.find().select("-password"); // Exclude passwords
