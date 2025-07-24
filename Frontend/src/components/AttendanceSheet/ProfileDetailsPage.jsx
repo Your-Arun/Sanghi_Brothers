@@ -35,6 +35,7 @@ const ProfileDetailsPage = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <p><strong>Name:</strong> {user.name}</p>
         <p><strong>Email:</strong> {user.email}</p>
         <p><strong>Phone:</strong> {user.phone}</p>
         <p><strong>Department:</strong> {user.department}</p>
