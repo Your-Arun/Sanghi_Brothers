@@ -3,72 +3,68 @@ const router = express.Router();
 const User = require("../user");
 const Attendance = require("../attendancewala/Attendance");
 
-// GET all users with attendance count for a given month/year
+// ✅ Get all users with attendance for selected month/year
 router.get("/users/attendance", async (req, res) => {
-  const { month, year } = req.query;
   try {
+    const { month, year } = req.query;
+
     const users = await User.find();
 
-    const enrichedUsers = await Promise.all(
-      users.map(async (user) => {
-        const regex = new RegExp(`^${year}-${String(month).padStart(2, "0")}`);
-        const attendanceCount = await Attendance.countDocuments({
-          userId: user._id,
-          date: { $regex: regex },
-        });
-        return {
-          ...user.toObject(),
-          attendanceCount,
-        };
-      })
-    );
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 0, 23, 59, 59);
 
-    res.json(enrichedUsers);
+    const attendanceRecords = await Attendance.find({
+      date: { $gte: startDate, $lte: endDate },
+    });
+
+    const usersWithAttendance = users.map((user) => {
+      const userAttendance = attendanceRecords.filter(
+        (record) => record.userId.toString() === user._id.toString()
+      );
+
+      return {
+        ...user.toObject(),
+        attendance: userAttendance,
+        attendanceCount: userAttendance.length,
+      };
+    });
+
+    res.json(usersWithAttendance);
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch users" });
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch users with attendance" });
   }
 });
 
-// POST: Create a new user
+
 router.post("/users", async (req, res) => {
   try {
-    const newUser = new User(req.body);
-    const result = await newUser.save();
-    res.status(201).json(result);
+    const user = new User(req.body);
+    await user.save();
+    res.status(201).json(user);
   } catch (err) {
-    res.status(400).json({ error: "Failed to add user", details: err.message });
+    console.error("Error creating user:", err.message);
+    res.status(400).json({ error: err.message });
   }
 });
 
 
-
-
-
-// GET attendance for a user for a specific month/year
-router.get("/:userId", async (req, res) => {
-  const { userId } = req.params;
-  const { month, year } = req.query;
-
+router.post("/attendance", async (req, res) => {
   try {
-    const regex = new RegExp(`^${year}-${String(month).padStart(2, "0")}`);
-    const records = await Attendance.find({
-      userId,
-      date: { $regex: regex },
-    });
-    res.json(records);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch attendance" });
-  }
-});
+    const { userId, date, status, checkIn, checkOut } = req.body;
 
-// POST attendance record
-router.post("/", async (req, res) => {
-  try {
-    const record = new Attendance(req.body);
-    const saved = await record.save();
-    res.status(201).json(saved);
+    const existing = await Attendance.findOne({ userId, date });
+
+    if (existing) {
+      return res.status(400).json({ message: "Attendance already marked" });
+    }
+
+    const record = new Attendance({ userId, date, status, checkIn, checkOut });
+    await record.save();
+
+    res.status(201).json(record);
   } catch (err) {
-    res.status(400).json({ error: "Failed to save attendance", details: err.message });
+    res.status(500).json({ error: "Failed to mark attendance" });
   }
 });
 
