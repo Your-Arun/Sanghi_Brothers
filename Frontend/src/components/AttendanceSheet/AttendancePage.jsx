@@ -23,7 +23,7 @@ const AttendancePage = () => {
       setUsers(res.data || []);
       setFilteredUsers(res.data || []);
     } catch (err) {
-      console.error("Error fetching users", err);
+      console.error("Ye kaam nhh kr rha hai", err);
     }
   };
 
