@@ -11,12 +11,13 @@ const ProfileModal = ({ user, onClose }) => {
         </button>
         <div className="flex items-center gap-6 mb-4">
           <img
-            src={user.photo || ""}
-            alt={user.name}
+            src={user.photo || "Photo"}
+            alt={user.name || "User"}
             className="w-28 h-28 rounded-full object-cover"
           />
+
           <div>
-            <h2 className="text-2xl font-bold">{user.name}</h2>
+            <h2 className="text-2xl font-bold">{user.name || "N/A"}</h2>
             <p className="text-gray-600">{user.department}</p>
           </div>
         </div>

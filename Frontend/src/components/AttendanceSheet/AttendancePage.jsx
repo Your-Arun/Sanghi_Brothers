@@ -96,6 +96,7 @@ const AttendancePage = () => {
           month={month}
         />
       )}
+
     </div>
   );
 };
