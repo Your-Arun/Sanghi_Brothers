@@ -1,41 +1,76 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axiosInstance from "../Dashboard/axiosInstance";
 
-const AttendanceTablePage = ({ users }) => {
+const AttendanceTablePage = () => {
+  const [attendanceData, setAttendanceData] = useState([]);
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [year, setYear] = useState(new Date().getFullYear());
+
+  const fetchAttendance = async () => {
+    try {
+      const res = await axiosInstance.get(`/users/attendance?month=${month}&year=${year}`);
+      setAttendanceData(res.data || []);
+    } catch (err) {
+      console.error("Error fetching attendance table", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchAttendance();
+  }, [month, year]);
+
+  const getDaysInMonth = (y, m) => new Date(y, m, 0).getDate();
+  const days = getDaysInMonth(year, month);
+
   return (
-    <div className="mt-6 bg-white rounded-lg shadow overflow-x-auto">
-      <table className="min-w-full text-sm text-left">
-        <thead className="bg-blue-100 text-blue-700">
-          <tr>
-            <th className="px-4 py-2">Employee</th>
-            <th className="px-4 py-2">Designation</th>
-            <th className="px-4 py-2">Date</th>
-            <th className="px-4 py-2">Check-in</th>
-            <th className="px-4 py-2">Checkout</th>
-            <th className="px-4 py-2 text-center">Details</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users?.flatMap((user) =>
-            (user.attendance || []).map((att, idx) => (
-              <tr key={idx} className="border-b hover:bg-blue-50">
-                <td className="px-4 py-2 flex items-center gap-2">
-                  <img src={user.photo || ""} className="w-8 h-8 rounded-full" />
-                  {user.name}
-                </td>
-                <td className="px-4 py-2">{user.designation}</td>
-                <td className="px-4 py-2">{att.date || "--"}</td>
-                <td className="px-4 py-2">{att.checkIn || "--"}</td>
-                <td className="px-4 py-2">{att.checkOut || "--"}</td>
-                <td className="px-4 py-2 text-center">
-                  <button className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
-                    View
-                  </button>
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+    <div className="p-6 bg-gray-900 text-white min-h-screen">
+      <h1 className="text-3xl font-bold mb-4">📅 Monthly Attendance Table</h1>
+
+      {/* Filter */}
+      <div className="flex gap-4 items-center mb-6">
+        <select value={year} onChange={e => setYear(+e.target.value)} className="bg-gray-700 px-4 py-2 rounded">
+          {[2023, 2024, 2025].map(y => <option key={y}>{y}</option>)}
+        </select>
+        <select value={month} onChange={e => setMonth(+e.target.value)} className="bg-gray-700 px-4 py-2 rounded">
+          {Array.from({ length: 12 }, (_, i) => (
+            <option key={i} value={i + 1}>{new Date(0, i).toLocaleString('default', { month: 'long' })}</option>
+          ))}
+        </select>
+        <button onClick={fetchAttendance} className="bg-green-600 px-4 py-2 rounded">🔄 Refresh</button>
+      </div>
+
+      {/* Attendance Table */}
+      <div className="overflow-auto">
+        <table className="w-full border border-gray-700 text-sm">
+          <thead className="bg-gray-800">
+            <tr>
+              <th className="border border-gray-700 px-2 py-1">Name</th>
+              {[...Array(days)].map((_, i) => (
+                <th key={i} className="border border-gray-700 px-1">{i + 1}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {attendanceData.map((user, idx) => {
+              const attendanceDays = user.attendance || [];
+              return (
+                <tr key={idx}>
+                  <td className="border border-gray-700 px-2 py-1 whitespace-nowrap">{user.name}</td>
+                  {[...Array(days)].map((_, i) => {
+                    const dateStr = `${year}-${String(month).padStart(2, "0")}-${String(i + 1).padStart(2, "0")}`;
+                    const present = attendanceDays.some((a) => a.date.startsWith(dateStr));
+                    return (
+                      <td key={i} className="border text-center border-gray-700 text-xs">
+                        {present ? "✅" : "❌"}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
