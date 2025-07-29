@@ -6,8 +6,8 @@ import { toast } from "react-toastify";
 
 
 const ProfileModal = ({ user, onClose, onUpdate }) => {
-  const { currentUser } = useContext(UserContext); // Access logged-in user
-  const isManager = currentUser?.department?.toLowerCase() === "manager";
+    const { user } = useContext(UserContext);
+      const isManager = user?.department?.toLowerCase() === "manager";
 
   const [editMode, setEditMode] = useState(false);
   const [editedUser, setEditedUser] = useState({ ...user });
