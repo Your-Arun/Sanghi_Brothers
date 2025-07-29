@@ -208,12 +208,15 @@ Router.get("/users", async (req, res) => {
 // ✅ Update user details
 Router.put("/users/:id", async (req, res) => {
   try {
-    const { username, email, department, phone } = req.body;
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      { username, email, department, phone },
-      { new: true }
-    );
+    // const { username, email, department, phone } = req.body;
+    // const updatedUser = await User.findByIdAndUpdate(
+    //   req.params.id,
+    //   { username, email, department, phone },
+    //   { new: true }
+    // );
+    // res.json(updatedUser);
+
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.json(updatedUser);
   } catch (err) {
     res.status(500).json({ error: "Update failed" });
