@@ -1,6 +1,8 @@
 import React from "react";
 
 const CreateUserModal = ({ newUser, setNewUser, onClose, onSave }) => {
+  if (!newUser) return null; // Prevent rendering if newUser is undefined
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;

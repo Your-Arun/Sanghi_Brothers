@@ -90,7 +90,7 @@ const AttendancePage = () => {
           >
             <div className="flex items-center gap-4">
               <img
-                src={user.photo || "https://via.placeholder.com/60"}
+                src={user.photo || ""}
                 alt="User"
                 className="w-16 h-16 rounded-full object-cover"
               />
