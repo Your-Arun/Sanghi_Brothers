@@ -1,14 +1,35 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { UserContext } from "../Home Page/UserContext"; // Make sure path is correct
+import axiosInstance from "../Dashboard/axiosInstance";
+import { toast } from "react-toastify";
 
-const ProfileModal = ({ user, onClose }) => {
-  const isManager = user?.department?.toLowerCase() === "manager";
+
+
+const ProfileModal = ({ user, onClose, onUpdate }) => {
+  const { currentUser } = useContext(UserContext); // Access logged-in user
+  const isManager = currentUser?.department?.toLowerCase() === "manager";
+
   const [editMode, setEditMode] = useState(false);
   const [editedUser, setEditedUser] = useState({ ...user });
 
-  const handleSave = () => {
-    // TODO: Send editedUser to backend
-    alert("Changes saved (implement backend logic)");
-    setEditMode(false);
+  const handleChange = (key, value) => {
+    // Allow only numeric values for these fields
+    if (["salary", "aadhaar"].includes(key) && value && !/^\d*$/.test(value)) return;
+    if (key === "joiningDate" && value && !/^\d{0,4}-?\d{0,2}-?\d{0,2}$/.test(value)) return;
+
+    setEditedUser({ ...editedUser, [key]: value });
+  };
+
+  const handleSave = async () => {
+    try {
+      const res = await axiosInstance.put(`/users/${user._id}`, editedUser); // Adjust API path as needed
+      toast.success("User updated successfully.");
+      setEditMode(false);
+      onUpdate && onUpdate(res.data); // Notify parent of changes
+    } catch (err) {
+      console.error(err);
+      toast.error("Error updating user.");
+    }
   };
 
   return (
@@ -48,11 +69,9 @@ const ProfileModal = ({ user, onClose }) => {
               <p className="text-sm font-medium text-gray-400">{label}</p>
               {editMode ? (
                 <input
-                  type="text"
+                  type={["salary", "aadhaar"].includes(key) ? "number" : "text"}
                   value={editedUser[key] || ""}
-                  onChange={(e) =>
-                    setEditedUser({ ...editedUser, [key]: e.target.value })
-                  }
+                  onChange={(e) => handleChange(key, e.target.value)}
                   className="w-full mt-1 px-3 py-2 bg-gray-800 text-white border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               ) : (
@@ -70,21 +89,21 @@ const ProfileModal = ({ user, onClose }) => {
         {isManager && (
           <div className="mt-6 flex justify-end gap-4">
             {!editMode ? (
-              <button
+              <div
                 onClick={() => setEditMode(true)}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded"
               >
                 Edit
-              </button>
+              </div>
             ) : (
               <>
-                <button
+                <div
                   onClick={handleSave}
                   className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded"
                 >
                   Save
-                </button>
-                <button
+                </div>
+                <div
                   onClick={() => {
                     setEditedUser({ ...user });
                     setEditMode(false);
@@ -92,7 +111,7 @@ const ProfileModal = ({ user, onClose }) => {
                   className="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded"
                 >
                   Cancel
-                </button>
+                </div>
               </>
             )}
           </div>
