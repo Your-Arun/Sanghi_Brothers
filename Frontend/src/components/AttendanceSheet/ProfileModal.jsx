@@ -1,31 +1,28 @@
 import React, { useContext, useState } from "react";
-import { UserContext } from "../Home Page/UserContext"; // Make sure path is correct
+import { UserContext } from "../Home Page/UserContext";
 import axiosInstance from "../Dashboard/axiosInstance";
 import { toast } from "react-toastify";
 
-
-
 const ProfileModal = ({ user, onClose, onUpdate }) => {
-    const { user } = useContext(UserContext);
-      const isManager = user.department.toLowerCase() === "manager";
+  const { user: currentUser } = useContext(UserContext);
+  const isManager = currentUser?.department?.toLowerCase() === "manager";
 
   const [editMode, setEditMode] = useState(false);
   const [editedUser, setEditedUser] = useState({ ...user });
 
   const handleChange = (key, value) => {
-    // Allow only numeric values for these fields
+    // Only allow numeric input for salary, aadhaar
     if (["salary", "aadhaar"].includes(key) && value && !/^\d*$/.test(value)) return;
     if (key === "joiningDate" && value && !/^\d{0,4}-?\d{0,2}-?\d{0,2}$/.test(value)) return;
-
     setEditedUser({ ...editedUser, [key]: value });
   };
 
   const handleSave = async () => {
     try {
-      const res = await axiosInstance.put(`/users/${user._id}`, editedUser); // Adjust API path as needed
+      const res = await axiosInstance.put(`/users/${user._id}`, editedUser);
       toast.success("User updated successfully.");
       setEditMode(false);
-      onUpdate && onUpdate(res.data); // Notify parent of changes
+      onUpdate && onUpdate(res.data);
     } catch (err) {
       console.error(err);
       toast.error("Error updating user.");
@@ -35,12 +32,12 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
       <div className="bg-gray-900 text-white w-full max-w-3xl p-6 rounded-lg shadow-xl relative max-h-[90vh] overflow-y-auto">
-        <div
+        <button
           onClick={onClose}
           className="absolute top-2 right-4 text-2xl text-red-400 hover:text-red-600"
         >
           &times;
-        </div>
+        </button>
 
         <div className="flex items-center gap-6 mb-6">
           <img
@@ -89,21 +86,21 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
         {isManager && (
           <div className="mt-6 flex justify-end gap-4">
             {!editMode ? (
-              <div
+              <button
                 onClick={() => setEditMode(true)}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded"
               >
                 Edit
-              </div>
+              </button>
             ) : (
               <>
-                <div
+                <button
                   onClick={handleSave}
                   className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded"
                 >
                   Save
-                </div>
-                <div
+                </button>
+                <button
                   onClick={() => {
                     setEditedUser({ ...user });
                     setEditMode(false);
@@ -111,7 +108,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
                   className="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded"
                 >
                   Cancel
-                </div>
+                </button>
               </>
             )}
           </div>
