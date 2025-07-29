@@ -32,12 +32,12 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
       <div className="bg-gray-900 text-white w-full max-w-3xl p-6 rounded-lg shadow-xl relative max-h-[90vh] overflow-y-auto">
-        <button
+        <div
           onClick={onClose}
           className="absolute top-2 right-4 text-2xl text-red-400 hover:text-red-600"
         >
           &times;
-        </button>
+        </div>
 
         <div className="flex items-center gap-6 mb-6">
           <img
@@ -86,21 +86,21 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
         {isManager && (
           <div className="mt-6 flex justify-end gap-4">
             {!editMode ? (
-              <button
+              <div
                 onClick={() => setEditMode(true)}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded"
               >
                 Edit
-              </button>
+              </div>
             ) : (
               <>
-                <button
+                <div
                   onClick={handleSave}
                   className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded"
                 >
                   Save
-                </button>
-                <button
+                </div>
+                <div
                   onClick={() => {
                     setEditedUser({ ...user });
                     setEditMode(false);
@@ -108,7 +108,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
                   className="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded"
                 >
                   Cancel
-                </button>
+                </div>
               </>
             )}
           </div>
