@@ -63,6 +63,23 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
     }
   };
 
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this user?");
+    if (!confirmDelete) return;
+
+    try {
+      await axiosInstance.delete(`/users/${user._id}`);
+      toast.success("User deleted successfully.");
+      onClose();         // Close modal
+      onUpdate();        // Trigger parent to refresh list
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete user.");
+    }
+  };
+
+
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
       <div className="bg-gray-900 text-white w-full max-w-3xl p-6 rounded-lg shadow-xl relative max-h-[90vh] overflow-y-auto">
@@ -88,7 +105,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
 
         <div className="grid grid-cols-2 gap-4">
           {[
-            ["name", "name"],
+            ["Name", "name"],
             ["Username", "username"],
             ["Email", "email"],
             ["Phone", "phone"],
@@ -185,6 +202,13 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
                 </button>
               </>
             )}
+            {/* Delete Button */}
+            <button
+              onClick={handleDelete}
+              className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded"
+            >
+              Delete
+            </button>
           </div>
         )}
       </div>
