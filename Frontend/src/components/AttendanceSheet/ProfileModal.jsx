@@ -63,19 +63,52 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
     }
   };
 
-  const handleDelete = async () => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this user?");
-    if (!confirmDelete) return;
 
-    try {
-      await axiosInstance.delete(`/users/${user._id}`);
-      toast.success("User deleted successfully.");
-      onClose();         // Close modal
-      onUpdate();        // Trigger parent to refresh list
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to delete user.");
-    }
+  const confirmDeleteToast = (onConfirm) => {
+    toast(
+      ({ closeToast }) => (
+        <div className="flex flex-col gap-2">
+          <p>Are you sure you want to delete this ?</p>
+          <div className="flex gap-4 mt-2">
+            <button
+              onClick={() => {
+                onConfirm()
+                closeToast()
+              }}
+              className="bg-red-500 text-white px-3 py-1 rounded"
+            >
+              Yes
+            </button>
+            <button
+              onClick={closeToast}
+              className="bg-gray-300 px-3 py-1 rounded"
+            >
+              No
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        position: "top-center",
+        autoClose: false,
+        closeOnClick: false,
+        closeButton: false,
+      }
+    )
+  }
+
+  const handleDelete = async () => {
+    confirmDeleteToast(async () => {
+      try {
+        await axiosInstance.delete(`/users/${user._id}`);
+        toast.success("User deleted successfully.");
+        onClose();         // Close modal
+        onUpdate();        // Trigger parent to refresh list
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to delete user.");
+      }
+    })
   };
 
 
