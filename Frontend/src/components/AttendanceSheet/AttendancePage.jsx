@@ -6,30 +6,38 @@ import ProfileModal from "./ProfileModal";
 const AttendancePage = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState("recent");
   const [selectedUser, setSelectedUser] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
   const [attendanceData, setAttendanceData] = useState([]);
+  const [isSearched, setIsSearched] = useState(false);
 
   const fetchUsers = async () => {
     try {
       const res = await axiosInstance.get(`/users/attendance?month=${month}&year=${year}`);
-      setUsers(res.data || []);
-      setAttendanceData(res.data || []);
+      const data = res.data || [];
+
+      setUsers(data);
+      setAttendanceData(data);
+      setIsSearched(true);
     } catch (err) {
       console.error("Error fetching users:", err);
     }
   };
 
-  useEffect(() => {
-    fetchUsers();
-  }, [month, year]);
-
   const getDaysInMonth = (y, m) => new Date(y, m, 0).getDate();
   const days = getDaysInMonth(year, month);
 
-  const filteredUsers = users.filter((user) =>
+  const sortedUsers = [...users].sort((a, b) => {
+    if (sortBy === "name-asc") return a.name.localeCompare(b.name);
+    if (sortBy === "name-desc") return b.name.localeCompare(a.name);
+    if (sortBy === "designation") return a.designation.localeCompare(b.designation);
+    return new Date(b.createdAt) - new Date(a.createdAt); // recent
+  });
+
+  const filteredUsers = sortedUsers.filter((user) =>
     user.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -66,12 +74,26 @@ const AttendancePage = () => {
             </option>
           ))}
         </select>
+
+        {/* Sorting Option */}
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="bg-gray-700 px-4 py-2 rounded"
+        >
+          <option value="recent">📅 Recently Added</option>
+          <option value="name-asc">🔤 Name (A-Z)</option>
+          <option value="name-desc">🔡 Name (Z-A)</option>
+          <option value="designation">🏷️ Designation</option>
+        </select>
+
         <button
           onClick={fetchUsers}
           className="bg-green-600 px-4 py-2 rounded hover:bg-green-700"
         >
           🔍 Search
         </button>
+
         <button
           onClick={() => setShowCreateModal(true)}
           className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
@@ -82,37 +104,70 @@ const AttendancePage = () => {
 
       {/* User Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredUsers.map((user) => (
-          <div
-            key={user._id}
-            onClick={() => setSelectedUser(user)}
-            className="bg-gray-800 rounded-lg p-4 cursor-pointer hover:bg-gray-700 transition"
-          >
-            <div className="flex items-center gap-4">
-              <img
-                src={user.photo || ""}
-                alt="User"
-                className="w-16 h-16 rounded-full object-cover"
-              />
-              <div>
-                <h2 className="text-lg font-semibold">{user.name}</h2>
-                <p className="text-sm text-gray-400">{user.designation}</p>
-                <p className="text-sm mt-1">
-                  Attendance:{" "}
-                  {user.attendance?.filter((a) =>
-                    a.date.startsWith(`${year}-${String(month).padStart(2, "0")}`)
-                  ).length || 0}{" "}
-                  days
-                </p>
+        {filteredUsers.length > 0 ? (
+          filteredUsers.map((user) => (
+            <div
+              key={user._id}
+              onClick={() => setSelectedUser(user)}
+              className="bg-gray-800 rounded-lg p-4 cursor-pointer hover:bg-gray-700 transition"
+            >
+              <div className="flex items-center gap-4">
+                <img
+                  src={user.photo || ""}
+                  alt="User"
+                  className="w-16 h-16 rounded-full object-cover"
+                />
+                <div>
+                  <h2 className="text-lg font-semibold">{user.name}</h2>
+                  <p className="text-sm text-gray-400">{user.designation}</p>
+                  <p className="text-sm mt-1">
+                    Attendance:{" "}
+                    {user.attendance?.filter((a) =>
+                      a.date.startsWith(`${year}-${String(month).padStart(2, "0")}`)
+                    ).length || 0}{" "}
+                    days
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : isSearched ? (
+          <p className="text-gray-400 col-span-full text-center">❌ No users found.</p>
+        ) : null}
       </div>
 
       {/* Attendance Table */}
       <div className="mt-10 bg-gray-900 p-4 rounded-lg shadow text-white">
         <h2 className="text-2xl font-bold mb-4">📅 Monthly Attendance Table</h2>
+
+        <div className="flex gap-4 items-center mb-4">
+          <select
+            value={year}
+            onChange={(e) => setYear(+e.target.value)}
+            className="bg-gray-700 px-4 py-2 rounded"
+          >
+            {[2023, 2024, 2025].map((y) => (
+              <option key={y}>{y}</option>
+            ))}
+          </select>
+          <select
+            value={month}
+            onChange={(e) => setMonth(+e.target.value)}
+            className="bg-gray-700 px-4 py-2 rounded"
+          >
+            {Array.from({ length: 12 }, (_, i) => (
+              <option key={i} value={i + 1}>
+                {new Date(0, i).toLocaleString("default", { month: "long" })}
+              </option>
+            ))}
+          </select>
+          <button
+            onClick={fetchUsers}
+            className="bg-green-600 px-4 py-2 rounded hover:bg-green-700"
+          >
+            🔍 Search
+          </button>
+        </div>
 
         <div className="overflow-auto border border-gray-700 rounded">
           <table className="min-w-full text-sm">
