@@ -4,7 +4,6 @@ import CreateUserModal from "./CreateUserModal";
 import ProfileModal from "./ProfileModal";
 import { useNavigate } from "react-router-dom";
 
-
 const AttendancePage = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,6 +15,7 @@ const AttendancePage = () => {
   const [attendanceData, setAttendanceData] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   const getDaysInMonth = (y, m) => new Date(y, m, 0).getDate();
   const days = getDaysInMonth(year, month);
 
@@ -40,7 +40,7 @@ const AttendancePage = () => {
   const sortedUsers = [...users].sort((a, b) => {
     if (sortBy === "name-asc") return a.name?.localeCompare(b.name);
     if (sortBy === "name-desc") return b.name?.localeCompare(a.name);
-    return new Date(b.createdAt) - new Date(a.createdAt); // recent
+    return new Date(b.createdAt) - new Date(a.createdAt);
   });
 
   const filteredUsers = sortedUsers.filter((user) =>
@@ -49,7 +49,15 @@ const AttendancePage = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-6">
-      <h1 className="text-3xl font-bold mb-4">🧑‍💼 Attendance Management</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">🧑‍💼 Attendance Management</h1>
+        <button
+          onClick={() => setShowCreateModal(true)}
+          className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
+        >
+          ➕ Add User
+        </button>
+      </div>
 
       {/* Controls */}
       <div className="flex flex-wrap gap-4 items-center mb-6">
@@ -76,18 +84,11 @@ const AttendancePage = () => {
           🔄 Refresh
         </button>
         <button
-          onClick={() => navigate('/daily-log-view')}
+          onClick={() => navigate("/daily-log-view")}
           className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
         >
-          📖Daily Log View
+          📖 Daily Log View
         </button>
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
-        >
-          ➕ Add User
-        </button>
-        
       </div>
 
       {/* User Cards */}
@@ -192,7 +193,10 @@ const AttendancePage = () => {
 
       {/* Modals */}
       {showCreateModal && (
-        <CreateUserModal onClose={() => setShowCreateModal(false)} onUserCreated={fetchUsers} />
+        <CreateUserModal
+          onClose={() => setShowCreateModal(false)}
+          onUserCreated={fetchUsers}
+        />
       )}
       {selectedUser && (
         <ProfileModal
