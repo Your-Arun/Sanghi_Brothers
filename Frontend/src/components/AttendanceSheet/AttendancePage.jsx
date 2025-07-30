@@ -33,7 +33,6 @@ const AttendancePage = () => {
   const sortedUsers = [...users].sort((a, b) => {
     if (sortBy === "name-asc") return a.name.localeCompare(b.name);
     if (sortBy === "name-desc") return b.name.localeCompare(a.name);
-    if (sortBy === "designation") return a.designation.localeCompare(b.designation);
     return new Date(b.createdAt) - new Date(a.createdAt); // recent
   });
 
@@ -54,26 +53,6 @@ const AttendancePage = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <select
-          value={year}
-          onChange={(e) => setYear(+e.target.value)}
-          className="bg-gray-700 px-4 py-2 rounded"
-        >
-          {[2023, 2024, 2025].map((y) => (
-            <option key={y}>{y}</option>
-          ))}
-        </select>
-        <select
-          value={month}
-          onChange={(e) => setMonth(+e.target.value)}
-          className="bg-gray-700 px-4 py-2 rounded"
-        >
-          {Array.from({ length: 12 }, (_, i) => (
-            <option key={i} value={i + 1}>
-              {new Date(0, i).toLocaleString("default", { month: "long" })}
-            </option>
-          ))}
-        </select>
 
         {/* Sorting Option */}
         <select
@@ -84,7 +63,6 @@ const AttendancePage = () => {
           <option value="recent">📅 Recently Added</option>
           <option value="name-asc">🔤 Name (A-Z)</option>
           <option value="name-desc">🔡 Name (Z-A)</option>
-          <option value="designation">🏷️ Designation</option>
         </select>
 
         <button
