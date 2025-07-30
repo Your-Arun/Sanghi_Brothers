@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import  UserContext  from "../Home Page/UserContext";
+import UserContext from "../Home Page/UserContext";
 import axiosInstance from "../Dashboard/axiosInstance";
 import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
@@ -142,7 +142,9 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
                 ))}
               </div>
             ) : (
-              <p className="mt-1 text-gray-200">{user.aadhaar || "-"}</p>
+              <p className="mt-1 text-gray-200">{user.aadhaar && String(user.aadhaar).length === 12
+                ? String(user.aadhaar).replace(/(\d{4})(\d{4})(\d{4})/, "$1-$2-$3")
+                : user.aadhaar || "-"}</p>
             )}
           </div>
 
