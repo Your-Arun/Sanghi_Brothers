@@ -13,27 +13,32 @@ const AttendancePage = () => {
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
   const [attendanceData, setAttendanceData] = useState([]);
-  const [isSearched, setIsSearched] = useState(false);
-
-  const fetchUsers = async () => {
-    try {
-      const res = await axiosInstance.get(`/users/attendance?month=${month}&year=${year}`);
-      const data = res.data || [];
-
-      setUsers(data);
-      setAttendanceData(data);
-      setIsSearched(true);
-    } catch (err) {
-      console.error("Error fetching users:", err);
-    }
-  };
+  const [loading, setLoading] = useState(false);
 
   const getDaysInMonth = (y, m) => new Date(y, m, 0).getDate();
   const days = getDaysInMonth(year, month);
 
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
+      const res = await axiosInstance.get(`/users/attendance?month=${month}&year=${year}`);
+      const data = res.data || [];
+      setUsers(data);
+      setAttendanceData(data);
+    } catch (err) {
+      console.error("Error fetching users:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, [month, year]);
+
   const sortedUsers = [...users].sort((a, b) => {
-    if (sortBy === "name-asc") return a.name.localeCompare(b.name);
-    if (sortBy === "name-desc") return b.name.localeCompare(a.name);
+    if (sortBy === "name-asc") return a.name?.localeCompare(b.name);
+    if (sortBy === "name-desc") return b.name?.localeCompare(a.name);
     return new Date(b.createdAt) - new Date(a.createdAt); // recent
   });
 
@@ -45,7 +50,7 @@ const AttendancePage = () => {
     <div className="min-h-screen bg-gray-900 text-white p-6">
       <h1 className="text-3xl font-bold mb-4">🧑‍💼 Attendance Management</h1>
 
-      {/* Search + Filter + Add User */}
+      {/* Controls */}
       <div className="flex flex-wrap gap-4 items-center mb-6">
         <input
           type="text"
@@ -54,8 +59,6 @@ const AttendancePage = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-
-        {/* Sorting Option */}
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
@@ -65,14 +68,12 @@ const AttendancePage = () => {
           <option value="name-asc">🔤 Name (A-Z)</option>
           <option value="name-desc">🔡 Name (Z-A)</option>
         </select>
-
         <button
           onClick={fetchUsers}
           className="bg-green-600 px-4 py-2 rounded hover:bg-green-700"
         >
-          🔍 Search
+          🔄 Refresh
         </button>
-
         <button
           onClick={() => setShowCreateModal(true)}
           className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
@@ -83,7 +84,9 @@ const AttendancePage = () => {
 
       {/* User Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredUsers.length > 0 ? (
+        {loading ? (
+          <p className="text-center col-span-full text-gray-400">⏳ Loading users...</p>
+        ) : filteredUsers.length > 0 ? (
           filteredUsers.map((user) => (
             <div
               key={user._id}
@@ -92,7 +95,7 @@ const AttendancePage = () => {
             >
               <div className="flex items-center gap-4">
                 <img
-                  src={user.photo || ""}
+                  src={user.photo || "/user-avatar.png"}
                   alt="User"
                   className="w-16 h-16 rounded-full object-cover"
                 />
@@ -102,7 +105,7 @@ const AttendancePage = () => {
                   <p className="text-sm mt-1">
                     Attendance:{" "}
                     {user.attendance?.filter((a) =>
-                      a.date.startsWith(`${year}-${String(month).padStart(2, "0")}`)
+                      a.date?.startsWith(`${year}-${String(month).padStart(2, "0")}`)
                     ).length || 0}{" "}
                     days
                   </p>
@@ -110,9 +113,9 @@ const AttendancePage = () => {
               </div>
             </div>
           ))
-        ) : isSearched ? (
-          <p className="text-gray-400 col-span-full text-center">❌ No users found.</p>
-        ) : null}
+        ) : (
+          <p className="text-center col-span-full text-gray-400">❌ No matching users.</p>
+        )}
       </div>
 
       {/* Attendance Table */}
@@ -140,12 +143,6 @@ const AttendancePage = () => {
               </option>
             ))}
           </select>
-          <button
-            onClick={fetchUsers}
-            className="bg-green-600 px-4 py-2 rounded hover:bg-green-700"
-          >
-            🔍 Search
-          </button>
         </div>
 
         <div className="overflow-auto border border-gray-700 rounded">
@@ -167,7 +164,9 @@ const AttendancePage = () => {
                   <tr key={idx}>
                     <td className="border border-gray-700 px-2 py-1">{user.name}</td>
                     {[...Array(days)].map((_, i) => {
-                      const dateStr = `${year}-${String(month).padStart(2, "0")}-${String(i + 1).padStart(2, "0")}`;
+                      const dateStr = `${year}-${String(month).padStart(2, "0")}-${String(
+                        i + 1
+                      ).padStart(2, "0")}`;
                       const present = attendance.some((a) => a.date?.startsWith(dateStr));
                       return (
                         <td key={i} className="border border-gray-700 text-center">
@@ -185,10 +184,7 @@ const AttendancePage = () => {
 
       {/* Modals */}
       {showCreateModal && (
-        <CreateUserModal
-          onClose={() => setShowCreateModal(false)}
-          onUserCreated={fetchUsers}
-        />
+        <CreateUserModal onClose={() => setShowCreateModal(false)} onUserCreated={fetchUsers} />
       )}
       {selectedUser && (
         <ProfileModal
@@ -197,7 +193,7 @@ const AttendancePage = () => {
           onUserUpdated={fetchUsers}
         />
       )}
-      <DailyLogView/>
+      <DailyLogView />
     </div>
   );
 };

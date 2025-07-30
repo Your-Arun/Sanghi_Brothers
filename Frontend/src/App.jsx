@@ -59,6 +59,7 @@ import AllShifts from "./components/Dashboard/ShiftDisplay.jsx";
 import SessionTimeout from "./components/Home Page/SessionTimeout.jsx";
 import Notfound from "./components/Layouts/NotFound";
 import AttendancePage from "./components/AttendanceSheet/AttendancePage.jsx";
+import DailyLogView from "./components/AttendanceSheet/DailyLogView.jsx";
 
 
 
@@ -148,6 +149,7 @@ const AppContent = () => {
           <Route path="/meterclose" element={<MeterClose />} />
           <Route path="/meterclose/:id" element={<UpdateMeter />} />
           <Route path="/Cashslip" element={<CashSlip />} />
+          <Route path="/daily-log-view" element={<DailyLogView />} />
         </Route>
       </Routes>
     </>
