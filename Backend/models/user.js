@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema(
     otpExpires: { type: Date }, // ✅ Make sure this is defined
     picture:  { type: String },
     address:  { type: String },
-    aadhaar:  { type: Number },
+    aadhaar: { type: String, trim: true },
     designation:  { type: String },
     joiningDate:  { type: Date },
     salary:  { type: Number },
