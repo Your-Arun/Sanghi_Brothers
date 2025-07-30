@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import axiosInstance from "../Dashboard/axiosInstance";
 import CreateUserModal from "./CreateUserModal";
 import ProfileModal from "./ProfileModal";
-import DailyLogView from "./DailyLogView";
+import { useNavigate } from "react-router-dom";
+
 
 const AttendancePage = () => {
   const [users, setUsers] = useState([]);
@@ -14,7 +15,7 @@ const AttendancePage = () => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [attendanceData, setAttendanceData] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
   const getDaysInMonth = (y, m) => new Date(y, m, 0).getDate();
   const days = getDaysInMonth(year, month);
 
@@ -75,11 +76,18 @@ const AttendancePage = () => {
           🔄 Refresh
         </button>
         <button
+          onClick={() => navigate('/daily-log-view')}
+          className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
+        >
+          📖Daily Log View
+        </button>
+        <button
           onClick={() => setShowCreateModal(true)}
           className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
         >
           ➕ Add User
         </button>
+        
       </div>
 
       {/* User Cards */}
@@ -193,7 +201,6 @@ const AttendancePage = () => {
           onUserUpdated={fetchUsers}
         />
       )}
-      <DailyLogView />
     </div>
   );
 };
