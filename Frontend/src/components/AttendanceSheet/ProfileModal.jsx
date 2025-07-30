@@ -88,6 +88,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
 
         <div className="grid grid-cols-2 gap-4">
           {[
+            ["name", "name"],
             ["Username", "username"],
             ["Email", "email"],
             ["Phone", "phone"],
