@@ -49,6 +49,33 @@ router.post("/users", async (req, res) => {
 });
 
 
+router.get("/daily-attendance", async (req, res) => {
+  const { date } = req.query;
+  if (!date) return res.status(400).json({ message: "Date is required" });
+
+  try {
+    const users = await User.find().lean();
+
+    const data = users.map(user => {
+      const isPresent = user.attendance?.some(a =>
+        a.date?.startsWith(date)
+      );
+      return {
+        _id: user._id,
+        name: user.name,
+        designation: user.designation,
+        photo: user.photo,
+        status: isPresent ? "Present" : "Absent",
+      };
+    });
+
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
+
 router.post("/attendance", async (req, res) => {
   try {
     const { userId, date, status, checkIn, checkOut } = req.body;

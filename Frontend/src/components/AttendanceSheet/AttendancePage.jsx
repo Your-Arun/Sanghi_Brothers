@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axiosInstance from "../Dashboard/axiosInstance";
 import CreateUserModal from "./CreateUserModal";
 import ProfileModal from "./ProfileModal";
+import DailyLogView from "./DailyLogView";
 
 const AttendancePage = () => {
   const [users, setUsers] = useState([]);
@@ -196,6 +197,7 @@ const AttendancePage = () => {
           onUserUpdated={fetchUsers}
         />
       )}
+      <DailyLogView/>
     </div>
   );
 };
