@@ -14,6 +14,7 @@ const AttendancePage = () => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [attendanceData, setAttendanceData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [newUser, setNewUser] = useState(null);
   const navigate = useNavigate();
 
   const getDaysInMonth = (y, m) => new Date(y, m, 0).getDate();
@@ -47,12 +48,40 @@ const AttendancePage = () => {
     user.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+
+  const handleSaveUser = async () => {
+    try {
+      await axiosInstance.post("/users", newUser);
+      fetchUsers();
+      setShowCreateModal(false);
+      setNewUser(null);
+    } catch (err) {
+      console.error("Error creating user:", err);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 text-white p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">🧑‍💼 Attendance Management</h1>
         <button
-          onClick={() => setShowCreateModal(true)}
+          onClick={() => {
+            setNewUser({
+              name: "",
+              username: "",
+              email: "",
+              phone: "",
+              password: "",
+              department: "",
+              address: "",
+              aadhaar: "",
+              designation: "",
+              joiningDate: "",
+              salary: "",
+              photo: ""
+            });
+            setShowCreateModal(true);
+          }}
           className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
         >
           ➕ Add User
@@ -194,8 +223,10 @@ const AttendancePage = () => {
       {/* Modals */}
       {showCreateModal && (
         <CreateUserModal
+          newUser={newUser}
+          setNewUser={setNewUser}
           onClose={() => setShowCreateModal(false)}
-          onUserCreated={fetchUsers}
+          onSave={handleSaveUser}
         />
       )}
       {selectedUser && (

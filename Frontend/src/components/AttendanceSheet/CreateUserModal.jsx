@@ -1,7 +1,7 @@
 import React from "react";
 
 const CreateUserModal = ({ newUser, setNewUser, onClose, onSave }) => {
-  if (!newUser) return null; // Prevent rendering if newUser is undefined
+  if (!newUser) return null; // Avoid rendering without data
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -20,8 +20,8 @@ const CreateUserModal = ({ newUser, setNewUser, onClose, onSave }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
-      <div className="bg-gray-900 text-white w-full max-w-xl p-6 rounded-lg relative max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-end items-center pr-6 z-50">
+      <div className="bg-gray-900 text-white w-full max-w-md p-6 rounded-lg relative max-h-[90vh] overflow-y-auto">
         <button onClick={onClose} className="absolute top-2 right-4 text-2xl text-red-400 hover:text-red-600">
           ×
         </button>
