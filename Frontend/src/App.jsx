@@ -7,8 +7,6 @@ import Home from "./components/Home Page/Home";
 import ContactUs from "./components/Home Page/ContactUs";
 import Services from "./components/Home Page/ServicesPage";
 import AboutUs from "./components/Home Page/AboutsUs";
-import Login from "./components/Home Page/Login";
-import Signup from "./components/Home Page/Signup";
 import ForgotPassword from "./components/Home Page/ForgetPassword";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Staffmember from "./components/Dashboard/staff-member.jsx";
@@ -60,6 +58,7 @@ import SessionTimeout from "./components/Home Page/SessionTimeout.jsx";
 import Notfound from "./components/Layouts/NotFound";
 import AttendancePage from "./components/AttendanceSheet/AttendancePage.jsx";
 import DailyLogView from "./components/AttendanceSheet/DailyLogView.jsx";
+import CreateUserPage from "./components/AttendanceSheet/CreateUserModal.jsx";
 
 
 
@@ -150,6 +149,7 @@ const AppContent = () => {
           <Route path="/meterclose/:id" element={<UpdateMeter />} />
           <Route path="/Cashslip" element={<CashSlip />} />
           <Route path="/daily-log-view" element={<DailyLogView />} />
+          <Route path="/create-user" element={<CreateUserPage />} />
         </Route>
       </Routes>
     </>

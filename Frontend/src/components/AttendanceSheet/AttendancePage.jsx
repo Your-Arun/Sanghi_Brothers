@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../Dashboard/axiosInstance";
-import CreateUserModal from "./CreateUserModal";
 import ProfileModal from "./ProfileModal";
 import { useNavigate } from "react-router-dom";
 
@@ -65,23 +64,7 @@ const AttendancePage = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">🧑‍💼 Attendance Management</h1>
         <button
-          onClick={() => {
-            setNewUser({
-              name: "",
-              username: "",
-              email: "",
-              phone: "",
-              password: "",
-              department: "",
-              address: "",
-              aadhaar: "",
-              designation: "",
-              joiningDate: "",
-              salary: "",
-              photo: ""
-            });
-            setShowCreateModal(true);
-          }}
+          onClick={() => {navigate("/create-user")}}
           className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
         >
           ➕ Add User
@@ -221,14 +204,6 @@ const AttendancePage = () => {
       </div>
 
       {/* Modals */}
-      {showCreateModal && (
-        <CreateUserModal
-          newUser={newUser}
-          setNewUser={setNewUser}
-          onClose={() => setShowCreateModal(false)}
-          onSave={handleSaveUser}
-        />
-      )}
       {selectedUser && (
         <ProfileModal
           user={selectedUser}
