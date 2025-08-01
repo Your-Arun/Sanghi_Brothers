@@ -55,7 +55,7 @@ const CreateUserPage = () => {
 
       await axiosInstance.post("/users", userToSave);
       alert("✅ User created successfully");
-      navigate("/attendance");
+      navigate("/attendance-sheet");
     } catch (err) {
       console.error("❌ Error creating user:", err);
       alert("Error: " + err.message || "Failed to create user");

@@ -107,7 +107,6 @@ const AppContent = () => {
           {/* <Route path="/dashb" element={< Dashboarddd/>} /> */}
           <Route path="/admin-panel" element={<AdminPanel />} />
           <Route path="/staff-dashboard" element={<Staffmember />} />
-          <Route path="/attendance-sheet" element={<AttendancePage />} />
           <Route path="/bankreport" element={<MergingSbSection />} />
           <Route path="/sbbank" element={<Mergesb01Inflo />} />
           <Route path="/fundposition" element={<Sb01 />} />
@@ -148,6 +147,7 @@ const AppContent = () => {
           <Route path="/meterclose" element={<MeterClose />} />
           <Route path="/meterclose/:id" element={<UpdateMeter />} />
           <Route path="/Cashslip" element={<CashSlip />} />
+          <Route path="/attendance-sheet" element={<AttendancePage />} />
           <Route path="/daily-log-view" element={<DailyLogView />} />
           <Route path="/create-user" element={<CreateUserPage />} />
         </Route>
