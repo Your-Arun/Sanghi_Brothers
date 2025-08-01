@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../user");
 const Attendance = require("../attendancewala/Attendance");
+const bcrypt = require("bcryptjs");
 
 // ✅ Get all users with attendance for selected month/year
 router.get("/users/attendance", async (req, res) => {
@@ -36,10 +37,16 @@ router.get("/users/attendance", async (req, res) => {
   }
 });
 
-
 router.post("/users", async (req, res) => {
   try {
-    const user = new User(req.body);
+    const { password, ...rest } = req.body;
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({
+      ...rest,
+      password: hashedPassword,
+    });
+
     await user.save();
     res.status(201).json(user);
   } catch (err) {
