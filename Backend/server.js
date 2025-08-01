@@ -41,6 +41,8 @@ app.use(session({
 
 app.options('*', cors()); // allow preflight for all routes
 
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 
 

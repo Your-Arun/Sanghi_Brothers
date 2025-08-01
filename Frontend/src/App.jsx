@@ -7,8 +7,6 @@ import Home from "./components/Home Page/Home";
 import ContactUs from "./components/Home Page/ContactUs";
 import Services from "./components/Home Page/ServicesPage";
 import AboutUs from "./components/Home Page/AboutsUs";
-import Login from "./components/Home Page/Login";
-import Signup from "./components/Home Page/Signup";
 import ForgotPassword from "./components/Home Page/ForgetPassword";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Staffmember from "./components/Dashboard/staff-member.jsx";
