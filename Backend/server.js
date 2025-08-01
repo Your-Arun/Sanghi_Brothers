@@ -9,27 +9,13 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
-
 app.use(cookieParser());
 
 // 🛡️ CORS Configuration
-
-const allowedOrigins = [
-  "https://sanghibros.vercel.app", // ✅ main
-  "https://sanghibros-git-dev-arunwork82-gmailcoms-projects.vercel.app", // ✅ dev preview
-];
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    }, methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: 'https://sanghibros.vercel.app', // ✅ Allow your Vercel frontend
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, // ✅ Allow cookies & authentication headers
   })
 );
@@ -43,14 +29,7 @@ app.use(session({
   cookie: { secure: false, httpOnly: true, maxAge: 1000 * 60 * 60 } // 1 hour session
 }));
 
-app.options('*', cors()); // allow preflight for all routes
-
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
-
-
+app.options('*', cors()); // allow preflight for all route
 
 // ✅ Import Routes
 const FlowRoute = require("./routes/flowroutes");
