@@ -37,24 +37,44 @@ router.get("/users/attendance", async (req, res) => {
   }
 });
 
+// router.post("/users", async (req, res) => {
+//   try {
+//     const { password, ...rest } = req.body;
+
+//     const hashedPassword = await bcrypt.hash(password, 10);
+//     const user = new User({
+//       ...rest,
+//       password: hashedPassword,
+//     });
+
+//     await user.save();
+//     res.status(201).json(user);
+//   } catch (err) {
+//     console.error("Error creating user:", err.message);
+//     res.status(400).json({ error: err.message });
+//   }
+// });
+
+
 router.post("/users", async (req, res) => {
   try {
     const { password, ...rest } = req.body;
 
+    // ✅ Hash the password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({
+
+    const newUser = new User({
       ...rest,
       password: hashedPassword,
     });
 
-    await user.save();
-    res.status(201).json(user);
+    await newUser.save();
+    res.status(201).json(newUser);
   } catch (err) {
     console.error("Error creating user:", err.message);
     res.status(400).json({ error: err.message });
   }
 });
-
 
 router.get("/daily-attendance", async (req, res) => {
   const { date } = req.query;
