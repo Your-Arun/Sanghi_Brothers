@@ -14,7 +14,7 @@ app.use(cookieParser());
 // 🛡️ CORS Configuration
 app.use(
   cors({
-    origin: "https://sanghibros.vercel.app", // Frontend URL
+    origin: ["https://sanghibros.vercel.app","https://sanghibros-mcpftjf2m-arunwork82-gmailcoms-projects.vercel.app" ,"https://sanghibros-git-dev-arunwork82-gmailcoms-projects.vercel.app"], // Frontend URL
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, // ✅ Allow cookies & authentication headers
   })
