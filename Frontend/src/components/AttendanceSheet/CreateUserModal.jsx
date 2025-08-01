@@ -20,7 +20,7 @@ const CreateUserModal = ({ newUser, setNewUser, onClose, onSave }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center pr-6 z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center pr-6 z-50">
       <div className="bg-gray-900 text-white w-full max-w-md p-6 rounded-lg relative max-h-[90vh] overflow-y-auto">
         <button onClick={onClose} className="absolute top-2 right-4 bg-transparent text-2xl text-red-400 hover:text-red-600">
           ×
