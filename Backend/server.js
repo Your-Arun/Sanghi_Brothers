@@ -12,10 +12,20 @@ const app = express();
 app.use(cookieParser());
 
 // 🛡️ CORS Configuration
+
+const allowedOrigins = [
+  "https://sanghibros.vercel.app", // ✅ main
+  "https://sanghibros-git-dev-arunwork82-gmailcoms-projects.vercel.app", // ✅ dev preview
+];
 app.use(
   cors({
-    origin: ["https://sanghibros.vercel.app","https://sanghibros-mcpftjf2m-arunwork82-gmailcoms-projects.vercel.app" ,"https://sanghibros-git-dev-arunwork82-gmailcoms-projects.vercel.app"], // Frontend URL
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    }, methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, // ✅ Allow cookies & authentication headers
   })
 );
@@ -72,30 +82,30 @@ app.use("/", Contactus);
 app.use("/", Attendance);
 
 // ✅ Protected Routes (Authentication Required)
-app.use("/bank",  FlowRoute);
-app.use("/bank",  Monthlyfundflow);
-app.use("/mastersheet",  PumpReport);
-app.use("/mastersheet",  SalesManagementSheet);
-app.use("/mastersheet",  PurchaseManagement);
-app.use("/mastersheet",  Lubricant);
-app.use("/mastersheet",  TankLorryManagement);
-app.use("/mastersheet",  BPCLSTATUTORY);
-app.use("/mastersheet",  Staffmng);
-app.use("/mastersheet",  Financemng);
-app.use("/newlekhajokha",  Lekha);
-app.use("/shifting",  ShiftingRoutes);
-app.use("/",  MeterClose);
-app.use("/",  ReportFile);
-app.use("/",  ExcelSheet);
-app.use("/",  DepositRoute);
-app.use("/",  CashSlip);
-app.use("/",  FundPosition);
-app.use("/",  ReportComplaint);
+app.use("/bank", FlowRoute);
+app.use("/bank", Monthlyfundflow);
+app.use("/mastersheet", PumpReport);
+app.use("/mastersheet", SalesManagementSheet);
+app.use("/mastersheet", PurchaseManagement);
+app.use("/mastersheet", Lubricant);
+app.use("/mastersheet", TankLorryManagement);
+app.use("/mastersheet", BPCLSTATUTORY);
+app.use("/mastersheet", Staffmng);
+app.use("/mastersheet", Financemng);
+app.use("/newlekhajokha", Lekha);
+app.use("/shifting", ShiftingRoutes);
+app.use("/", MeterClose);
+app.use("/", ReportFile);
+app.use("/", ExcelSheet);
+app.use("/", DepositRoute);
+app.use("/", CashSlip);
+app.use("/", FundPosition);
+app.use("/", ReportComplaint);
 app.use("/", shiftApi);
 
 
-app.get('/',(req,res)=>{
-  res.status(404).send({message:'Backend live'})
+app.get('/', (req, res) => {
+  res.status(404).send({ message: 'Backend live' })
 })
 
 // ✅ Start Server
