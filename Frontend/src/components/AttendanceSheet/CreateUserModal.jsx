@@ -77,7 +77,6 @@ const CreateUserPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex justify-center items-center p-6">
-      <ToastContainer position="top-center" autoClose={2000} />
       <div className="bg-gray-800 p-6 rounded-lg w-full max-w-lg">
         <h2 className="text-2xl font-bold mb-4 text-center">➕ Create New User</h2>
         <div className="grid grid-cols-2 gap-4">
