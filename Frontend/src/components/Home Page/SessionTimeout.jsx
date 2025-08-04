@@ -12,7 +12,7 @@ const SessionTimeout = ({ timeout = 10 * 60 * 1000 }) => { // Default: 10 min (6
       logoutTimer = setTimeout(() => {
         console.log("Session expired due to inactivity");
         localStorage.removeItem("authToken"); // Clear token
-        navigate("/login");
+        navigate("/");
       }, timeout);
     };
 
