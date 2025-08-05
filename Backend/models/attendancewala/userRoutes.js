@@ -37,25 +37,6 @@ router.get("/users/attendance", async (req, res) => {
   }
 });
 
-// router.post("/users", async (req, res) => {
-//   try {
-//     const { password, ...rest } = req.body;
-
-//     const hashedPassword = await bcrypt.hash(password, 10);
-//     const user = new User({
-//       ...rest,
-//       password: hashedPassword,
-//     });
-
-//     await user.save();
-//     res.status(201).json(user);
-//   } catch (err) {
-//     console.error("Error creating user:", err.message);
-//     res.status(400).json({ error: err.message });
-//   }
-// });
-
-
 router.post("/users", async (req, res) => {
   try {
     const { password, ...rest } = req.body;
@@ -75,26 +56,6 @@ router.post("/users", async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 });
-
-router.post("/attendance", async (req, res) => {
-  try {
-    const { userId, date, status, checkIn, checkOut } = req.body;
-
-    const existing = await Attendance.findOne({ userId, date });
-
-    if (existing) {
-      return res.status(400).json({ message: "Attendance already marked" });
-    }
-
-    const record = new Attendance({ userId, date, status, checkIn, checkOut });
-    await record.save();
-
-    res.status(201).json(record);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to mark attendance" });
-  }
-});
-
 
 router.post("/mark-attendance", async (req, res) => {
   try {

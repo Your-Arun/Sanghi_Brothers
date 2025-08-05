@@ -53,7 +53,7 @@ const DailyLogView = () => {
   );
 
   return (
-    <div className="bg-gray-800 min-h-screen shadow mt-8">
+    <div className="bg-gray-800 min-h-screen ">
       <h2 className="text-2xl font-bold text-white mb-6">📝 Daily Manual Attendance</h2>
 
       {/* Top controls */}
