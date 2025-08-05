@@ -123,4 +123,16 @@ router.post("/attendance", async (req, res) => {
 });
 
 
+router.post("/mark-attendance", async (req, res) => {
+  try {
+    const attendanceData = req.body;
+    await Attendance.insertMany(attendanceData);
+    res.status(201).json({ message: "Attendance marked successfully" });
+  } catch (err) {
+    console.error("Error marking attendance:", err);
+    res.status(500).json({ error: "Failed to mark attendance" });
+  }
+});
+
+
 module.exports = router;

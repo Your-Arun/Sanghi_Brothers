@@ -36,7 +36,7 @@ const DailyLogView = () => {
         status,
       }));
 
-      await axiosInstance.post("/users/mark-attendance-bulk", payload);
+      await axiosInstance.post("/mark-attendance", payload);
       alert("✅ Attendance submitted successfully.");
     } catch (error) {
       console.error("Failed to submit attendance:", error);
@@ -53,7 +53,7 @@ const DailyLogView = () => {
   );
 
   return (
-    <div className="p-6 bg-gray-800 rounded-lg shadow mt-8">
+    <div className="p-6 bg-gray-800 min-h-screen rounded-lg shadow mt-8">
       <h2 className="text-2xl font-bold text-white mb-6">📝 Daily Manual Attendance</h2>
 
       {/* Top controls */}

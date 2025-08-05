@@ -102,14 +102,15 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
       try {
         await axiosInstance.delete(`/users/${user._id}`);
         onClose();          // Close the modal
-        onUpdate();         // Refresh parent list
-        toast.success("User deleted successfully.");  // Only one toast here
+        if (onUpdate) onUpdate();  // Safe call
+        toast.success("User deleted successfully.");
       } catch (error) {
         console.error(error);
         toast.error("Failed to delete user.");
       }
     });
   };
+  
   
 
 
