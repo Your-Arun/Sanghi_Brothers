@@ -1,86 +1,118 @@
-import React, { useState } from "react";
-import DatePicker from "react-datepicker"; // or use simple <input type="date" />
+import React, { useState, useEffect } from "react";
+import axiosInstance from "../Dashboard/axiosInstance"; // ✅ Make sure axiosInstance is properly configured
 import "react-datepicker/dist/react-datepicker.css";
 
 const DailyLogView = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [dailyLog, setDailyLog] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [attendanceData, setAttendanceData] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const fetchDailyLog = async () => {
+  const fetchUsers = async () => {
     setLoading(true);
     try {
-      const dateStr = selectedDate.toISOString().split("T")[0];
-      const res = await axiosInstance.get(`/users/daily-attendance?date=${dateStr}`);
-      setDailyLog(res.data);
+      const res = await axiosInstance.get("/users");
+      setUsers(res.data);
     } catch (err) {
-      console.error("Failed to fetch daily log:", err);
+      console.error("Failed to fetch users:", err);
     }
     setLoading(false);
   };
 
-  const filteredLog = dailyLog.filter((u) =>
+  const handleAttendanceChange = (userId, status) => {
+    setAttendanceData((prev) => ({
+      ...prev,
+      [userId]: status,
+    }));
+  };
+
+  const handleSubmitAttendance = async () => {
+    try {
+      const dateStr = selectedDate.toISOString().split("T")[0];
+      const payload = Object.entries(attendanceData).map(([userId, status]) => ({
+        userId,
+        date: dateStr,
+        status,
+      }));
+
+      await axiosInstance.post("/users/mark-attendance-bulk", payload);
+      alert("✅ Attendance submitted successfully.");
+    } catch (error) {
+      console.error("Failed to submit attendance:", error);
+      alert("❌ Error submitting attendance.");
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const filteredUsers = users.filter((u) =>
     u.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className="mt-10 bg-gray-800 p-6 rounded-lg shadow">
-      <h2 className="text-2xl font-bold mb-4">📋 Daily Attendance Log</h2>
+    <div className="p-6 bg-gray-800 rounded-lg shadow mt-8">
+      <h2 className="text-2xl font-bold text-white mb-6">📝 Daily Manual Attendance</h2>
 
-      <div className="flex gap-4 items-center mb-4 flex-wrap">
+      {/* Top controls */}
+      <div className="flex flex-wrap items-center gap-4 mb-6">
         <input
           type="date"
           value={selectedDate.toISOString().split("T")[0]}
           onChange={(e) => setSelectedDate(new Date(e.target.value))}
-          className="bg-gray-700 px-4 py-2 rounded"
+          className="bg-gray-700 text-white px-4 py-2 rounded"
         />
-        <button
-          onClick={fetchDailyLog}
-          className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
-        >
-          🔍 View Log
-        </button>
+
         <input
           type="text"
           placeholder="Search user..."
-          className="bg-gray-700 px-4 py-2 rounded w-64"
+          className="bg-gray-700 px-4 py-2 rounded text-white w-64"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
+
+        <button
+          onClick={handleSubmitAttendance}
+          className="bg-green-600 hover:bg-green-700 px-6 py-2 rounded text-white font-semibold"
+        >
+          ✅ Submit Attendance
+        </button>
       </div>
 
       {loading ? (
-        <p className="text-gray-400">Loading...</p>
-      ) : filteredLog.length === 0 ? (
-        <p className="text-red-400">No users found.</p>
+        <p className="text-gray-400">Loading users...</p>
       ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredLog.map((user) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filteredUsers.map((user) => (
             <div
               key={user._id}
-              className={`p-4 rounded-lg shadow bg-gray-900 flex items-center gap-4 ${
-                user.status === "Present" ? "border-green-500 border" : "border-red-500 border"
-              }`}
+              className="bg-gray-900 border border-gray-700 p-4 rounded-lg flex items-start gap-4"
             >
               <img
-                src={user.photo || ""}
+                src={user.photo}
                 alt={user.name}
-                className="w-14 h-14 rounded-full object-cover"
+                className="w-14 h-14 rounded-full object-cover border"
               />
-              <div>
-                <h3 className="font-semibold">{user.name}</h3>
-                <p className="text-sm text-gray-400">{user.designation}</p>
-                <p className="text-sm">
-                  Status:{" "}
-                  <span
-                    className={
-                      user.status === "Present" ? "text-green-400" : "text-red-400"
-                    }
-                  >
-                    {user.status}
-                  </span>
-                </p>
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-white">{user.name}</h3>
+                <p className="text-gray-400 text-sm">{user.designation}</p>
+
+                <div className="mt-2 flex gap-3">
+                  {["Present", "Absent", "Leave"].map((status) => (
+                    <label key={status} className="flex items-center gap-1 text-sm text-white">
+                      <input
+                        type="radio"
+                        name={`attendance-${user._id}`}
+                        value={status}
+                        checked={attendanceData[user._id] === status}
+                        onChange={() => handleAttendanceChange(user._id, status)}
+                      />
+                      {status}
+                    </label>
+                  ))}
+                </div>
               </div>
             </div>
           ))}
@@ -89,6 +121,5 @@ const DailyLogView = () => {
     </div>
   );
 };
-
 
 export default DailyLogView;
