@@ -241,7 +241,6 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
             {/* Delete Button */}
             <button
               onClick={handleDelete}
-              disabled={loading}
               className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded"
             >
               Delete
