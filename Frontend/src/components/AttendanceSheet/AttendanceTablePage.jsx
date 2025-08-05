@@ -27,7 +27,7 @@ const AttendanceTablePage = () => {
       <h1 className="text-3xl font-bold mb-4">📅 Monthly Attendance Table</h1>
 
       {/* Filter Controls */}
-      <div className="flex gap-4 items-center mb-6">
+      <div className="flex gap-4 items-center mb-6">  
         <select
           value={year}
           onChange={(e) => setYear(Number(e.target.value))}
