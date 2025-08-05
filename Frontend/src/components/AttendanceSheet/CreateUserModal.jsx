@@ -146,6 +146,12 @@ const CreateUserPage = () => {
         </div>
 
         <button
+          onClick={() => navigate("/attendance-sheet")}
+          className="mt-4 bg-red-600 w-full py-2 rounded hover:bg-green-700"
+        >
+          Cancel
+        </button>
+        <button
           onClick={handleSave}
           className="mt-4 bg-green-600 w-full py-2 rounded hover:bg-green-700"
         >

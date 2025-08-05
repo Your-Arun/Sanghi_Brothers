@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axiosInstance from "../Dashboard/axiosInstance";
 import ProfileModal from "./ProfileModal";
 import { useNavigate } from "react-router-dom";
+import UserContext from "../Home Page/UserContext";
+
 
 const AttendancePage = () => {
   const [users, setUsers] = useState([]);
@@ -15,6 +17,9 @@ const AttendancePage = () => {
   const [loading, setLoading] = useState(false);
   const [newUser, setNewUser] = useState(null);
   const navigate = useNavigate();
+  const { user: currentUser } = useContext(UserContext);
+
+
 
   const getDaysInMonth = (y, m) => new Date(y, m, 0).getDate();
   const days = getDaysInMonth(year, month);
@@ -63,12 +68,15 @@ const AttendancePage = () => {
     <div className="min-h-screen bg-gray-900 text-white p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">🧑‍💼 Attendance Management</h1>
-        <button
-          onClick={() => {navigate("/create-user")}}
-          className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
-        >
-          ➕ Add User
-        </button>
+        {currentUser?.department?.toLowerCase() === "manager" && (
+          <button
+            onClick={() => { navigate("/create-user") }}
+            className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
+          >
+            ➕ Add User
+          </button>
+        )}
+
       </div>
 
       {/* Controls */}

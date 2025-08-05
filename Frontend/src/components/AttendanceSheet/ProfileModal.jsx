@@ -172,7 +172,10 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
                 className="w-full mt-1 px-3 py-2 bg-gray-800 text-white border border-gray-700 rounded"
               />
             ) : (
-              <p className="mt-1 text-gray-200">{user.joiningDate || "-"}</p>
+              <p className="mt-1 text-gray-200">
+                {user.joiningDate ? new Date(user.joiningDate).toLocaleDateString("en-IN") : "-"}
+              </p>
+
             )}
           </div>
 
