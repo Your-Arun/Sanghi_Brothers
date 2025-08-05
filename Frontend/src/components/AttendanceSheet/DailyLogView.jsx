@@ -54,7 +54,7 @@ const DailyLogView = () => {
 
   return (
     <div className="bg-gray-800 min-h-screen ">
-      <h2 className="text-2xl font-bold text-white mb-6">📝 Daily Manual Attendance</h2>
+      <h2 className="text-5xl font-bold text-white mb-6">📝 Daily Manual Attendance</h2>
 
       {/* Top controls */}
       <div className="flex flex-wrap items-center gap-4 mb-6">

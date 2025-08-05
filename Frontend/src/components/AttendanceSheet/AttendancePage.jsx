@@ -27,7 +27,7 @@ const AttendancePage = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const res = await axiosInstance.get(`/users/attendance?month=${month}&year=${year}`);
+      const res = await axiosInstance.get(`/daily-attendance?month=${month}&year=${year}`);
       const data = res.data || [];
       setUsers(data);
       setAttendanceData(data);
