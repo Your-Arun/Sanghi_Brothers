@@ -15,6 +15,19 @@ const AttendancePage = () => {
   const { user: currentUser } = useContext(UserContext);
 
 
+
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
+      const res = await axiosInstance.get(`/users`);
+      const data = res.data || [];
+      setUsers(data);
+    } catch (err) {
+      console.error("Error fetching users:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
   const sortedUsers = [...users].sort((a, b) => {
     if (sortBy === "name-asc") return a.name?.localeCompare(b.name);
     if (sortBy === "name-desc") return b.name?.localeCompare(a.name);
