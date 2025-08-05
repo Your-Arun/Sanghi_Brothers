@@ -147,7 +147,7 @@ const CreateUserPage = () => {
 
         <button
           onClick={() => navigate("/attendance-sheet")}
-          className="mt-4 bg-red-600 w-full py-2 rounded hover:bg-green-700"
+          className="mt-4 bg-red-600 w-full py-2 rounded hover:bg-red-700"
         >
           Cancel
         </button>

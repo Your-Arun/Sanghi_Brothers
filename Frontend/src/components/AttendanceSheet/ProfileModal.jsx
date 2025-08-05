@@ -72,8 +72,8 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
           <div className="flex gap-4 mt-2">
             <button
               onClick={() => {
-                onConfirm()
-                closeToast()
+                closeToast(); // First close the toast
+                onConfirm();  // Then call confirm
               }}
               className="bg-red-500 text-white px-3 py-1 rounded"
             >
@@ -94,23 +94,23 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
         closeOnClick: false,
         closeButton: false,
       }
-    )
-  }
-
+    );
+  };
+  
   const handleDelete = async () => {
     confirmDeleteToast(async () => {
       try {
         await axiosInstance.delete(`/users/${user._id}`);
-        toast.success("User deleted successfully.");
-        onClose();         // Close modal
-        onUpdate();        // Trigger parent to refresh list
+        onClose();          // Close the modal
+        onUpdate();         // Refresh parent list
+        toast.success("User deleted successfully.");  // Only one toast here
       } catch (error) {
         console.error(error);
         toast.error("Failed to delete user.");
       }
-    })
+    });
   };
-
+  
 
 
   return (
