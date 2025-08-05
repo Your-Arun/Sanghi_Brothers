@@ -3,6 +3,7 @@ import axiosInstance from "../Dashboard/axiosInstance";
 import ProfileModal from "./ProfileModal";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../Home Page/UserContext";
+import AttendanceTablePage from "./AttendanceTablePage";
 
 
 const AttendancePage = () => {
@@ -27,7 +28,7 @@ const AttendancePage = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const res = await axiosInstance.get(`/daily-attendance?month=${month}&year=${year}`);
+      const res = await axiosInstance.get(`/users/attendance?month=${month}&year=${year}`);
       const data = res.data || [];
       setUsers(data);
       setAttendanceData(data);
@@ -68,7 +69,7 @@ const AttendancePage = () => {
     <div className="min-h-screen bg-gray-900 text-white p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">🧑‍💼 Attendance Management</h1>
-        {currentUser?.department?.toLowerCase() === "manager" && (
+        {currentUser?.department === "manager" && (
           <button
             onClick={() => { navigate("/create-user") }}
             className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
@@ -219,6 +220,8 @@ const AttendancePage = () => {
           onUserUpdated={fetchUsers}
         />
       )}
+
+      <AttendanceTablePage />
     </div>
   );
 };
