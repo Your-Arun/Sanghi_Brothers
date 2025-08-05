@@ -4,38 +4,7 @@ const User = require("../user");
 const Attendance = require("../attendancewala/Attendance");
 const bcrypt = require("bcryptjs");
 
-// ✅ Get all users with attendance for selected month/year
-router.get("/users/attendance", async (req, res) => {
-  try {
-    const { month, year } = req.query;
 
-    const users = await User.find();
-
-    const startDate = new Date(year, month - 1, 1);
-    const endDate = new Date(year, month, 0, 23, 59, 59);
-
-    const attendanceRecords = await Attendance.find({
-      date: { $gte: startDate, $lte: endDate },
-    });
-
-    const usersWithAttendance = users.map((user) => {
-      const userAttendance = attendanceRecords.filter(
-        (record) => record.userId.toString() === user._id.toString()
-      );
-
-      return {
-        ...user.toObject(),
-        attendance: userAttendance,
-        attendanceCount: userAttendance.length,
-      };
-    });
-
-    res.json(usersWithAttendance);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to fetch users with attendance" });
-  }
-});
 
 router.post("/users", async (req, res) => {
   try {

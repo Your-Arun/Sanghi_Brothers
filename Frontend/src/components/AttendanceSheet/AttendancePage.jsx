@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
-import axiosInstance from "../Dashboard/axiosInstance";
+import React, { useContext, useState } from "react";
 import ProfileModal from "./ProfileModal";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../Home Page/UserContext";
@@ -11,37 +10,10 @@ const AttendancePage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("recent");
   const [selectedUser, setSelectedUser] = useState(null);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [month, setMonth] = useState(new Date().getMonth() + 1);
-  const [year, setYear] = useState(new Date().getFullYear());
-  const [attendanceData, setAttendanceData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [newUser, setNewUser] = useState(null);
   const navigate = useNavigate();
   const { user: currentUser } = useContext(UserContext);
 
-
-
-  const getDaysInMonth = (y, m) => new Date(y, m, 0).getDate();
-  const days = getDaysInMonth(year, month);
-
-  const fetchUsers = async () => {
-    setLoading(true);
-    try {
-      const res = await axiosInstance.get(`/users/attendance?month=${month}&year=${year}`);
-      const data = res.data || [];
-      setUsers(data);
-      setAttendanceData(data);
-    } catch (err) {
-      console.error("Error fetching users:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchUsers();
-  }, [month, year]);
 
   const sortedUsers = [...users].sort((a, b) => {
     if (sortBy === "name-asc") return a.name?.localeCompare(b.name);
@@ -53,17 +25,6 @@ const AttendancePage = () => {
     user.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-
-  const handleSaveUser = async () => {
-    try {
-      await axiosInstance.post("/users", newUser);
-      fetchUsers();
-      setShowCreateModal(false);
-      setNewUser(null);
-    } catch (err) {
-      console.error("Error creating user:", err);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-6">
@@ -98,12 +59,6 @@ const AttendancePage = () => {
           <option value="name-asc">🔤 Name (A-Z)</option>
           <option value="name-desc">🔡 Name (Z-A)</option>
         </select>
-        <button
-          onClick={fetchUsers}
-          className="bg-green-600 px-4 py-2 rounded hover:bg-green-700"
-        >
-          🔄 Refresh
-        </button>
         <button
           onClick={() => navigate("/daily-log-view")}
           className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
