@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../Dashboard/axiosInstance";
 import { toast } from "react-toastify";
+import imageCompression from "browser-image-compression";
+
 
 const CreateUserPage = () => {
   const navigate = useNavigate();
@@ -21,22 +23,36 @@ const CreateUserPage = () => {
     photo: "",
   });
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
+  
     const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
     if (!allowedTypes.includes(file.type)) {
       toast.warning("Only JPG, JPEG, and PNG formats are allowed!");
       return;
     }
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setNewUser({ ...newUser, photo: reader.result });
-    };
-    reader.readAsDataURL(file);
+  
+    try {
+      const options = {
+        maxSizeMB: 0.5,        // ⬅️ Compress to ~0.5 MB max
+        maxWidthOrHeight: 800, // ⬅️ Resize if too large
+        useWebWorker: true,
+      };
+  
+      const compressedFile = await imageCompression(file, options);
+  
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewUser({ ...newUser, photo: reader.result });
+      };
+      reader.readAsDataURL(compressedFile);
+    } catch (error) {
+      console.error("Image compression error:", error);
+      toast.error("Failed to compress image.");
+    }
   };
+  
 
   const handleInputChange = (e, key) => {
     let value = e.target.value;
