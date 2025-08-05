@@ -76,33 +76,6 @@ router.post("/users", async (req, res) => {
   }
 });
 
-router.get("/daily-attendance", async (req, res) => {
-  const { date } = req.query;
-  if (!date) return res.status(400).json({ message: "Date is required" });
-
-  try {
-    const users = await User.find().lean();
-
-    const data = users.map(user => {
-      const isPresent = user.attendance?.some(a =>
-        a.date?.startsWith(date)
-      );
-      return {
-        _id: user._id,
-        name: user.name,
-        designation: user.designation,
-        photo: user.photo,
-        status: isPresent ? "Present" : "Absent",
-      };
-    });
-
-    res.json(data);
-  } catch (err) {
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-});
-
-
 router.post("/attendance", async (req, res) => {
   try {
     const { userId, date, status, checkIn, checkOut } = req.body;
@@ -125,14 +98,46 @@ router.post("/attendance", async (req, res) => {
 
 router.post("/mark-attendance", async (req, res) => {
   try {
-    const attendanceData = req.body;
-    await Attendance.insertMany(attendanceData);
-    res.status(201).json({ message: "Attendance marked successfully" });
+    const attendanceList = req.body; // Array of { userId, date, status }
+
+    const bulkOps = attendanceList.map((entry) => ({
+      updateOne: {
+        filter: { userId: entry.userId, date: entry.date },
+        update: { $set: { status: entry.status } },
+        upsert: true,
+      },
+    }));
+
+    await Attendance.bulkWrite(bulkOps);
+
+    res.json({ message: "Attendance marked successfully." });
   } catch (err) {
-    console.error("Error marking attendance:", err);
-    res.status(500).json({ error: "Failed to mark attendance" });
+    console.error("Error marking bulk attendance:", err);
+    res.status(500).json({ error: "Failed to mark attendance." });
   }
 });
+
+
+
+router.get("/daily-attendance", async (req, res) => {
+  try {
+    const { date } = req.query;
+    const logs = await Attendance.find({ date }).populate("userId", "name photo designation");
+    
+    const result = logs.map((log) => ({
+      _id: log.userId._id,
+      name: log.userId.name,
+      photo: log.userId.photo,
+      designation: log.userId.designation,
+      status: log.status,
+    }));
+
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch attendance." });
+  }
+});
+
 
 
 module.exports = router;
