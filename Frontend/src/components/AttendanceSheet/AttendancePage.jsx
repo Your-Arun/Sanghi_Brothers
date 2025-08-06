@@ -1,9 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import ProfileModal from "./ProfileModal";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../Home Page/UserContext";
 import AttendanceTablePage from "./AttendanceTablePage";
-
+import axiosInstance from "../Dashboard/axiosInstance";
 
 const AttendancePage = () => {
   const [users, setUsers] = useState([]);
@@ -14,20 +14,25 @@ const AttendancePage = () => {
   const navigate = useNavigate();
   const { user: currentUser } = useContext(UserContext);
 
-
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [year, setYear] = useState(new Date().getFullYear());
 
   const fetchUsers = async () => {
-    setLoading(true);
     try {
-      const res = await axiosInstance.get(`/users`);
-      const data = res.data || [];
-      setUsers(data);
+      setLoading(true);
+      const res = await axiosInstance.get(`/users/attendance?month=${month}&year=${year}`);
+      setUsers(res.data || []);
     } catch (err) {
       console.error("Error fetching users:", err);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchUsers();
+  }, [month, year]);
+
   const sortedUsers = [...users].sort((a, b) => {
     if (sortBy === "name-asc") return a.name?.localeCompare(b.name);
     if (sortBy === "name-desc") return b.name?.localeCompare(a.name);
@@ -38,20 +43,18 @@ const AttendancePage = () => {
     user.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-
   return (
     <div className="min-h-screen bg-gray-900 text-white p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">🧑‍💼 Attendance Management</h1>
         {currentUser?.department === "manager" && (
           <button
-            onClick={() => { navigate("/create-user") }}
+            onClick={() => navigate("/create-user")}
             className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
           >
             ➕ Add User
           </button>
         )}
-
       </div>
 
       {/* Controls */}
@@ -72,16 +75,47 @@ const AttendancePage = () => {
           <option value="name-asc">🔤 Name (A-Z)</option>
           <option value="name-desc">🔡 Name (Z-A)</option>
         </select>
+
+        <select
+          value={year}
+          onChange={(e) => setYear(Number(e.target.value))}
+          className="bg-gray-700 px-4 py-2 rounded"
+        >
+          {[2023, 2024, 2025].map((y) => (
+            <option key={y} value={y}>
+              {y}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={month}
+          onChange={(e) => setMonth(Number(e.target.value))}
+          className="bg-gray-700 px-4 py-2 rounded"
+        >
+          {Array.from({ length: 12 }, (_, i) => (
+            <option key={i} value={i + 1}>
+              {new Date(0, i).toLocaleString("default", { month: "long" })}
+            </option>
+          ))}
+        </select>
+
+        <button
+          onClick={fetchUsers}
+          className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded"
+        >
+          🔄 Refresh
+        </button>
         <button
           onClick={() => navigate("/daily-log-view")}
-          className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
+          className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded"
         >
           📖 Daily Log View
         </button>
       </div>
 
       {/* User Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
         {loading ? (
           <p className="text-center col-span-full text-gray-400">⏳ Loading users...</p>
         ) : filteredUsers.length > 0 ? (
@@ -102,9 +136,11 @@ const AttendancePage = () => {
                   <p className="text-sm text-gray-400">{user.designation}</p>
                   <p className="text-sm mt-1">
                     Attendance:{" "}
-                    {user.attendance?.filter((a) =>
-                      a.date?.startsWith(`${year}-${String(month).padStart(2, "0")}`)
-                    ).length || 0}{" "}
+                    {
+                      user.attendance?.filter((a) =>
+                        a.date?.startsWith(`${year}-${String(month).padStart(2, "0")}`)
+                      ).length || 0
+                    }{" "}
                     days
                   </p>
                 </div>
@@ -125,7 +161,8 @@ const AttendancePage = () => {
         />
       )}
 
-      <AttendanceTablePage />
+      {/* Attendance Table Component */}
+      <AttendanceTablePage month={month} year={year} />
     </div>
   );
 };
