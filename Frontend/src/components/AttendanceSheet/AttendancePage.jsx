@@ -200,7 +200,7 @@ const AttendancePage = () => {
       setUsers(usersRes.data || []);
 
       const dateString = `${year}-${String(month).padStart(2, "0")}`;
-      const attendanceRes = await axiosInstance.get(`/users/daily-attendance?date=${dateString}`);
+      const attendanceRes = await axiosInstance.get(`/daily-attendance?date=${dateString}`);
       setAttendanceTableData(attendanceRes.data || []);
     } catch (error) {
       console.error("Error fetching data:", error);
