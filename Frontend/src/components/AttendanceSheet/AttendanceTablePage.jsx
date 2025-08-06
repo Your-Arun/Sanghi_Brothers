@@ -176,6 +176,146 @@
 
 
 
+// import React, { useEffect, useState } from "react";
+// import axiosInstance from "../Dashboard/axiosInstance";
+
+// const AttendanceTablePage = () => {
+//   const [attendanceData, setAttendanceData] = useState([]);
+//   const [month, setMonth] = useState(new Date().getMonth() + 1);
+//   const [year, setYear] = useState(new Date().getFullYear());
+//   const [loading, setLoading] = useState(false);
+
+//   const getDaysInMonth = (y, m) => new Date(y, m, 0).getDate();
+//   const days = getDaysInMonth(year, month);
+
+//   const fetchMonthlyAttendance = async () => {
+//     setLoading(true);
+//     try {
+//       const dailyLogs = [];
+//       // Request sabhi din ke attendance ek-ek kar ke
+//       const requests = Array.from({ length: days }, (_, i) => {
+//         const day = i + 1;
+//         const date = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+//         return axiosInstance.get(`/daily-attendance?date=${date}`).then((res) => ({
+//           date,
+//           data: res.data,
+//         }));
+//       });
+
+//       const results = await Promise.all(requests);
+//       const attendanceMap = {};
+
+//       results.forEach(({ date, data }) => {
+//         data.forEach((entry) => {
+//           const uid = entry._id;
+//           if (!attendanceMap[uid]) {
+//             attendanceMap[uid] = {
+//               _id: uid,
+//               name: entry.name,
+//               attendance: {},
+//             };
+//           }
+//           attendanceMap[uid].attendance[date] = entry.status;
+//         });
+//       });
+
+//       const formattedData = Object.values(attendanceMap);
+//       setAttendanceData(formattedData);
+//     } catch (err) {
+//       console.error("Error fetching attendance:", err);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchMonthlyAttendance();
+//   }, [month, year]);
+
+//   return (
+//     <div className="p-6 bg-gray-900 text-white min-h-screen">
+//       <h1 className="text-2xl font-bold mb-4">📆 Monthly Attendance Table</h1>
+
+//       {/* Filters */}
+//       <div className="flex gap-4 mb-6">
+//         <select
+//           value={year}
+//           onChange={(e) => setYear(Number(e.target.value))}
+//           className="bg-gray-800 text-white px-3 py-2 rounded"
+//         >
+//           {[2023, 2024, 2025].map((y) => (
+//             <option key={y} value={y}>
+//               {y}
+//             </option>
+//           ))}
+//         </select>
+
+//         <select
+//           value={month}
+//           onChange={(e) => setMonth(Number(e.target.value))}
+//           className="bg-gray-800 text-white px-3 py-2 rounded"
+//         >
+//           {Array.from({ length: 12 }, (_, i) => (
+//             <option key={i} value={i + 1}>
+//               {new Date(0, i).toLocaleString("default", { month: "long" })}
+//             </option>
+//           ))}
+//         </select>
+
+//         <button
+//           onClick={fetchMonthlyAttendance}
+//           className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+//         >
+//           🔄 Refresh
+//         </button>
+//       </div>
+
+//       {/* Table */}
+//       <div className="overflow-auto border border-gray-800 rounded">
+//         {loading ? (
+//           <div className="text-center text-gray-300 py-10">Loading attendance data...</div>
+//         ) : (
+//           <table className="w-full text-sm border-collapse">
+//             <thead className="bg-gray-800">
+//               <tr>
+//                 <th className="sticky left-0 bg-gray-800 px-2 py-1 border border-gray-700">Name</th>
+//               </tr>
+//             </thead>
+//             <tbody>
+//               {attendanceData.map((user, idx) => (
+//                 <tr key={idx} className="hover:bg-gray-800">
+//                   <td className="sticky left-0 bg-gray-900 tex px-2 py-1 border border-gray-700 whitespace-nowrap">
+//                     {user.name}
+//                   </td>
+//                   {Array.from({ length: days }, (_, i) => {
+//                     const date = `${year}-${String(month).padStart(2, "0")}-${String(i + 1).padStart(2, "0")}`;
+//                     const status = user.attendance[date];
+
+//                     return (
+//                       <td
+//                         key={i}
+//                         className={`px-2 py-1 border border-gray-700 text-center ${
+//                           status === "Leave" ? "text-yellow-400" : status === "Present" ? "text-green-400" : "text-red-400"
+//                         }`}
+//                       >
+//                         {status === "Present" ? "✅" : status === "Leave" ? "🟡" : "❌"}
+//                       </td>
+//                     );
+//                   })}
+//                 </tr>
+//               ))}
+//             </tbody>
+//           </table>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default AttendanceTablePage;
+
+
+
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../Dashboard/axiosInstance";
 
@@ -193,27 +333,29 @@ const AttendanceTablePage = () => {
     try {
       const dailyLogs = [];
 
-      // Request sabhi din ke attendance ek-ek kar ke
-      const requests = Array.from({ length: days }, (_, i) => {
-        const day = i + 1;
+      for (let day = 1; day <= days; day++) {
         const date = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-        return axiosInstance.get(`/daily-attendance?date=${date}`).then((res) => ({
-          date,
-          data: res.data,
-        }));
-      });
+        const res = await axiosInstance.get(`/daily-attendance?date=${date}`);
+        if (res.data.length > 0) {
+          dailyLogs.push({ date, data: res.data });
+        }
+      }
 
-      const results = await Promise.all(requests);
+      if (dailyLogs.length === 0) {
+        setAttendanceData([]);
+        setLoading(false);
+        return;
+      }
+
       const attendanceMap = {};
 
-      results.forEach(({ date, data }) => {
+      dailyLogs.forEach(({ date, data }) => {
         data.forEach((entry) => {
           const uid = entry._id;
           if (!attendanceMap[uid]) {
             attendanceMap[uid] = {
               _id: uid,
               name: entry.name,
-              photo: entry.photo,
               designation: entry.designation,
               attendance: {},
             };
@@ -237,26 +379,24 @@ const AttendanceTablePage = () => {
 
   return (
     <div className="p-6 bg-gray-900 text-white min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">📆 Monthly Attendance Table</h1>
+      <h1 className="text-3xl font-bold mb-4">📅 Monthly Attendance Table</h1>
 
       {/* Filters */}
-      <div className="flex gap-4 mb-6">
+      <div className="flex gap-4 items-center mb-6">
         <select
           value={year}
           onChange={(e) => setYear(Number(e.target.value))}
-          className="bg-gray-800 text-white px-3 py-2 rounded"
+          className="bg-gray-700 px-4 py-2 rounded"
         >
           {[2023, 2024, 2025].map((y) => (
-            <option key={y} value={y}>
-              {y}
-            </option>
+            <option key={y} value={y}>{y}</option>
           ))}
         </select>
 
         <select
           value={month}
           onChange={(e) => setMonth(Number(e.target.value))}
-          className="bg-gray-800 text-white px-3 py-2 rounded"
+          className="bg-gray-700 px-4 py-2 rounded"
         >
           {Array.from({ length: 12 }, (_, i) => (
             <option key={i} value={i + 1}>
@@ -273,50 +413,40 @@ const AttendanceTablePage = () => {
         </button>
       </div>
 
-      {/* Table */}
-      <div className="overflow-auto border border-gray-800 rounded">
+      {/* Table or Message */}
+      <div className="overflow-auto rounded border border-gray-700">
         {loading ? (
-          <div className="text-center text-gray-300 py-10">Loading attendance data...</div>
+          <div className="text-center py-10 text-xl">⏳ Loading attendance data...</div>
+        ) : attendanceData.length === 0 ? (
+          <div className="text-center py-10 text-red-400 text-xl">
+            🚫 No attendance data for {new Date(year, month - 1).toLocaleString("default", { month: "long" })} {year}
+          </div>
         ) : (
-          <table className="w-full text-sm border-collapse">
+          <table className="w-full border-collapse text-sm">
             <thead className="bg-gray-800">
               <tr>
-                <th className="sticky left-0 bg-gray-800 px-2 py-1 border border-gray-700">Photo</th>
-                <th className="sticky left-0 bg-gray-800 px-2 py-1 border border-gray-700">Name</th>
-                <th className="px-2 py-1 border border-gray-700">Designation</th>
+                <th className="border border-gray-700 px-2 py-1 sticky left-0 bg-gray-800 z-20">Name</th>
                 {Array.from({ length: days }, (_, i) => (
-                  <th key={i} className="px-2 py-1 border border-gray-700 text-center">
-                    {i + 1}
-                  </th>
+                  <th key={i} className="border border-gray-700 px-1 text-center">{i + 1}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {attendanceData.map((user, idx) => (
-                <tr key={idx} className="hover:bg-gray-800">
-                  <td className="sticky left-0 bg-gray-900 px-2 py-1 border border-gray-700">
-                    <img
-                      src={user.photo || "/user-avatar.png"}
-                      alt="User"
-                      className="w-8 h-8 rounded-full"
-                    />
-                  </td>
-                  <td className="sticky left-0 bg-gray-900 px-2 py-1 border border-gray-700 whitespace-nowrap">
+                <tr key={idx}>
+                  <td className="text-white border border-gray-700 px-2 py-1 sticky left-0 bg-gray-900 z-10 whitespace-nowrap">
                     {user.name}
                   </td>
-                  <td className="px-2 py-1 border border-gray-700">{user.designation}</td>
                   {Array.from({ length: days }, (_, i) => {
                     const date = `${year}-${String(month).padStart(2, "0")}-${String(i + 1).padStart(2, "0")}`;
                     const status = user.attendance[date];
+                    let display = "❌";
+                    if (status === "Present") display = "✅";
+                    else if (status === "Leave") display = "🟡";
 
                     return (
-                      <td
-                        key={i}
-                        className={`px-2 py-1 border border-gray-700 text-center ${
-                          status === "Leave" ? "text-yellow-400" : status === "Present" ? "text-green-400" : "text-red-400"
-                        }`}
-                      >
-                        {status === "Present" ? "✅" : status === "Leave" ? "🟡" : "❌"}
+                      <td key={i} className="border border-gray-700 px-1 text-center text-xs">
+                        {status ? display : "❌"}
                       </td>
                     );
                   })}
