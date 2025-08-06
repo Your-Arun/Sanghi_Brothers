@@ -84,13 +84,13 @@ router.get("/daily-attendance", async (req, res) => {
   try {
     const { date } = req.query;
     const logs = await Attendance.find({ date }).populate("userId", "name photo designation");
-    
+
     const result = logs.map((log) => ({
       _id: log.userId._id,
       name: log.userId.name,
       photo: log.userId.photo,
       designation: log.userId.designation,
-      status: log.status,
+      status: log.status, // "Present", "Absent", "Leave"
     }));
 
     res.json(result);
@@ -98,6 +98,7 @@ router.get("/daily-attendance", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch attendance." });
   }
 });
+
 
 
 
