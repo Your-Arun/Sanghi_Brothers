@@ -105,7 +105,7 @@ const AttendancePage = () => {
           ))}
         </select> */}
 
-        <button onClick={fetchAllData} className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded">
+        <button onClick={fetchAllData} className="bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded">
           🔄 Refresh
         </button>
         <button
