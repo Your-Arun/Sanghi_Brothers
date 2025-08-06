@@ -7,49 +7,16 @@ const AttendanceTablePage = () => {
   const [year, setYear] = useState(new Date().getFullYear());
   const [loading, setLoading] = useState(false);
 
-  const getDaysInMonth = (y, m) => new Date(y, m, 0).getDate();
-  const days = getDaysInMonth(year, month);
+  const daysInMonth = new Date(year, month, 0).getDate();
 
   const fetchMonthlyAttendance = async () => {
     setLoading(true);
     try {
-      const dailyLogs = [];
-
-      for (let day = 1; day <= days; day++) {
-        const date = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-        const res = await axiosInstance.get(`/daily-attendance?date=${date}`);
-        if (res.data.length > 0) {
-          dailyLogs.push({ date, data: res.data });
-        }
-      }
-
-      if (dailyLogs.length === 0) {
-        setAttendanceData([]);
-        setLoading(false);
-        return;
-      }
-
-      const attendanceMap = {};
-
-      dailyLogs.forEach(({ date, data }) => {
-        data.forEach((entry) => {
-          const uid = entry._id;
-          if (!attendanceMap[uid]) {
-            attendanceMap[uid] = {
-              _id: uid,
-              name: entry.name,
-              designation: entry.designation,
-              attendance: {},
-            };
-          }
-          attendanceMap[uid].attendance[date] = entry.status;
-        });
-      });
-
-      const formattedData = Object.values(attendanceMap);
-      setAttendanceData(formattedData);
+      const res = await axiosInstance.get(`/monthly-attendance?month=${String(month).padStart(2, "0")}&year=${year}`);
+      setAttendanceData(res.data || []);
     } catch (err) {
       console.error("Error fetching attendance:", err);
+      setAttendanceData([]);
     } finally {
       setLoading(false);
     }
@@ -108,7 +75,7 @@ const AttendanceTablePage = () => {
             <thead className="bg-gray-800">
               <tr>
                 <th className="border border-gray-700 px-2 py-1 sticky left-0 bg-gray-800 z-20">Name</th>
-                {Array.from({ length: days }, (_, i) => (
+                {Array.from({ length: daysInMonth }, (_, i) => (
                   <th key={i} className="border border-gray-700 px-1 text-center">{i + 1}</th>
                 ))}
               </tr>
@@ -119,7 +86,7 @@ const AttendanceTablePage = () => {
                   <td className="text-white border border-gray-700 px-2 py-1 sticky left-0 bg-gray-900 z-10 whitespace-nowrap">
                     {user.name}
                   </td>
-                  {Array.from({ length: days }, (_, i) => {
+                  {Array.from({ length: daysInMonth }, (_, i) => {
                     const date = `${year}-${String(month).padStart(2, "0")}-${String(i + 1).padStart(2, "0")}`;
                     const status = user.attendance[date];
                     let display = "❌";
@@ -143,4 +110,3 @@ const AttendanceTablePage = () => {
 };
 
 export default AttendanceTablePage;
-

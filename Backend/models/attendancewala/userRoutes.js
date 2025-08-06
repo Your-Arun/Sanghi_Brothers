@@ -100,6 +100,41 @@ router.get("/daily-attendance", async (req, res) => {
 });
 
 
+// ✅ Route: GET /api/monthly-attendance?month=08&year=2025
+router.get("/monthly-attendance", async (req, res) => {
+  try {
+    const { month, year } = req.query;
+
+    const start = new Date(`${year}-${month}-01`);
+    const end = new Date(year, Number(month), 0); // last day of month
+
+    const attendance = await Attendance.find({
+      date: { $gte: start.toISOString().split("T")[0], $lte: end.toISOString().split("T")[0] }
+    }).populate("userId", "name designation");
+
+    const result = {};
+
+    attendance.forEach((log) => {
+      const id = log.userId._id.toString();
+      if (!result[id]) {
+        result[id] = {
+          _id: id,
+          name: log.userId.name,
+          designation: log.userId.designation,
+          attendance: {}
+        };
+      }
+
+      result[id].attendance[log.date] = log.status;
+    });
+
+    res.json(Object.values(result));
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 
 
 module.exports = router;
