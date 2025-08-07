@@ -102,14 +102,14 @@ const DailyLogView = () => {
                   const bgColor =
                     status === "Present"
                       ? isSelected
-                        ? "bg-green-600"
+                        ? "bg-green-400"
                         : "bg-green-800"
                       : status === "Absent"
                       ? isSelected
-                        ? "bg-red-600"
+                        ? "bg-red-400"
                         : "bg-red-800"
                       : isSelected
-                      ? "bg-yellow-500"
+                      ? "bg-yellow-400"
                       : "bg-yellow-700";
 
                   return (
