@@ -32,67 +32,74 @@ const AttendanceTablePage = () => {
   }, [selectedDate]);
 
   return (
-    <div className="p-4 sm:p-6 bg-gray-900 text-white min-h-screen">
-      {/* Header Section */}
+    <div className="p-6 bg-gray-900 text-white min-h-screen">
       <div className="mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-3 flex items-center gap-2">
-          📅 Monthly Attendance Table
-        </h1>
-
-        <div className="flex flex-wrap items-center gap-3">
+        <h1 className="text-3xl font-bold mb-2">📅 Monthly Attendance Table</h1>
+        {/* Date Picker + Button */}
+        <div className="flex flex-wrap items-center gap-4">
           <DatePicker
             selected={selectedDate}
             onChange={(date) => setSelectedDate(date)}
             dateFormat="MMMM yyyy"
             showMonthYearPicker
-            className="bg-white text-black px-4 py-2 rounded shadow"
-            popperPlacement="bottom-start"
+            className="bg-gray-700 text-white px-4 py-2 rounded"
           />
           <button
             onClick={fetchMonthlyAttendance}
-            className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded shadow"
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
           >
             🔄 Refresh
           </button>
         </div>
       </div>
 
-      {/* Scrollable Table */}
-      <div className="overflow-x-auto bg-white rounded-lg shadow">
-        <table className="min-w-full border-collapse">
-          <thead className="bg-indigo-900 text-white text-sm sticky top-0 z-10">
-            <tr>
-              <th className="px-4 py-2 text-left border">Name</th>
-              {Array.from({ length: totalDays }, (_, i) => (
-                <th key={i} className="px-2 py-2 border text-center">
-                  {i + 1}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="text-sm text-black">
-            {attendance.map((record, idx) => (
-              <tr key={idx} className="hover:bg-gray-100">
-                <td className="px-4 py-2 border font-medium">{record.name}</td>
-                {Array.from({ length: totalDays }, (_, i) => {
-                  const status = record.days[i + 1];
-                  return (
-                    <td key={i} className="px-2 py-1 text-center border">
-                      {status === "Present" ? (
-                        <span className="text-green-600 font-bold">✅</span>
-                      ) : (
-                        <span className="text-red-500 font-bold">❌</span>
-                      )}
-                    </td>
-                  );
-                })}
+      {/* Table */}
+      <div className="overflow-auto rounded border border-gray-700">
+        {loading ? (
+          <div className="text-center py-10 text-xl">⏳ Loading attendance data...</div>
+        ) : attendanceData.length === 0 ? (
+          <div className="text-center py-10 text-red-400 text-xl">
+            🚫 No attendance data for{" "}
+            {new Date(year, month - 1).toLocaleString("default", { month: "long" })}{" "}
+            {year}
+          </div>
+        ) : (
+          <table className="w-full border-collapse text-sm">
+            <thead className="bg-gray-800">
+              <tr>
+                <th className="border border-gray-700 px-2 py-1 sticky left-0 bg-gray-800 z-20">Name</th>
+                {Array.from({ length: daysInMonth }, (_, i) => (
+                  <th key={i} className="border border-gray-700 px-1 text-center">{i + 1}</th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+            </thead>
+            <tbody>
+              {attendanceData.map((user, idx) => (
+                <tr key={idx}>
+                  <td className="text-white border border-gray-700 px-2 py-1 sticky left-0 bg-gray-900 z-10 whitespace-nowrap">
+                    {user.name}
+                  </td>
+                  {Array.from({ length: daysInMonth }, (_, i) => {
+                    const date = `${year}-${String(month).padStart(2, "0")}-${String(i + 1).padStart(2, "0")}`;
+                    const status = user.attendance[date];
+                    let display = "❌";
+                    if (status === "Present") display = "✅";
+                    else if (status === "Leave") display = "🟡";
 
+                    return (
+                      <td key={i} className="border border-gray-700 px-1 text-center text-xs">
+                        {status ? display : "❌"}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+
+    </div>
   );
 };
 
