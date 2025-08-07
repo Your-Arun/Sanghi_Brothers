@@ -42,7 +42,7 @@ const AttendanceTablePage = () => {
           onChange={(date) => setSelectedDate(date)}
           dateFormat="MMMM yyyy"
           showMonthYearPicker
-          className="bg-gray-700 text-white px-4 py-2 rounded"
+          className="bg-gray-700 text-white px-4 py-2 rounded z-index -10"
         />
 
         <button
