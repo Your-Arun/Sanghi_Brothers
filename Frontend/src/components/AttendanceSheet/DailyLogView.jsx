@@ -156,7 +156,7 @@ const DailyLogView = () => {
 
               {/* Attendance Buttons */}
               <div className="mt-4 flex gap-3 flex-wrap">
-                {["Present", "Absent", "Leave"].map((status) => {
+                {/* {["Present", "Absent", "Leave"].map((status) => {
                   const isSelected = attendanceData[user._id] === status;
                   const bgColor =
                     status === "Present"
@@ -180,7 +180,34 @@ const DailyLogView = () => {
                       {status}
                     </button>
                   );
+                })} */}
+
+
+                {["Present", "Absent", "Leave"].map((status) => {
+                  const isSelected = attendanceData[user._id] === status;
+
+                  const baseColor =
+                    status === "Present"
+                      ? "bg-green-800"
+                      : status === "Absent"
+                        ? "bg-red-800"
+                        : "bg-yellow-700";
+
+                  const selectedOutline =
+                    isSelected ? "outline outline-2 outline-white" : "";
+
+                  return (
+                    <button
+                      key={status}
+                      onClick={() => handleAttendanceChange(user._id, status)}
+                      className={`px-4 py-1 rounded-full text-sm font-medium text-white ${baseColor} ${selectedOutline} hover:opacity-90 transition-all duration-150`}
+                    >
+                      {status}
+                    </button>
+                  );
                 })}
+
+
               </div>
             </div>
           ))}
