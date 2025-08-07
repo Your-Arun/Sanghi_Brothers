@@ -47,22 +47,23 @@ const DailyLogView = () => {
   );
 
   return (
-    <div className="bg-gray-800 min-h-screen p-6">
-      <h2 className="text-4xl font-bold text-white mb-6">📝 Daily Attendance</h2>
+    <div className="bg-gray-900 min-h-screen p-6 text-white">
+      <h2 className="text-3xl font-bold mb-6">📝 Daily Attendance</h2>
 
-      <div className="flex flex-wrap items-center gap-4 mb-6">
+      {/* Controls */}
+      <div className="flex flex-wrap items-center gap-4 mb-8">
         <input
           type="date"
           value={selectedDate.toISOString().split("T")[0]}
           onChange={(e) => setSelectedDate(new Date(e.target.value))}
-          className="bg-gray-700 text-white px-4 py-2 rounded"
+          className="bg-gray-800 text-white px-4 py-2 rounded border border-gray-700"
         />
         <input
           type="text"
-          placeholder="Search user..."
+          placeholder="🔍 Search user..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="bg-gray-700 px-4 py-2 rounded text-white w-64"
+          className="bg-gray-800 px-4 py-2 rounded text-white w-64 border border-gray-700"
         />
         <button
           onClick={handleSubmitAttendance}
@@ -72,34 +73,55 @@ const DailyLogView = () => {
         </button>
       </div>
 
+      {/* User Cards */}
       {loading ? (
         <p className="text-gray-400">⏳ Loading users...</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredUsers.map((user) => (
-            <div key={user._id} className="bg-gray-900 border border-gray-700 p-4 rounded-lg flex items-start gap-4">
-              <img
-                src={user.photo}
-                alt={user.name}
-                className="w-14 h-14 rounded-full object-cover border"
-              />
-              <div className="flex-1">
-                <h3 className="text-lg font-bold text-white">{user.name}</h3>
-                <p className="text-gray-400 text-sm">{user.designation}</p>
-                <div className="mt-2 flex gap-3">
-                  {["Present", "Absent", "Leave"].map((status) => (
-                    <label key={status} className="flex items-center gap-1 text-sm text-white">
-                      <input
-                        type="radio"
-                        name={`attendance-${user._id}`}
-                        value={status}
-                        checked={attendanceData[user._id] === status}
-                        onChange={() => handleAttendanceChange(user._id, status)}
-                      />
-                      {status}
-                    </label>
-                  ))}
+            <div
+              key={user._id}
+              className="bg-gray-800 border border-gray-700 p-5 rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
+            >
+              <div className="flex items-center gap-4">
+                <img
+                  src={user.photo}
+                  alt={user.name}
+                  className="w-16 h-16 rounded-full object-cover border border-gray-600"
+                />
+                <div>
+                  <h3 className="text-xl font-semibold">{user.name}</h3>
+                  <p className="text-gray-400 text-sm">{user.designation}</p>
                 </div>
+              </div>
+
+              {/* Attendance Buttons */}
+              <div className="mt-4 flex gap-3 flex-wrap">
+                {["Present", "Absent", "Leave"].map((status) => {
+                  const isSelected = attendanceData[user._id] === status;
+                  const bgColor =
+                    status === "Present"
+                      ? isSelected
+                        ? "bg-green-600"
+                        : "bg-green-800"
+                      : status === "Absent"
+                      ? isSelected
+                        ? "bg-red-600"
+                        : "bg-red-800"
+                      : isSelected
+                      ? "bg-yellow-500"
+                      : "bg-yellow-700";
+
+                  return (
+                    <button
+                      key={status}
+                      onClick={() => handleAttendanceChange(user._id, status)}
+                      className={`px-4 py-1 rounded-full text-sm font-medium text-white ${bgColor} hover:opacity-90`}
+                    >
+                      {status}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           ))}
