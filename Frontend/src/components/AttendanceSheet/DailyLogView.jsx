@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../Dashboard/axiosInstance";
-
+import {toast} from 'react-toastify';
 const DailyLogView = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [users, setUsers] = useState([]);
@@ -31,10 +31,10 @@ const DailyLogView = () => {
         status,
       }));
       await axiosInstance.post("/mark-attendance", payload);
-      alert("✅ Attendance submitted successfully.");
+      toast.success("✅ Attendance submitted successfully.");
     } catch (err) {
       console.error("Submit failed:", err);
-      alert("❌ Error submitting attendance.");
+      toast.error("❌ Error submitting attendance.");
     }
   };
 
@@ -107,7 +107,7 @@ const DailyLogView = () => {
                       : status === "Absent"
                       ? isSelected
                         ? "bg-red-400"
-                        : "bg-red-800"
+                        : "bg-red-900"
                       : isSelected
                       ? "bg-yellow-400"
                       : "bg-yellow-700";
@@ -116,7 +116,7 @@ const DailyLogView = () => {
                     <button
                       key={status}
                       onClick={() => handleAttendanceChange(user._id, status)}
-                      className={`px-4 py-1 rounded-full text-sm font-medium text-white ${bgColor} hover:opacity-90`}
+                      className={`px-4 py-1 rounded-full text-sm font-medium text-white ${bgColor} hover:opacity-90 border border-transparent transition-all duration-200`}
                     >
                       {status}
                     </button>
