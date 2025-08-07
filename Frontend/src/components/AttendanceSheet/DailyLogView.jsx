@@ -71,6 +71,18 @@ const DailyLogView = () => {
     return nameMatch && statusMatch;
   });
 
+  const markAllPresent = () => {
+    const updatedAttendance = {};
+    filteredUsers.forEach((user) => {
+      updatedAttendance[user._id] = "Present";
+    });
+    setAttendanceData((prev) => ({
+      ...prev,
+      ...updatedAttendance,
+    }));
+  };
+
+
   return (
     <div className="bg-gray-900 min-h-screen p-6 text-white relative z-0">
       <h2 className="text-3xl font-bold mb-6">📝 Daily Attendance</h2>
@@ -104,6 +116,12 @@ const DailyLogView = () => {
           <option value="Leave">🟡 Leave</option>
         </select>
 
+        <button
+          onClick={markAllPresent}
+          className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded text-white font-semibold"
+        >
+          ☑️ Mark All Present
+        </button>
         <button
           onClick={handleSubmitAttendance}
           className="bg-green-600 hover:bg-green-700 px-6 py-2 rounded text-white font-semibold"
@@ -146,18 +164,18 @@ const DailyLogView = () => {
                         ? "bg-green-400"
                         : "bg-green-800"
                       : status === "Absent"
-                      ? isSelected
-                        ? "bg-red-400"
-                        : "bg-red-800"
-                      : isSelected
-                      ? "bg-yellow-400"
-                      : "bg-yellow-700";
+                        ? isSelected
+                          ? "bg-red-400"
+                          : "bg-red-800"
+                        : isSelected
+                          ? "bg-yellow-400"
+                          : "bg-yellow-700";
 
                   return (
                     <button
                       key={status}
                       onClick={() => handleAttendanceChange(user._id, status)}
-                      className={`px-4 py-1 rounded-full text-sm font-medium text-white ${bgColor} hover:opacity-90`}
+                      className={`px-4 py-1 rounded-full text-sm outline-2 outline-offset-2 outline-dashed font-medium text-white ${bgColor} hover:opacity-90`}
                     >
                       {status}
                     </button>
