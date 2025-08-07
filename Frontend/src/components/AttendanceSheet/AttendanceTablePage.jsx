@@ -33,24 +33,24 @@ const AttendanceTablePage = () => {
 
   return (
     <div className="p-6 bg-gray-900 text-white min-h-screen">
-      <h1 className="text-3xl font-bold mb-4">📅 Monthly Attendance Table</h1>
-
-      {/* Date Picker */}
-      <div className="flex gap-4 items-center mb-6">
-        <DatePicker
-          selected={selectedDate}
-          onChange={(date) => setSelectedDate(date)}
-          dateFormat="MMMM yyyy"
-          showMonthYearPicker
-          className="bg-gray-700 text-white px-4 py-2 rounded z-index -10"
-        />
-
-        <button
-          onClick={fetchMonthlyAttendance}
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-        >
-          🔄 Refresh
-        </button>
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold mb-2">📅 Monthly Attendance Table</h1>
+        {/* Date Picker + Button */}
+        <div className="flex flex-wrap items-center gap-4">
+          <DatePicker
+            selected={selectedDate}
+            onChange={(date) => setSelectedDate(date)}
+            dateFormat="MMMM yyyy"
+            showMonthYearPicker
+            className="bg-gray-700 text-white px-4 py-2 rounded"
+          />
+          <button
+            onClick={fetchMonthlyAttendance}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+          >
+            🔄 Refresh
+          </button>
+        </div>
       </div>
 
       {/* Table */}
@@ -98,6 +98,7 @@ const AttendanceTablePage = () => {
           </table>
         )}
       </div>
+
     </div>
   );
 };
