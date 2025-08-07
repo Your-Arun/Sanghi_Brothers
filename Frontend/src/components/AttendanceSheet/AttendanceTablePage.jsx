@@ -42,7 +42,7 @@ const AttendanceTablePage = () => {
             onChange={(date) => setSelectedDate(date)}
             dateFormat="MMMM yyyy"
             showMonthYearPicker
-            className="bg-gray-700 text-white px-4 py-2 rounded"
+            className="bg-gray-700 z-10 text-white px-4 py-2 rounded"
           />
           <button
             onClick={fetchMonthlyAttendance}
@@ -54,7 +54,7 @@ const AttendanceTablePage = () => {
       </div>
 
       {/* Table */}
-      <div className="overflow-auto rounded border border-gray-700">
+      <div className="overflow-auto z-0 rounded border border-gray-700">
         {loading ? (
           <div className="text-center py-10 text-xl">⏳ Loading attendance data...</div>
         ) : attendanceData.length === 0 ? (
