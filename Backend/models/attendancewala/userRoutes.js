@@ -37,6 +37,9 @@ router.get("/users/attendance", async (req, res) => {
   }
 });
 
+
+
+
 router.post("/users", async (req, res) => {
   try {
     const { password, ...rest } = req.body;
