@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import UserContext from "../Home Page/UserContext";
 import AttendanceTablePage from "./AttendanceTablePage";
 import axiosInstance from "../Dashboard/axiosInstance";
+import BackButton from "../Home Page/BackButtonn";
 
 const AttendancePage = () => {
   const [users, setUsers] = useState([]);
@@ -158,7 +159,9 @@ const AttendancePage = () => {
       )}
 
       {/* Attendance Table Component */}
-      <AttendanceTablePage data={attendanceTableData} loading={loading} />    </div>
+      <AttendanceTablePage data={attendanceTableData} loading={loading} />
+      <BackButton label="Go Back" />
+    </div>
   );
 };
 
