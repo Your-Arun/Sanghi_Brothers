@@ -82,7 +82,6 @@ const DailyLogView = () => {
     }));
   };
 
-
   return (
     <div className="bg-gray-900 min-h-screen p-6 text-white relative z-0">
       <h2 className="text-3xl font-bold mb-6">📝 Daily Attendance</h2>
@@ -156,7 +155,7 @@ const DailyLogView = () => {
 
               {/* Attendance Buttons */}
               <div className="mt-4 flex gap-3 flex-wrap">
-                {/* {["Present", "Absent", "Leave"].map((status) => {
+                {["Present", "Absent", "Leave"].map((status) => {
                   const isSelected = attendanceData[user._id] === status;
                   const bgColor =
                     status === "Present"
@@ -175,39 +174,13 @@ const DailyLogView = () => {
                     <button
                       key={status}
                       onClick={() => handleAttendanceChange(user._id, status)}
-                      className={`px-4 py-1 rounded-full text-sm outline-2 outline-offset-2 outline-dashed font-medium text-white ${bgColor} hover:opacity-90`}
-                    >
-                      {status}
-                    </button>
-                  );
-                })} */}
-
-
-                {["Present", "Absent", "Leave"].map((status) => {
-                  const isSelected = attendanceData[user._id] === status;
-
-                  const baseColor =
-                    status === "Present"
-                      ? "bg-green-800"
-                      : status === "Absent"
-                        ? "bg-red-800"
-                        : "bg-yellow-700";
-
-                  const selectedOutline =
-                    isSelected ? "outline outline-2 outline-white" : "";
-
-                  return (
-                    <button
-                      key={status}
-                      onClick={() => handleAttendanceChange(user._id, status)}
-                      className={`px-4 py-1 rounded-full text-sm font-medium text-white ${baseColor} ${selectedOutline} hover:opacity-90 transition-all duration-150`}
+                      className={`px-4 py-1 rounded-full text-sm font-medium text-white hover:opacity-90
+                        ${bgColor} ${isSelected ? "outline outline-2 outline-offset-2 outline-white" : ""}`}
                     >
                       {status}
                     </button>
                   );
                 })}
-
-
               </div>
             </div>
           ))}
