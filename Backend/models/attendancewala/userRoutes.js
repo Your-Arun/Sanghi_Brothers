@@ -140,4 +140,34 @@ router.get("/monthly-attendance", async (req, res) => {
 
 
 
+
+router.get("/user-attendance/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { year, month } = req.query;
+
+    if (!year || !month) {
+      return res.status(400).json({ message: "Year and month are required" });
+    }
+
+    // Ensure month is always 2 digits
+    const monthStr = String(month).padStart(2, "0");
+
+    // Regex to match YYYY-MM dates
+    const regex = new RegExp(`^${year}-${monthStr}`);
+
+    const records = await Attendance.find({
+      userId: id,
+      date: { $regex: regex },
+    });
+
+    res.json(records);
+  } catch (err) {
+    console.error("Error fetching attendance:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
 module.exports = router;
