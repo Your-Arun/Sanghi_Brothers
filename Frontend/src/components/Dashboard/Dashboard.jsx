@@ -253,7 +253,7 @@ const UpdateDashboard = () => {
             <div className="flex items-center justify-between mb-8">
                 <h1 className="text-4xl font-bold text-gray-800">Dashboard</h1>
                 <img
-                    src="/user.png"
+                    src={user.photo}
                     alt="Profile"
                     className="w-10 h-10 rounded-full cursor-pointer"
                     onClick={() => setProfileOpen(true)}
@@ -375,7 +375,7 @@ const UpdateDashboard = () => {
                     </button>
                     <button
                         onClick={() => navigate("/attendance-sheet")}
-                        className="bg-red-500 text-white flex items-center px-6 py-3 rounded-full shadow-lg hover:bg-red-600 transform hover:scale-105 transition-all ease-in-out w-full"
+                        className="bg-green-500 text-white flex items-center px-6 py-3 rounded-full shadow-lg hover:bg-green-600 transform hover:scale-105 transition-all ease-in-out w-full"
                         aria-label="attendance-sheet"
                     >
                         💵 <span className="ml-2">Attendance Sheet</span>

@@ -146,7 +146,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
         {/* Close Button */}
         <div
           onClick={onClose}
-          className="absolute top-3 right-4 text-gray-400 hover:text-red-500 text-2xl"
+          className="absolute top-3 right-4 text-gray-400 hover:text-red-500 text-2xl cursor-pointer"
         >
           ✖
         </div>
