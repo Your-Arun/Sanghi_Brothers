@@ -20,12 +20,50 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
     user.joiningDate ? new Date(user.joiningDate) : null
   );
 
+ // NEW: Attendance counts
+ const [attendanceCounts, setAttendanceCounts] = useState({
+  present: 0,
+  absent: 0,
+  leave: 0,
+});
+
+
   useEffect(() => {
     if (user.aadhaar) {
       const parts = user.aadhaar.match(/.{1,4}/g) || ["", "", ""];
       setAadhaarParts(parts);
     }
   }, [user.aadhaar]);
+
+  useEffect(() => {
+    const fetchMonthlyAttendance = async () => {
+      try {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, "0"); // 01-12
+
+        const res = await axiosInstance.get(
+          `/user-attendance/${user._id}?year=${year}&month=${month}`
+        );
+
+        // Count by status
+        const counts = { present: 0, absent: 0, leave: 0 };
+        res.data.forEach((entry) => {
+          if (entry.status === "Present") counts.present++;
+          if (entry.status === "Absent") counts.absent++;
+          if (entry.status === "Leave") counts.leave++;
+        });
+
+        setAttendanceCounts(counts);
+      } catch (err) {
+        console.error("Failed to fetch monthly attendance:", err);
+      }
+    };
+
+    fetchMonthlyAttendance();
+  }, [user._id]);
+
+
 
   const handleChange = (key, value) => {
     setEditedUser({ ...editedUser, [key]: value });
@@ -203,9 +241,14 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
             )}
           </div>
 
-          <div>
-            <p className="text-sm font-medium text-gray-400">Attendance</p>
-            <p className="mt-1 text-gray-200">{user.attendance?.length || 0}</p>
+           {/* 🔹 Attendance Counts for current month */}
+           <div>
+            <p className="text-sm font-medium text-gray-400">
+              Attendance ({new Date().toLocaleString("default", { month: "long", year: "numeric" })})
+            </p>
+            <p className="mt-1 text-gray-200">
+              ✅ Present: {attendanceCounts.present} | ❌ Absent: {attendanceCounts.absent} | 🟡 Leave: {attendanceCounts.leave}
+            </p>
           </div>
         </div>
 
@@ -254,3 +297,198 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
 };
 
 export default ProfileModal;
+
+
+
+
+
+// import React, { useContext, useState, useEffect } from "react";
+// import UserContext from "../Home Page/UserContext";
+// import axiosInstance from "../Dashboard/axiosInstance";
+// import { toast } from "react-toastify";
+// import DatePicker from "react-datepicker";
+// import "react-datepicker/dist/react-datepicker.css";
+
+// const ProfileModal = ({ user, onClose, onUpdate }) => {
+//   const { user: currentUser } = useContext(UserContext);
+//   const isManager = currentUser?.department?.toLowerCase() === "manager";
+
+//   const [editMode, setEditMode] = useState(false);
+//   const [editedUser, setEditedUser] = useState({ ...user });
+//   const [aadhaarParts, setAadhaarParts] = useState(["", "", ""]);
+//   const [joiningDate, setJoiningDate] = useState(
+//     user.joiningDate ? new Date(user.joiningDate) : null
+//   );
+
+//   // NEW: Attendance counts
+//   const [attendanceCounts, setAttendanceCounts] = useState({
+//     present: 0,
+//     absent: 0,
+//     leave: 0,
+//   });
+
+//   useEffect(() => {
+//     if (user.aadhaar) {
+//       const parts = user.aadhaar.match(/.{1,4}/g) || ["", "", ""];
+//       setAadhaarParts(parts);
+//     }
+//   }, [user.aadhaar]);
+
+//   // 🔹 Fetch current month's attendance counts
+//   useEffect(() => {
+//     const fetchMonthlyAttendance = async () => {
+//       try {
+//         const now = new Date();
+//         const year = now.getFullYear();
+//         const month = String(now.getMonth() + 1).padStart(2, "0"); // 01-12
+
+//         const res = await axiosInstance.get(
+//           `/user-attendance/${user._id}?year=${year}&month=${month}`
+//         );
+
+//         // Count by status
+//         const counts = { present: 0, absent: 0, leave: 0 };
+//         res.data.forEach((entry) => {
+//           if (entry.status === "Present") counts.present++;
+//           if (entry.status === "Absent") counts.absent++;
+//           if (entry.status === "Leave") counts.leave++;
+//         });
+
+//         setAttendanceCounts(counts);
+//       } catch (err) {
+//         console.error("Failed to fetch monthly attendance:", err);
+//       }
+//     };
+
+//     fetchMonthlyAttendance();
+//   }, [user._id]);
+
+//   const handleChange = (key, value) => {
+//     setEditedUser({ ...editedUser, [key]: value });
+//   };
+
+//   const handleAadhaarChange = (index, value) => {
+//     if (/^\d{0,4}$/.test(value)) {
+//       const newParts = [...aadhaarParts];
+//       newParts[index] = value;
+//       setAadhaarParts(newParts);
+//     }
+//   };
+
+//   const handleSave = async () => {
+//     const aadhaar = aadhaarParts.join("");
+//     if (aadhaar.length !== 12) {
+//       toast.error("Aadhaar must be 12 digits.");
+//       return;
+//     }
+
+//     const updatedUser = {
+//       ...editedUser,
+//       aadhaar,
+//       joiningDate: joiningDate?.toISOString().split("T")[0],
+//     };
+
+//     try {
+//       const res = await axiosInstance.put(`/users/${user._id}`, updatedUser);
+//       toast.success("User updated successfully.");
+//       setEditMode(false);
+//       onUpdate && onUpdate(res.data);
+//     } catch (err) {
+//       console.error(err);
+//       toast.error("Error updating user.");
+//     }
+//   };
+
+//   const confirmDeleteToast = (onConfirm) => {
+//     toast(
+//       ({ closeToast }) => (
+//         <div className="flex flex-col gap-2">
+//           <p>Are you sure you want to delete this ?</p>
+//           <div className="flex gap-4 mt-2">
+//             <button
+//               onClick={() => {
+//                 closeToast();
+//                 onConfirm();
+//               }}
+//               className="bg-red-500 text-white px-3 py-1 rounded"
+//             >
+//               Yes
+//             </button>
+//             <button
+//               onClick={closeToast}
+//               className="bg-gray-300 px-3 py-1 rounded"
+//             >
+//               No
+//             </button>
+//           </div>
+//         </div>
+//       ),
+//       {
+//         position: "top-center",
+//         autoClose: false,
+//         closeOnClick: false,
+//         closeButton: false,
+//       }
+//     );
+//   };
+
+//   const handleDelete = async () => {
+//     confirmDeleteToast(async () => {
+//       try {
+//         await axiosInstance.delete(`/users/${user._id}`);
+//         onClose();
+//         if (onUpdate) onUpdate();
+//         toast.success("User deleted successfully.");
+//       } catch (error) {
+//         console.error(error);
+//         toast.error("Failed to delete user.");
+//       }
+//     });
+//   };
+
+//   return (
+//     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
+//       <div className="bg-gray-900 text-white w-full max-w-3xl p-6 rounded-lg shadow-xl relative max-h-[90vh] overflow-y-auto">
+//         <div
+//           onClick={onClose}
+//           className="absolute top-2 right-4 text-2xl text-red-400 hover:text-red-600 cursor-pointer"
+//         >
+//           &times;
+//         </div>
+
+//         {/* Profile Header */}
+//         <div className="flex items-center gap-6 mb-6">
+//           <img
+//             src={user.photo || ""}
+//             alt={user.name}
+//             className="w-28 h-28 rounded-full object-cover border-2 border-gray-700"
+//           />
+//           <div>
+//             <h2 className="text-3xl font-bold">{user.name}</h2>
+//             <p className="text-gray-400 text-sm">{user.designation}</p>
+//             <p className="text-blue-400 text-sm font-semibold">{user.department}</p>
+//           </div>
+//         </div>
+
+//         {/* Info Grid */}
+//         <div className="grid grid-cols-2 gap-4">
+//           {/* Existing fields here ... */}
+
+//           {/* 🔹 Attendance Counts for current month */}
+//           <div>
+//             <p className="text-sm font-medium text-gray-400">
+//               Attendance ({new Date().toLocaleString("default", { month: "long", year: "numeric" })})
+//             </p>
+//             <p className="mt-1 text-gray-200">
+//               ✅ Present: {attendanceCounts.present} | ❌ Absent: {attendanceCounts.absent} | 🟡 Leave: {attendanceCounts.leave}
+//             </p>
+//           </div>
+//         </div>
+
+//         {/* Manager controls ... */}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ProfileModal;
