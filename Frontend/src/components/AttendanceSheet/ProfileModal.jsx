@@ -144,12 +144,12 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-[9999]">
       <div className="bg-gray-900 text-white w-full max-w-3xl p-6 rounded-lg shadow-xl relative max-h-[90vh] overflow-y-auto border border-gray-700">
         {/* Close Button */}
-        <button
+        <div
           onClick={onClose}
           className="absolute top-3 right-4 text-gray-400 hover:text-red-500 text-2xl"
         >
           ✖
-        </button>
+        </div>
 
         {/* Profile Header */}
         <div className="flex items-center gap-6 mb-6 border-b border-gray-700 pb-4">

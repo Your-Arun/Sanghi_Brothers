@@ -135,15 +135,9 @@ const AttendancePage = () => {
                 />
                 <div>
                   <h2 className="text-lg font-semibold">{user.name}</h2>
-                  <p className="text-sm text-gray-400">{user.designation}</p>
-                  <p className="text-sm mt-1">
-                    Attendance:{" "}
-                    {
-                      user.attendance?.filter((a) =>
-                        a.date?.startsWith(`${year}-${String(month).padStart(2, "0")}`)
-                      ).length || 0
-                    }{" "}
-                    days
+                  <p className="text-sm text-gray-400">{user.department}</p>
+                  <p className="text-sm mt-1 text-gray-400">
+                    {user.email}
                   </p>
                 </div>
               </div>
