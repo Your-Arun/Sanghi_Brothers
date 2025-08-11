@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../Dashboard/axiosInstance";
 import { toast } from "react-toastify";
+import BackButton from "../Home Page/BackButtonn";
 
 const DailyLogView = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -186,6 +187,7 @@ const DailyLogView = () => {
           ))}
         </div>
       )}
+    <BackButton label="Go Back" />
     </div>
   );
 };

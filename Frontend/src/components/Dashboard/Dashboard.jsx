@@ -253,7 +253,7 @@ const UpdateDashboard = () => {
             <div className="flex items-center justify-between mb-8">
                 <h1 className="text-4xl font-bold text-gray-800">Dashboard</h1>
                 <img
-                    src={user.photo}
+                    src={user.photo || "/user.png"}
                     alt="Profile"
                     className="w-10 h-10 rounded-full cursor-pointer"
                     onClick={() => setProfileOpen(true)}
