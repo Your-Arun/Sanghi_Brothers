@@ -18,7 +18,7 @@ const Home = () => {
     <>
       {/* Main Layout */}
       <div className="relative flex flex-col md:flex-row items-center justify-between min-h-screen overflow-hidden">
-        
+
         {/* Left Section */}
         <div className="w-full md:w-1/2 px-4 sm:px-6 md:px-12 lg:px-20 py-6 md:py-12">
           <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-black mb-4 sm:mb-6 leading-snug">
@@ -46,7 +46,7 @@ const Home = () => {
         </div>
 
         {/* Right Section (image on large screens only) */}
-        <div className="relative w-full md:w-1/2 h-[400px] md:h-[480px] hidden md:block">
+        <div className="relative w-full md:w-1/2 md:h-[480px] hidden md:block">
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{
@@ -56,7 +56,6 @@ const Home = () => {
             }}
           ></div>
 
-          {/* Inline Form on Desktop */}
           {authMode && (
             <div className="absolute left-1/2 top-4 transform -translate-x-1/2 w-[85%] md:w-[75%] lg:w-[60%] xl:w-[50%] z-20">
               {authMode === "login" ? (
@@ -67,6 +66,7 @@ const Home = () => {
             </div>
           )}
         </div>
+
       </div>
 
       {/* Mobile Full-Screen Modal */}
