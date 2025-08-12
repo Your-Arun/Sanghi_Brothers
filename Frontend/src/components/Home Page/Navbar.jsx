@@ -16,7 +16,7 @@ const Navbar = () => {
                 
                 {/* Logo */}
                 <div className="flex items-center">
-                    <span className="text-white font-bold text-2xl flex items-center">
+                    <span className="text-white font-bold font-serif text-2xl flex items-center">
                         <span className="mr-2 text-4xl">⛽</span> 
                         SANGHI BROTHERS
                     </span>
