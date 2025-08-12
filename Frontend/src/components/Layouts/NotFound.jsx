@@ -5,7 +5,7 @@ import error from "/error.png"
 
 const NotFound = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-yellow-200 via-pink-200 to-purple-300 p-6 relative overflow-hidden">
+    <div className="flex flex-col items-center justify-center min-h-screen p-6 relative overflow-hidden">
 
       {/* Floating background circles */}
       <div className="absolute w-64 h-64 bg-yellow-400 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-pulse top-10 left-10"></div>
