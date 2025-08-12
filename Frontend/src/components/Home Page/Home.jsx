@@ -17,7 +17,7 @@ const Home = () => {
   return (
     <>
       {/* Main Layout */}
-      <div className="relative flex flex-col md:flex-row items-center justify-between min-h-screen overflow-hidden">
+      <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between min-h-[auto] md:min-h-screen overflow-hidden">
 
         {/* Left Section */}
         <div className="w-full md:w-1/2 px-4 sm:px-6 md:px-12 lg:px-20 py-6 md:py-12">
@@ -66,6 +66,7 @@ const Home = () => {
             </div>
           )}
         </div>
+
 
       </div>
 
