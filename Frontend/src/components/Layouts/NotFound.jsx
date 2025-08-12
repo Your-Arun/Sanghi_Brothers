@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FaInstagram, FaFacebookF, FaTelegramPlane, FaTwitter } from "react-icons/fa";
+import error from "/error.png"
 
 const NotFound = () => {
   return (
@@ -15,7 +16,7 @@ const NotFound = () => {
         
         {/* Fun Character Image */}
         <img
-          src="https://upload.wikimedia.org/wikipedia/en/2/23/Mike_Wazowski.png"
+          src={error}
           alt="404 Not Found"
           className="w-64 md:w-80 animate-bounce"
         />
