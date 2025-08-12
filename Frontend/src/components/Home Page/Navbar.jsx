@@ -5,7 +5,7 @@ import { FiMenu, FiX } from "react-icons/fi";
 const Navbar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
 
-    const menuItems = ['home', 'about', 'services', 'contact'];
+    const menuItems = ['home', 'about', 'services', 'contacts'];
 
     const toggleMenu = () => setMenuOpen(!menuOpen);
     const closeMenu = () => setMenuOpen(false);
