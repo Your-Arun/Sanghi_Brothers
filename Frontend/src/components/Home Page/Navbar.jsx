@@ -18,7 +18,7 @@ const Navbar = () => {
                 <div className="flex items-center">
                     <span className="text-white font-bold text-2xl flex items-center">
                         <span className="mr-2 text-4xl">⛽</span> 
-                        SANGHI BROTHER<span className='text-yellow-500'>s</span>
+                        SANGHI BROTHERS
                     </span>
                 </div>
 
@@ -39,13 +39,13 @@ const Navbar = () => {
                 </ul>
 
                 {/* Mobile Menu Toggle */}
-                <button
+                <div
                     className="md:hidden text-2xl text-white focus:outline-none"
                     onClick={toggleMenu}
                     aria-label="Toggle menu"
                 >
                     {menuOpen ? <FiX /> : <FiMenu />}
-                </button>
+                </div>
             </div>
 
             {/* Mobile Menu */}
