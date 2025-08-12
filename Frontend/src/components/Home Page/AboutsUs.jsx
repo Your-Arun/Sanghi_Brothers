@@ -53,6 +53,7 @@ const AboutUs = () => {
   return (
     <div className="bg-white py-16 px-6">
       <div className="max-w-6xl mx-auto">
+        
         {/* Icons Row */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 text-center mb-20">
           {aboutItems.map((item, i) => (
@@ -74,28 +75,36 @@ const AboutUs = () => {
         </div>
 
         {/* Legacy Section */}
-        <div className="space-y-12">
+        <div className="space-y-20">
           {legacyItems.map((item, i) => (
             <div
               key={i}
               className={`flex flex-col md:flex-row items-center ${
                 i % 2 !== 0 ? "md:flex-row-reverse" : ""
-              } gap-6 md:gap-12`}
+              } gap-8`}
             >
-              <img
-                src={item.image}
-                alt={item.title}
-                className="w-full md:w-1/2 h-64 object-cover rounded-lg shadow-lg"
-              />
+              {/* Image */}
+              <div className="md:w-1/2 overflow-hidden rounded-lg shadow-lg">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-full aspect-video object-cover transform hover:scale-105 transition duration-500"
+                />
+              </div>
+
+              {/* Text */}
               <div className="md:w-1/2">
-                <h3 className="text-2xl font-semibold text-gray-900 mb-2">
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4">
                   {item.title}
                 </h3>
-                <p className="text-gray-600 text-base leading-relaxed">{item.description}</p>
+                <p className="text-gray-600 text-lg leading-relaxed">
+                  {item.description}
+                </p>
               </div>
             </div>
           ))}
         </div>
+
       </div>
     </div>
   );
