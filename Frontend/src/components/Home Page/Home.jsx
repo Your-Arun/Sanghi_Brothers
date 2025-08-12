@@ -19,7 +19,7 @@ const Home = () => {
       {/* Main Layout */}
       <div className="relative flex flex-col md:flex-row items-center justify-between min-h-screen overflow-hidden">
         {/* Left Section */}
-        <div className="w-full md:w-1/2 px-4 sm:px-6 md:px-12 lg:px-20 py-10 md:py-12">
+        <div className="w-full md:w-1/2 px-4 sm:px-6 md:px-12 lg:px-20 py-15 md:py-12">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black mb-6 leading-snug">
             We are happily saying <br /> we are awesome
           </h1>
@@ -53,7 +53,8 @@ const Home = () => {
               clipPath: "polygon(10% 0%, 100% 0%, 100% 100%, 0% 100%)",
               filter: "brightness(0.9)",
             }}
-          ></div>
+          >   
+          </div>
 
           {/* Inline Form on Desktop */}
           {authMode && (
@@ -68,7 +69,7 @@ const Home = () => {
         </div>
         
 
-      </div>
+      </div>  
 
       {/* Mobile Full-Screen Modal */}
       {authMode && (
