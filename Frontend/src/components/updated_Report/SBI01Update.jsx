@@ -497,7 +497,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td>cash deposit in m/c from evening shift</td>
+                  <td>cash deposit in a/c from evening shift</td>
                   <td>
                     <input
                       type="number"
@@ -725,7 +725,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td>cash of Yesterday for deposit in othe a/c </td>
+                  <td>cash of Yesterday for deposit in other a/c </td>
                   <td>
                     <input
                       type="number"
@@ -797,7 +797,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td> payment to bpcl for invoice 21-12</td>
+                  <td> payment to bpcl for invoice <input type="date" name="d1" value={updtSbi.inputs.d1} onChange={handleInputChange} /></td>
                   <td>
                     <input
                       type="number"
@@ -811,7 +811,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td> payment to bpcl for invoice 00-12</td>
+                  <td> payment to bpcl for invoice <input type="date" name="d2" value={updtSbi.inputs.d2} onChange={handleInputChange} /></td>
                   <td>
                     <input
                       type="number"
@@ -825,7 +825,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td> payment to bpcl for invoice 00-12</td>
+                  <td> payment to bpcl for invoice <input type="date" name="d3" value={updtSbi.inputs.d3} onChange={handleInputChange} /></td>
                   <td>
                     <input
                       type="number"
