@@ -280,7 +280,7 @@ const Sb01 = () => {
                 <input
                   type="date"
                   id="date9"
-                  value={inputs.date9}
+                  value={inputs.date9 || ''}
                   onChange={handleInputChange}
                   className="bg-transparent text-black px-2 py-1 "
                 /> </h1>
