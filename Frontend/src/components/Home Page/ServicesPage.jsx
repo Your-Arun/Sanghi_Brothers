@@ -1,4 +1,5 @@
 import { ArrowRight, Fuel, Clock, ShieldCheck, Banknote, Car } from "lucide-react";
+import Footer from "./Footer";
 
 
 const Services = () => {
@@ -83,6 +84,7 @@ const Services = () => {
         </button>
       </div>
     </div>
+    <Footer/>
     </>
   );
 };
