@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import axiosInstance from '../Dashboard/axiosInstance'
 import saveImage from "/save.png";
 import previousImage from "/previous.png";
