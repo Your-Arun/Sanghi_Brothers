@@ -96,7 +96,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
   const confirmDeleteToast = (onConfirm) => {
     toast(
       ({ closeToast }) => (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 inset-0 z-[9999]">
           <p>Are you sure you want to delete this user?</p>
           <div className="flex gap-4 mt-2">
             <button
