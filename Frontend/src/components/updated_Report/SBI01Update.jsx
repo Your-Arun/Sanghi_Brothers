@@ -122,7 +122,7 @@ function SBI01Update() {
       ...prev,
       inputs: {
         ...prev.inputs,
-        [name]: value,
+        [name]: value ||"",
       },
     }));
   };
