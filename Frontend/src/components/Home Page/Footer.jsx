@@ -25,7 +25,7 @@ const Footer = () => {
           <ul className="space-y-2 text-sm">
             <li><span className="text-yellow-400">📍</span> Sanghi Brothers,Olympic circle near station road, Jodhpur(Rajasthan)</li>
             <li><span className="text-yellow-400">📞</span><a href="tel" to="" className="hover:text-yellow-400"> 098209111507</a></li>
-            <li><span className="text-yellow-400">✉️</span><a href="mail" className="hover:text-yellow-400"> sanghibrothers@gmail.com </a></li>
+            <li><span className="text-yellow-400">✉️</span><a href="mail" className="hover:text-yellow-400"> sanghi.jodhpur@gmail.com</a></li>
             <li><span className="text-yellow-400">🔗</span><a href="#" className="hover:text-yellow-400"> www.sanghibros.com</a></li>
           </ul>
         </div>

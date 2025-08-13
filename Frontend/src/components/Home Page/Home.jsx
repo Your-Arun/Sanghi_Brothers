@@ -5,7 +5,6 @@ import homeImage from "/petrol.png";
 import AboutUs from "./AboutsUs";
 import ServicesPage from "./ServicesPage";
 import ContactUs from "./ContactUs";
-import Footer from "./Footer";
 
 const Home = () => {
   const [authMode, setAuthMode] = useState(null); // 'login' or 'signup'
@@ -87,7 +86,6 @@ const Home = () => {
       <AboutUs />
       <ServicesPage />
       <ContactUs />
-      <Footer />
     </>
   );
 };
