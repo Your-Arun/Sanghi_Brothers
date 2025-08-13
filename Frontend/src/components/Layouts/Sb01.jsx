@@ -110,18 +110,20 @@ const Sb01 = () => {
     date9:0,
   });
   const handleInputChange = (e) => {
-    const { id, value } = e.target;
+    const { id, value, type } = e.target;
+  
     setInputs({
       ...inputs,
-      [id]: value === "" ? 0 : parseFloat(value) || 0, // Set to 0 if empty, otherwise parse
+      [id]: type === "number"
+        ? (value === "" ? 0 : parseFloat(value) || 0)
+        : value, // for text, date, etc.
     });
   };
-
   const handleDateChange = (e) => {
     const { id, value } = e.target;
     setInputs({
       ...inputs,
-      [id]: value ? new Date(value).toISOString().split("T")[0] : "",
+      [id]: value || "",
     });
   };
   
