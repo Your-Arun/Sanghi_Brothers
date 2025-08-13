@@ -51,7 +51,7 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center min-h-screen bg-black">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96 animate-fadeIn">
         <h2 className="text-2xl font-bold mb-4 text-center">
           {step === 1 ? "Forgot Password" : "Reset Password"}
