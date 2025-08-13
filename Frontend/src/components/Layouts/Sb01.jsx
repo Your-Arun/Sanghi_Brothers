@@ -107,6 +107,7 @@ const Sb01 = () => {
     date6:'',
     date7:'',
     date8:'',
+    date9:'',
   });
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -278,8 +279,9 @@ const Sb01 = () => {
               <h1>Bank position as on
                 <input
                   type="date"
-                  value={selectedDate.toISOString().split("T")[0]}
-                  onChange={(e) => setSelectedDate(new Date(e.target.value))}
+                  id="date9"
+                  value={inputs.date9}
+                  onChange={handleInputChange}
                   className="bg-transparent text-black px-2 py-1 "
                 /> </h1>
             </div>
