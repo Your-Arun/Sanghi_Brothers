@@ -118,13 +118,13 @@ function SBI01Update() {
 
   const handleDateChange = (e) => {
     const { name, value } = e.target;
-  setUpdtSbi((prev) => ({
-    ...prev,
-    inputs: {
-      ...prev.inputs,
-      [name]: value,
+    setUpdtSbi((prev) => ({
+      ...prev,
+      inputs: {
+        ...prev.inputs,
+        [name]: value,
       },
-      }));
+    }));
   };
 
   const handleSaveSBI = async (e) => {
@@ -230,13 +230,13 @@ function SBI01Update() {
           <span className="text-red-600">Sanghi Brothers</span>
         </h1>
         <h1>Bank position as on
-                <input
-                  type="date"
-                  name="date9"
-                  value={inputs.date9}
-                  onChange={handleDateChange}
-                  className="bg-transparent text-black px-2 py-1 "
-                /> </h1>
+          <input
+            type="date"
+            name="date9"
+            value={updtSbi.inputs.date9}
+            onChange={handleDateChange}
+            className="bg-transparent text-black px-2 py-1 "
+          /> </h1>
         <div className="flex justify-evenly items-center  p-4">
           <Link to={"/sbbank"}>
             <div className="bg-transparent">
