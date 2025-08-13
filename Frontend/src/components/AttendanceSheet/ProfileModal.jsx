@@ -172,6 +172,8 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
             ["Username", "username"],
             ["Email", "email"],
             ["Phone", "phone"],
+            ["Department", "department"],
+            ["Designation", "designation"],
             ["Address", "address"],
             ["Salary", "salary"],
           ].map(([label, key]) => (
