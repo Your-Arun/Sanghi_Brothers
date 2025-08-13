@@ -4,7 +4,6 @@ import axiosInstance from "../Dashboard/axiosInstance";
 import { toast } from "react-toastify";
 import imageCompression from "browser-image-compression";
 
-
 const CreateUserPage = () => {
   const navigate = useNavigate();
 
@@ -13,11 +12,11 @@ const CreateUserPage = () => {
     username: "",
     email: "",
     phone: "",
-    password: "", // will auto-fill with phone on save
+    password: "",
     department: "",
     address: "",
     aadhaar: "",
-    designation: "",   
+    designation: "",
     joiningDate: "",
     salary: "",
     photo: "",
@@ -26,22 +25,22 @@ const CreateUserPage = () => {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-  
+
     const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
     if (!allowedTypes.includes(file.type)) {
       toast.warning("Only JPG, JPEG, and PNG formats are allowed!");
       return;
     }
-  
+
     try {
       const options = {
-        maxSizeMB: 0.5,        // ⬅️ Compress to ~0.5 MB max
-        maxWidthOrHeight: 800, // ⬅️ Resize if too large
+        maxSizeMB: 0.5,
+        maxWidthOrHeight: 800,
         useWebWorker: true,
       };
-  
+
       const compressedFile = await imageCompression(file, options);
-  
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setNewUser({ ...newUser, photo: reader.result });
@@ -52,7 +51,6 @@ const CreateUserPage = () => {
       toast.error("Failed to compress image.");
     }
   };
-  
 
   const handleInputChange = (e, key) => {
     let value = e.target.value;
@@ -65,16 +63,15 @@ const CreateUserPage = () => {
   };
 
   const handleSave = async () => {
-    // Basic validation
-    if (!newUser.name || !newUser.phone || !newUser.email) {
-      toast.error("Please fill in all required fields (Name, Email, Phone)");
+    if (!newUser.name || !newUser.phone || !newUser.email || !newUser.department) {
+      toast.error("Please fill in all required fields (Name, Email, Phone, Department)");
       return;
     }
 
     try {
       const userToSave = {
         ...newUser,
-        password: newUser.phone, // ✅ Set phone as password
+        password: newUser.phone,
       };
 
       await axiosInstance.post("/users", userToSave);
@@ -98,6 +95,23 @@ const CreateUserPage = () => {
         <div className="grid grid-cols-2 gap-4">
           {Object.entries(newUser).map(([key, val]) => {
             if (key === "photo" || key === "password") return null;
+
+            if (key === "department") {
+              return (
+                <select
+                  key={key}
+                  value={val}
+                  onChange={(e) => handleInputChange(e, key)}
+                  className="col-span-2 border border-gray-600 bg-gray-700 p-2 rounded text-white"
+                >
+                   <option value="">Select Department</option>
+                <option value="manager">MANAGER</option>
+                <option value="accounts/finance">ACCOUNTS/FINANCE</option>
+                <option value="backoffice">BACK OFFICE</option>
+                <option value="staff">STAFF</option>
+                </select>
+              );
+            }
 
             if (key === "aadhaar") {
               return (
