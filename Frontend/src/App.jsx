@@ -59,20 +59,15 @@ import Notfound from "./components/Layouts/NotFound";
 import AttendancePage from "./components/AttendanceSheet/AttendancePage.jsx";
 import DailyLogView from "./components/AttendanceSheet/DailyLogView.jsx";
 import CreateUserPage from "./components/AttendanceSheet/CreateUserModal.jsx";
-
-
-
-
-
+import Footer from "./components/Home Page/Footer.jsx"; // ✅ Footer import
 
 const App = () => {
   return (
     <>
       <ToastContainer position="top-right" autoClose={2000} />
-      
       <UserProvider>
         <Router>
-          <SessionTimeout timeout={240 * 60 * 1000} /> {/* 10 min session timeout */}
+          <SessionTimeout timeout={240 * 60 * 1000} />
           <AppContent />
         </Router>
       </UserProvider>
@@ -80,10 +75,15 @@ const App = () => {
   );
 };
 
+// ✅ Footer Wrapper function to control where Footer appears
+const FooterWrapper = () => {
+  const location = useLocation();
+  const showFooterPages = ["/about", "/services", "/contacts","/"];
+  return showFooterPages.includes(location.pathname) ? <Footer /> : null;
+};
 
 const AppContent = () => {
   const location = useLocation();
-  // ✅ Show Navbar Only on These Routes
   const showNavbarRoutes = ["/", "/contacts", "/services", "/about", "/login", "/signup"];
   const shouldShowNavbar = showNavbarRoutes.includes(location.pathname);
 
@@ -92,19 +92,14 @@ const AppContent = () => {
       {shouldShowNavbar && <Navbar />}
       <Routes>
         <Route path="*" element={<Notfound />} />
-        {/* Public Routes */}
         <Route path="/" element={<Home />} />
-        {/* <Route path="/login" element={<Login />} /> */}
-        {/* <Route path="/signup" element={<Signup />} /> */}
         <Route path="/services" element={<Services />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/contacts" element={<ContactUs />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
-          {/* <Route path="/dashb" element={< Dashboarddd/>} /> */}
           <Route path="/admin-panel" element={<AdminPanel />} />
           <Route path="/staff-dashboard" element={<Staffmember />} />
           <Route path="/bankreport" element={<MergingSbSection />} />
@@ -152,6 +147,9 @@ const AppContent = () => {
           <Route path="/create-user" element={<CreateUserPage />} />
         </Route>
       </Routes>
+
+      {/* ✅ Footer only on specific pages */}
+      <FooterWrapper />
     </>
   );
 };
