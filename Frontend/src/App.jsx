@@ -102,9 +102,9 @@ const AppContent = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/admin-panel" element={<AdminPanel />} />
           <Route path="/staff-dashboard" element={<Staffmember />} />
-          <Route path="/bankreport" element={<MergingSbSection />} />
           <Route path="/sbbank" element={<Mergesb01Inflo />} />
           <Route path="/fundposition" element={<Sb01 />} />
+          <Route path="/bankreport" element={<MergingSbSection />} />
           <Route path="/fundposition/:id" element={<SBI01Update />} />
           <Route path="/bank/monthlyflow" element={<InFlowOutFlow />} />
           <Route path="/bank/monthlyflow/:id" element={<InOutFlowUpdate />} />

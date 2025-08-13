@@ -203,6 +203,29 @@ const Sb01 = () => {
     +inputs.c35 + inputs.c36 + inputs.c37 + inputs.c38 + inputs.c39;
 
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // screen width check
+    if (window.innerWidth < 1024) {
+      setIsMobile(true);
+    }
+  }, []);
+
+  if (isMobile) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 text-center p-4">
+        <div className="bg-white shadow-lg p-6 rounded-lg max-w-sm">
+          <h2 className="text-lg font-bold text-gray-800">📢 Desktop Only Feature</h2>
+          <p className="text-gray-600 mt-2">
+            Ye feature sirf desktop screen par available hai.
+            Apne device ko desktop mode me open kare.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="items-center justify-center p-6">
@@ -212,7 +235,13 @@ const Sb01 = () => {
               <h1>
                 Fund Position of <span className="text-red-600">Sanghi Brothers</span>{" "}
               </h1>
-              <h1>Bank position as on {date} </h1>
+              <h1>Bank position as on {date}
+                <input
+                  type="date"
+                  value={selectedDate.toISOString().split("T")[0]}
+                  onChange={(e) => setSelectedDate(new Date(e.target.value))}
+                  className="bg-gray-800 text-white px-4 py-2 rounded border border-gray-700"
+                /> </h1>
             </div>
             <div>
               <div className="flex justify-evenly w-full p-4">
