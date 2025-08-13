@@ -8,6 +8,9 @@ import { toast } from 'react-toastify'
 
 const Sb01 = () => {
   const date = new Date().toLocaleDateString();
+  const [isMobile, setIsMobile] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
   const { user } = useContext(UserContext);
 
   const [inputs, setInputs] = useState({
@@ -203,7 +206,7 @@ const Sb01 = () => {
     +inputs.c35 + inputs.c36 + inputs.c37 + inputs.c38 + inputs.c39;
 
 
-  const [isMobile, setIsMobile] = useState(false);
+ 
 
   useEffect(() => {
     // screen width check
