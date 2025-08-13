@@ -26,9 +26,6 @@ const Sb01 = () => {
     c16: 0,
     c17: 0,
     c20:0,
-    d1:0,
-    d2:0,
-    d3:0,
     d6: 0,
     d7: 0,
     d8: 0,
@@ -102,6 +99,14 @@ const Sb01 = () => {
     e25: 0,
     e26: 0,
     e27: 0,
+    date1:'',
+    date2:'',
+    date3:'',
+    date4:'',
+    date5:'',
+    date6:'',
+    date7:'',
+    date8:'',
   });
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -275,7 +280,7 @@ const Sb01 = () => {
                   type="date"
                   value={selectedDate.toISOString().split("T")[0]}
                   onChange={(e) => setSelectedDate(new Date(e.target.value))}
-                  className="bg-transparent text-black px-4 py-2 rounded border border-gray-700"
+                  className="bg-transparent text-black px-2 py-1 "
                 /> </h1>
             </div>
             <div>
@@ -851,7 +856,7 @@ const Sb01 = () => {
                   <td className="p-2 border">
                     <br />
                   </td>
-                  <td className="p-2 border"> payment to bpcl for invoice <input type="date" id="d1" value={inputs.d1} onChange={handleInputChange} /> </td>
+                  <td className="p-2 border"> payment to bpcl for invoice <input type="date" id="date1" value={inputs.date1} onChange={handleInputChange} /> </td>
                   <td className="p-2 border">
                     <input
                       type="number"
@@ -865,7 +870,7 @@ const Sb01 = () => {
                   <td className="p-2 border">
                     <br />
                   </td>
-                  <td className="p-2 border"> payment to bpcl for invoice <input type="date" id="d2" value={inputs.d2} onChange={handleInputChange} /> </td>
+                  <td className="p-2 border"> payment to bpcl for invoice <input type="date" id="date2" value={inputs.date2} onChange={handleInputChange} /> </td>
                   <td className="p-2 border">
                     <input
                       type="number"
@@ -879,7 +884,7 @@ const Sb01 = () => {
                   <td className="p-2 border">
                     <br />
                   </td>
-                  <td className="p-2 border"> payment to bpcl for invoice <input type="date" id="d3" value={inputs.d3} onChange={handleInputChange} /> </td>
+                  <td className="p-2 border"> payment to bpcl for invoice <input type="date" id="date3" value={inputs.date3} onChange={handleInputChange} /> </td>
                   <td className="p-2 border">
                     <input
                       type="number"
@@ -969,7 +974,7 @@ const Sb01 = () => {
                   <td className="p-2 border">
                     <br />
                   </td>
-                  <td className="p-2 border">Pd FOR AIR COPRESSOR</td>
+                  <td className="p-2 border">Pd FOR AIR COMPRESSOR</td>
                   <td className="p-2 border">
                     <input
                       type="number"
@@ -1082,7 +1087,7 @@ const Sb01 = () => {
                   <td className="p-2 border">
                     <br />
                   </td>
-                  <td className="p-2 border">Due payment to bpcl for invoice 00-12</td>
+                  <td className="p-2 border">Due payment to bpcl for invoice <input type="date" id="date4" value={inputs.date4} onChange={handleInputChange} /> </td>
                   <td className="p-2 border">
                     {" "}
                     <input
@@ -1097,7 +1102,7 @@ const Sb01 = () => {
                   <td className="p-2 border">
                     <br />
                   </td>
-                  <td className="p-2 border">Due payment to bpcl for invoice 00-12</td>
+                  <td className="p-2 border">Due payment to bpcl for invoice <input type="date" id="date5" value={inputs.date5} onChange={handleInputChange} /> </td>
                   <td className="p-2 border">
                     {" "}
                     <input
@@ -1112,7 +1117,7 @@ const Sb01 = () => {
                   <td className="p-2 border">
                     <br />
                   </td>
-                  <td className="p-2 border">Due payment to bpcl for invoice 00-12</td>
+                  <td className="p-2 border">Due payment to bpcl for invoice <input type="date" id="date6" value={inputs.date6} onChange={handleInputChange} /> </td>
                   <td className="p-2 border">
                     {" "}
                     <input
@@ -1127,7 +1132,7 @@ const Sb01 = () => {
                   <td className="p-2 border">
                     <br />
                   </td>
-                  <td className="p-2 border">Due payment to bpcl for invoice 00-12</td>
+                  <td className="p-2 border">Due payment to bpcl for invoice <input type="date" id="date7" value={inputs.date7} onChange={handleInputChange} /> </td>
                   <td className="p-2 border">
                     {" "}
                     <input
@@ -1153,7 +1158,7 @@ const Sb01 = () => {
                     />
                   </td>
                   <td className="p-2 border">
-                    <input type="date" />
+                    <input type="date" id="date8" value={inputs.date8} onChange={handleInputChange} />
                   </td>
                   <td className="p-2 border">
                     {e39result.toFixed(2)} <br />
