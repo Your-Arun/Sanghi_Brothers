@@ -35,7 +35,12 @@ body {
 .table-cont2 input[type="number"],
 .table-cont2 input[type="text"]{
   width: 120px;
-  
+}
+
+.table-cont2 input::-webkit-outer-spin-button,
+.table-cont2 input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* Prevent table from expanding beyond screen */
