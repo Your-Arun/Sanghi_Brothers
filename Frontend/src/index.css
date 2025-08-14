@@ -28,7 +28,6 @@ body {
 .table-container input[type="number"],
 .table-container input[type="text"] {
   width: 100%;
-  padding: 4px 10px;
 }
 
 
@@ -64,7 +63,6 @@ input[type="number"],
 input[type="text"] {
   background-color: #f9f9f9;
   color: #333;
-  padding: 4px 0px;
   border: 1px solid #ccc;
   border-radius: 0.25rem;
 }
