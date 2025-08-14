@@ -27,7 +27,7 @@ body {
 }
 .table-container input[type="number"],
 .table-container input[type="text"] {
-  width: 100px;
+  width: 100%;
 }
 
 
