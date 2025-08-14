@@ -197,7 +197,7 @@ const InOutFlowUpdate = () => {
           <span className="text-green-600">In</span> Flow{" "}
           <span className="text-red-600">Out</span> Flow Transactions
         </h1>
-        <h2>{floww.createdAt}</h2>
+        <h2>{floww.inputs.date1}</h2>
       </div>
 
       <div className='table-container'>

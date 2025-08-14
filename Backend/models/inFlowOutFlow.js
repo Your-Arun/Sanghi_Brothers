@@ -67,6 +67,7 @@ const InflowOutFlowSchema = new mongoose.Schema(
       b59: { type: String, default: "" },
       f59: { type: String, default: "" },
       g59: { type: String, default: "" },
+      date1: { type: Date, default: "" },
     },
   },
   { timestamps: true }
