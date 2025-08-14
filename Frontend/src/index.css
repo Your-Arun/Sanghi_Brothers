@@ -23,7 +23,7 @@ body {
   border: 1px solid #e0e0e0;
   width: 100%;
   max-width: 100%;
-  overflow-x: auto; /* horizontal scroll on small screens */
+  /* overflow-x: auto; */
 }
 .table-container input[type="number"],
 .table-container input[type="text"] {
