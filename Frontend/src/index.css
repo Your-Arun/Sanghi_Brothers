@@ -28,6 +28,7 @@ body {
 .table-container input[type="number"],
 .table-container input[type="text"] {
   width: 100%;
+  padding: 0.5rem;
 }
 
 
