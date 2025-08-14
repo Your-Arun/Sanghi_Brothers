@@ -263,7 +263,7 @@ function SBI01Update() {
                   <th>Name</th>
                   <th colSpan="2">Transfer</th>
                   <th colSpan="2">to a/c no.</th>
-                  <th>Acc##</th>
+                  <th>Accounts</th>
                   <th>Closing Balance</th>
                 </tr>
                 <tr>
@@ -837,7 +837,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td> payment to bpcl for invoice {date13}.split("T")[0] </td>
+                  <td> payment to bpcl for invoice {date13.split("T")[0]}</td>
                   <td>
                     <input
                       type="number"
