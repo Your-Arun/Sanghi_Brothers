@@ -219,7 +219,7 @@ const InFlowOutFlow = () => {
           <span className="text-green-600">In</span> Flow{" "}
           <span className="text-red-600">Out</span> Flow Transactions
         </h1>
-        <h2><input type="date" id="date1" value={date1} onChange={handleDateChange} /></h2>
+        <h2><input type="date" id="date1" value={inputs.date1} onChange={handleDateChange} /></h2>
       </div>
 
       <div className='table-container'>
