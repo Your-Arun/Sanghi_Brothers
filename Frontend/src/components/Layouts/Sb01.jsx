@@ -8,10 +8,7 @@ import { toast } from 'react-toastify'
 
 const Sb01 = () => {
   const [isMobile, setIsMobile] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-
   const { user } = useContext(UserContext);
-
   const [inputs, setInputs] = useState({
     c6: 0,
     c7: 0,

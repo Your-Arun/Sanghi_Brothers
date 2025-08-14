@@ -158,6 +158,7 @@ const InFlowOutFlow = () => {
 
 
 
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     // screen width check
