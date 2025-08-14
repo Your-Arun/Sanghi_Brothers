@@ -6,7 +6,7 @@ body {
   font-family: serif;
   margin: 0;
   padding: 0;
-  /* overflow-x: hidden; */
+  overflow-x: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -23,7 +23,21 @@ body {
   border: 1px solid #e0e0e0;
   width: 100%;
   max-width: 100%;
-  /* overflow-x: auto; */
+  overflow-x: auto; /* horizontal scroll enable */
+}
+
+.table-container table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 800px; /* jitni min width chahiye utni */
+  white-space: nowrap; /* prevent wrapping */
+}
+
+.table-container th,
+.table-container td {
+  padding: 0.75rem 1rem;
+  border: 1px solid #ddd;
+  text-align: left;
 }
 .table-container input[type="number"],
 .table-container input[type="text"] {
