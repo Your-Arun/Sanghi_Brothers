@@ -14,10 +14,6 @@ body {
   /* display: none; */
 }
 
-::-webkit-scrollbar:horizontal{
-  display: none;
-}
-
 .table-container {
   padding: 2rem;
   background-color: #fff;
@@ -28,6 +24,17 @@ body {
   width: 100%;
   max-width: 100%;
   overflow-x: auto; /* horizontal scroll enable */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Sirf horizontal scrollbar hide */
+.table-container::-webkit-scrollbar:horizontal { height: 0; }
+
+/* Vertical ko visible rakhna ho to width set kar do */
+.table-container::-webkit-scrollbar:vertical { width: 8px; }
+.table-container::-webkit-scrollbar-thumb:vertical {
+  background: rgba(0,0,0,.35);
+  border-radius: 4px;
 }
 
 .table-container table {
