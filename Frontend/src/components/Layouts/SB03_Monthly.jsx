@@ -252,7 +252,7 @@ const SB03_Monthly = () => {
               </div>
             </div>
           </div>
-          <div className="table-container">
+          <div className="table-container table-cont2">
             <table className="">
               <thead>
                 <tr>

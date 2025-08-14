@@ -32,6 +32,12 @@ body {
 }
 
 
+.table-cont2 input[type="number"],
+.table-cont2 input[type="text"]{
+  width: 120px;
+  
+}
+
 /* Prevent table from expanding beyond screen */
 table {
   width: 100%;
