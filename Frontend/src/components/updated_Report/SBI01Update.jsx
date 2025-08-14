@@ -230,7 +230,7 @@ function SBI01Update() {
           Updated Fund Position of{" "}
           <span className="text-red-600">Sanghi Brothers</span>
         </h1>
-        <h1>Bank position as on  {date19.toISOString().split("T")[0]}</h1>
+        <h1>Bank position as on  {date19.split("T")[0]}</h1>
         <div className="flex justify-evenly items-center  p-4">
           <Link to={"/sbbank"}>
             <div className="bg-transparent">
@@ -809,7 +809,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td> payment to bpcl for invoice {date11.toISOString().split("T")[0]}</td>
+                  <td> payment to bpcl for invoice {date11.split("T")[0]}</td>
                   <td>
                     <input
                       type="number"
@@ -823,7 +823,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td> payment to bpcl for invoice {date12.toISOString().split("T")[0]} </td>
+                  <td> payment to bpcl for invoice {date12.split("T")[0]} </td>
                   <td>
                     <input
                       type="number"
@@ -837,7 +837,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td> payment to bpcl for invoice {date13}.toISOString().split("T")[0] </td>
+                  <td> payment to bpcl for invoice {date13}.split("T")[0] </td>
                   <td>
                     <input
                       type="number"
@@ -1039,7 +1039,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td>Due payment to bpcl for invoice {date14.toISOString().split("T")[0]}</td>
+                  <td>Due payment to bpcl for invoice {date14.split("T")[0]}</td>
                   <td>
                     {" "}
                     <input
@@ -1054,7 +1054,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td>Due payment to bpcl for invoice {date15.toISOString().split("T")[0]}</td>
+                  <td>Due payment to bpcl for invoice {date15.split("T")[0]}</td>
                   <td>
                     {" "}
                     <input
@@ -1069,7 +1069,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td>Due payment to bpcl for invoice {date16.toISOString().split("T")[0]}</td>
+                  <td>Due payment to bpcl for invoice {date16.split("T")[0]}</td>
                   <td>
                     {" "}
                     <input
@@ -1084,7 +1084,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td>Due payment to bpcl for invoice {date17.toISOString().split("T")[0]}</td>
+                  <td>Due payment to bpcl for invoice {date17.split("T")[0]}</td>
                   <td>
                     {" "}
                     <input
@@ -1109,7 +1109,7 @@ function SBI01Update() {
                       onChange={handleInputChange}
                     />
                   </td>
-                  <td>{date18.toISOString().split("T")[0]} </td>
+                  <td>{date18.split("T")[0]} </td>
                   <td>
                     {updtSbi.CalculatedValue.e39result.toFixed(2)} <br />
                     TOTAL DUE as on AS PER BPCL <br />
