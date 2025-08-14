@@ -224,7 +224,6 @@ function SBI01Update() {
             type="date"
             name="date9"
             value={updtSbi.inputs.date9}
-            onChange={handleDateChange}
             className="bg-transparent text-black px-2 py-1 "
           /> </h1>
         <div className="flex justify-evenly items-center  p-4">
