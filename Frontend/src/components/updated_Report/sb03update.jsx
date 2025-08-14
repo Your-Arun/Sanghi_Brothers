@@ -382,7 +382,7 @@ const Sb03Update = () => {
     <>
       <div className="flex-col items-center justify-center p-6">
         <form onSubmit={handleSaveSB}>
-        <h1 className="text-center  text-4xl font-bold p-4 text-blue-600">
+        <h1 className="text-center text-6xl font-bold p-2 text-blue-600">
         Monthly Data Flow
           </h1>
 

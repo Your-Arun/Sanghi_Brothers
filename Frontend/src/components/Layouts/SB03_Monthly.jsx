@@ -233,7 +233,7 @@ const SB03_Monthly = () => {
       <div className="flex-col items-center justify-center p-6">
         <form onSubmit={saveData}>
           <div>
-            <h1 className="text-center  text-4xl font-bold p-4 text-blue-600">
+            <h1 className="text-center text-6xl font-bold p-2 text-blue-600">
               Monthly Data Flow
             </h1>
             <div className="flex justify-evenly items-center  p-4">

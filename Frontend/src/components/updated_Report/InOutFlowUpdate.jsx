@@ -208,7 +208,7 @@ const InOutFlowUpdate = () => {
                 <img src={previousImage} width={50} alt="Back" />
               </div>
             </Link>
-            <div className='bg-transparent'>
+            <div className='bg-transparent cursor-pointer'>
               {" "}
               <img
                 onClick={handleDelete}
