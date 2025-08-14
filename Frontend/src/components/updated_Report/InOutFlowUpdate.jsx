@@ -188,7 +188,7 @@ const InOutFlowUpdate = () => {
       }
     })
   }
-
+   const date11=floww.inputs.date1;
   return (
     <div className="flex flex-col items-center justify-center p-6">
       <div className="text-center mt-5 text-4xl font-serif">
@@ -197,7 +197,7 @@ const InOutFlowUpdate = () => {
           <span className="text-green-600">In</span> Flow{" "}
           <span className="text-red-600">Out</span> Flow Transactions
         </h1>
-        <h2>{floww.inputs.date1}</h2>
+        <h2>{date11.split("T")[0]}</h2>
       </div>
 
       <div className='table-container'>
