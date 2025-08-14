@@ -219,13 +219,7 @@ function SBI01Update() {
           Updated Fund Position of{" "}
           <span className="text-red-600">Sanghi Brothers</span>
         </h1>
-        <h1>Bank position as on
-          <input
-            type="date"
-            name="date9"
-            value={updtSbi.inputs.date9}
-            className="bg-transparent text-black px-2 py-1 "
-          /> </h1>
+        <h1>Bank position as on  {updtSbi.inputs.date9}</h1>
         <div className="flex justify-evenly items-center  p-4">
           <Link to={"/sbbank"}>
             <div className="bg-transparent">
@@ -804,7 +798,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td> payment to bpcl for invoice <input type="date" name="date1" value={updtSbi.inputs.date1} /></td>
+                  <td> payment to bpcl for invoice {updtSbi.inputs.date1}</td>
                   <td>
                     <input
                       type="number"
@@ -818,7 +812,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td> payment to bpcl for invoice <input type="date" name="date2" value={updtSbi.inputs.date2} /></td>
+                  <td> payment to bpcl for invoice {updtSbi.inputs.date2} </td>
                   <td>
                     <input
                       type="number"
@@ -832,7 +826,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td> payment to bpcl for invoice <input type="date" name="date3" value={updtSbi.inputs.date3}  /></td>
+                  <td> payment to bpcl for invoice {updtSbi.inputs.date3} /></td>
                   <td>
                     <input
                       type="number"
@@ -1034,7 +1028,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td>Due payment to bpcl for invoice <input type="date" name="date4" value={updtSbi.inputs.date4}  /></td>
+                  <td>Due payment to bpcl for invoice {updtSbi.inputs.date4}</td>
                   <td>
                     {" "}
                     <input
@@ -1049,7 +1043,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td>Due payment to bpcl for invoice <input type="date" name="date5" value={updtSbi.inputs.date5}  /></td>
+                  <td>Due payment to bpcl for invoice {updtSbi.inputs.date5}</td>
                   <td>
                     {" "}
                     <input
@@ -1064,7 +1058,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td>Due payment to bpcl for invoice <input type="date" name="date6" value={updtSbi.inputs.date6}  /></td>
+                  <td>Due payment to bpcl for invoice {updtSbi.inputs.date6}</td>
                   <td>
                     {" "}
                     <input
@@ -1079,7 +1073,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td>Due payment to bpcl for invoice <input type="date" name="date7" value={updtSbi.inputs.date7}  /></td>
+                  <td>Due payment to bpcl for invoice {updtSbi.inputs.date7}</td>
                   <td>
                     {" "}
                     <input
@@ -1104,7 +1098,7 @@ function SBI01Update() {
                       onChange={handleInputChange}
                     />
                   </td>
-                  <td><input type="date" name="date8" value={updtSbi.inputs.date8} /></td>
+                  <td>{updtSbi.inputs.date8} </td>
                   <td>
                     {updtSbi.CalculatedValue.e39result.toFixed(2)} <br />
                     TOTAL DUE as on AS PER BPCL <br />
