@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import axiosInstance from '../Dashboard/axiosInstance'
 import { FaArrowLeft } from "react-icons/fa";
 import { toast } from 'react-toastify'
-import Desktop from "../Layouts/MobileViewerror"
 
 const sections = [
   { key: "pumpSheetData", title: "Pump Report Sheet", route: "pumpsheet" },
@@ -59,9 +58,6 @@ const ChekList = () => {
 
   return (
     <>
-      <div>
-        <Desktop />
-      </div>
       <div className="flex flex-col items-center justify-center p-6">
         <h1 className="text-6xl font-bold text-center text-gray-80 mb-4">MASTER SHEET</h1>
 

@@ -381,7 +381,6 @@ const Sb03Update = () => {
 
 
   const [isMobile, setIsMobile] = useState(false);
-
   useEffect(() => {
     // screen width check
     if (window.innerWidth < 1024) {
