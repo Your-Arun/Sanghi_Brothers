@@ -153,10 +153,23 @@ const updatesalemanagemnet = () => {
   
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
-    // screen width check
-    if (window.innerWidth < 1024) {
-      setIsMobile(true);
-    }
+    const checkDevice = () => {
+      const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const isSmallScreen = window.innerWidth < 1024;
+  
+      if (isMobileDevice && isSmallScreen) {
+        // Mobile + chhoti screen = block
+        setIsMobile(true);
+      } else {
+        // Desktop ya Mobile Desktop Mode
+        setIsMobile(false);
+      }
+    };
+  
+    checkDevice(); // initial check
+    window.addEventListener("resize", checkDevice); // resize par bhi check
+  
+    return () => window.removeEventListener("resize", checkDevice);
   }, []);
 
   if (isMobile) {
