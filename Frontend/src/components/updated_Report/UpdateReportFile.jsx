@@ -1,15 +1,13 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import axiosInstance from '../Dashboard/axiosInstance'
 import { Link, useNavigate, useParams } from "react-router-dom";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
 import binImage from "/bin.png";
-import UserContext from "../Home Page/UserContext"
 import { toast } from "react-toastify";
 
 const UpdateReportFile = () => {
   const { id } = useParams();
-  const { user } = useContext(UserContext);
   const [upreportfile, setUpReportfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
