@@ -188,10 +188,10 @@ const updatesalemanagemnet = () => {
               className="w-20 h-20 opacity-90"
             />
           </div>
-
+      
           {/* Button */}
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => toast.warn("Try opening on desktop!")}
             className="mt-6 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg shadow-md transition"
           >
             Okay, Got It!

@@ -141,8 +141,8 @@ const bpclstatutory = () => {
   
             {/* Button */}
             <button
-            onClick={() => navigate(-1)}
-            className="mt-6 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg shadow-md transition"
+              onClick={() => toast.warn("Try opening on desktop!")}
+              className="mt-6 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg shadow-md transition"
             >
               Okay, Got It!
             </button>
