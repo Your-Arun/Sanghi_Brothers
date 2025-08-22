@@ -5,6 +5,7 @@ import binImage from "/bin.png"
 import previousImage from "/previous.png"
 import saveImage from "/save.png"
 import { toast } from 'react-toastify'
+import DesktopOnlyWrapper from "../Layouts/MobileViewerror.jsx"
 
 const updatesalemanagemnet = () => {
   const { id } = useParams()
@@ -30,7 +31,7 @@ const updatesalemanagemnet = () => {
     }
     fetchPumpSheetData()
   }, [id])
- 
+
 
   const handleInputChnge = (e, index) => {
     const { name, value, type, checked } = e.target
@@ -40,7 +41,7 @@ const updatesalemanagemnet = () => {
         points: prevPurchasemgnemt.points.map((point, pointIndex) => {
           if (pointIndex === index) {
             if (type === "checkbox") {
-              return { ...point, [name]: checked  }
+              return { ...point, [name]: checked }
             } else {
               return { ...point, [name]: value }
             }
@@ -86,17 +87,17 @@ const updatesalemanagemnet = () => {
   const handleDelete = async (e) => {
     e.preventDefault()
     confirmDeleteToast(async () => {
-    try {
-      
+      try {
+
         const response = await axiosInstance.delete(`/mastersheet/lubricantmanagement/${id}`)
         navigate("/mastersheet")
         toast.success("Purchase management sheet deleted successfully!")
-      
-    } catch (error) {
-      toast.warn("Error deleting purchase management sheet!")
-    }
-  })
-}
+
+      } catch (error) {
+        toast.warn("Error deleting purchase management sheet!")
+      }
+    })
+  }
 
   const handleSave = async (e) => {
     e.preventDefault()
@@ -150,182 +151,123 @@ const updatesalemanagemnet = () => {
     const year = dateObject.getFullYear()
     return `${day}/${month}/${year}`
   }
-  const [isMobile, setIsMobile] = useState(false);
-    useEffect(() => {
-        const checkDevice = () => {
-          const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-          const isSmallScreen = window.innerWidth < 1024;
-      
-          if (isMobileDevice && isSmallScreen) {
-            // Mobile + chhoti screen = block
-            setIsMobile(true);
-          } else {
-            // Desktop ya Mobile Desktop Mode
-            setIsMobile(false);
-          }
-        };
-      
-        checkDevice(); // initial check
-        window.addEventListener("resize", checkDevice); // resize par bhi check
-      
-        return () => window.removeEventListener("resize", checkDevice);
-      }, []);
-      
-  
-    if (isMobile) {
-      return (
-        <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100 p-6">
-          <div className="relative bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-sm text-center border border-yellow-200">
-  
-            {/* Icon circle */}
-            <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 w-20 h-20 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg border-4 border-white">
-              <span className="text-3xl">💻</span>
-            </div>
-  
-            {/* Title */}
-            <h2 className="mt-12 text-2xl font-extrabold text-gray-800">
-              Desktop Only Feature
-            </h2>
-  
-            {/* Subtitle */}
-            <p className="mt-3 text-gray-600 leading-relaxed">
-              Ye feature sirf <span className="font-semibold text-yellow-600">desktop screen</span> par available hai.
-              Apne device ko desktop mode me open kare.
-            </p>
-  
-            {/* Illustration */}
-            <div className="mt-5 flex justify-center">
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/992/992700.png"
-                alt="Desktop Icon"
-                className="w-20 h-20 opacity-90"
-              />
-            </div>
-  
-            {/* Button */}
-            <button
-              onClick={() => toast.warn("Try opening on desktop!")}
-              className="mt-6 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg shadow-md transition"
-            >
-              Okay, Got It!
-            </button>
-          </div>
-        </div>
-  
-      );
-    }
+
 
   return (
-    <div className="flex flex-col items-center justify-center p-6">
-       <h1 className="text-center  text-4xl p-4 font-bold">LUBRICANT MANAGEMENT</h1>
-      <form onSubmit={handleSave}>
-        <div className="flex justify-evenly items-center p-4">
-          <Link to={"/mastersheet"}>
-            <div className="">
-              <img src={previousImage || "/placeholder.svg"} width={50} alt="Back" />
+    <>
+      <DesktopOnlyWrapper>
+      <div className="flex flex-col items-center justify-center p-6">
+        <h1 className="text-center  text-4xl p-4 font-bold">LUBRICANT MANAGEMENT</h1>
+        <form onSubmit={handleSave}>
+          <div className="flex justify-evenly items-center p-4">
+            <Link to={"/mastersheet"}>
+              <div className="">
+                <img src={previousImage || "/placeholder.svg"} width={50} alt="Back" />
+              </div>
+            </Link>
+            <div className="col-span-2 text-xl">
+              <strong>
+                <input className="bg-transparent" value={handleDate()} readOnly />
+              </strong>
             </div>
-          </Link>
-          <div className="col-span-2 text-xl">
-            <strong>
-              <input className="bg-transparent" value={handleDate()} readOnly />
-            </strong>
+            <div>
+              <img
+                src={binImage || "/placeholder.svg"}
+                onClick={handleDelete}
+                width={50}
+                height={50}
+                className=" "
+                alt="Bin"
+              />
+            </div>
+            <div>
+              <button type="submit" className='bg-transparent'>
+                <img src={saveImage || "/placeholder.svg"} width={50} alt="Save" />
+              </button>{" "}
+            </div>
           </div>
-          <div>
-            <img
-              src={binImage || "/placeholder.svg"}
-              onClick={handleDelete}
-              width={50}
-              height={50}
-              className=" "
-              alt="Bin"
-            />
+          <div className="table-container">
+            <table className="">
+              <thead>
+                <th className="p-2 border">Point</th>
+                <th className="p-2 border"> Item to Check</th>
+                <th className="p-2 border">Ok</th>
+                <th className="p-2 border">Responsible</th>
+                <th className="p-2 border">Defect Person</th>
+                <th className="p-2 border">Defect Delays Days</th>
+                <th className="p-2 border">Deadline</th>
+                <th className="p-2 border">Comments</th>
+              </thead>
+              <tbody>
+                {lubricantmgnemt.points.map((item, index) => (
+                  <tr key={index}>
+                    <td className="p-2 border">
+                      {index + 1}</td>
+                    <td className="p-2 border">
+                      <input
+                        type="text"
+                        name="itemToCheck"
+                        value={item.itemToCheck}
+                        onChange={(e) => handleItemChange(e, index)}
+                      />
+                    </td>
+                    <td className="p-2 border">
+                      <input
+                        type="checkbox"
+                        name="ok"
+                        checked={item.ok === true || item.ok === "Yes" || item.ok === "true"}
+                        onChange={(e) => handleInputChnge(e, index)}
+                      />
+                    </td>
+                    <td className="p-2 border">
+                      <input
+                        type="text"
+                        name="responsible"
+                        value={item.responsible}
+                        onChange={(e) => handleInputChnge(e, index)}
+                      />
+                    </td>
+                    <td className="p-2 border">
+                      <input
+                        type="text"
+                        name="defectPerson"
+                        value={item.defectPerson}
+                        onChange={(e) => handleInputChnge(e, index)}
+                      />
+                    </td>
+                    <td className="p-2 border">
+                      <input
+                        type="text"
+                        name="defectDelaysDays"
+                        value={item.defectDelaysDays}
+                        onChange={(e) => handleInputChnge(e, index)}
+                      />
+                    </td>
+                    <td className="p-2 border">
+                      <input
+                        type="text"
+                        name="deadline"
+                        value={item.deadline}
+                        onChange={(e) => handleInputChnge(e, index)}
+                      />
+                    </td>
+                    <td className="p-2 border">
+                      <input
+                        type="text"
+                        name="comment"
+                        value={item.comment}
+                        onChange={(e) => handleInputChnge(e, index)}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-          <div>
-            <button type="submit" className='bg-transparent'>
-              <img src={saveImage || "/placeholder.svg"} width={50} alt="Save" />
-            </button>{" "}
-          </div>
-        </div>
-        <div className="table-container">
-        <table  className="">
-        <thead>
-                        <th className="p-2 border">Point</th>
-                        <th className="p-2 border"> Item to Check</th>
-                        <th className="p-2 border">Ok</th>
-                        <th className="p-2 border">Responsible</th>
-                        <th className="p-2 border">Defect Person</th>
-                        <th className="p-2 border">Defect Delays Days</th>
-                        <th className="p-2 border">Deadline</th>
-                        <th className="p-2 border">Comments</th>
-                    </thead>
-          <tbody>
-            {lubricantmgnemt.points.map((item, index) => (
-              <tr key={index}>
-                                <td className="p-2 border">
-                                {index + 1}</td>
-                                <td className="p-2 border">
-                  <input
-                    type="text"
-                    name="itemToCheck"
-                    value={item.itemToCheck}
-                    onChange={(e) => handleItemChange(e, index)}
-                  />
-                </td>
-                <td className="p-2 border">
-                <input
-                    type="checkbox"
-                    name="ok"
-                    checked={item.ok === true || item.ok === "Yes" || item.ok === "true"}
-                    onChange={(e) => handleInputChnge(e, index)}
-                  />
-                </td>
-                <td className="p-2 border">
-                <input
-                    type="text"
-                    name="responsible"
-                    value={item.responsible}
-                    onChange={(e) => handleInputChnge(e, index)}
-                  />
-                </td>
-                <td className="p-2 border">
-                <input
-                    type="text"
-                    name="defectPerson"
-                    value={item.defectPerson}
-                    onChange={(e) => handleInputChnge(e, index)}
-                  />
-                </td>
-                <td className="p-2 border">
-                <input
-                    type="text"
-                    name="defectDelaysDays"
-                    value={item.defectDelaysDays}
-                    onChange={(e) => handleInputChnge(e, index)}
-                  />
-                </td>
-                <td className="p-2 border">
-                <input
-                    type="text"
-                    name="deadline"
-                    value={item.deadline}
-                    onChange={(e) => handleInputChnge(e, index)}
-                  />
-                </td>
-                <td className="p-2 border">
-                <input
-                    type="text"
-                    name="comment"
-                    value={item.comment}
-                    onChange={(e) => handleInputChnge(e, index)}
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+      </DesktopOnlyWrapper>
+    </>
   )
 }
 
