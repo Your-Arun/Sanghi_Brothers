@@ -416,9 +416,9 @@ const UpdateDashboard = () => {
             {activeModal === "bankOptions" && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white w-[90%] max-w-md p-6 rounded-lg relative">
-                        <button onClick={() => setActiveModal(null)} className="absolute top-3 right-3 text-gray-600 hover:text-black">
+                        <div onClick={() => setActiveModal(null)} className="absolute top-3 right-3 text-gray-600 hover:text-black">
                             <FaTimes />
-                        </button>
+                        </div>
                         <h2 className="text-xl font-bold mb-4 text-center text-indigo-600">Select Bank Report Type</h2>
                         <div className="space-y-4">
                             <div

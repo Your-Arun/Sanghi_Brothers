@@ -1,5 +1,5 @@
 import axiosInstance from '../Dashboard/axiosInstance'
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import previousImage from "/previous.png";
 import saveImage from "/save.png";
