@@ -18,61 +18,6 @@ const UpdateReportFile = () => {
     nextDay.setDate(date.getDate() + 1);
     return nextDay.toLocaleTimeString;
   };
-
-
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    // screen width check
-    if (window.innerWidth < 1024) {
-      setIsMobile(true);
-    }
-  }, []);
-
-  if (isMobile) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100 p-6">
-        <div className="relative bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-sm text-center border border-yellow-200">
-
-          {/* Icon circle */}
-          <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 w-20 h-20 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg border-4 border-white">
-            <span className="text-3xl">💻</span>
-          </div>
-
-          {/* Title */}
-          <h2 className="mt-12 text-2xl font-extrabold text-gray-800">
-            Desktop Only Feature
-          </h2>
-
-          {/* Subtitle */}
-          <p className="mt-3 text-gray-600 leading-relaxed">
-            Ye feature sirf <span className="font-semibold text-yellow-600">desktop screen</span> par available hai.
-            Apne device ko desktop mode me open kare.
-          </p>
-
-          {/* Illustration */}
-          <div className="mt-5 flex justify-center">
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/992/992700.png"
-              alt="Desktop Icon"
-              className="w-20 h-20 opacity-90"
-            />
-          </div>
-
-          {/* Button */}
-          <button
-            onClick={() => toast.warn("Try opening on desktop!")}
-            className="mt-6 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg shadow-md transition"
-          >
-            Okay, Got It!
-          </button>
-        </div>
-      </div>
-
-    );
-  }
-
-
-
   useEffect(() => {
     const fetchReport = async () => {
       try {
@@ -107,18 +52,6 @@ const UpdateReportFile = () => {
       </div>
     );
   }
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   const numericValue = value === "" ? "" : Number(value) || Text(value);
-  //   setUpReportfile((prev) => ({
-  //     ...prev,
-  //     inputs: {
-  //       ...prev.inputs,
-  //       [name]: numericValue,
-  //     },
-  //   }));
-  // };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -133,9 +66,6 @@ const UpdateReportFile = () => {
       },
     }));
   };
-
-
-
   const handleSave = async (e) => {
     e.preventDefault();
     try {
@@ -146,7 +76,6 @@ const UpdateReportFile = () => {
       toast.warn("Failed to update report.");
     }
   };
-
   const confirmDeleteToast = (onConfirm) => {
     toast(
       ({ closeToast }) => (
@@ -179,8 +108,6 @@ const UpdateReportFile = () => {
       }
     )
   }
-
-
   const handleDelete = async (e) => {
     e.preventDefault();
     confirmDeleteToast(async () => {
@@ -194,7 +121,6 @@ const UpdateReportFile = () => {
       }
     })
   }
-
   const calculateReports = () => {
     upreportfile.reports.b4result =
       upreportfile.inputs.c4 +
@@ -276,13 +202,63 @@ const UpdateReportFile = () => {
         ? (upreportfile.inputs.h13 / 31).toFixed(2)
         : 0;
   };
-
   calculateReports();
-
   const currentYear = new Date().getFullYear();
   const year1 = currentYear - 1;
   const year2 = currentYear - 2;
   const year3 = currentYear - 3;
+
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    // screen width check
+    if (window.innerWidth < 1024) {
+      setIsMobile(true);
+    }
+  }, []);
+
+  if (isMobile) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100 p-6">
+        <div className="relative bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-sm text-center border border-yellow-200">
+
+          {/* Icon circle */}
+          <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 w-20 h-20 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg border-4 border-white">
+            <span className="text-3xl">💻</span>
+          </div>
+
+          {/* Title */}
+          <h2 className="mt-12 text-2xl font-extrabold text-gray-800">
+            Desktop Only Feature
+          </h2>
+
+          {/* Subtitle */}
+          <p className="mt-3 text-gray-600 leading-relaxed">
+            Ye feature sirf <span className="font-semibold text-yellow-600">desktop screen</span> par available hai.
+            Apne device ko desktop mode me open kare.
+          </p>
+
+          {/* Illustration */}
+          <div className="mt-5 flex justify-center">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/992/992700.png"
+              alt="Desktop Icon"
+              className="w-20 h-20 opacity-90"
+            />
+          </div>
+
+          {/* Button */}
+          <button
+            onClick={() => toast.warn("Try opening on desktop!")}
+            className="mt-6 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-bold rounded-lg shadow-md transition"
+          >
+            Okay, Got It!
+          </button>
+        </div>
+      </div>
+
+    );
+  }
+
 
   
 
