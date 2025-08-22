@@ -8,6 +8,7 @@ import { toast } from 'react-toastify'
 
 const updatesalemanagemnet = () => {
   const { id } = useParams()
+  const [isMobile, setIsMobile] = useState(false);
   const [loading, setLoading] = useState(true)
   const [lubricantmgnemt, setLubmagnmnet] = useState({
     date: "",
@@ -30,6 +31,25 @@ const updatesalemanagemnet = () => {
     }
     fetchPumpSheetData()
   }, [id])
+  useEffect(() => {
+    const checkDevice = () => {
+      const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const isSmallScreen = window.innerWidth < 1024;
+  
+      if (isMobileDevice && isSmallScreen) {
+        // Mobile + chhoti screen = block
+        setIsMobile(true);
+      } else {
+        // Desktop ya Mobile Desktop Mode
+        setIsMobile(false);
+      }
+    };
+  
+    checkDevice(); // initial check
+    window.addEventListener("resize", checkDevice); // resize par bhi check
+  
+    return () => window.removeEventListener("resize", checkDevice);
+  }, []);
 
   const handleInputChnge = (e, index) => {
     const { name, value, type, checked } = e.target
@@ -150,27 +170,6 @@ const updatesalemanagemnet = () => {
     return `${day}/${month}/${year}`
   }
 
-  
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const checkDevice = () => {
-      const isMobileDevice = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      const isSmallScreen = window.innerWidth < 1024;
-  
-      if (isMobileDevice && isSmallScreen) {
-        // Mobile + chhoti screen = block
-        setIsMobile(true);
-      } else {
-        // Desktop ya Mobile Desktop Mode
-        setIsMobile(false);
-      }
-    };
-  
-    checkDevice(); // initial check
-    window.addEventListener("resize", checkDevice); // resize par bhi check
-  
-    return () => window.removeEventListener("resize", checkDevice);
-  }, []);
 
   if (isMobile) {
     return (
