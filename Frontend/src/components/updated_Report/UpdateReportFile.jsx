@@ -18,6 +18,8 @@ const UpdateReportFile = () => {
     nextDay.setDate(date.getDate() + 1);
     return nextDay.toLocaleTimeString;
   };
+  const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
     const fetchReport = async () => {
       try {
@@ -31,7 +33,12 @@ const UpdateReportFile = () => {
     };
     fetchReport();
   }, [id]);
-
+  useEffect(() => {
+    // screen width check
+    if (window.innerWidth < 1024) {
+      setIsMobile(true);
+    }
+  }, []);
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -207,14 +214,6 @@ const UpdateReportFile = () => {
   const year1 = currentYear - 1;
   const year2 = currentYear - 2;
   const year3 = currentYear - 3;
-
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    // screen width check
-    if (window.innerWidth < 1024) {
-      setIsMobile(true);
-    }
-  }, []);
 
   if (isMobile) {
     return (
