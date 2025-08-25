@@ -7,105 +7,58 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+::-webkit-scrollbar {
+  /* display: none; */
 }
 
-/* Default Table Container */
 .table-container {
-  padding: 1rem;
+  padding: 2rem;
   background-color: #fff;
   border-radius: 1rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  margin: 1rem auto;
+  margin: 2rem auto;
   border: 1px solid #e0e0e0;
   width: 100%;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow-x: auto; /* horizontal scroll enable */
   -webkit-overflow-scrolling: touch;
 }
 
-/* Scrollbar Styling */
-.table-container::-webkit-scrollbar {
-  height: 6px;
-}
-.table-container::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.25);
-  border-radius: 3px;
-}
+/* Sirf horizontal scrollbar hide */
+.table-container::-webkit-scrollbar:horizontal { height: 0; }
 
-/* Mobile Responsive Tables */
-@media (max-width: 768px) {
-  .table-container {
-    padding: 0.5rem;
-  }
-
-  .table-container table {
-    border: 0;
-    min-width: 100%; /* force adjust */
-  }
-
-  .table-container thead {
-    display: none; /* hide table header */
-  }
-
-  .table-container tr {
-    display: block;
-    margin-bottom: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 0.5rem;
-    padding: 0.5rem;
-    background: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  }
-
-  .table-container td {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.5rem;
-    border: none;
-    border-bottom: 1px solid #eee;
-    font-size: 0.9rem;
-  }
-
-  .table-container td:last-child {
-    border-bottom: none;
-  }
-
-  /* Show label before each value (from table headers) */
-  .table-container td::before {
-    content: attr(data-label);
-    font-weight: bold;
-    color: #2563eb;
-    flex: 1;
-    text-align: left;
-    margin-right: 0.5rem;
-  }
+/* Vertical ko visible rakhna ho to width set kar do */
+.table-container::-webkit-scrollbar:vertical { width: 8px; }
+.table-container::-webkit-scrollbar-thumb:vertical {
+  background: rgba(0,0,0,.35);
+  border-radius: 4px;
 }
 
-/* Table Base Style */
 .table-container table {
   border-collapse: collapse;
   width: 100%;
-  min-width: 800px; /* scroll enable on small screen */
-  white-space: nowrap;
+  min-width: 800px; /* jitni min width chahiye utni */
+  white-space: nowrap; /* prevent wrapping */
 }
 
 .table-container th,
 .table-container td {
   padding: 0.75rem 1rem;
   border: 1px solid #ddd;
-  text-align: center;
+  text-align: left;
 }
-
-/* Input Styling */
 .table-container input[type="number"],
 .table-container input[type="text"] {
   width: 100%;
   padding: 4px;
 }
 
+
 .table-cont2 input[type="number"],
-.table-cont2 input[type="text"] {
+.table-cont2 input[type="text"]{
   width: 120px;
 }
 
@@ -115,10 +68,10 @@ body {
   margin: 0;
 }
 
-/* Table Global Style */
+/* Prevent table from expanding beyond screen */
 table {
   width: 100%;
-  min-width: 800px;
+  min-width: 800px; /* Allow horizontal scroll if needed */
   border-collapse: collapse;
   background-color: #fff;
   border-radius: 0.75rem;
@@ -133,10 +86,16 @@ th {
   text-transform: uppercase;
 }
 
+th, td {
+  padding: .2rem 2rem;
+  text-align: center;
+  border: 1px solid #e0e0e0;
+}
+
 tr:nth-child(even) { background-color: #f2f2f2; }
 tr:nth-child(odd) { background-color: #ffffff; }
 
-/* Inputs inside table */
+
 input[type="number"],
 input[type="text"] {
   background-color: #f9f9f9;
@@ -144,13 +103,15 @@ input[type="text"] {
   border: 1px solid #ccc;
   border-radius: 0.25rem;
 }
+
 input[type="number"]:focus,
 input[type="text"]:focus {
   border-color: #4caf50;
   outline: none;
 }
 
-/* Buttons */
+
+
 button {
   color: #fff;
   background-color: #4caf50;
@@ -161,48 +122,64 @@ button {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+.buttonn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0; /* Important: remove default padding */
+  margin-left: 0.5rem;            
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+}
 
-/* Password Input Wrapper */
+/* Wrapper to hold input and icon */
 .passwordinput {
   @apply w-full flex items-center border border-gray-300 rounded-lg px-3 mb-4 focus-within:ring-2 focus-within:ring-blue-500 bg-white;
 }
+
+/* Password input */
 .passwordinput-field {
   @apply flex-1 px-4 py-3 text-gray-800 placeholder-gray-500 outline-none bg-transparent;
 }
 
-/* Eye Toggle Button */
+/* Eye toggle button - FIXES shrinking & default styles */
 .buttonn {
-  all: unset;
+  all: unset; /* remove default button styles (border, padding, etc) */
   @apply flex items-center justify-center w-10 h-10 cursor-pointer text-gray-600;
 }
+
+/* Eye Icon Styling */
 .icon-eye {
   @apply text-gray-600;
 }
-
-/* Small screens home page */
 @media (max-width: 350px) {
   .home-heading {
-    font-size: 1.5rem;
+    font-size: 1.5rem; /* ~24px */
     line-height: 1.6;
   }
+
   .home-subtext {
-    font-size: 0.875rem;
+    font-size: 0.875rem; /* ~14px */
     padding: 0 0.5rem;
     line-height: 1.4;
   }
+
   .home-button {
     padding: 0.5rem 1rem;
     font-size: 0.875rem;
     width: 100%;
     margin-bottom: 0.5rem;
   }
+
   .home-image {
     height: 200px !important;
     clip-path: none !important;
   }
 }
 
-/* Toggle Button */
+
 .toggle-btn {
   background: white;
   color: #2563eb;
@@ -213,11 +190,11 @@ button {
   transition: all 0.3s ease;
   z-index: 9999;
 }
+
 .toggle-btn:hover {
   transform: scale(1.1);
 }
 
-/* Sidebar */
 .sidebar-btn {
   display: flex;
   background: transparent;
@@ -230,15 +207,16 @@ button {
   transition: all 0.2s;
   color: white;
 }
+
 .sidebar-btn:hover {
   background-color: rgba(59, 130, 246, 0.7);
 }
+
 .sidebar-btn.active {
   background-color: #1e40af;
   color: white;
 }
 
-/* Profile Button */
 .profile-btn {
   background-color: white;
   color: #2563eb;
@@ -246,17 +224,16 @@ button {
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
 }
+
 .profile-btn:hover {
   background-color: #ebf4ff;
 }
-
-/* Dashboard Card */
 @layer components {
   .card-dashboard {
     @apply text-white p-6 rounded-xl shadow-md flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-all gap-2 text-center;
   }
 }
-
-.butoonn {
+.butoonn{
   background-color: transparent;
 }
+
