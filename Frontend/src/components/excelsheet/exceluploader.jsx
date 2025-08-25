@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import axiosInstance from '../Dashboard/axiosInstance'
+import axiosInstance from '../Dashboard/axiosInstance';
 import BackButton from "../Home Page/backbutton";
-import previousImage from "/previous.png"; // ✅ Fixed import
+import previousImage from "/previous.png"; 
 import { toast } from "react-toastify";
 
 function UploadExcel() {
@@ -28,8 +28,8 @@ function UploadExcel() {
     try {
       const response = await axiosInstance.post("/exceluploader", formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          "Content-Type": "multipart/form-data",
+        },
       });
       setMessage(`✅ ${response.data.message}`);
       setSelectedFile(null);
@@ -47,8 +47,7 @@ function UploadExcel() {
 
   const fetchSavedFiles = async () => {
     try {
-      const response = await axiosInstance.get("/exceluploader", {
-      });
+      const response = await axiosInstance.get("/exceluploader");
       setSavedFiles(response.data);
     } catch (error) {
       toast.warn("Error fetching files:", error);
@@ -63,11 +62,11 @@ function UploadExcel() {
 
   const handleDownload = async (filename) => {
     try {
-      const encodedFilename = encodeURIComponent(filename); // ✅ Encode filename
-      const response = await axiosInstance.get(`/exceluploader/${encodedFilename}`, {
-        responseType: "blob",
-
-      });
+      const encodedFilename = encodeURIComponent(filename);
+      const response = await axiosInstance.get(
+        `/exceluploader/${encodedFilename}`,
+        { responseType: "blob" }
+      );
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
@@ -80,17 +79,38 @@ function UploadExcel() {
     }
   };
 
+  // ✅ New Delete Handler
+  const handleDelete = async (filename) => {
+    try {
+      const encodedFilename = encodeURIComponent(filename);
+      await axiosInstance.delete(`/exceluploader/${encodedFilename}`);
+      toast.success("🗑️ File deleted successfully");
+      fetchSavedFiles();
+    } catch (error) {
+      toast.error("❌ Delete failed");
+      console.error(error);
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center p-6">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-lg">
-        <h2 className="text-4xl font-semibold mb-5 text-center">📂 Upload Excel File</h2>
+        <h2 className="text-4xl font-semibold mb-5 text-center">
+          📂 Upload Excel File
+        </h2>
 
         <label className="w-full flex flex-col items-center justify-center border-2 border-dashed border-gray-300 p-6 rounded-lg cursor-pointer hover:border-blue-500">
-          <input type="file" accept=".xlsx, .xls" className="hidden" onChange={handleFileChange} />
+          <input
+            type="file"
+            accept=".xlsx, .xls"
+            className="hidden"
+            onChange={handleFileChange}
+          />
           <div className="text-center">
             <span className="text-gray-600">
-              {selectedFile ? selectedFile.name : "Click or Drag & Drop File Here"}
+              {selectedFile
+                ? selectedFile.name
+                : "Click or Drag & Drop File Here"}
             </span>
           </div>
         </label>
@@ -103,7 +123,11 @@ function UploadExcel() {
         </button>
 
         {message && (
-          <p className={`mt-4 text-center text-sm font-medium ${message.startsWith("✅") ? "text-green-600" : "text-red-600"}`}>
+          <p
+            className={`mt-4 text-center text-sm font-medium ${
+              message.startsWith("✅") ? "text-green-600" : "text-red-600"
+            }`}
+          >
             {message}
           </p>
         )}
@@ -125,21 +149,32 @@ function UploadExcel() {
               >
                 <div className="text-4xl">📄</div>
                 <p className="text-sm text-gray-700 font-medium mt-2 text-center">
-                  {file.filename.length > 20 ? file.filename.slice(0, 20) + "..." : file.filename}
+                  {file.filename.length > 20
+                    ? file.filename.slice(0, 20) + "..."
+                    : file.filename}
                 </p>
                 <p className="text-xs text-gray-500 mt-1">
                   Size: {(file.chunkSize / 1024).toFixed(2)} KB
                 </p>
                 <p className="text-xs text-gray-500">
-                  Uploaded: {new Date(file.uploadDate).toLocaleDateString("en-GB")}
+                  Uploaded:{" "}
+                  {new Date(file.uploadDate).toLocaleDateString("en-GB")}
                 </p>
 
-                <button
-                  onClick={() => handleDownload(file.filename)}
-                  className="mt-3 bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 transition"
-                >
-                  📥 Download
-                </button>
+                <div className="flex gap-2 mt-3">
+                  <button
+                    onClick={() => handleDownload(file.filename)}
+                    className="bg-blue-500 text-white px-3 py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 transition"
+                  >
+                    📥 Download
+                  </button>
+                  <button
+                    onClick={() => handleDelete(file.filename)}
+                    className="bg-red-500 text-white px-3 py-2 rounded-lg text-sm font-semibold hover:bg-red-600 transition"
+                  >
+                    🗑 Delete
+                  </button>
+                </div>
               </div>
             ))}
           </div>
