@@ -5,7 +5,7 @@ const BackButton = ({ label = "Back" }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="fixed bottom-4 left-0 right-0 flex justify-center">
+    <div className="fixed bottom-4 left-0 right-0 flex justify-center min-h-screen">
     <button
       onClick={() => navigate(-1)}
       className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded shadow flex items-center gap-2"
