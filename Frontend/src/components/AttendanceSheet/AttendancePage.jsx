@@ -59,8 +59,20 @@ const AttendancePage = () => {
 
   // ✅ Pagination logic
   const startIndex = (page - 1) * usersPerPage;
-  const paginatedUsers = filteredUsers.slice(startIndex, startIndex + usersPerPage);
+  const paginatedUsers = filteredUsers.slice(
+    startIndex,
+    startIndex + usersPerPage
+  );
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+
+  // ✅ Placeholder users (dummy cards) ताकि हमेशा 6 दिखें
+  const displayedUsers = [
+    ...paginatedUsers,
+    ...Array.from(
+      { length: Math.max(0, usersPerPage - paginatedUsers.length) },
+      () => null
+    ),
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white p-6 flex flex-col">
@@ -118,27 +130,44 @@ const AttendancePage = () => {
           <p className="text-center col-span-full text-gray-400">
             ⏳ Loading users...
           </p>
-        ) : paginatedUsers.length > 0 ? (
-          paginatedUsers.map((user) => (
-            <div
-              key={user._id}
-              onClick={() => setSelectedUser(user)}
-              className="bg-gray-800/80 rounded-2xl p-5 cursor-pointer hover:scale-105 hover:shadow-2xl transition transform backdrop-blur-lg"
-            >
-              <div className="flex items-center gap-4">
-                <img
-                  src={user.photo || "/user-avatar.png"}
-                  alt="User"
-                  className="w-16 h-16 rounded-full object-cover border-2 border-blue-500"
-                />
-                <div>
-                  <h2 className="text-lg font-bold">{user.name}</h2>
-                  <p className="text-sm text-gray-400">{user.department}</p>
-                  <p className="text-sm mt-1 text-gray-400">{user.email}</p>
+        ) : displayedUsers.length > 0 ? (
+          displayedUsers.map((user, idx) =>
+            user ? (
+              <div
+                key={user._id}
+                onClick={() => setSelectedUser(user)}
+                className="bg-gray-800/80 rounded-2xl p-5 cursor-pointer hover:scale-105 hover:shadow-2xl transition transform backdrop-blur-lg"
+              >
+                <div className="flex items-center gap-4">
+                  <img
+                    src={user.photo || "/user-avatar.png"}
+                    alt="User"
+                    className="w-16 h-16 rounded-full object-cover border-2 border-blue-500"
+                  />
+                  <div>
+                    <h2 className="text-lg font-bold">{user.name}</h2>
+                    <p className="text-sm text-gray-400">{user.department}</p>
+                    <p className="text-sm mt-1 text-gray-400">{user.email}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
+            ) : (
+              // Dummy card placeholder
+              <div
+                key={idx}
+                className="bg-gray-700/40 rounded-2xl p-5 opacity-30"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 rounded-full bg-gray-600"></div>
+                  <div>
+                    <div className="h-4 w-24 bg-gray-600 mb-2 rounded"></div>
+                    <div className="h-3 w-16 bg-gray-600 mb-1 rounded"></div>
+                    <div className="h-3 w-20 bg-gray-600 rounded"></div>
+                  </div>
+                </div>
+              </div>
+            )
+          )
         ) : (
           <p className="text-center col-span-full text-gray-400">
             ❌ No matching users.
