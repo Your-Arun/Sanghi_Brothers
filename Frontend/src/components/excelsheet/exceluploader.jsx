@@ -1,164 +1,192 @@
 import React, { useState, useEffect } from "react";
-import axiosInstance from "../Axios/axiosInstance";
+import axiosInstance from '../Dashboard/axiosInstance';
+import BackButton from "../Home Page/backbutton";
+import previousImage from "/previous.png"; 
 import { toast } from "react-toastify";
 
-const UploadExcel = () => {
-  const [file, setFile] = useState(null);
+function UploadExcel() {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [message, setMessage] = useState("");
   const [savedFiles, setSavedFiles] = useState([]);
 
-  // ✅ Fetch Saved Files
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  const handleSaveToDB = async () => {
+    if (!selectedFile) {
+      setMessage("❌ Please select a file");
+      clearMessageAfterDelay();
+      return;
+    }
+
+    setMessage("⏳ Uploading file...");
+
+    const formData = new FormData();
+    formData.append("excelFile", selectedFile);
+
+    try {
+      const response = await axiosInstance.post("/exceluploader", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      setMessage(`✅ ${response.data.message}`);
+      setSelectedFile(null);
+      fetchSavedFiles();
+    } catch (error) {
+      console.error("❌ Upload failed:", error);
+      setMessage("❌ Error saving file");
+    }
+    clearMessageAfterDelay();
+  };
+
+  const clearMessageAfterDelay = () => {
+    setTimeout(() => setMessage(""), 3000);
+  };
+
   const fetchSavedFiles = async () => {
     try {
-      const res = await axiosInstance.get("/exceluploader");
-      setSavedFiles(res.data);
+      const response = await axiosInstance.get("/exceluploader");
+      setSavedFiles(response.data);
     } catch (error) {
-      toast.error("❌ Failed to fetch files");
-      console.error(error);
+      toast.warn("Error fetching files:", error);
     }
   };
 
   useEffect(() => {
     fetchSavedFiles();
+    const interval = setInterval(fetchSavedFiles, 5000);
+    return () => clearInterval(interval);
   }, []);
 
-  // ✅ Handle File Change
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-
-  // ✅ Handle Upload
-  const handleUpload = async () => {
-    if (!file) {
-      toast.warn("⚠️ Please select a file first!");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("excelFile", file);
-
-    try {
-      const res = await axiosInstance.post("/exceluploader", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      toast.success("✅ File uploaded successfully");
-      setFile(null);
-      fetchSavedFiles();
-    } catch (error) {
-      toast.error("❌ Upload failed");
-      console.error(error);
-    }
-  };
-
-  // ✅ Handle Download
   const handleDownload = async (filename) => {
     try {
-      const res = await axiosInstance.get(`/exceluploader/${filename}`, {
-        responseType: "blob",
-      });
-
-      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const encodedFilename = encodeURIComponent(filename);
+      const response = await axiosInstance.get(
+        `/exceluploader/${encodedFilename}`,
+        { responseType: "blob" }
+      );
+      const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
       link.setAttribute("download", filename);
       document.body.appendChild(link);
       link.click();
-
-      toast.success("📥 Download started");
+      document.body.removeChild(link);
     } catch (error) {
-      toast.error("❌ Download failed");
+      toast.warning("❌ Download failed:", error);
+    }
+  };
+
+  // ✅ New Delete Handler
+  const handleDelete = async (filename) => {
+    try {
+      const encodedFilename = encodeURIComponent(filename);
+      await axiosInstance.delete(`/exceluploader/${encodedFilename}`);
+      toast.success("🗑️ File deleted successfully");
+      fetchSavedFiles();
+    } catch (error) {
+      toast.error("❌ Delete failed");
       console.error(error);
     }
   };
 
-  // ✅ Handle Delete with Toast Confirmation
-  const handleDelete = (filename) => {
-    toast.info(
-      <div className="flex flex-col gap-2">
-        <p>❓ Are you sure you want to delete <b>{filename}</b>?</p>
-        <div className="flex gap-2 justify-center">
-          <button
-            onClick={async () => {
-              try {
-                const encodedFilename = encodeURIComponent(filename);
-                await axiosInstance.delete(`/exceluploader/${encodedFilename}`);
-                toast.dismiss();
-                toast.success("🗑️ File deleted successfully");
-                fetchSavedFiles();
-              } catch (error) {
-                toast.dismiss();
-                toast.error("❌ Delete failed");
-                console.error(error);
-              }
-            }}
-            className="bg-red-500 text-white px-3 py-1 rounded"
-          >
-            Yes
-          </button>
-          <button
-            onClick={() => toast.dismiss()}
-            className="bg-gray-400 text-white px-3 py-1 rounded"
-          >
-            No
-          </button>
-        </div>
-      </div>,
-      { autoClose: false, closeOnClick: false }
-    );
-  };
-
   return (
-    <div className="p-6 bg-white rounded-lg shadow-lg max-w-3xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4 text-center">📊 Excel File Manager</h2>
+    <div className="flex flex-col items-center justify-center p-6">
+      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-lg">
+        <h2 className="text-4xl font-semibold mb-5 text-center">
+          📂 Upload Excel File
+        </h2>
 
-      {/* Upload Section */}
-      <div className="flex gap-2 mb-6">
-        <input
-          type="file"
-          accept=".xlsx,.xls"
-          onChange={handleFileChange}
-          className="border p-2 rounded w-full"
-        />
+        <label className="w-full flex flex-col items-center justify-center border-2 border-dashed border-gray-300 p-6 rounded-lg cursor-pointer hover:border-blue-500">
+          <input
+            type="file"
+            accept=".xlsx, .xls"
+            className="hidden"
+            onChange={handleFileChange}
+          />
+          <div className="text-center">
+            <span className="text-gray-600">
+              {selectedFile
+                ? selectedFile.name
+                : "Click or Drag & Drop File Here"}
+            </span>
+          </div>
+        </label>
+
         <button
-          onClick={handleUpload}
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          onClick={handleSaveToDB}
+          className="mt-5 bg-green-500 text-white px-5 py-3 rounded-lg w-full hover:bg-green-600"
         >
-          Upload
+          💾 Save to Database
         </button>
+
+        {message && (
+          <p
+            className={`mt-4 text-center text-sm font-medium ${
+              message.startsWith("✅") ? "text-green-600" : "text-red-600"
+            }`}
+          >
+            {message}
+          </p>
+        )}
       </div>
 
-      {/* Saved Files List */}
-      <h3 className="text-xl font-semibold mb-2">📁 Saved Files</h3>
-      {savedFiles.length === 0 ? (
-        <p className="text-gray-500">No files uploaded yet.</p>
-      ) : (
-        <ul className="divide-y divide-gray-200">
-          {savedFiles.map((file, index) => (
-            <li
-              key={file._id || index}
-              className="flex justify-between items-center py-2"
-            >
-              <span>{file.filename}</span>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => handleDownload(file.filename)}
-                  className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-                >
-                  Download
-                </button>
-                <button
-                  onClick={() => handleDelete(file.filename)}
-                  className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                >
-                  Delete
-                </button>
+      <div className="mt-8 bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl">
+        <h3 className="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
+          📄 Saved Files
+        </h3>
+
+        {savedFiles.length === 0 ? (
+          <p className="text-gray-500 text-center">No files available</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {savedFiles.map((file, index) => (
+              <div
+                key={index}
+                className="bg-gray-100 p-4 rounded-lg shadow-md flex flex-col items-center transition hover:scale-105 hover:shadow-lg"
+              >
+                <div className="text-4xl">📄</div>
+                <p className="text-sm text-gray-700 font-medium mt-2 text-center">
+                  {file.filename.length > 20
+                    ? file.filename.slice(0, 20) + "..."
+                    : file.filename}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Size: {(file.chunkSize / 1024).toFixed(2)} KB
+                </p>
+                <p className="text-xs text-gray-500">
+                  Uploaded:{" "}
+                  {new Date(file.uploadDate).toLocaleDateString("en-GB")}
+                </p>
+
+                <div className="flex gap-3 mt-3">
+                  <button
+                    onClick={() => handleDownload(file.filename)}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg text-bold font-semibold hover:bg-blue-600 transition"
+                  >
+                    📥 Download
+                  </button>
+                  <button
+                    onClick={() => handleDelete(file.filename)}
+                    className="bg-red-500 text-white px-4 py-2 rounded-lg text-bold font-semibold hover:bg-red-600 transition"
+                  >
+                    🗑 Delete
+                  </button>
+                </div>
               </div>
-            </li>
-          ))}
-        </ul>
-      )}
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Back Button */}
+      <div className="fixed bottom-6 left-6">
+        <BackButton previousImage={previousImage} />
+      </div>
     </div>
   );
-};
+}
 
 export default UploadExcel;
