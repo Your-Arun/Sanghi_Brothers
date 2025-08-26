@@ -63,14 +63,16 @@ const AttendancePage = () => {
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white p-6 flex flex-col">
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">🧑‍💼 Attendance Management</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-4xl font-extrabold tracking-wide drop-shadow-lg">
+          🧑‍💼 Attendance Management
+        </h1>
         {currentUser?.department === "manager" && (
           <button
             onClick={() => navigate("/create-user")}
-            className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
+            className="bg-gradient-to-r from-blue-500 to-blue-700 px-5 py-2 rounded-xl shadow-lg hover:scale-105 transition-transform font-semibold"
           >
             ➕ Add User
           </button>
@@ -78,18 +80,18 @@ const AttendancePage = () => {
       </div>
 
       {/* Controls */}
-      <div className="flex flex-wrap gap-4 items-center mb-6">
+      <div className="flex flex-wrap gap-4 items-center mb-8 bg-gray-800/70 p-4 rounded-xl shadow-lg backdrop-blur">
         <input
           type="text"
           placeholder="🔍 Search user..."
-          className="bg-gray-700 px-4 py-2 rounded w-64"
+          className="bg-gray-700 px-4 py-2 rounded-lg w-64 focus:ring-2 focus:ring-blue-500 outline-none"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
-          className="bg-gray-700 px-4 py-2 rounded"
+          className="bg-gray-700 px-4 py-2 rounded-lg"
         >
           <option value="recent">📅 Recently Added</option>
           <option value="name-asc">🔤 Name (A-Z)</option>
@@ -98,20 +100,20 @@ const AttendancePage = () => {
 
         <button
           onClick={fetchAllData}
-          className="bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded text-black"
+          className="bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-lg text-black font-semibold shadow-md"
         >
           🔄 Refresh
         </button>
         <button
           onClick={() => navigate("/daily-log-view")}
-          className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded"
+          className="bg-gradient-to-r from-blue-600 to-indigo-700 hover:scale-105 px-4 py-2 rounded-lg shadow-md transition-transform"
         >
           📖 Daily Log View
         </button>
       </div>
 
       {/* User Cards with Pagination */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {loading ? (
           <p className="text-center col-span-full text-gray-400">
             ⏳ Loading users...
@@ -121,16 +123,16 @@ const AttendancePage = () => {
             <div
               key={user._id}
               onClick={() => setSelectedUser(user)}
-              className="bg-gray-800 rounded-lg p-4 cursor-pointer hover:bg-gray-700 transition"
+              className="bg-gray-800/80 rounded-2xl p-5 cursor-pointer hover:scale-105 hover:shadow-2xl transition transform backdrop-blur-lg"
             >
               <div className="flex items-center gap-4">
                 <img
                   src={user.photo || "/user-avatar.png"}
                   alt="User"
-                  className="w-16 h-16 rounded-full object-cover"
+                  className="w-16 h-16 rounded-full object-cover border-2 border-blue-500"
                 />
                 <div>
-                  <h2 className="text-lg font-semibold">{user.name}</h2>
+                  <h2 className="text-lg font-bold">{user.name}</h2>
                   <p className="text-sm text-gray-400">{user.department}</p>
                   <p className="text-sm mt-1 text-gray-400">{user.email}</p>
                 </div>
@@ -146,19 +148,21 @@ const AttendancePage = () => {
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
-        <div className="flex justify-center gap-2 mb-8">
+        <div className="flex justify-center gap-3 mb-10">
           <button
             disabled={page === 1}
             onClick={() => setPage((p) => p - 1)}
-            className="px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 disabled:opacity-50"
+            className="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 disabled:opacity-50 shadow-md"
           >
             ⬅️ Prev
           </button>
-          <span className="px-3 py-1">{page} / {totalPages}</span>
+          <span className="px-4 py-2 bg-gray-800 rounded-lg shadow-md">
+            {page} / {totalPages}
+          </span>
           <button
             disabled={page === totalPages}
             onClick={() => setPage((p) => p + 1)}
-            className="px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 disabled:opacity-50"
+            className="px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 disabled:opacity-50 shadow-md"
           >
             Next ➡️
           </button>
@@ -174,12 +178,14 @@ const AttendancePage = () => {
         />
       )}
 
-      {/* Attendance Table - always fill space */}
-      <div className="flex-1 min-h-[100%]">
+      {/* Attendance Table */}
+      <div className="flex-1 min-h-[100%] bg-gray-800/70 p-6 rounded-2xl shadow-xl backdrop-blur">
         <AttendanceTablePage data={attendanceTableData} loading={loading} />
       </div>
 
-      <BackButton label="Go Back" />
+      <div className="mt-6">
+        <BackButton label="⬅ Go Back" />
+      </div>
     </div>
   );
 };
