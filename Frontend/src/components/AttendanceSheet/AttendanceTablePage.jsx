@@ -154,7 +154,7 @@ const AttendanceTablePage = () => {
                       );
                     })}
                     {/* ✅ Extra column for total present */}
-                    <td className="border border-gray-700 px-2 py-1 text-center font-bold text-green-400">
+                    <td className="border border-gray-700 px-2 py-1 text-center font-bold text-black">
                       {totalPresent}
                     </td>
                   </tr>
