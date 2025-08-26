@@ -143,7 +143,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
           onClick={onClose}
           className="absolute top-3 right-4 text-gray-400 hover:text-red-500 text-2xl cursor-pointer"
         >
-          ✖
+          ❌
         </div>
 
         {/* Header */}
@@ -306,3 +306,6 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
 };
 
 export default ProfileModal;
+
+
+//edit or delete user manager or particular user or photo or attendance
