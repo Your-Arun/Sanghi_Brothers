@@ -220,3 +220,5 @@ const AttendancePage = () => {
 };
 
 export default AttendancePage;
+
+//edit or delete user manager or particular user or photo or attendance profile modal
