@@ -139,9 +139,6 @@ router.get("/monthly-attendance", async (req, res) => {
   }
 });
 
-const Attendance = require("../models/Attendance");
-const User = require("../models/User");
-
 app.get("/monthly-attendance", async (req, res) => {
   try {
     const { month, year } = req.query;
