@@ -175,7 +175,7 @@ const AttendancePage = () => {
       )}
 
       {/* Attendance Table - always fill space */}
-      <div className="flex-1 min-h-[400px]">
+      <div className="flex-1 min-h-[80%]">
         <AttendanceTablePage data={attendanceTableData} loading={loading} />
       </div>
 

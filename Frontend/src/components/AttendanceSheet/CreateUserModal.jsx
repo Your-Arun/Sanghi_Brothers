@@ -76,7 +76,7 @@ const CreateUserPage = () => {
 
       await axiosInstance.post("/users", userToSave);
 
-      toast.success("✅ User created successfully");
+      toast.success("User created successfully");
       setTimeout(() => navigate("/attendance-sheet"), 1500);
     } catch (err) {
       console.error("❌ Error creating user:", err);
