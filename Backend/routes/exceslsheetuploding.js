@@ -85,4 +85,20 @@ router.get('/exceluploader', async (req, res) => {
   });
   
 
+// ✅ Delete File
+router.delete("/exceluploader/:filename", async (req, res) => {
+  try {
+    const file = await gfs.files.findOne({ filename: req.params.filename });
+    if (!file) {
+      return res.status(404).json({ message: "File not found" });
+    }
+
+    await gridfsBucket.delete(file._id);
+    res.json({ message: "File deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error deleting file" });
+  }
+});
+
 module.exports = router;
