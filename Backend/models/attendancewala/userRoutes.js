@@ -104,41 +104,78 @@ router.get("/daily-attendance", async (req, res) => {
 
 
 // ✅ Route: GET /api/monthly-attendance?month=08&year=2025
-router.get("/monthly-attendance", async (req, res) => {
+app.get("/monthly-attendance", async (req, res) => {
   try {
     const { month, year } = req.query;
 
-    const start = new Date(`${year}-${month}-01`);
-    const end = new Date(year, Number(month), 0); // last day of month
+    const users = await User.find();
+    const startDate = new Date(`${year}-${month}-01`);
+    const endDate = new Date(year, parseInt(month), 0); // last date of month
 
     const attendance = await Attendance.find({
-      date: { $gte: start.toISOString().split("T")[0], $lte: end.toISOString().split("T")[0] }
-    }).populate("userId", "name designation");
+      date: { $gte: startDate, $lte: endDate }
+    }).populate("userId", "name");
 
-    const result = {};
-
-    attendance.forEach((log) => {
-      const id = log.userId._id.toString();
-      if (!result[id]) {
-        result[id] = {
-          _id: id,
-          name: log.userId.name,
-          designation: log.userId.designation,
-          attendance: {}
-        };
-      }
-
-      result[id].attendance[log.date] = log.status;
+    // Normalize
+    const attendanceMap = {};
+    users.forEach((user) => {
+      attendanceMap[user._id] = {
+        name: user.name,
+        attendance: {},
+      };
     });
 
-    res.json(Object.values(result));
+    attendance.forEach((record) => {
+      const dateKey = new Date(record.date).toISOString().split("T")[0]; // ✅ YYYY-MM-DD
+      if (attendanceMap[record.userId._id]) {
+        attendanceMap[record.userId._id].attendance[dateKey] = record.status;
+      }
+    });
+
+    res.json(Object.values(attendanceMap));
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Error fetching monthly attendance:", err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
+const Attendance = require("../models/Attendance");
+const User = require("../models/User");
 
+app.get("/monthly-attendance", async (req, res) => {
+  try {
+    const { month, year } = req.query;
+
+    const users = await User.find();
+    const startDate = new Date(`${year}-${month}-01`);
+    const endDate = new Date(year, parseInt(month), 0); // last date of month
+
+    const attendance = await Attendance.find({
+      date: { $gte: startDate, $lte: endDate }
+    }).populate("userId", "name");
+
+    // Normalize
+    const attendanceMap = {};
+    users.forEach((user) => {
+      attendanceMap[user._id] = {
+        name: user.name,
+        attendance: {},
+      };
+    });
+
+    attendance.forEach((record) => {
+      const dateKey = new Date(record.date).toISOString().split("T")[0]; // ✅ YYYY-MM-DD
+      if (attendanceMap[record.userId._id]) {
+        attendanceMap[record.userId._id].attendance[dateKey] = record.status;
+      }
+    });
+
+    res.json(Object.values(attendanceMap));
+  } catch (err) {
+    console.error("Error fetching monthly attendance:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 
 router.get("/user-attendance/:id", async (req, res) => {
