@@ -23,6 +23,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
     leave: 0,
   });
 
+  // Aadhaar split
   useEffect(() => {
     if (user.aadhaar) {
       const parts = user.aadhaar.match(/.{1,4}/g) || ["", "", ""];
@@ -30,6 +31,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
     }
   }, [user.aadhaar]);
 
+  // Attendance fetch
   useEffect(() => {
     const fetchMonthlyAttendance = async () => {
       try {
@@ -69,6 +71,14 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
     }
   };
 
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const preview = URL.createObjectURL(file);
+      setEditedUser({ ...editedUser, photo: preview, photoFile: file });
+    }
+  };
+
   const handleSave = async () => {
     const aadhaar = aadhaarParts.join("");
     if (aadhaar.length !== 12) {
@@ -76,14 +86,22 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
       return;
     }
 
-    const updatedUser = {
-      ...editedUser,
-      aadhaar,
-      joiningDate: joiningDate?.toISOString().split("T")[0],
-    };
+    const formData = new FormData();
+    Object.entries(editedUser).forEach(([key, value]) => {
+      if (key !== "photoFile") formData.append(key, value);
+    });
+    formData.append("aadhaar", aadhaar);
+    if (joiningDate) {
+      formData.append("joiningDate", joiningDate.toISOString().split("T")[0]);
+    }
+    if (editedUser.photoFile) {
+      formData.append("photo", editedUser.photoFile);
+    }
 
     try {
-      const res = await axiosInstance.put(`/users/${user._id}`, updatedUser);
+      const res = await axiosInstance.put(`/users/${user._id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       toast.success("User updated successfully.");
       setEditMode(false);
       onUpdate && onUpdate(res.data);
@@ -93,57 +111,10 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
     }
   };
 
-  const confirmDeleteToast = (onConfirm) => {
-    toast(
-      ({ closeToast }) => (
-        <div className="flex flex-col gap-2 inset-0 z-[9999]">
-          <p>Are you sure you want to delete this user?</p>
-          <div className="flex gap-4 mt-2">
-            <button
-              onClick={() => {
-                closeToast();
-                onConfirm();
-              }}
-              className="bg-red-500 text-white px-3 py-1 rounded"
-            >
-              Yes
-            </button>
-            <button
-              onClick={closeToast}
-              className="bg-gray-300 px-3 py-1 rounded"
-            >
-              No
-            </button>
-          </div>
-        </div>
-      ),
-      {
-        position: "top-center",
-        autoClose: false,
-        closeOnClick: false,
-        closeButton: false,
-      }
-    );
-  };
-
-  const handleDelete = async () => {
-    confirmDeleteToast(async () => {
-      try {
-        await axiosInstance.delete(`/users/${user._id}`);
-        onClose();
-        if (onUpdate) onUpdate();
-        toast.success("User deleted successfully.");
-      } catch (error) {
-        console.error(error);
-        toast.error("Failed to delete user.");
-      }
-    });
-  };
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-[9999]">
       <div className="bg-gray-900 text-white w-full max-w-3xl p-6 rounded-lg shadow-xl relative max-h-[90vh] overflow-y-auto border border-gray-700">
-        {/* Close Button */}
+        {/* Close */}
         <div
           onClick={onClose}
           className="absolute top-3 right-4 text-gray-400 hover:text-red-500 text-2xl cursor-pointer"
@@ -151,13 +122,23 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
           ✖
         </div>
 
-        {/* Profile Header */}
+        {/* Header */}
         <div className="flex items-center gap-6 mb-6 border-b border-gray-700 pb-4">
-          <img
-            src={user.photo || ""}
-            alt={user.name}
-            className="w-28 h-28 rounded-full object-cover border-2 border-gray-700"
-          />
+          <div className="relative">
+            <img
+              src={editedUser.photo || "/user-avatar.png"}
+              alt={user.name}
+              className="w-28 h-28 rounded-full object-cover border-2 border-gray-700"
+            />
+            {editMode && (
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoChange}
+                className="absolute bottom-0 left-0 bg-black/70 text-xs text-white"
+              />
+            )}
+          </div>
           <div>
             <h2 className="text-3xl font-bold">{user.name}</h2>
             <p className="text-gray-400 text-sm">{user.designation}</p>
@@ -167,6 +148,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
 
         {/* Info Grid */}
         <div className="grid grid-cols-2 gap-4">
+          {/* Basic fields */}
           {[
             ["Name", "name"],
             ["Username", "username"],
@@ -184,7 +166,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
                   type={key === "salary" ? "number" : "text"}
                   value={editedUser[key] || ""}
                   onChange={(e) => handleChange(key, e.target.value)}
-                  className="w-full mt-1 px-3 py-2 bg-gray-800 text-white border border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full mt-1 px-3 py-2 bg-gray-800 text-white border border-gray-700 rounded"
                 />
               ) : (
                 <p className="mt-1 text-gray-200">{user[key] || "-"}</p>
@@ -200,7 +182,6 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
                 selected={joiningDate}
                 onChange={(date) => setJoiningDate(date)}
                 dateFormat="yyyy-MM-dd"
-                placeholderText="Select date"
                 className="w-full mt-1 px-3 py-2 bg-gray-800 text-white border border-gray-700 rounded"
               />
             ) : (
@@ -231,24 +212,33 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
             ) : (
               <p className="mt-1 text-gray-200">
                 {user.aadhaar && String(user.aadhaar).length === 12
-                  ? String(user.aadhaar).replace(/(\d{4})(\d{4})(\d{4})/, "$1-$2-$3")
+                  ? String(user.aadhaar).replace(
+                      /(\d{4})(\d{4})(\d{4})/,
+                      "$1-$2-$3"
+                    )
                   : user.aadhaar || "-"}
               </p>
             )}
           </div>
 
-          {/* Attendance Counts */}
+          {/* Attendance counts */}
           <div className="col-span-2">
             <p className="text-sm font-medium text-gray-400">
-              Attendance ({new Date().toLocaleString("default", { month: "long", year: "numeric" })})
+              Attendance (
+              {new Date().toLocaleString("default", {
+                month: "long",
+                year: "numeric",
+              })}
+              )
             </p>
             <p className="mt-1 text-gray-200">
-              ✅ Present: {attendanceCounts.present} | ❌ Absent: {attendanceCounts.absent} | 🟡 Leave: {attendanceCounts.leave}
+              ✅ Present: {attendanceCounts.present} | ❌ Absent:{" "}
+              {attendanceCounts.absent} | 🟡 Leave: {attendanceCounts.leave}
             </p>
           </div>
         </div>
 
-        {/* Action Buttons */}
+        {/* Actions */}
         {isManager && (
           <div className="mt-6 flex justify-end gap-4">
             {!editMode ? (
@@ -269,8 +259,12 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
                 <button
                   onClick={() => {
                     setEditedUser({ ...user });
-                    setAadhaarParts(user.aadhaar?.match(/.{1,4}/g) || ["", "", ""]);
-                    setJoiningDate(user.joiningDate ? new Date(user.joiningDate) : null);
+                    setAadhaarParts(
+                      user.aadhaar?.match(/.{1,4}/g) || ["", "", ""]
+                    );
+                    setJoiningDate(
+                      user.joiningDate ? new Date(user.joiningDate) : null
+                    );
                     setEditMode(false);
                   }}
                   className="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded"
@@ -279,12 +273,6 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
                 </button>
               </>
             )}
-            <button
-              onClick={handleDelete}
-              className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded"
-            >
-              Delete
-            </button>
           </div>
         )}
       </div>

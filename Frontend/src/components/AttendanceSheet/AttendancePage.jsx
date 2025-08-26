@@ -208,7 +208,7 @@ const AttendancePage = () => {
       )}
 
       {/* Attendance Table */}
-      <div className="flex-1 min-h-[100%] bg-gray-800/70 p-6 rounded-2xl shadow-xl backdrop-blur">
+      <div className="flex-1 min-h-[100%] bg-gray-800/70 p-4 rounded-xl shadow-xl backdrop-blur">
         <AttendanceTablePage data={attendanceTableData} loading={loading} />
       </div>
 
