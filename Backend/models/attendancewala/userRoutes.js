@@ -104,7 +104,7 @@ router.get("/daily-attendance", async (req, res) => {
 
 
 // ✅ Route: GET /api/monthly-attendance?month=08&year=2025
-app.get("/monthly-attendance", async (req, res) => {
+router.get("/monthly-attendance", async (req, res) => {
   try {
     const { month, year } = req.query;
 
