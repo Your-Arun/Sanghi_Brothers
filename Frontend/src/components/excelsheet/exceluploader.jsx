@@ -164,15 +164,15 @@ function UploadExcel() {
                 <div className="flex gap-3 mt-3">
                   <button
                     onClick={() => handleDownload(file.filename)}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg text-bold font-semibold hover:bg-blue-600 transition"
+                    className="bg-blue-500 text-white px-4 py-3 rounded-lg text-bold font-semibold hover:bg-blue-600 transition"
                   >
-                    📥 Download
+                    📥
                   </button>
                   <button
                     onClick={() => handleDelete(file.filename)}
-                    className="bg-red-500 text-white px-4 py-2 rounded-lg text-bold font-semibold hover:bg-red-600 transition"
+                    className="bg-red-500 text-white px-4 py-3 rounded-lg text-bold font-semibold hover:bg-red-600 transition"
                   >
-                    🗑 Delete
+                    🗑
                   </button>
                 </div>
               </div>
