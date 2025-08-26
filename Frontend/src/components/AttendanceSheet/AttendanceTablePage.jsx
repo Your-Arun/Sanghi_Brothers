@@ -114,29 +114,52 @@ const AttendanceTablePage = () => {
                     {i + 1}
                   </th>
                 ))}
+                {/* ✅ Extra column header for total present */}
+                <th className="border border-gray-700 px-2 py-1 text-center bg-gray-800">
+                  Total Present
+                </th>
               </tr>
             </thead>
             <tbody>
-              {sortedData.map((user, idx) => (
-                <tr key={idx}>
-                  <td className="text-white border border-gray-700 px-2 py-1 sticky left-0 bg-gray-900 z-10 whitespace-nowrap">
-                    {user.name}
-                  </td>
-                  {Array.from({ length: daysInMonth }, (_, i) => {
-                    const date = `${year}-${String(month).padStart(2, "0")}-${String(i + 1).padStart(2, "0")}`;
-                    const status = user.attendance[date];
-                    let display = "❌";
-                    if (status === "Present") display = "✅";
-                    else if (status === "Leave") display = "🟡";
+              {sortedData.map((user, idx) => {
+                // Har user ke liye present ka count nikalna
+                let totalPresent = 0;
 
-                    return (
-                      <td key={i} className="border border-gray-700 px-1 text-center text-xs">
-                        {status ? display : "❌"}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
+                return (
+                  <tr key={idx}>
+                    <td className="text-white border border-gray-700 px-2 py-1 sticky left-0 bg-gray-900 z-10 whitespace-nowrap">
+                      {user.name}
+                    </td>
+                    {Array.from({ length: daysInMonth }, (_, i) => {
+                      const date = `${year}-${String(month).padStart(2, "0")}-${String(
+                        i + 1
+                      ).padStart(2, "0")}`;
+                      const status = user.attendance[date];
+                      let display = "❌";
+
+                      if (status === "Present") {
+                        display = "✅";
+                        totalPresent++; // ✅ agar present hai to count increase
+                      } else if (status === "Leave") {
+                        display = "🟡";
+                      }
+
+                      return (
+                        <td
+                          key={i}
+                          className="border border-gray-700 px-1 text-center text-xs"
+                        >
+                          {status ? display : "❌"}
+                        </td>
+                      );
+                    })}
+                    {/* ✅ Extra column for total present */}
+                    <td className="border border-gray-700 px-2 py-1 text-center font-bold text-green-400">
+                      {totalPresent}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         )}
