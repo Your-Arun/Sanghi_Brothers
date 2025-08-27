@@ -82,40 +82,40 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
     }
   };
 
-  // Save
-  const handleSave = async () => {
-    try {
-      const formData = new FormData();
-  
-      Object.entries(editedUser).forEach(([key, value]) => {
-        if (key !== "photo" && key !== "photoFile") formData.append(key, value);
-      });
-  
-      if (editedUser.photoFile) formData.append("photo", editedUser.photoFile);
-  
-      const response = await axiosInstance.put(
-        `/users/${editedUser._id}`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-  
-      const updatedUser = response.data;
-  
-      // Backend se aaya path ko full URL me convert
-      if (updatedUser.photo) {
-        updatedUser.photo = `${axiosInstance.defaults.baseURL}/${updatedUser.photo}`;
-      }
-  
-      setEditedUser(updatedUser); // modal me turant update
-      onUpdate?.(updatedUser);
-  
-      toast.success("Profile updated successfully!");
-      onClose();
-    } catch (err) {
-      console.error("Update failed:", err);
-      toast.error("Failed to update profile");
-    }
-  };
+ // Save
+const handleSave = async () => {
+  try {
+    const formData = new FormData();
+
+    // Append all editable fields except photoFile
+    Object.entries(editedUser).forEach(([key, value]) => {
+      if (key !== "photo" && key !== "photoFile") formData.append(key, value);
+    });
+
+    // Append photo file if selected
+    if (editedUser.photoFile) formData.append("photo", editedUser.photoFile);
+
+    // Send request
+    const response = await axiosInstance.put(
+      `/users/${editedUser._id}`,
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+
+    const updatedUser = response.data;
+
+    // ✅ Use backend-provided full URL directly
+    setEditedUser(updatedUser); // Modal me turant update
+    onUpdate?.(updatedUser);    // Parent component update
+
+    toast.success("Profile updated successfully!");
+    onClose();
+  } catch (err) {
+    console.error("Update failed:", err);
+    toast.error("Failed to update profile");
+  }
+};
+
   
   
   
