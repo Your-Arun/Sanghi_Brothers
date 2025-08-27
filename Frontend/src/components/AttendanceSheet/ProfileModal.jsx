@@ -83,41 +83,41 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
   };
 
   // Save
-  // save
-const handleSave = async () => {
-  try {
-    const formData = new FormData();
-
-    // Baaki fields add karo
-    Object.entries(editedUser).forEach(([key, value]) => {
-      if (key !== "photo" && key !== "photoFile") {
-        formData.append(key, value);
+  const handleSave = async () => {
+    try {
+      const formData = new FormData();
+  
+      Object.entries(editedUser).forEach(([key, value]) => {
+        if (key !== "photo" && key !== "photoFile") formData.append(key, value);
+      });
+  
+      if (editedUser.photoFile) formData.append("photo", editedUser.photoFile);
+  
+      const response = await axiosInstance.put(
+        `/users/${editedUser._id}`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+  
+      // Backend se updated user object leke frontend state update karo
+      const updatedUser = response.data;
+  
+      // Photo ka full path agar relative aa raha hai
+      if (updatedUser.photo && !updatedUser.photo.startsWith("http")) {
+        updatedUser.photo = `${axiosInstance.defaults.baseURL}/${updatedUser.photo}`;
       }
-    });
-
-    // Photo file add karo
-    if (editedUser.photoFile) {
-      formData.append("photo", editedUser.photoFile);
+  
+      setEditedUser(updatedUser); // modal me updated dikhane ke liye
+      onUpdate?.(updatedUser);
+  
+      toast.success("Profile updated successfully!");
+      onClose();
+    } catch (err) {
+      console.error("Update failed:", err);
+      toast.error("Failed to update profile");
     }
-
-    // API call
-    const response = await axiosInstance.put(
-      `/users/${editedUser._id}`,
-      formData,
-      { headers: { "Content-Type": "multipart/form-data" } }
-    );
-
-    // Updated data se frontend update
-    setEditedUser(response.data); // updated photo path included
-    onUpdate?.(response.data);
-
-    toast.success("Profile updated successfully!");
-    onClose();
-  } catch (err) {
-    console.error("Update failed:", err);
-    toast.error("Failed to update profile");
-  }
-};
+  };
+  
 
 
   // Delete
