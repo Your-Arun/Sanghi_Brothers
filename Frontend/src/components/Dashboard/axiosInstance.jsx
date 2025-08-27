@@ -5,6 +5,7 @@ const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true, // ✅ Important for cookies / sessions
 });
 
 // ✅ Add Authorization token in headers for every request
@@ -16,6 +17,7 @@ axiosInstance.interceptors.request.use(
     }
     return config;
   },
+  (error) => Promise.reject(error)
 );
 
 // ✅ Handle session expiration (Auto logout on 401 error)
