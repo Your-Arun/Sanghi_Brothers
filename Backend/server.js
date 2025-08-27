@@ -11,6 +11,7 @@ const app = express();
 // Body Parser
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+app.use("/uploads", express.static("uploads")); // photo serve karne ke liye
 
 app.use(cookieParser());
 
@@ -66,6 +67,7 @@ const FundPosition = require("./routes/fundposition");
 const ReportComplaint = require("./routes/reportcomlaint");
 const shiftApi = require("./models/shifting/shiftsapi");
 const Attendance = require("./models/attendancewala/userRoutes");
+const User = require("./routes/user");
 
 // ✅ MongoDB Connection
 mongoose
@@ -77,7 +79,7 @@ mongoose
 app.use("", LoginSignup);
 app.use("/", Contactus);
 app.use("/", Attendance);
-
+app.use("/", User);
 // ✅ Protected Routes
 app.use("/bank", FlowRoute);
 app.use("/bank", Monthlyfundflow);

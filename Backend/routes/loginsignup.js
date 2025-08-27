@@ -5,19 +5,7 @@ const User = require("../models/user");
 const nodemailer = require("nodemailer");
 const Router = express.Router();
 require("dotenv").config();
-const Attendance = require("../models/attendancewala/Attendance");
-const multer = require("multer");
 
-// 📂 Upload setup
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
-const upload = multer({ storage });
 
 // ✅ Middleware to verify token
 const authenticateUser = async (req, res, next) => {
@@ -202,48 +190,6 @@ Router.get("/departments", async (req, res) => {
     res.json(departments);
   } catch (err) {
     res.status(500).json({ error: err.message });
-  }
-});
-// ✅ Fetch all users
-
-Router.get("/users", async (req, res) => {
-  try {
-    const users = await User.find().select("-password"); // Exclude passwords
-    res.json(users);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch users" });
-  }
-});
-// ✅ Update User (Manager or Self can update)
-Router.put("/users/:id", upload.single("photo"), async (req, res) => {
-  try {
-    const updatedData = req.body;
-
-    // agar photo bheji hai to add karo
-    if (req.file) {
-      updatedData.photo = `/uploads/${req.file.filename}`;
-    }
-
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      updatedData,
-      { new: true }
-    );
-
-    res.json(updatedUser);
-  } catch (err) {
-    console.error("Update failed:", err);
-    res.status(500).json({ error: "Update failed" });
-  }
-});
-
-// ✅ Delete a user
-Router.delete("/users/:id", async (req, res) => {
-  try {
-    await User.findByIdAndDelete(req.params.id);
-    res.json({ message: "User deleted" });
-  } catch (err) {
-    res.status(500).json({ error: "Delete failed" });
   }
 });
 //verify-invite

@@ -4,7 +4,7 @@ const User = require("../user");
 const Attendance = require("../attendancewala/Attendance");
 const bcrypt = require("bcryptjs");
 
-// ✅ Get all users with attendance for selected month/year
+// ✅ Users with attendance (monthly filter)
 router.get("/users/attendance", async (req, res) => {
   try {
     const { month, year } = req.query;
@@ -36,6 +36,7 @@ router.get("/users/attendance", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch users with attendance" });
   }
 });
+
 
 
 
