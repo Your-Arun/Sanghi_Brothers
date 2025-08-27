@@ -5,69 +5,105 @@ import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-// ✅ helper function to convert file → base64
-const convertToBase64 = (file) => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
-};
-
 const ProfileModal = ({ user, onClose, onUpdate }) => {
   const { user: currentUser } = useContext(UserContext);
-  const isManager = currentUser?.department === "Manager"; // ✅ Manager check
 
-  const [editedUser, setEditedUser] = useState(user);
-  const [aadhaarParts, setAadhaarParts] = useState(["", "", "", ""]);
-  const [joiningDate, setJoiningDate] = useState(null);
+  const isManager = currentUser?.department?.toLowerCase() === "manager";
+  const isSelf = currentUser?._id === user._id;
 
-  // ✅ load aadhaar + date when modal opens
+  const [editMode, setEditMode] = useState(false);
+  const [editedUser, setEditedUser] = useState({ ...user });
+
+  const [aadhaarParts, setAadhaarParts] = useState(["", "", ""]);
+  const [joiningDate, setJoiningDate] = useState(
+    user.joiningDate ? new Date(user.joiningDate) : null
+  );
+
+  const [attendanceCounts, setAttendanceCounts] = useState({
+    present: 0,
+    absent: 0,
+    leave: 0,
+  });
+
+  // Aadhaar split
   useEffect(() => {
-    if (user?.aadhaar) {
-      const parts = user.aadhaar.match(/.{1,4}/g) || ["", "", "", ""];
+    if (user.aadhaar) {
+      const parts = user.aadhaar.match(/.{1,4}/g) || ["", "", ""];
       setAadhaarParts(parts);
     }
-    if (user?.joiningDate) {
-      setJoiningDate(new Date(user.joiningDate));
-    }
-  }, [user]);
+  }, [user.aadhaar]);
 
-  // ✅ input change
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setEditedUser({ ...editedUser, [name]: value });
+  // Attendance fetch
+  useEffect(() => {
+    const fetchMonthlyAttendance = async () => {
+      try {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+
+        const res = await axiosInstance.get(
+          `/user-attendance/${user._id}?year=${year}&month=${month}`
+        );
+
+        const counts = { present: 0, absent: 0, leave: 0 };
+        res.data.forEach((entry) => {
+          if (entry.status === "Present") counts.present++;
+          if (entry.status === "Absent") counts.absent++;
+          if (entry.status === "Leave") counts.leave++;
+        });
+
+        setAttendanceCounts(counts);
+      } catch (err) {
+        console.error("Failed to fetch monthly attendance:", err);
+      }
+    };
+
+    fetchMonthlyAttendance();
+  }, [user._id]);
+
+  // field change
+  const handleChange = (key, value) => {
+    setEditedUser({ ...editedUser, [key]: value });
   };
 
-  // ✅ Aadhaar parts
+  // Aadhaar change
   const handleAadhaarChange = (index, value) => {
-    const updatedParts = [...aadhaarParts];
-    updatedParts[index] = value;
-    setAadhaarParts(updatedParts);
+    if (/^\d{0,4}$/.test(value)) {
+      const newParts = [...aadhaarParts];
+      newParts[index] = value;
+      setAadhaarParts(newParts);
+    }
   };
 
-  // ✅ Photo upload (convert to base64)
-  const handlePhotoChange = async (e) => {
+  // photo change (base64)
+  const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const base64 = await convertToBase64(file);
-      setEditedUser({ ...editedUser, photo: base64 });
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditedUser({ ...editedUser, photo: reader.result });
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  // ✅ Save profile
+  // save
   const handleSave = async () => {
     try {
-      const payload = {
-        ...editedUser,
-        aadhaar: aadhaarParts.join(""),
-        joiningDate: joiningDate ? joiningDate.toISOString() : null,
-      };
+      // joiningDate ko update karna
+      if (joiningDate) {
+        editedUser.joiningDate = joiningDate;
+      }
 
-      const response = await axiosInstance.put(`/users/${editedUser._id}`, payload, {
-        headers: { "Content-Type": "application/json" },
-      });
+      // aadhaar ko merge karna
+      if (aadhaarParts.join("").length === 12) {
+        editedUser.aadhaar = aadhaarParts.join("");
+      }
+
+      const response = await axiosInstance.put(
+        `/users/${editedUser._id}`,
+        editedUser // ✅ JSON, base64 photo included
+      );
 
       toast.success("Profile updated successfully!");
       onUpdate(response.data);
@@ -78,80 +114,206 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
     }
   };
 
-  // ✅ Delete profile (Manager only)
+  // delete
   const handleDelete = async () => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
     try {
-      await axiosInstance.delete(`/users/${editedUser._id}`);
-      toast.success("User deleted successfully!");
-      onUpdate(null);
+      await axiosInstance.delete(`/users/${user._id}`);
+      toast.success("User deleted successfully.");
+      onUpdate && onUpdate();
       onClose();
     } catch (err) {
-      console.error("Delete failed:", err);
-      toast.error("Failed to delete user");
+      console.error(err);
+      toast.error("Error deleting user.");
     }
   };
 
-  return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40">
-      <div className="bg-white rounded-xl shadow-lg w-full max-w-2xl p-6 relative">
-        <h2 className="text-2xl font-semibold mb-4 text-center">Profile</h2>
+  // editable fields for self
+  const editableForUser = ["name", "username", "phone", "address", "photo"];
 
-        {/* Photo */}
-        <div className="flex justify-center mb-4">
-          <label className="cursor-pointer">
-            <img
-              src={editedUser.photo || "/default-avatar.png"}
-              alt="Profile"
-              className="w-28 h-28 rounded-full border object-cover"
-            />
-            <input type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
-          </label>
+  const canEditField = (key) => {
+    if (isManager) return true;
+    if (isSelf && editableForUser.includes(key)) return true;
+    return false;
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-[9999]">
+      <div className="bg-gray-900 text-white w-full max-w-2xl p-4 rounded-lg shadow-xl relative max-h-[80vh] overflow-y-auto border border-gray-700">
+        {/* Close */}
+        <div
+          onClick={onClose}
+          className="absolute top-3 right-4 text-gray-400 hover:text-red-500 text-2xl cursor-pointer"
+        >
+          ❌
         </div>
 
-        {/* Form fields */}
-        <div className="grid grid-cols-2 gap-4">
-          <input name="name" value={editedUser.name || ""} onChange={handleChange} placeholder="Name" className="border p-2 rounded" />
-          <input name="username" value={editedUser.username || ""} onChange={handleChange} placeholder="Username" className="border p-2 rounded" />
-          <input name="email" value={editedUser.email || ""} onChange={handleChange} placeholder="Email" className="border p-2 rounded" />
-          <input name="phone" value={editedUser.phone || ""} onChange={handleChange} placeholder="Phone" className="border p-2 rounded" />
-          <input name="department" value={editedUser.department || ""} onChange={handleChange} placeholder="Department" className="border p-2 rounded" />
-          <input name="designation" value={editedUser.designation || ""} onChange={handleChange} placeholder="Designation" className="border p-2 rounded" />
-          <input name="salary" type="number" value={editedUser.salary || ""} onChange={handleChange} placeholder="Salary" className="border p-2 rounded" />
-          <input name="address" value={editedUser.address || ""} onChange={handleChange} placeholder="Address" className="border p-2 rounded col-span-2" />
-
-          {/* Aadhaar */}
-          <div className="col-span-2 flex space-x-2">
-            {aadhaarParts.map((part, index) => (
+        {/* Header */}
+        <div className="flex items-center gap-6 mb-6 border-b border-gray-700 pb-4">
+          <div className="relative">
+            <img
+              src={editedUser.photo || "/user-avatar.png"}
+              alt={user.name}
+              className="w-24 h-24 rounded-full object-cover border-2 border-gray-700"
+            />
+            {editMode && canEditField("photo") && (
               <input
-                key={index}
-                maxLength={4}
-                value={part}
-                onChange={(e) => handleAadhaarChange(index, e.target.value)}
-                className="border p-2 rounded w-1/4 text-center"
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoChange}
+                className="absolute bottom-0 left-0 bg-black/70 text-xs text-white"
               />
-            ))}
+            )}
           </div>
+          <div>
+            <h2 className="text-2xl font-bold">{editedUser.name}</h2>
+            <p className="text-gray-400 text-sm">{editedUser.designation}</p>
+            <p className="text-blue-400 text-sm font-semibold">
+              {editedUser.department}
+            </p>
+          </div>
+        </div>
+
+        {/* Info Grid */}
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          {[
+            ["Name", "name"],
+            ["Username", "username"],
+            ["Email", "email"],
+            ["Phone", "phone"],
+            ["Department", "department"],
+            ["Designation", "designation"],
+            ["Address", "address"],
+            ["Salary", "salary"],
+          ].map(([label, key]) => (
+            <div key={key}>
+              <p className="font-medium text-gray-400">{label}</p>
+              {editMode && canEditField(key) ? (
+                <input
+                  type={key === "salary" ? "number" : "text"}
+                  value={editedUser[key] || ""}
+                  onChange={(e) => handleChange(key, e.target.value)}
+                  className="w-full mt-1 px-2 py-1 bg-gray-800 text-white border border-gray-700 rounded"
+                />
+              ) : (
+                <p className="mt-1 text-gray-200">{editedUser[key] || "-"}</p>
+              )}
+            </div>
+          ))}
 
           {/* Joining Date */}
+          {isManager && (
+            <div>
+              <p className="font-medium text-gray-400">Joining Date</p>
+              {editMode ? (
+                <DatePicker
+                  selected={joiningDate}
+                  onChange={(date) => setJoiningDate(date)}
+                  dateFormat="yyyy-MM-dd"
+                  className="w-full mt-1 px-2 py-1 bg-gray-800 text-white border border-gray-700 rounded"
+                />
+              ) : (
+                <p className="mt-1 text-gray-200">
+                  {user.joiningDate
+                    ? new Date(user.joiningDate).toLocaleDateString("en-IN")
+                    : "-"}
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Aadhaar */}
+          {isManager && (
+            <div>
+              <p className="font-medium text-gray-400">Aadhaar</p>
+              {editMode ? (
+                <div className="flex gap-2 mt-1">
+                  {aadhaarParts.map((part, i) => (
+                    <input
+                      key={i}
+                      type="text"
+                      value={part}
+                      maxLength={4}
+                      onChange={(e) => handleAadhaarChange(i, e.target.value)}
+                      className="w-1/3 px-2 py-1 bg-gray-800 text-white border border-gray-700 rounded text-center"
+                    />
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-1 text-gray-200">
+                  {user.aadhaar && String(user.aadhaar).length === 12
+                    ? String(user.aadhaar).replace(
+                        /(\d{4})(\d{4})(\d{4})/,
+                        "$1-$2-$3"
+                      )
+                    : user.aadhaar || "-"}
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Attendance */}
           <div className="col-span-2">
-            <DatePicker
-              selected={joiningDate}
-              onChange={(date) => setJoiningDate(date)}
-              dateFormat="dd/MM/yyyy"
-              placeholderText="Joining Date"
-              className="border p-2 rounded w-full"
-            />
+            <p className="font-medium text-gray-400">
+              Attendance (
+              {new Date().toLocaleString("default", {
+                month: "long",
+                year: "numeric",
+              })}
+              )
+            </p>
+            <p className="mt-1 text-gray-200">
+              ✅ Present: {attendanceCounts.present} | ❌ Absent:{" "}
+              {attendanceCounts.absent} | 🟡 Leave: {attendanceCounts.leave}
+            </p>
           </div>
         </div>
 
-        {/* Buttons */}
-        <div className="flex justify-between mt-6">
-          <button onClick={handleSave} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Save</button>
+        {/* Actions */}
+        <div className="mt-4 flex justify-end gap-3 text-sm">
+          {(isSelf || isManager) &&
+            (!editMode ? (
+              <button
+                onClick={() => setEditMode(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded"
+              >
+                Edit
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={handleSave}
+                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded"
+                >
+                  Save
+                </button>
+                <button
+                  onClick={() => {
+                    setEditedUser({ ...user });
+                    setAadhaarParts(
+                      user.aadhaar?.match(/.{1,4}/g) || ["", "", ""]
+                    );
+                    setJoiningDate(
+                      user.joiningDate ? new Date(user.joiningDate) : null
+                    );
+                    setEditMode(false);
+                  }}
+                  className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-1 rounded"
+                >
+                  Cancel
+                </button>
+              </>
+            ))}
+
+          {/* Delete (Manager only) */}
           {isManager && (
-            <button onClick={handleDelete} className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Delete</button>
+            <button
+              onClick={handleDelete}
+              className="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded"
+            >
+              Delete
+            </button>
           )}
-          <button onClick={onClose} className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">Close</button>
         </div>
       </div>
     </div>
