@@ -19,6 +19,7 @@ app.use(
   cors({
     origin: 'https://sanghibros.vercel.app', // ✅ Allow your Vercel frontend
     methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true, // ✅ Allow cookies & authentication headers
   })
 );
