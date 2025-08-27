@@ -105,7 +105,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
       });
       toast.success("User updated successfully.");
       setEditMode(false);
-      onUpdate && onUpdate(res.data);
+      onUpdate && onUpdate(res.data); // ✅ reflect changes in parent
     } catch (err) {
       console.error(err);
       toast.error("Error updating user.");
@@ -127,7 +127,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
   };
 
   // ✅ Editable fields logic
-  const editableForUser = ["name", "username", "phone", "address","photo"];
+  const editableForUser = ["name", "username", "phone", "address", "photo"];
 
   const canEditField = (key) => {
     if (isManager) return true;
@@ -137,7 +137,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-[9999]">
-      <div className="bg-gray-900 text-white w-full max-w-3xl p-6 rounded-lg shadow-xl relative max-h-[90vh] overflow-y-auto border border-gray-700">
+      <div className="bg-gray-900 text-white w-full max-w-2xl p-4 rounded-lg shadow-xl relative max-h-[80vh] overflow-y-auto border border-gray-700">
         {/* Close */}
         <div
           onClick={onClose}
@@ -152,7 +152,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
             <img
               src={editedUser.photo || "/user-avatar.png"}
               alt={user.name}
-              className="w-28 h-28 rounded-full object-cover border-2 border-gray-700"
+              className="w-24 h-24 rounded-full object-cover border-2 border-gray-700"
             />
             {editMode && canEditField("photo") && (
               <input
@@ -164,14 +164,16 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
             )}
           </div>
           <div>
-            <h2 className="text-3xl font-bold">{user.name}</h2>
+            <h2 className="text-2xl font-bold">{user.name}</h2>
             <p className="text-gray-400 text-sm">{user.designation}</p>
-            <p className="text-blue-400 text-sm font-semibold">{user.department}</p>
+            <p className="text-blue-400 text-sm font-semibold">
+              {user.department}
+            </p>
           </div>
         </div>
 
         {/* Info Grid */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4 text-sm">
           {[
             ["Name", "name"],
             ["Username", "username"],
@@ -183,13 +185,13 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
             ["Salary", "salary"],
           ].map(([label, key]) => (
             <div key={key}>
-              <p className="text-sm font-medium text-gray-400">{label}</p>
+              <p className="font-medium text-gray-400">{label}</p>
               {editMode && canEditField(key) ? (
                 <input
                   type={key === "salary" ? "number" : "text"}
                   value={editedUser[key] || ""}
                   onChange={(e) => handleChange(key, e.target.value)}
-                  className="w-full mt-1 px-3 py-2 bg-gray-800 text-white border border-gray-700 rounded"
+                  className="w-full mt-1 px-2 py-1 bg-gray-800 text-white border border-gray-700 rounded"
                 />
               ) : (
                 <p className="mt-1 text-gray-200">{user[key] || "-"}</p>
@@ -200,13 +202,13 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
           {/* Joining Date (manager only) */}
           {isManager && (
             <div>
-              <p className="text-sm font-medium text-gray-400">Joining Date</p>
+              <p className="font-medium text-gray-400">Joining Date</p>
               {editMode ? (
                 <DatePicker
                   selected={joiningDate}
                   onChange={(date) => setJoiningDate(date)}
                   dateFormat="yyyy-MM-dd"
-                  className="w-full mt-1 px-3 py-2 bg-gray-800 text-white border border-gray-700 rounded"
+                  className="w-full mt-1 px-2 py-1 bg-gray-800 text-white border border-gray-700 rounded"
                 />
               ) : (
                 <p className="mt-1 text-gray-200">
@@ -221,7 +223,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
           {/* Aadhaar (manager only) */}
           {isManager && (
             <div>
-              <p className="text-sm font-medium text-gray-400">Aadhaar</p>
+              <p className="font-medium text-gray-400">Aadhaar</p>
               {editMode ? (
                 <div className="flex gap-2 mt-1">
                   {aadhaarParts.map((part, i) => (
@@ -231,14 +233,17 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
                       value={part}
                       maxLength={4}
                       onChange={(e) => handleAadhaarChange(i, e.target.value)}
-                      className="w-1/3 px-3 py-2 bg-gray-800 text-white border border-gray-700 rounded text-center"
+                      className="w-1/3 px-2 py-1 bg-gray-800 text-white border border-gray-700 rounded text-center"
                     />
                   ))}
                 </div>
               ) : (
                 <p className="mt-1 text-gray-200">
                   {user.aadhaar && String(user.aadhaar).length === 12
-                    ? String(user.aadhaar).replace(/(\d{4})(\d{4})(\d{4})/, "$1-$2-$3")
+                    ? String(user.aadhaar).replace(
+                        /(\d{4})(\d{4})(\d{4})/,
+                        "$1-$2-$3"
+                      )
                     : user.aadhaar || "-"}
                 </p>
               )}
@@ -247,9 +252,12 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
 
           {/* Attendance counts */}
           <div className="col-span-2">
-            <p className="text-sm font-medium text-gray-400">
+            <p className="font-medium text-gray-400">
               Attendance (
-              {new Date().toLocaleString("default", { month: "long", year: "numeric" })}
+              {new Date().toLocaleString("default", {
+                month: "long",
+                year: "numeric",
+              })}
               )
             </p>
             <p className="mt-1 text-gray-200">
@@ -260,41 +268,46 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
         </div>
 
         {/* Actions */}
-        <div className="mt-6 flex justify-end gap-4">
-          {!editMode ? (
-            <button
-              onClick={() => setEditMode(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded"
-            >
-              Edit
-            </button>
-          ) : (
-            <>
+        <div className="mt-4 flex justify-end gap-3 text-sm">
+          {/* Self user can edit */}
+          {isSelf && (
+            !editMode ? (
               <button
-                onClick={handleSave}
-                className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded"
+                onClick={() => setEditMode(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded"
               >
-                Save
+                Edit
               </button>
-              <button
-                onClick={() => {
-                  setEditedUser({ ...user });
-                  setAadhaarParts(user.aadhaar?.match(/.{1,4}/g) || ["", "", ""]);
-                  setJoiningDate(user.joiningDate ? new Date(user.joiningDate) : null);
-                  setEditMode(false);
-                }}
-                className="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded"
-              >
-                Cancel
-              </button>
-            </>
+            ) : (
+              <>
+                <button
+                  onClick={handleSave}
+                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded"
+                >
+                  Save
+                </button>
+                <button
+                  onClick={() => {
+                    setEditedUser({ ...user });
+                    setAadhaarParts(user.aadhaar?.match(/.{1,4}/g) || ["", "", ""]);
+                    setJoiningDate(
+                      user.joiningDate ? new Date(user.joiningDate) : null
+                    );
+                    setEditMode(false);
+                  }}
+                  className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-1 rounded"
+                >
+                  Cancel
+                </button>
+              </>
+            )
           )}
 
           {/* Delete (only manager) */}
           {isManager && (
             <button
               onClick={handleDelete}
-              className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded"
+              className="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded"
             >
               Delete
             </button>
@@ -306,5 +319,3 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
 };
 
 export default ProfileModal;
-
-
