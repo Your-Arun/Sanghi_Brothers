@@ -21,26 +21,27 @@ const upload = multer({ storage });
 
 // Update user route
 Router.put("/users/:id", upload.single("photo"), async (req, res) => {
-  try {
-    let updatedData = { ...req.body };
-
-    // Agar photo file aayi
-    if (req.file) {
-      updatedData.photo = `/uploads/${req.file.filename}`; // path client me dikhega
+    try {
+      const updatedData = { ...req.body };
+      
+      if (req.file) {
+        // Save full URL instead of just file name
+        updatedData.photo = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+      }
+  
+      const updatedUser = await User.findByIdAndUpdate(
+        req.params.id,
+        updatedData,
+        { new: true }
+      ).select("-password");
+  
+      res.json(updatedUser);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Update failed" });
     }
-
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      updatedData,
-      { new: true }
-    ).select("-password");
-
-    res.json(updatedUser);
-  } catch (err) {
-    console.error("Update failed:", err);
-    res.status(500).json({ error: "Update failed" });
-  }
-});
+  });
+  
 
 // ✅ Delete user
 Router.delete("/users/:id", async (req, res) => {
