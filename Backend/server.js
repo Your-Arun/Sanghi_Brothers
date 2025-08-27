@@ -6,9 +6,9 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const cookieParser = require("cookie-parser");
 
-
 const app = express();
 
+// Body Parser
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
@@ -17,27 +17,30 @@ app.use(cookieParser());
 // 🛡️ CORS Configuration
 app.use(
   cors({
-    origin: 'https://sanghibros.vercel.app', // ✅ Allow your Vercel frontend
+    origin: "https://sanghibros.vercel.app", 
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true, // ✅ Allow cookies & authentication headers
+    credentials: true,
   })
 );
-app.use(express.json());
 
+// 🛡️ Sessions
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET, // ✅ use proper session secret
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
+    cookie: {
+      secure: process.env.NODE_ENV === "production", // ✅ HTTPS me true
+      httpOnly: true,
+      sameSite: "none", // ✅ important for cross-origin cookies
+      maxAge: 1000 * 60 * 60, // 1 hour
+    },
+  })
+);
 
-
-
-
-app.use(session({
-  secret: process.env.JWT_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }), // ✅ Session per user alag hoga
-  cookie: { secure: false, httpOnly: true, maxAge: 1000 * 60 * 60 } // 1 hour session
-}));
-
-app.options('*', cors()); // allow preflight for all route
+app.options("*", cors());
 
 // ✅ Import Routes
 const FlowRoute = require("./routes/flowroutes");
@@ -62,20 +65,20 @@ const ReportFile = require("./routes/reportfileroute");
 const FundPosition = require("./routes/fundposition");
 const ReportComplaint = require("./routes/reportcomlaint");
 const shiftApi = require("./models/shifting/shiftsapi");
-const Attendance = require('./models/attendancewala/userRoutes')
+const Attendance = require("./models/attendancewala/userRoutes");
 
 // ✅ MongoDB Connection
 mongoose
   .connect(process.env.MONGODB_URI)
-  .then(() => console.log("MongoDB connected 🟢🟢"))
+  .then(() => console.log("MongoDB connected 🟢"))
   .catch((err) => console.error(err));
 
-// ✅ Public Routes (No Authentication Required)
+// ✅ Public Routes
 app.use("", LoginSignup);
 app.use("/", Contactus);
 app.use("/", Attendance);
 
-// ✅ Protected Routes (Authentication Required)
+// ✅ Protected Routes
 app.use("/bank", FlowRoute);
 app.use("/bank", Monthlyfundflow);
 app.use("/mastersheet", PumpReport);
@@ -97,11 +100,13 @@ app.use("/", FundPosition);
 app.use("/", ReportComplaint);
 app.use("/", shiftApi);
 
-
-app.get('/', (req, res) => {
-  res.status(404).send({ message: 'Backend live' })
-})
+// ✅ Root
+app.get("/", (req, res) => {
+  res.status(200).send({ message: "Backend live ✅" });
+});
 
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT} 🔴🔴`));
+app.listen(PORT, () =>
+  console.log(`Server running on port ${PORT} 🚀`)
+);
