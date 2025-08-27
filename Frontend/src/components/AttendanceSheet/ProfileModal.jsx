@@ -83,40 +83,42 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
   };
 
   // Save
-  const handleSave = async () => {
-    try {
-      const formData = new FormData();
+  // save
+const handleSave = async () => {
+  try {
+    const formData = new FormData();
 
-      // append other fields
-      Object.entries(editedUser).forEach(([key, value]) => {
-        if (key !== "photo" && key !== "photoFile") {
-          formData.append(key, value);
-        }
-      });
-
-      // append photo file if selected
-      if (editedUser.photoFile) {
-        formData.append("photo", editedUser.photoFile);
+    // Baaki fields add karo
+    Object.entries(editedUser).forEach(([key, value]) => {
+      if (key !== "photo" && key !== "photoFile") {
+        formData.append(key, value);
       }
+    });
 
-      const response = await axiosInstance.put(
-        `/users/${editedUser._id}`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-
-      toast.success("Profile updated successfully!");
-
-      // Update parent state
-      onUpdate?.(response.data);
-
-      setEditedUser({ ...response.data }); // immediately update modal state
-      setEditMode(false);
-    } catch (err) {
-      console.error("Update failed:", err);
-      toast.error("Failed to update profile");
+    // Photo file add karo
+    if (editedUser.photoFile) {
+      formData.append("photo", editedUser.photoFile);
     }
-  };
+
+    // API call
+    const response = await axiosInstance.put(
+      `/users/${editedUser._id}`,
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+
+    // Updated data se frontend update
+    setEditedUser(response.data); // updated photo path included
+    onUpdate?.(response.data);
+
+    toast.success("Profile updated successfully!");
+    onClose();
+  } catch (err) {
+    console.error("Update failed:", err);
+    toast.error("Failed to update profile");
+  }
+};
+
 
   // Delete
   const handleDelete = async () => {
