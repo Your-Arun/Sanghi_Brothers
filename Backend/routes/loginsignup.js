@@ -233,6 +233,7 @@ Router.put("/users/:id", upload.single("photo"), async (req, res) => {
 
     res.json(updatedUser);
   } catch (err) {
+    console.error("Update failed:", err);
     res.status(500).json({ error: "Update failed" });
   }
 });
