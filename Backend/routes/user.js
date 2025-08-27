@@ -1,6 +1,20 @@
 const express = require("express");
 const Router = express.Router();
 const User = require("../models/user");
+const multer = require("multer");
+const path = require("path");
+
+// Multer setup
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // uploads folder
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, `${Date.now()}-${file.fieldname}${ext}`);
+  },
+});
+const upload = multer({ storage });
 
 // ✅ Get all users
 Router.get("/users", async (req, res) => {
@@ -12,10 +26,14 @@ Router.get("/users", async (req, res) => {
   }
 });
 
-// ✅ Update user (Base64 / URL photo support)
-Router.put("/users/:id", async (req, res) => {
+// ✅ Update user (with photo support)
+Router.put("/users/:id", upload.single("photo"), async (req, res) => {
   try {
-    let updatedData = req.body; // frontend से aayega string/photo bhi
+    const updatedData = { ...req.body };
+
+    if (req.file) {
+      updatedData.photo = `/uploads/${req.file.filename}`; // Save path in DB
+    }
 
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
