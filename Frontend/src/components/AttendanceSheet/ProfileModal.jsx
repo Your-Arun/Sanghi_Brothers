@@ -99,15 +99,14 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
   
-      // Backend se updated user object leke frontend state update karo
       const updatedUser = response.data;
   
-      // Photo ka full path agar relative aa raha hai
-      if (updatedUser.photo && !updatedUser.photo.startsWith("http")) {
+      // Backend se jo path aa raha hai usko full URL me convert karo
+      if (updatedUser.photo) {
         updatedUser.photo = `${axiosInstance.defaults.baseURL}/${updatedUser.photo}`;
       }
   
-      setEditedUser(updatedUser); // modal me updated dikhane ke liye
+      setEditedUser(updatedUser); // modal me turant updated photo show
       onUpdate?.(updatedUser);
   
       toast.success("Profile updated successfully!");
@@ -117,6 +116,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
       toast.error("Failed to update profile");
     }
   };
+  
   
 
 
