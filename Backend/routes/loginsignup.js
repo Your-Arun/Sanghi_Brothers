@@ -218,22 +218,15 @@ Router.get("/users", async (req, res) => {
 // ✅ Update user with photo
 Router.put("/users/:id", async (req, res) => {
   try {
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-
-    if (!updatedUser) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedUser) return res.status(404).json({ error: "User not found" });
     res.json(updatedUser);
   } catch (err) {
-    console.error("Update Error:", err);   // 👈 Logs me dikhega
-    res.status(500).json({ error: err.message }); // 👈 Exact error frontend pe aayega
+    console.error("Update Error:", err); // 🛑 Log karo
+    res.status(500).json({ error: "Update failed", details: err.message });
   }
 });
+
 
 // ✅ Delete a user
 Router.delete("/users/:id", async (req, res) => {
