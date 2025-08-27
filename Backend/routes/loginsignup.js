@@ -216,18 +216,27 @@ Router.get("/users", async (req, res) => {
   }
 });
 // ✅ Update user with photo
-Router.put("/users/:id", async (req, res) => {
+Router.put("/users/:id", upload.single("photo"), async (req, res) => {
   try {
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!updatedUser) return res.status(404).json({ error: "User not found" });
+    const updatedData = req.body;
+
+    // agar photo bheji hai to add karo
+    if (req.file) {
+      updatedData.photo = `/uploads/${req.file.filename}`;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      updatedData,
+      { new: true }
+    );
+
     res.json(updatedUser);
   } catch (err) {
-    console.error("Update Error:", err); // 🛑 Log karo
-    res.status(500).json({ error: "Update failed", details: err.message });
+    console.error("Update failed:", err);
+    res.status(500).json({ error: "Update failed" });
   }
 });
-
-
 // ✅ Delete a user
 Router.delete("/users/:id", async (req, res) => {
   try {
