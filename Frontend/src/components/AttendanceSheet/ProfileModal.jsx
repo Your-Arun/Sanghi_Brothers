@@ -194,7 +194,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
                   className="w-full mt-1 px-2 py-1 bg-gray-800 text-white border border-gray-700 rounded"
                 />
               ) : (
-                <p className="mt-1 text-gray-200">{user[key] || "-"}</p>
+                <p className="mt-1 text-gray-200">{editedUser[key] || "-"}</p>  // ✅ fix
               )}
             </div>
           ))}
@@ -241,9 +241,9 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
                 <p className="mt-1 text-gray-200">
                   {user.aadhaar && String(user.aadhaar).length === 12
                     ? String(user.aadhaar).replace(
-                        /(\d{4})(\d{4})(\d{4})/,
-                        "$1-$2-$3"
-                      )
+                      /(\d{4})(\d{4})(\d{4})/,
+                      "$1-$2-$3"
+                    )
                     : user.aadhaar || "-"}
                 </p>
               )}

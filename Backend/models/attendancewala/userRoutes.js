@@ -109,15 +109,14 @@ router.get("/user-attendance/:id", async (req, res) => {
       return res.status(400).json({ message: "Year and month are required" });
     }
 
-    // Ensure month is always 2 digits
-    const monthStr = String(month).padStart(2, "0");
-
-    // Regex to match YYYY-MM dates
-    const regex = new RegExp(`^${year}-${monthStr}`);
+    // Start: YYYY-MM-01
+    const startDate = new Date(year, month - 1, 1);
+    // End: last day of that month
+    const endDate = new Date(year, month, 0, 23, 59, 59, 999);
 
     const records = await Attendance.find({
       userId: id,
-      date: { $regex: regex },
+      date: { $gte: startDate, $lte: endDate },
     });
 
     res.json(records);
