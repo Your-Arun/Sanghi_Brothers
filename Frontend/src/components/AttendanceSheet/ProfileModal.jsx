@@ -26,7 +26,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
   // Aadhaar split
   useEffect(() => {
     if (user.aadhaar) {
-      const parts = user.aadhaar.match(/.{1,4}/g) || ["", "", ""];
+      const parts = user.aadhaar.match(/.{1,4}/g) || ["", "", ""]; 
       setAadhaarParts(parts);
     }
   }, [user.aadhaar]);
@@ -77,53 +77,40 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Sirf local preview ke liye
-      const preview = URL.createObjectURL(file);
-      setEditedUser((prev) => ({
-        ...prev,
-        photoFile: file,   // Backend me send hoga
-        localPreview: preview, // Modal me show karne ke liye
-      }));
+      setEditedUser({ ...editedUser, photoFile: file });
     }
   };
-  
 
   // Save
   const handleSave = async () => {
     try {
       const formData = new FormData();
-  
+
       Object.entries(editedUser).forEach(([key, value]) => {
-        if (key !== "photo" && key !== "photoFile" && key !== "localPreview")
-          formData.append(key, value);
+        if (key !== "photo" && key !== "photoFile") formData.append(key, value);
       });
-  
+
       if (editedUser.photoFile) formData.append("photo", editedUser.photoFile);
-  
+
       const response = await axiosInstance.put(
         `/users/${editedUser._id}`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-  
+
       const updatedUser = response.data;
-  
-      setEditedUser(updatedUser);  // Modal me turant backend URL update
+
+      // Backend se aaya photo URL turant set
+      setEditedUser({ ...updatedUser, photoFile: null });
       onUpdate?.(updatedUser);
-  
+
       toast.success("Profile updated successfully!");
-      onClose();
+      setEditMode(false);
     } catch (err) {
       console.error("Update failed:", err);
       toast.error("Failed to update profile");
     }
   };
-  
-
-
-
-
-
 
   // Delete
   const handleDelete = async () => {
@@ -162,11 +149,14 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
         <div className="flex items-center gap-6 mb-6 border-b border-gray-700 pb-4">
           <div className="relative">
             <img
-              src={editedUser.localPreview || editedUser.photo || "/user-avatar.png"}
+              src={
+                editMode && editedUser.photoFile
+                  ? URL.createObjectURL(editedUser.photoFile)
+                  : editedUser.photo || "/user-avatar.png"
+              }
               alt={user.name}
               className="w-24 h-24 rounded-full object-cover border-2 border-gray-700"
             />
-
             {editMode && canEditField("photo") && (
               <input
                 type="file"
@@ -253,10 +243,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
               ) : (
                 <p className="mt-1 text-gray-200">
                   {user.aadhaar && String(user.aadhaar).length === 12
-                    ? String(user.aadhaar).replace(
-                      /(\d{4})(\d{4})(\d{4})/,
-                      "$1-$2-$3"
-                    )
+                    ? String(user.aadhaar).replace(/(\d{4})(\d{4})(\d{4})/, "$1-$2-$3")
                     : user.aadhaar || "-"}
                 </p>
               )}
@@ -267,15 +254,11 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
           <div className="col-span-2">
             <p className="font-medium text-gray-400">
               Attendance (
-              {new Date().toLocaleString("default", {
-                month: "long",
-                year: "numeric",
-              })}
+              {new Date().toLocaleString("default", { month: "long", year: "numeric" })}
               )
             </p>
             <p className="mt-1 text-gray-200">
-              ✅ Present: {attendanceCounts.present} | ❌ Absent:{" "}
-              {attendanceCounts.absent} | 🟡 Leave: {attendanceCounts.leave}
+              ✅ Present: {attendanceCounts.present} | ❌ Absent: {attendanceCounts.absent} | 🟡 Leave: {attendanceCounts.leave}
             </p>
           </div>
         </div>
@@ -301,12 +284,8 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
                 <button
                   onClick={() => {
                     setEditedUser({ ...user });
-                    setAadhaarParts(
-                      user.aadhaar?.match(/.{1,4}/g) || ["", "", ""]
-                    );
-                    setJoiningDate(
-                      user.joiningDate ? new Date(user.joiningDate) : null
-                    );
+                    setAadhaarParts(user.aadhaar?.match(/.{1,4}/g) || ["", "", ""]);
+                    setJoiningDate(user.joiningDate ? new Date(user.joiningDate) : null);
                     setEditMode(false);
                   }}
                   className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-1 rounded"
