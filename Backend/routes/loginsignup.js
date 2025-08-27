@@ -8,16 +8,15 @@ require("dotenv").config();
 const Attendance = require("../models/attendancewala/Attendance");
 const multer = require("multer");
 
-// storage config
+// 📂 Upload setup
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/"); // uploads folder
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
   },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
   },
 });
-
 const upload = multer({ storage });
 
 // ✅ Middleware to verify token
@@ -215,7 +214,7 @@ Router.get("/users", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch users" });
   }
 });
-// ✅ Update user with photo
+// ✅ Update User (Manager or Self can update)
 Router.put("/users/:id", upload.single("photo"), async (req, res) => {
   try {
     const updatedData = req.body;
@@ -237,6 +236,7 @@ Router.put("/users/:id", upload.single("photo"), async (req, res) => {
     res.status(500).json({ error: "Update failed" });
   }
 });
+
 // ✅ Delete a user
 Router.delete("/users/:id", async (req, res) => {
   try {
