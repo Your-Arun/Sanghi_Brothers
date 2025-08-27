@@ -13,12 +13,10 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
 
   const [editMode, setEditMode] = useState(false);
   const [editedUser, setEditedUser] = useState({ ...user });
-
   const [aadhaarParts, setAadhaarParts] = useState(["", "", ""]);
   const [joiningDate, setJoiningDate] = useState(
     user.joiningDate ? new Date(user.joiningDate) : null
   );
-
   const [attendanceCounts, setAttendanceCounts] = useState({
     present: 0,
     absent: 0,
@@ -61,7 +59,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
     fetchMonthlyAttendance();
   }, [user._id]);
 
-  // field change
+  // Field change
   const handleChange = (key, value) => {
     setEditedUser({ ...editedUser, [key]: value });
   };
@@ -72,10 +70,12 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
       const newParts = [...aadhaarParts];
       newParts[index] = value;
       setAadhaarParts(newParts);
+      // Also update editedUser.aadhaar
+      setEditedUser({ ...editedUser, aadhaar: newParts.join("") });
     }
   };
 
-  // photo change
+  // Photo change
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -84,21 +84,19 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
     }
   };
 
-  // save
+  // Save
   const handleSave = async () => {
     try {
       const formData = new FormData();
 
+      // Add all fields except photoFile
       Object.entries(editedUser).forEach(([key, value]) => {
-        if (key !== "photo" && key !== "photoFile") {
-          formData.append(key, value);
-        }
+        if (key !== "photoFile") formData.append(key, value || "");
       });
 
+      // Add photo file if selected
       if (editedUser.photoFile) {
         formData.append("photo", editedUser.photoFile);
-      } else {
-        formData.append("photo", editedUser.photo || "");
       }
 
       const response = await axiosInstance.put(
@@ -107,28 +105,26 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
+      // Backend updated user
+      const updatedUser = response.data;
+
       toast.success("Profile updated successfully!");
-
-      // ✅ Safe call
-      onUpdate?.(response.data);
-
-      onClose();
+      onUpdate?.(updatedUser); // parent component update
+      setEditedUser({ ...updatedUser }); // local state update
+      setEditMode(false);
     } catch (err) {
       console.error("Update failed:", err);
       toast.error("Failed to update profile");
     }
   };
 
-  // delete
+  // Delete
   const handleDelete = async () => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
     try {
       await axiosInstance.delete(`/users/${user._id}`);
       toast.success("User deleted successfully.");
-
-      // ✅ Safe call
-      onUpdate?.();
-
+      onUpdate?.(); // parent update
       onClose();
     } catch (err) {
       console.error(err);
@@ -136,14 +132,8 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
     }
   };
 
-  // editable fields for self
   const editableForUser = ["name", "username", "phone", "address", "photo"];
-
-  const canEditField = (key) => {
-    if (isManager) return true;
-    if (isSelf && editableForUser.includes(key)) return true;
-    return false;
-  };
+  const canEditField = (key) => isManager || (isSelf && editableForUser.includes(key));
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-[9999]">
@@ -216,7 +206,10 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
               {editMode ? (
                 <DatePicker
                   selected={joiningDate}
-                  onChange={(date) => setJoiningDate(date)}
+                  onChange={(date) => {
+                    setJoiningDate(date);
+                    setEditedUser({ ...editedUser, joiningDate: date });
+                  }}
                   dateFormat="yyyy-MM-dd"
                   className="w-full mt-1 px-2 py-1 bg-gray-800 text-white border border-gray-700 rounded"
                 />
