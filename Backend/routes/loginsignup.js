@@ -6,9 +6,19 @@ const nodemailer = require("nodemailer");
 const Router = express.Router();
 require("dotenv").config();
 const Attendance = require("../models/attendancewala/Attendance");
+const multer = require("multer");
 
-//google auth
+// storage config
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // uploads folder
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
 
+const upload = multer({ storage });
 
 // ✅ Middleware to verify token
 const authenticateUser = async (req, res, next) => {
@@ -205,18 +215,22 @@ Router.get("/users", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch users" });
   }
 });
-// ✅ Update user details
-Router.put("/users/:id", async (req, res) => {
+// ✅ Update user with photo
+Router.put("/users/:id", upload.single("photo"), async (req, res) => {
   try {
-    // const { username, email, department, phone } = req.body;
-    // const updatedUser = await User.findByIdAndUpdate(
-    //   req.params.id,
-    //   { username, email, department, phone },
-    //   { new: true }
-    // );
-    // res.json(updatedUser);
+    const updatedData = req.body;
 
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    // agar photo bheji hai to add karo
+    if (req.file) {
+      updatedData.photo = `/uploads/${req.file.filename}`;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      updatedData,
+      { new: true }
+    );
+
     res.json(updatedUser);
   } catch (err) {
     res.status(500).json({ error: "Update failed" });
