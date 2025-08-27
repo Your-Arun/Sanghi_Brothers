@@ -75,38 +75,43 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
     }
   };
 
-  // photo change (base64)
+  // photo change
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setEditedUser({ ...editedUser, photo: reader.result });
-      };
-      reader.readAsDataURL(file);
+      const preview = URL.createObjectURL(file);
+      setEditedUser({ ...editedUser, photo: preview, photoFile: file });
     }
   };
 
   // save
   const handleSave = async () => {
     try {
-      // joiningDate ko update karna
-      if (joiningDate) {
-        editedUser.joiningDate = joiningDate;
-      }
+      const formData = new FormData();
 
-      // aadhaar ko merge karna
-      if (aadhaarParts.join("").length === 12) {
-        editedUser.aadhaar = aadhaarParts.join("");
+      Object.entries(editedUser).forEach(([key, value]) => {
+        if (key !== "photo" && key !== "photoFile") {
+          formData.append(key, value);
+        }
+      });
+
+      if (editedUser.photoFile) {
+        formData.append("photo", editedUser.photoFile);
+      } else {
+        formData.append("photo", editedUser.photo || "");
       }
 
       const response = await axiosInstance.put(
         `/users/${editedUser._id}`,
-        editedUser // ✅ JSON, base64 photo included
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
 
       toast.success("Profile updated successfully!");
-      onUpdate(response.data);
+
+      // ✅ Safe call
+      onUpdate?.(response.data);
+
       onClose();
     } catch (err) {
       console.error("Update failed:", err);
@@ -120,7 +125,10 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
     try {
       await axiosInstance.delete(`/users/${user._id}`);
       toast.success("User deleted successfully.");
-      onUpdate && onUpdate();
+
+      // ✅ Safe call
+      onUpdate?.();
+
       onClose();
     } catch (err) {
       console.error(err);
