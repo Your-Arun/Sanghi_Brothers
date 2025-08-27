@@ -88,39 +88,36 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
   const handleSave = async () => {
     try {
       const formData = new FormData();
-  
+
       Object.entries(editedUser).forEach(([key, value]) => {
         if (key !== "photo" && key !== "photoFile") {
           formData.append(key, value);
         }
       });
-  
+
       if (editedUser.photoFile) {
         formData.append("photo", editedUser.photoFile);
+      } else {
+        formData.append("photo", editedUser.photo || "");
       }
-  
+
       const response = await axiosInstance.put(
         `/users/${editedUser._id}`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-  
-      // Update local state so modal shows latest photo immediately
-      setEditedUser(response.data);
-  
-      // Update parent list/profile
-      onUpdate?.(response.data);
-  
+
       toast.success("Profile updated successfully!");
-  
-      setEditMode(false); // modal can stay open if you want to see changes
-      // onClose(); // optional: call only if you want to close modal immediately
+
+      // ✅ Safe call
+      onUpdate?.(response.data);
+
+      onClose();
     } catch (err) {
       console.error("Update failed:", err);
       toast.error("Failed to update profile");
     }
   };
-  
 
   // delete
   const handleDelete = async () => {
