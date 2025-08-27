@@ -26,7 +26,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
   // Aadhaar split
   useEffect(() => {
     if (user.aadhaar) {
-      const parts = user.aadhaar.match(/.{1,4}/g) || ["", "", ""]; 
+      const parts = user.aadhaar.match(/.{1,4}/g) || ["", "", ""];
       setAadhaarParts(parts);
     }
   }, [user.aadhaar]);
@@ -73,19 +73,19 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
     }
   };
 
-  // Photo change
+  // Photo select
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setEditedUser({ ...editedUser, photoFile: file });
+      const preview = URL.createObjectURL(file); // temporary preview
+      setEditedUser({ ...editedUser, photo: preview, photoFile: file });
     }
   };
 
-  // Save
+  // Save updated user
   const handleSave = async () => {
     try {
       const formData = new FormData();
-
       Object.entries(editedUser).forEach(([key, value]) => {
         if (key !== "photo" && key !== "photoFile") formData.append(key, value);
       });
@@ -100,17 +100,21 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
 
       const updatedUser = response.data;
 
-      // Backend se aaya photo URL turant set
+      // ✅ Set updated user with backend photo URL
       setEditedUser({ ...updatedUser, photoFile: null });
-      onUpdate?.(updatedUser);
 
+      // Notify parent & toast
+      onUpdate?.(updatedUser);
       toast.success("Profile updated successfully!");
       setEditMode(false);
+
+      console.log("✅ Photo saved & shown:", updatedUser.photo);
     } catch (err) {
-      console.error("Update failed:", err);
       toast.error("Failed to update profile");
+      console.error("❌ Save Failed:", err.response?.data || err);
     }
   };
+
 
   // Delete
   const handleDelete = async () => {
@@ -149,12 +153,8 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
         <div className="flex items-center gap-6 mb-6 border-b border-gray-700 pb-4">
           <div className="relative">
             <img
-              src={
-                editMode && editedUser.photoFile
-                  ? URL.createObjectURL(editedUser.photoFile)
-                  : editedUser.photo || "/user-avatar.png"
-              }
-              alt={user.name}
+              src={editedUser.photo || "/user-avatar.png"} // backend URL ya default
+              alt={editedUser.name}
               className="w-24 h-24 rounded-full object-cover border-2 border-gray-700"
             />
             {editMode && canEditField("photo") && (

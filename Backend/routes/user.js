@@ -19,29 +19,28 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Update user route
+// ✅ Update user
 Router.put("/users/:id", upload.single("photo"), async (req, res) => {
-    try {
-      const updatedData = { ...req.body };
-      
-      if (req.file) {
-        // Save full URL instead of just file name
-        updatedData.photo = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
-      }
-  
-      const updatedUser = await User.findByIdAndUpdate(
-        req.params.id,
-        updatedData,
-        { new: true }
-      ).select("-password");
-  
-      res.json(updatedUser);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Update failed" });
+  try {
+    const updatedData = { ...req.body };
+
+    if (req.file) {
+      // Full URL return
+      updatedData.photo = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
     }
-  });
-  
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      updatedData,
+      { new: true }
+    ).select("-password");
+
+    res.json(updatedUser); // ✅ returns photo URL
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Update failed" });
+  }
+});
 
 // ✅ Delete user
 Router.delete("/users/:id", async (req, res) => {

@@ -5,14 +5,12 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const cookieParser = require("cookie-parser");
-
+const path = require("path");
 const app = express();
 
 // Body Parser
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
- 
 
 app.use(cookieParser());
 
@@ -25,6 +23,8 @@ app.use(
     credentials: true,
   })
 );
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // 🛡️ Sessions
 app.use(
