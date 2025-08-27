@@ -101,12 +101,12 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
   
       const updatedUser = response.data;
   
-      // Backend se jo path aa raha hai usko full URL me convert karo
+      // Backend se aaya path ko full URL me convert
       if (updatedUser.photo) {
         updatedUser.photo = `${axiosInstance.defaults.baseURL}/${updatedUser.photo}`;
       }
   
-      setEditedUser(updatedUser); // modal me turant updated photo show
+      setEditedUser(updatedUser); // modal me turant update
       onUpdate?.(updatedUser);
   
       toast.success("Profile updated successfully!");
@@ -116,6 +116,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
       toast.error("Failed to update profile");
     }
   };
+  
   
   
 
@@ -157,7 +158,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
         <div className="flex items-center gap-6 mb-6 border-b border-gray-700 pb-4">
           <div className="relative">
             <img
-              src={editedUser.photo || "/user-avatar.png"}
+              src={editedUser.photo}
               alt={user.name}
               className="w-24 h-24 rounded-full object-cover border-2 border-gray-700"
             />
