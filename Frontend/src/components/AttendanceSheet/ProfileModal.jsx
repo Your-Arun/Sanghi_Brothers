@@ -86,36 +86,39 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
 
   // save
   const handleSave = async () => {
-    const aadhaar = aadhaarParts.join("");
-    if (aadhaar && aadhaar.length !== 12 && isManager) {
-      toast.error("Aadhaar must be 12 digits.");
-      return;
-    }
-
-    const formData = new FormData();
-    Object.entries(editedUser).forEach(([key, value]) => {
-      if (key !== "photoFile") formData.append(key, value);
-    });
-    if (isManager) formData.append("aadhaar", aadhaar);
-    if (joiningDate && isManager) {
-      formData.append("joiningDate", joiningDate.toISOString().split("T")[0]);
-    }
-    if (editedUser.photoFile) {
-      formData.append("photo", editedUser.photoFile);
-    }
-
     try {
-      const res = await axiosInstance.put(`/users/${user._id}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      const formData = new FormData();
+  
+      // sab data add karo except "photo" & "photoFile"
+      Object.entries(editedUser).forEach(([key, value]) => {
+        if (key !== "photo" && key !== "photoFile") {
+          formData.append(key, value);
+        }
       });
-      toast.success("User updated successfully.");
-      setEditMode(false);
-      onUpdate && onUpdate(res.data);
+  
+      // agar naya photo select kiya hai → file bhejo
+      if (editedUser.photoFile) {
+        formData.append("photo", editedUser.photoFile);
+      } else {
+        // agar naya photo select nahi kiya → purana photo string bhejo
+        formData.append("photo", editedUser.photo || "");
+      }
+  
+      const response = await axiosInstance.put(
+        `/users/${editedUser._id}`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+  
+      toast.success("Profile updated successfully!");
+      onUpdate(response.data);
+      onClose();
     } catch (err) {
-      console.error(err);
-      toast.error("Error updating user.");
+      console.error("Update failed:", err);
+      toast.error("Failed to update profile");
     }
   };
+  
 
   // delete
   const handleDelete = async () => {

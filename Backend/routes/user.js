@@ -22,21 +22,28 @@ Router.get("/users", async (req, res) => {
 
 // ✅ Update user
 Router.put("/users/:id", upload.single("photo"), async (req, res) => {
-  try {
-    const updatedData = req.body;
-    if (req.file) {
-      updatedData.photo = `/uploads/${req.file.filename}`;
+    try {
+      let updatedData = req.body;
+  
+      // agar nayi file hai → path se overwrite karo
+      if (req.file) {
+        updatedData.photo = `/uploads/${req.file.filename}`;
+      }
+  
+      const updatedUser = await User.findByIdAndUpdate(
+        req.params.id,
+        updatedData,
+        { new: true }
+      );
+  
+      res.json(updatedUser);
+    } catch (err) {
+      console.error("Update failed:", err);
+      res.status(500).json({ error: "Update failed" });
     }
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      updatedData,
-      { new: true }
-    );
-    res.json(updatedUser);
-  } catch (err) {
-    res.status(500).json({ error: "Update failed" });
-  }
-});
+  });
+  
+  
 
 // ✅ Delete user
 Router.delete("/users/:id", async (req, res) => {
