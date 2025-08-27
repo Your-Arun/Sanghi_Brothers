@@ -13,12 +13,10 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
 
   const [editMode, setEditMode] = useState(false);
   const [editedUser, setEditedUser] = useState({ ...user });
-
   const [aadhaarParts, setAadhaarParts] = useState(["", "", ""]);
   const [joiningDate, setJoiningDate] = useState(
     user.joiningDate ? new Date(user.joiningDate) : null
   );
-
   const [attendanceCounts, setAttendanceCounts] = useState({
     present: 0,
     absent: 0,
@@ -61,7 +59,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
     fetchMonthlyAttendance();
   }, [user._id]);
 
-  // field change
+  // Field change
   const handleChange = (key, value) => {
     setEditedUser({ ...editedUser, [key]: value });
   };
@@ -75,7 +73,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
     }
   };
 
-  // photo change
+  // Photo change
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -84,21 +82,21 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
     }
   };
 
-  // save
+  // Save
   const handleSave = async () => {
     try {
       const formData = new FormData();
 
+      // append other fields
       Object.entries(editedUser).forEach(([key, value]) => {
         if (key !== "photo" && key !== "photoFile") {
           formData.append(key, value);
         }
       });
 
+      // append photo file if selected
       if (editedUser.photoFile) {
         formData.append("photo", editedUser.photoFile);
-      } else {
-        formData.append("photo", editedUser.photo || "");
       }
 
       const response = await axiosInstance.put(
@@ -109,26 +107,24 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
 
       toast.success("Profile updated successfully!");
 
-      // ✅ Safe call
+      // Update parent state
       onUpdate?.(response.data);
 
-      onClose();
+      setEditedUser({ ...response.data }); // immediately update modal state
+      setEditMode(false);
     } catch (err) {
       console.error("Update failed:", err);
       toast.error("Failed to update profile");
     }
   };
 
-  // delete
+  // Delete
   const handleDelete = async () => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
     try {
       await axiosInstance.delete(`/users/${user._id}`);
       toast.success("User deleted successfully.");
-
-      // ✅ Safe call
       onUpdate?.();
-
       onClose();
     } catch (err) {
       console.error(err);
@@ -136,9 +132,8 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
     }
   };
 
-  // editable fields for self
+  // Editable fields for self
   const editableForUser = ["name", "username", "phone", "address", "photo"];
-
   const canEditField = (key) => {
     if (isManager) return true;
     if (isSelf && editableForUser.includes(key)) return true;
@@ -313,7 +308,6 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
               </>
             ))}
 
-          {/* Delete (Manager only) */}
           {isManager && (
             <button
               onClick={handleDelete}
