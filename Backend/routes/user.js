@@ -1,21 +1,31 @@
 const express = require("express");
 const Router = express.Router();
+const multer = require("multer");
 const User = require("../models/user");
 
-// ✅ Get all users
-Router.get("/users", async (req, res) => {
-  try {
-    const users = await User.find().select("-password");
-    res.json(users);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch users" });
-  }
+
+// multer setup (memory storage ya disk storage)
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/"); // folder create karna padega project me
+  },
+  filename: function (req, file, cb) {
+    const ext = file.originalname.split(".").pop();
+    cb(null, `${Date.now()}.${ext}`);
+  },
 });
 
-// ✅ Update user (Base64 / URL photo support)
-Router.put("/users/:id", async (req, res) => {
+const upload = multer({ storage: storage });
+
+// Update user with file support
+Router.put("/users/:id", upload.single("photo"), async (req, res) => {
   try {
-    let updatedData = req.body; // frontend से aayega string/photo bhi
+    let updatedData = { ...req.body };
+
+    // agar photo file aayi hai
+    if (req.file) {
+      updatedData.photo = `/uploads/${req.file.filename}`;
+    }
 
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
@@ -29,6 +39,7 @@ Router.put("/users/:id", async (req, res) => {
     res.status(500).json({ error: "Update failed" });
   }
 });
+
 
 // ✅ Delete user
 Router.delete("/users/:id", async (req, res) => {
