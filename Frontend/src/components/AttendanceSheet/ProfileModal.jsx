@@ -87,18 +87,14 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
       Object.entries(editedUser).forEach(([key, value]) => {
         if (key !== "photo" && key !== "photoFile") formData.append(key, value);
       });
+  
       if (editedUser.photoFile) formData.append("photo", editedUser.photoFile);
   
-      const response = await axiosInstance.put(
-        `/users/${editedUser._id}`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+      const response = await axiosInstance.put(`/users/${editedUser._id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
   
-      const updatedUser = response.data;
-      setEditedUser(updatedUser);
-      onUpdate?.(updatedUser);
-  
+      setEditedUser(response.data);
       toast.success("Profile updated successfully!");
       onClose();
     } catch (err) {
@@ -106,6 +102,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
       toast.error("Failed to update profile");
     }
   };
+  
   
 
 
