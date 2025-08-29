@@ -25,6 +25,7 @@ const UpdateDashboard = () => {
     const [inOutFlow, setInOutFlow] = useState([]);
     const [masterSheet, setMasterSheet] = useState([]);
     const [cashierTotal, setCashierTotal] = useState(0);
+    const [profilePhoto, setProfilePhoto] = useState(null);
 
 
     const navigate = useNavigate();
@@ -69,6 +70,21 @@ const UpdateDashboard = () => {
         };
         fetchAll();
     }, []);
+
+
+    useEffect(() => {
+        const fetchProfilePhoto = async () => {
+          try {
+            if (user?._id) {
+              const res = await axiosInstance.get(`/users/${user._id}/photo`);
+              setProfilePhoto(res.data.photo);
+            }
+          } catch (err) {
+            console.error("Error fetching profile photo:", err);
+          }
+        };
+        fetchProfilePhoto();
+      }, [user]);
 
     const viewReports = (department) => {
         if (!user || !user.department) {
@@ -253,7 +269,7 @@ const UpdateDashboard = () => {
             <div className="flex items-center justify-between mb-8">
                 <h1 className="text-4xl font-bold text-gray-800">Dashboard</h1>
                 <img
-                    src={user.photo || "/user.png"}
+                    src={profilePhoto || "/user.png"}
                     alt="Profile"
                     className="w-10 h-10 rounded-full cursor-pointer"
                     onClick={() => setProfileOpen(true)}
