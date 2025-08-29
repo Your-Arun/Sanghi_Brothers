@@ -269,10 +269,10 @@ const UpdateDashboard = () => {
             <div className="flex items-center justify-between mb-8">
                 <h1 className="text-4xl font-bold text-gray-800">Dashboard</h1>
                 <img
-  src={profilePhoto || "/user.png"}
-  alt="Profile"
-  className="w-16 h-16 rounded-full object-cover border-2 border-gray-300 shadow-md cursor-pointer hover:scale-105 transition-transform duration-300"
-/>
+                    src={profilePhoto || "/user.png"}
+                    alt="Profile"
+                    className="w-16 h-16 rounded-full object-cover border-2 border-gray-300 shadow-md cursor-pointer hover:scale-105 transition-transform duration-300"
+                />
 
                 {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
             </div>
