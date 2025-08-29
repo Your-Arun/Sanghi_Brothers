@@ -26,15 +26,15 @@ const AttendancePage = () => {
   const fetchAllData = async () => {
     setLoading(true);
     try {
-      const dateString = `${year}-${String(month).padStart(2, "0")}`;
-  
-      // ✅ Parallel fetch
-      const [usersRes, attendanceRes] = await Promise.all([
-        axiosInstance.get(`/users/attendance?month=${month}&year=${year}`),
-        axiosInstance.get(`/daily-attendance?date=${dateString}`)
-      ]);
-  
+      const usersRes = await axiosInstance.get(
+        `/users/attendance?month=${month}&year=${year}`
+      );
       setUsers(usersRes.data || []);
+
+      const dateString = `${year}-${String(month).padStart(2, "0")}`;
+      const attendanceRes = await axiosInstance.get(
+        `/daily-attendance?date=${dateString}`
+      );
       setAttendanceTableData(attendanceRes.data || []);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -42,7 +42,6 @@ const AttendancePage = () => {
       setLoading(false);
     }
   };
-  
 
   useEffect(() => {
     fetchAllData();
@@ -54,18 +53,9 @@ const AttendancePage = () => {
     return new Date(b.createdAt) - new Date(a.createdAt);
   });
 
-  const filteredUsers = React.useMemo(() => {
-    const sorted = [...users].sort((a, b) => {
-      if (sortBy === "name-asc") return a.name?.localeCompare(b.name);
-      if (sortBy === "name-desc") return b.name?.localeCompare(a.name);
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    });
-  
-    return sorted.filter(user =>
-      user.name?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [users, searchTerm, sortBy]);
-  
+  const filteredUsers = sortedUsers.filter((user) =>
+    user.name?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   // ✅ Pagination logic
   const startIndex = (page - 1) * usersPerPage;
