@@ -10,7 +10,7 @@ const BackButton = ({ label = "Back" }) => {
         onClick={() => navigate(-1)}
         className="bg-gray-700 hover:bg-gray-600 text-white px-5 py-2 rounded-lg shadow-md flex items-center gap-2"
       >
-        ← {label}
+        {label}
       </button>
     </div>
   );

@@ -80,20 +80,20 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
       setEditedUser({ ...editedUser, photo: preview, photoFile: file });
     }
   };
-  
+
   const handleSave = async () => {
     try {
       const formData = new FormData();
       Object.entries(editedUser).forEach(([key, value]) => {
         if (key !== "photo" && key !== "photoFile") formData.append(key, value);
       });
-  
+
       if (editedUser.photoFile) formData.append("photo", editedUser.photoFile);
-  
+
       const response = await axiosInstance.put(`/users/${editedUser._id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-  
+
       setEditedUser(response.data);
       toast.success("Profile updated successfully!");
       onClose();
@@ -102,22 +102,53 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
       toast.error("Failed to update profile");
     }
   };
-  
-  
 
 
+
+  const confirmDeleteToast = (onConfirm) => {
+    toast(
+      ({ closeToast }) => (
+        <div className="flex flex-col gap-2">
+          <p>Are you sure you want to delete this ?</p>
+          <div className="flex gap-4 mt-2">
+            <button
+              onClick={() => {
+                onConfirm()
+                closeToast()
+              }}
+              className="bg-red-500 text-white px-3 py-1 rounded"
+            >
+              Yes
+            </button>
+            <button
+              onClick={closeToast}
+              className="bg-gray-300 px-3 py-1 rounded"
+            >
+              No
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        position: "top-center",
+        autoClose: false,
+        closeOnClick: false,
+        closeButton: false,
+      }
+    )
+  }
   // Delete
   const handleDelete = async () => {
-    if (!window.confirm("Are you sure you want to delete this user?")) return;
-    try {
-      await axiosInstance.delete(`/users/${user._id}`);
-      toast.success("User deleted successfully.");
-      onUpdate?.();
-      onClose();
-    } catch (err) {
-      console.error(err);
-      toast.error("Error deleting user.");
-    }
+    confirmDeleteToast(async ()=> {
+      try {
+        await axiosInstance.delete(`/users/${user._id}`);
+        toast.success("User deleted successfully.");
+        onUpdate?.();
+        onClose();
+      } catch (err) {
+        toast.error("Error deleting user.");
+      }
+    })
   };
 
   // Editable fields for self

@@ -5,7 +5,6 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const cookieParser = require("cookie-parser");
-const path = require("path");
 const app = express();
 
 // Body Parser
@@ -24,7 +23,6 @@ app.use(
   })
 );
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // 🛡️ Sessions
 app.use(
   session({
