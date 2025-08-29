@@ -73,37 +73,40 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
     }
   };
 
-  const handlePhotoChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const preview = URL.createObjectURL(file);
-      setEditedUser({ ...editedUser, photo: preview, photoFile: file });
-    }
-  };
-  
-  const handleSave = async () => {
-    try {
-      const formData = new FormData();
-      Object.entries(editedUser).forEach(([key, value]) => {
-        if (key !== "photo" && key !== "photoFile") formData.append(key, value);
-      });
-  
-      if (editedUser.photoFile) formData.append("photo", editedUser.photoFile);
-  
-      const response = await axiosInstance.put(`/users/${editedUser._id}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-  
-      setEditedUser(response.data);
-      toast.success("Profile updated successfully!");
-      onClose();
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to update profile");
-    }
-  };
-  
-  
+const handlePhotoChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const preview = URL.createObjectURL(file);
+    setEditedUser({ ...editedUser, photo: preview, photoFile: file });
+  }
+};
+
+const handleSave = async () => {
+  try {
+    const formData = new FormData();
+    Object.entries(editedUser).forEach(([key, value]) => {
+      if (key !== "photo" && key !== "photoFile") formData.append(key, value);
+    });
+    if (editedUser.photoFile) formData.append("photo", editedUser.photoFile);
+
+    const response = await axiosInstance.put(
+      `/users/${editedUser._id}`,
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+
+    const updatedUser = response.data;
+    setEditedUser(updatedUser);
+    onUpdate?.(updatedUser);
+
+    toast.success("Profile updated successfully!");
+    onClose();
+  } catch (err) {
+    console.error(err);
+    toast.error("Failed to update profile");
+  }
+};
+
 
 
   // Delete
