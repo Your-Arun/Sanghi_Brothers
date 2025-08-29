@@ -143,7 +143,7 @@ const ProfileModal = ({ user, onClose, onUpdate }) => {
         <div className="flex items-center gap-6 mb-6 border-b border-gray-700 pb-4">
           <div className="relative">
             <img
-              src={editedUser.photo?.replace("http://", "https://") || "/user-avatar.png"}
+              src={editedUser.photo || "/user-avatar.png"} // backend URL ya default
               alt={editedUser.name}
               className="w-24 h-24 rounded-full object-cover border-2 border-gray-700"
             />
