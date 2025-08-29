@@ -66,12 +66,12 @@ Router.delete("/users/:id", async (req, res) => {
 
 // ✅ Get all users
 Router.get("/users", async (req, res) => {
-    try {
-      const users = await User.find().select("-password");
-      res.json(users);   // 👈 sirf array return karo
-    } catch (err) {
-      res.status(500).json({ error: "Failed to fetch users" });
-    }
-  });
-  
+  try {
+    const users = await User.find().select("-password");
+    res.json({ success: true, users });
+  } catch (err) {
+    res.status(500).json({ success: false, error: "Failed to fetch users" });
+  }
+});
+
 module.exports = Router;
