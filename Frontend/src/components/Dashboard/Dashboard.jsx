@@ -74,17 +74,17 @@ const UpdateDashboard = () => {
 
     useEffect(() => {
         const fetchProfilePhoto = async () => {
-          try {
-            if (user?._id) {
-              const res = await axiosInstance.get(`/users/${user._id}/photo`);
-              setProfilePhoto(res.data.photo);
+            try {
+                if (user?._id) {
+                    const res = await axiosInstance.get(`/users/${user._id}/photo`);
+                    setProfilePhoto(res.data.photo);
+                }
+            } catch (err) {
+                console.error("Error fetching profile photo:", err);
             }
-          } catch (err) {
-            console.error("Error fetching profile photo:", err);
-          }
         };
         fetchProfilePhoto();
-      }, [user]);
+    }, [user]);
 
     const viewReports = (department) => {
         if (!user || !user.department) {
@@ -269,11 +269,11 @@ const UpdateDashboard = () => {
             <div className="flex items-center justify-between mb-8">
                 <h1 className="text-4xl font-bold text-gray-800">Dashboard</h1>
                 <img
-                    src={profilePhoto || "/user.png"}
-                    alt="Profile"
-                    className="w-10 h-10 rounded-full cursor-pointer"
-                    onClick={() => setProfileOpen(true)}
-                />
+  src={profilePhoto || "/user.png"}
+  alt="Profile"
+  className="w-16 h-16 rounded-full object-cover border-2 border-gray-300 shadow-md cursor-pointer hover:scale-105 transition-transform duration-300"
+/>
+
                 {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
             </div>
 
@@ -455,7 +455,7 @@ const UpdateDashboard = () => {
                             >
                                 <h3 className="text-lg font-semibold text-green-700">✅ SB Master CheckList</h3>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
