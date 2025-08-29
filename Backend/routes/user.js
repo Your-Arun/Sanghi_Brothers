@@ -2,43 +2,31 @@ const express = require("express");
 const Router = express.Router();
 const multer = require("multer");
 const User = require("../models/user");
-const path = require("path");
-const fs = require("fs");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("../models/upload");
 
-// ✅ Upload folder setup
-const uploadFolder = path.join(__dirname, "../uploads");
-if (!fs.existsSync(uploadFolder)) fs.mkdirSync(uploadFolder);
-
-// ✅ Multer setup for all image types
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadFolder),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname); // .jpg/.png/.jpeg
-    const filename = `${Date.now()}${ext}`;
-    cb(null, filename);
+// ✅ Cloudinary storage setup
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "user_photos", // Cloudinary ke andar ek folder ban jayega
+    allowed_formats: ["jpg", "png", "jpeg"],
+    public_id: (req, file) =>
+      `${Date.now()}-${file.originalname.split(".")[0]}`,
   },
 });
 
-// Filter only images
-const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png/;
-  const ext = path.extname(file.originalname).toLowerCase();
-  if (allowedTypes.test(ext)) cb(null, true);
-  else cb(new Error("Only JPEG, JPG and PNG files are allowed"));
-};
+const upload = multer({ storage });
 
-const upload = multer({ storage, fileFilter });
 
-// ✅ Update user (photo + other fields)
+
+// ✅ Update user with photo
 Router.put("/users/:id", upload.single("photo"), async (req, res) => {
   try {
     const updatedData = { ...req.body };
 
-    if (req.file) {
-      // Full URL for frontend
-      const protocol = req.protocol;
-      const host = req.get("host");
-      updatedData.photo = `${protocol}://${host}/uploads/${req.file.filename}`;
+    if (req.file && req.file.path) {
+      updatedData.photo = req.file.path; // Cloudinary ka URL aa jayega
     }
 
     const updatedUser = await User.findByIdAndUpdate(
@@ -53,6 +41,11 @@ Router.put("/users/:id", upload.single("photo"), async (req, res) => {
     res.status(500).json({ success: false, error: "Update failed" });
   }
 });
+
+
+
+
+
 
 // ✅ Delete user
 Router.delete("/users/:id", async (req, res) => {
@@ -73,5 +66,9 @@ Router.get("/users", async (req, res) => {
       res.status(500).json({ error: "Failed to fetch users" });
     }
   });
+
+
+
+
 
 module.exports = Router;
