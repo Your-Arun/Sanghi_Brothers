@@ -237,3 +237,7 @@ button {
   background-color: transparent;
 }
 
+/* React Toastify ka z-index badha do */
+.Toastify__toast-container {
+  z-index: 99999 !important;
+}
