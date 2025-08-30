@@ -61,7 +61,7 @@ const MergeSBInflo = () => {
                 >
                   <div className="font-semibold text-gray-800">{item.username}</div>
                   <div className="text-sm text-gray-600 mt-1">
-                    {new Date(item.date1).toLocaleDateString("en-GB")}
+                    {new Date(item.inputs.date1).toLocaleDateString("en-GB")}
                   </div>
                 </Link>
               ))
@@ -91,7 +91,7 @@ const MergeSBInflo = () => {
                 >
                   <div className="font-semibold text-gray-800">{flow.User}</div>
                   <div className="text-sm text-gray-600 mt-1">
-                    {new Date(flow.date1).toLocaleDateString("en-GB")}
+                    {new Date(flow.inputs.date1).toLocaleDateString("en-GB")}
                   </div>
                 </div>
               ))
