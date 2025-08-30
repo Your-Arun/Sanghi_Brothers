@@ -224,8 +224,6 @@ function SBI01Update() {
     const date18= updtSbi.inputs.date8
     const date19= updtSbi.inputs.date9
 
-    const [isMobile, setIsMobile] = useState(false);
-
 
   return (
     <>
