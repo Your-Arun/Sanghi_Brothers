@@ -188,8 +188,8 @@ const InOutFlowUpdate = () => {
       }
     })
   }
-   const date11=floww.inputs.date1;
-  const  date111=date11.split("T")[0];
+  const date111 = floww?.inputs?.date1?.split("T")[0] || "";
+
   return (
     <div className="flex flex-col items-center justify-center p-6">
       <div className="text-center mt-5 text-4xl font-serif">
