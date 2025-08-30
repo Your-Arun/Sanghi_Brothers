@@ -127,7 +127,7 @@ const UpdatePumpSheet = () => {
     };
   return (
     <div className="flex flex-col items-center justify-center  p-6">
-      <h1 className="text-center text-4xl p-4">PUMP REPORT SHEET</h1>
+      <h1 className="text-center text-4xl ">PUMP REPORT SHEET</h1>
       <form>
         <div className="text-center text-3xl p-4">
           <h1>

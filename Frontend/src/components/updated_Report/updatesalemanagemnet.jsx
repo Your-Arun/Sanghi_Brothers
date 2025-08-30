@@ -181,8 +181,8 @@ const updatesalemanagemnet = () => {
 
     return (
         <>
-            <div className="flex flex-col items-center justify-center ">
-                <h1 className="text-center text-4xl p-4 font-bold">SALES MANAGEMENT SHEET</h1>
+            <div className="flex flex-col items-center justify-center p-6 ">
+                <h1 className="text-center text-4xl ">SALES MANAGEMENT SHEET</h1>
                 <form onSubmit={handleSave}>
                     <div className="flex justify-evenly items-center  p-4">
                         <Link to={"/mastersheet"}>
@@ -202,70 +202,70 @@ const updatesalemanagemnet = () => {
                             </button>{" "}
                         </div>
                     </div>
-                    <div className="table-container">
+                    <div className="table-container tbble">
                         <table>
-                        <thead>
-                            <th>Point</th>
-                            <th>Item to Check</th>
-                            <th>Ok</th>
-                            <th>Responsible</th>
-                            <th>Defect Person</th>
-                            <th>Defect Delays Days</th>
-                            <th>Deadline</th>
-                        </thead>
-                        <tbody>
-                            {points.map((point, index) => (
-                                <tr key={index}>
-                                    <td>
-                                        {index + 1}
-                                    </td>
-                                    <td>
-                                        {items[index]}
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="checkbox"
-                                            name="ok"
-                                            checked={point.ok === true || point.ok === "Yes" || point.ok === "true"}
-                                            onChange={(e) => handleInputChnge(e, index)}
-                                        />
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="text"
-                                            name="responsible"
-                                            value={point.responsible}
-                                            onChange={(e) => handleInputChnge(e, index)}
-                                        />
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="text"
-                                            name="defectPerson"
-                                            value={point.defectPerson}
-                                            onChange={(e) => handleInputChnge(e, index)}
-                                        />
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="text"
-                                            name="defectDelaysDays"
-                                            value={point.defectDelaysDays}
-                                            onChange={(e) => handleInputChnge(e, index)}
-                                        />
-                                    </td>
-                                    <td>
-                                        <input
-                                            type="text"
-                                            name="deadline"
-                                            value={point.deadline}
-                                            onChange={(e) => handleInputChnge(e, index)}
-                                        />
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            <thead>
+                                <th>Point</th>
+                                <th>Item to Check</th>
+                                <th>Ok</th>
+                                <th>Responsible</th>
+                                <th>Defect Person</th>
+                                <th>Defect Delays Days</th>
+                                <th>Deadline</th>
+                            </thead>
+                            <tbody>
+                                {points.map((point, index) => (
+                                    <tr key={index}>
+                                        <td>
+                                            {index + 1}
+                                        </td>
+                                        <td>
+                                            {items[index]}
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="checkbox"
+                                                name="ok"
+                                                checked={point.ok === true || point.ok === "Yes" || point.ok === "true"}
+                                                onChange={(e) => handleInputChnge(e, index)}
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                name="responsible"
+                                                value={point.responsible}
+                                                onChange={(e) => handleInputChnge(e, index)}
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                name="defectPerson"
+                                                value={point.defectPerson}
+                                                onChange={(e) => handleInputChnge(e, index)}
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                name="defectDelaysDays"
+                                                value={point.defectDelaysDays}
+                                                onChange={(e) => handleInputChnge(e, index)}
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                name="deadline"
+                                                value={point.deadline}
+                                                onChange={(e) => handleInputChnge(e, index)}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </form>
             </div>
