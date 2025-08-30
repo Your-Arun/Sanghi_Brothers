@@ -211,20 +211,16 @@ function SBI01Update() {
     updtSbi.inputs.c37 +
     updtSbi.inputs.c38 +
     updtSbi.inputs.c39;
-
-
-
-    const date11= updtSbi.inputs.date1
-    const date12= updtSbi.inputs.date2
-    const date13= updtSbi.inputs.date3
-    const date14= updtSbi.inputs.date4
-    const date15= updtSbi.inputs.date5
-    const date16= updtSbi.inputs.date6
-    const date17= updtSbi.inputs.date7
-    const date18= updtSbi.inputs.date8
-    const date19= updtSbi.inputs.date9
-   
-    const date199 =updtSbi?.inputs?date19?.split("T")[0] || "";
+  
+    const date19 =updtSbi?.inputs?.date9?.split("T")[0] || "";
+    const date11 =updtSbi?.inputs?.date1?.split("T")[0] || "";
+    const date12 =updtSbi?.inputs?.date2?.split("T")[0] || "";
+    const date13 =updtSbi?.inputs?.date3?.split("T")[0] || "";
+    const date14 =updtSbi?.inputs?.date4?.split("T")[0] || "";
+    const date15 =updtSbi?.inputs?.date5?.split("T")[0] || "";
+    const date16 =updtSbi?.inputs?.date6?.split("T")[0] || "";
+    const date17 =updtSbi?.inputs?.date7?.split("T")[0] || "";
+    const date18 =updtSbi?.inputs?.date8?.split("T")[0] || "";
 
   return (
     <>
@@ -233,7 +229,7 @@ function SBI01Update() {
           Updated Fund Position of{" "}
           <span className="text-red-600">Sanghi Brothers</span>
         </h1>
-        <h1>Bank position as on  {date199}</h1>
+        <h1>Bank position as on  {date19}</h1>
         <div className="flex justify-evenly items-center  p-4">
           <Link to={"/sbbank"}>
             <div className="bg-transparent">
@@ -812,7 +808,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td> payment to bpcl for invoice {date11.split("T")[0]}</td>
+                  <td> payment to bpcl for invoice {date11}</td>
                   <td>
                     <input
                       type="number"
@@ -826,7 +822,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td> payment to bpcl for invoice {date12.split("T")[0]} </td>
+                  <td> payment to bpcl for invoice {date12} </td>
                   <td>
                     <input
                       type="number"
@@ -840,7 +836,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td> payment to bpcl for invoice {date13.split("T")[0]}</td>
+                  <td> payment to bpcl for invoice {date13}</td>
                   <td>
                     <input
                       type="number"
@@ -1042,7 +1038,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td>Due payment to bpcl for invoice {date14.split("T")[0]}</td>
+                  <td>Due payment to bpcl for invoice {date14}</td>
                   <td>
                     {" "}
                     <input
@@ -1057,7 +1053,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td>Due payment to bpcl for invoice {date15.split("T")[0]}</td>
+                  <td>Due payment to bpcl for invoice {date15}</td>
                   <td>
                     {" "}
                     <input
@@ -1072,7 +1068,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td>Due payment to bpcl for invoice {date16.split("T")[0]}</td>
+                  <td>Due payment to bpcl for invoice {date16}</td>
                   <td>
                     {" "}
                     <input
@@ -1087,7 +1083,7 @@ function SBI01Update() {
                   <td>
                     <br />
                   </td>
-                  <td>Due payment to bpcl for invoice {date17.split("T")[0]}</td>
+                  <td>Due payment to bpcl for invoice {date17}</td>
                   <td>
                     {" "}
                     <input
@@ -1112,7 +1108,7 @@ function SBI01Update() {
                       onChange={handleInputChange}
                     />
                   </td>
-                  <td>{date18.split("T")[0]} </td>
+                  <td>{date18} </td>
                   <td>
                     {updtSbi.CalculatedValue.e39result.toFixed(2)} <br />
                     TOTAL DUE as on AS PER BPCL <br />
