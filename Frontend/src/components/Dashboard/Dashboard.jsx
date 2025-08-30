@@ -441,13 +441,13 @@ const UpdateDashboard = () => {
                                 onClick={() => navigate("/sbbank")}
                                 className="p-4 bg-green-100 hover:bg-green-200 rounded shadow cursor-pointer transition"
                             >
-                                <h3 className="text-lg font-semibold text-red-700">📊 SB Bank Report</h3>
+                                <h3 className="text-lg font-semibold text-red-700">📊 Bank Report</h3>
                             </div>
                             <div
                                 onClick={() => navigate("/bank/monthlyfundflow")}
                                 className="p-4 bg-purple-100 hover:bg-purple-200 rounded shadow cursor-pointer transition"
                             >
-                                <h3 className="text-lg font-semibold text-pink-700">📅 Monthly Fund Flow</h3>
+                                <h3 className="text-lg font-semibold text-pink-700">📅 Sales Reports</h3>
                             </div>
                             <div
                                 onClick={() => navigate("/mastersheet")}
