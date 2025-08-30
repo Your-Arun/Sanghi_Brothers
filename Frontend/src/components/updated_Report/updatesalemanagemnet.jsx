@@ -205,24 +205,26 @@ const updatesalemanagemnet = () => {
                     <div className="table-container">
                         <table>
                             <thead>
-                                <th>Point</th>
-                                <th>Item to Check</th>
-                                <th>Ok</th>
-                                <th>Responsible</th>
-                                <th>Defect Person</th>
-                                <th>Defect Delays Days</th>
-                                <th>Deadline</th>
+                                <tr>
+                                    <th className="p-2 border">Point</th>
+                                    <th className="p-2 border">Item to Check</th>
+                                    <th className="p-2 border">Ok</th>
+                                    <th className="p-2 border">Responsible</th>
+                                    <th className="p-2 border">Defect Person</th>
+                                    <th className="p-2 border">Defect Delays Days</th>
+                                    <th className="p-2 border">Deadline</th>
+                                </tr>
                             </thead>
                             <tbody>
                                 {points.map((point, index) => (
                                     <tr key={index}>
-                                        <td>
+                                        <td className="p-2 border">
                                             {index + 1}
                                         </td>
-                                        <td>
+                                        <td className="p-2 border">
                                             {items[index]}
                                         </td>
-                                        <td>
+                                        <td className="p-2 border">
                                             <input
                                                 type="checkbox"
                                                 name="ok"
@@ -230,7 +232,7 @@ const updatesalemanagemnet = () => {
                                                 onChange={(e) => handleInputChnge(e, index)}
                                             />
                                         </td>
-                                        <td>
+                                        <td className="p-2 border">
                                             <input
                                                 type="text"
                                                 name="responsible"
@@ -238,7 +240,7 @@ const updatesalemanagemnet = () => {
                                                 onChange={(e) => handleInputChnge(e, index)}
                                             />
                                         </td>
-                                        <td>
+                                        <td className="p-2 border">
                                             <input
                                                 type="text"
                                                 name="defectPerson"
@@ -246,7 +248,7 @@ const updatesalemanagemnet = () => {
                                                 onChange={(e) => handleInputChnge(e, index)}
                                             />
                                         </td>
-                                        <td>
+                                        <td className="p-2 border">
                                             <input
                                                 type="text"
                                                 name="defectDelaysDays"
@@ -254,7 +256,7 @@ const updatesalemanagemnet = () => {
                                                 onChange={(e) => handleInputChnge(e, index)}
                                             />
                                         </td>
-                                        <td>
+                                        <td className="p-2 border">
                                             <input
                                                 type="text"
                                                 name="deadline"
