@@ -223,7 +223,8 @@ function SBI01Update() {
     const date17= updtSbi.inputs.date7
     const date18= updtSbi.inputs.date8
     const date19= updtSbi.inputs.date9
-
+   
+    const date199 =updtSbi?.inputs?date19?.split("T")[0] || "";
 
   return (
     <>
@@ -232,7 +233,7 @@ function SBI01Update() {
           Updated Fund Position of{" "}
           <span className="text-red-600">Sanghi Brothers</span>
         </h1>
-        <h1>Bank position as on  {date19.split("T")[0]}</h1>
+        <h1>Bank position as on  {date199}</h1>
         <div className="flex justify-evenly items-center  p-4">
           <Link to={"/sbbank"}>
             <div className="bg-transparent">
