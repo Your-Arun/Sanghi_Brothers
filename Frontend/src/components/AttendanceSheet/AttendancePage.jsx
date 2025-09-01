@@ -77,19 +77,23 @@ const AttendancePage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white p-6 flex flex-col">
       {/* Header */}
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-extrabold tracking-wide drop-shadow-lg">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8 text-center md:text-left">
+        {/* Heading */}
+        <h1 className="text-3xl md:text-4xl font-extrabold tracking-wide drop-shadow-lg mb-4 md:mb-0">
           🧑‍💼 Attendance Management
         </h1>
+
+        {/* Add User Button - Only for Manager */}
         {currentUser?.department === "manager" && (
           <button
             onClick={() => navigate("/create-user")}
-            className="bg-gradient-to-r from-blue-500 to-blue-700 px-5 py-2 rounded-xl shadow-lg hover:scale-105 transition-transform font-semibold"
+            className="bg-gradient-to-r from-blue-500 to-blue-700 px-5 py-2 rounded-xl shadow-lg hover:scale-105 transition-transform font-semibold w-fit mx-auto md:mx-0"
           >
             ➕ Add User
           </button>
         )}
       </div>
+
 
       {/* Controls */}
       <div className="flex flex-wrap gap-4 items-center mb-8 bg-gray-800/70 p-4 rounded-xl shadow-lg backdrop-blur">
