@@ -47,10 +47,7 @@ const verifyToken = (req, res, next) => {
 Router.post("/signup", async (req, res) => {
   try {
     let { name, username, email, phone, password, department } = req.body;
-    name = name;
-    username = username;
-    email = email;
-    phone = phone;
+
     department = department.toLowerCase();
 
     const validDepartments = ["manager", "backoffice", "accounts/finance", "staff"];
@@ -63,82 +60,45 @@ Router.post("/signup", async (req, res) => {
       return res.status(400).json({ message: "Username or email already taken" });
     }
 
+    // ✅ password ko yahin hash karo (model me pre("save") hata do warna double hash hoga)
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ name, username, email, phone, password: hashedPassword, department });
+
+    const newUser = new User({ 
+      name, 
+      username, 
+      email, 
+      phone, 
+      password: hashedPassword, 
+      department 
+    });
+
     await newUser.save();
-    
-    res.status(201).json({ message: "User registered successfully",
+
+    // ✅ ab token banate hain
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    res.status(201).json({ 
+      message: "User registered successfully",
       user: newUser,
       token,
-     });
+    });
+
   } catch (err) {
     console.error("Signup Error:", err);
     res.status(500).json({ message: "Internal server error. Please try again later." });
   }
 });
-
-// Router.post("/login", async (req, res) => {
-//   try {
-//     const { identifier, password } = req.body;
-
-//     const adminEmail = process.env.GMAIL;
-//     const adminPassword = process.env.PASSWORD;
-
-//     // ✅ Check if this is the admin user (from env)
-//     if (identifier === adminEmail && password === adminPassword) {
-//       const adminUser = {
-//         _id: "admin-id",
-//         username: "SuperAdmin",
-//         email: adminEmail,
-//         department: "admin",
-//       };
-
-//       const token = jwt.sign({ id: adminUser._id }, process.env.JWT_SECRET, {
-//         expiresIn: "7d",
-//       });
-
-//       return res.status(200).json({ user: adminUser, token });
-//     }
-
-//     // Check if identifier is an email or phone
-//     const isEmail = /\S+@\S+\.\S+/.test(identifier);
-//     const query = isEmail ? { email: identifier } : { phone: identifier };
-
-//     const user = await User.findOne(query);
-//     if (!user) {
-//       return res.status(400).json({ message: `User not found with ${identifier}` });
-//     }
-
-//     const isMatch = await bcrypt.compare(password, user.password);
-//     if (!isMatch) {
-//       return res.status(400).json({ message: "Password does not match" });
-//     }
-
-//     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-//       expiresIn: "7d",
-//     });
-
-//     res.status(200).json({ user, token });
-//   } catch (err) {
-//     console.error("Login Error:", err);
-//     res.status(500).json({ message: "Something went wrong" });
-//   }
-// });
-
-
-// ========================== LOGIN ==========================
+// ✅ Login Route (Fixed double response issue)
 Router.post("/login", async (req, res) => {
   try {
     const { identifier, password } = req.body;
 
-    if (!identifier || !password) {
-      return res.status(400).json({ message: "Email/Phone and password are required" });
-    }
-
     const adminEmail = process.env.GMAIL;
-    const adminPassword = process.env.PASSWORD; // ✅ make sure .env key matches
+    const adminPassword = process.env.PASSWORD;
 
-    // ✅ Admin login check
+    // ✅ Check if this is the admin user (from env)
     if (identifier === adminEmail && password === adminPassword) {
       const adminUser = {
         _id: "admin-id",
@@ -154,22 +114,20 @@ Router.post("/login", async (req, res) => {
       return res.status(200).json({ user: adminUser, token });
     }
 
-    // ✅ Check if identifier is email or phone
+    // Check if identifier is an email or phone
     const isEmail = /\S+@\S+\.\S+/.test(identifier);
     const query = isEmail ? { email: identifier } : { phone: identifier };
 
     const user = await User.findOne(query);
     if (!user) {
-      return res.status(404).json({ message: "User not found. Please signup first." });
+      return res.status(400).json({ message: `User not found with ${identifier}` });
     }
 
-    // ✅ Password check
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid password" });
+      return res.status(400).json({ message: "Password does not match" });
     }
 
-    // ✅ Generate JWT
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
@@ -177,9 +135,10 @@ Router.post("/login", async (req, res) => {
     res.status(200).json({ user, token });
   } catch (err) {
     console.error("Login Error:", err);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Something went wrong" });
   }
 });
+
 
 // ✅ Profile Route (Fixed missing token vali  dation)
 Router.get("/profile", verifyToken, async (req, res) => {
