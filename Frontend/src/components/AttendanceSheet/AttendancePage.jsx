@@ -8,13 +8,13 @@ import BackButton from "../Home Page/BackButtonn";
 
 const AttendancePage = () => {
   const [users, setUsers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
   const [attendanceTableData, setAttendanceTableData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("recent");
   const [selectedUser, setSelectedUser] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const { user: currentUser } = useContext(UserContext);
+
+  const [loadingUsers, setLoadingUsers] = useState(false);
+  const [loadingAttendance, setLoadingAttendance] = useState(false);
 
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
@@ -23,38 +23,55 @@ const AttendancePage = () => {
   const [page, setPage] = useState(1);
   const usersPerPage = 6;
 
-  const fetchAllData = async () => {
-    setLoading(true);
+  const navigate = useNavigate();
+  const { user: currentUser } = useContext(UserContext);
+
+  // ✅ Fetch users only
+  const fetchUsers = async () => {
+    setLoadingUsers(true);
     try {
-      const usersRes = await axiosInstance.get(
+      const res = await axiosInstance.get(
         `/users/attendance?month=${month}&year=${year}`
       );
-      setUsers(usersRes.data || []);
+      setUsers(res.data || []);
+    } catch (err) {
+      console.error("Error fetching users:", err);
+    } finally {
+      setLoadingUsers(false);
+    }
+  };
 
+  // ✅ Fetch attendance only
+  const fetchAttendance = async () => {
+    setLoadingAttendance(true);
+    try {
       const dateString = `${year}-${String(month).padStart(2, "0")}`;
-      const attendanceRes = await axiosInstance.get(
+      const res = await axiosInstance.get(
         `/daily-attendance?date=${dateString}`
       );
-      setAttendanceTableData(attendanceRes.data || []);
-    } catch (error) {
-      console.error("Error fetching data:", error);
+      setAttendanceTableData(res.data || []);
+    } catch (err) {
+      console.error("Error fetching attendance:", err);
     } finally {
-      setLoading(false);
+      setLoadingAttendance(false);
     }
   };
 
   useEffect(() => {
-    fetchAllData();
+    fetchUsers();
+    fetchAttendance();
   }, [month, year]);
 
+  // ✅ Sorting
   const sortedUsers = [...users].sort((a, b) => {
     if (sortBy === "name-asc") return a.name?.localeCompare(b.name);
     if (sortBy === "name-desc") return b.name?.localeCompare(a.name);
     return new Date(b.createdAt) - new Date(a.createdAt);
   });
 
-  const filteredUsers = sortedUsers.filter((user) =>
-    user.name?.toLowerCase().includes(searchTerm.toLowerCase())
+  // ✅ Searching
+  const filteredUsers = sortedUsers.filter((u) =>
+    u.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // ✅ Pagination logic
@@ -65,7 +82,7 @@ const AttendancePage = () => {
   );
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
-  // ✅ Placeholder users (dummy cards) ताकि हमेशा 6 दिखें
+  // ✅ Dummy placeholders (so grid always stays balanced)
   const displayedUsers = [
     ...paginatedUsers,
     ...Array.from(
@@ -78,12 +95,9 @@ const AttendancePage = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white p-6 flex flex-col">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8 text-center md:text-left">
-        {/* Heading */}
         <h1 className="text-3xl md:text-4xl font-extrabold tracking-wide drop-shadow-lg mb-4 md:mb-0">
           🧑‍💼 Attendance Management
         </h1>
-
-        {/* Add User Button - Only for Manager */}
         {currentUser?.department === "manager" && (
           <button
             onClick={() => navigate("/create-user")}
@@ -93,7 +107,6 @@ const AttendancePage = () => {
           </button>
         )}
       </div>
-
 
       {/* Controls */}
       <div className="flex flex-wrap gap-4 items-center mb-8 bg-gray-800/70 p-4 rounded-xl shadow-lg backdrop-blur">
@@ -115,11 +128,15 @@ const AttendancePage = () => {
         </select>
 
         <button
-          onClick={fetchAllData}
+          onClick={() => {
+            fetchUsers();
+            fetchAttendance();
+          }}
           className="bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-lg text-black font-semibold shadow-md"
         >
           🔄 Refresh
         </button>
+
         <button
           onClick={() => navigate("/daily-log-view")}
           className="bg-gradient-to-r from-blue-600 to-indigo-700 hover:scale-105 px-4 py-2 rounded-lg shadow-md transition-transform"
@@ -128,9 +145,9 @@ const AttendancePage = () => {
         </button>
       </div>
 
-      {/* User Cards with Pagination */}
+      {/* Users grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        {loading ? (
+        {loadingUsers ? (
           <p className="text-center col-span-full text-gray-400">
             ⏳ Loading users...
           </p>
@@ -156,7 +173,6 @@ const AttendancePage = () => {
                 </div>
               </div>
             ) : (
-              // Dummy card placeholder
               <div
                 key={idx}
                 className="bg-gray-700/40 rounded-2xl p-5 opacity-30"
@@ -179,7 +195,7 @@ const AttendancePage = () => {
         )}
       </div>
 
-      {/* Pagination Controls */}
+      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-center gap-3 mb-10">
           <button
@@ -202,20 +218,27 @@ const AttendancePage = () => {
         </div>
       )}
 
-      {/* Modal */}
+      {/* Profile Modal */}
       {selectedUser && (
         <ProfileModal
           user={selectedUser}
           onClose={() => setSelectedUser(null)}
-          onUserUpdated={fetchAllData}
+          onUserUpdated={() => {
+            fetchUsers();
+            fetchAttendance();
+          }}
         />
       )}
 
       {/* Attendance Table */}
       <div className="flex-1 min-h-[100%] bg-gray-800/70 p-4 rounded-xl shadow-xl backdrop-blur">
-        <AttendanceTablePage data={attendanceTableData} loading={loading} />
+        <AttendanceTablePage
+          data={attendanceTableData}
+          loading={loadingAttendance}
+        />
       </div>
 
+      {/* Back Button */}
       <div className="mt-6">
         <BackButton label="⬅ Go Back" />
       </div>
