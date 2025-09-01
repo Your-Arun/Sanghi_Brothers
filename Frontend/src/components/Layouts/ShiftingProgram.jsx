@@ -499,7 +499,7 @@ const ShiftManagementSystem = () => {
           </button>
         </div>
         <div>
-          <div onClick={() => navigate('/allshifting')} className="bg-green-500 text-white px-4 py-2 rounded">
+          <div onClick={() => navigate('/allshifting')} className="bg-green-500 text-white px-4 py-2 rounded cursor-pointer">
             All Shifts
           </div>
         </div>
