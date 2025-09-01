@@ -79,7 +79,7 @@ const AttendanceTablePage = () => {
         </div>
 
         {/* Legend */}
-        <div className="flex gap-6 mb-4 text-sm">
+        <div className="flex gap-6 mb-4 text-sm hidden md:flex">
           <div className="flex items-center gap-2">
             <span className="text-green-400 text-xl">✅</span> Present
           </div>
