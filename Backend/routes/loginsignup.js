@@ -106,12 +106,12 @@ Router.post("/login", async (req, res) => {
 
     const user = await User.findOne(query);
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(400).json({ message: `User not found with ${identifier}` });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Incorrect password" });
+      return res.status(400).json({ message: "Password does not match" });
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
