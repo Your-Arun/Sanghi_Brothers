@@ -64,7 +64,6 @@ const UpdateDashboard = () => {
                 const total = cashierRes.data.reduce((sum, item) => sum + item.amount, 0);
                 setCashierTotal(total);
             } catch (err) {
-                console.error("Error loading data:", err);
                 toast.error("Failed to fetch dashboard data.");
             }
         };
@@ -80,7 +79,7 @@ const UpdateDashboard = () => {
                     setProfilePhoto(res.data.photo);
                 }
             } catch (err) {
-                console.error("Error fetching profile photo:", err);
+                toast.error("Error fetching profile photo:", err);
             }
         };
         fetchProfilePhoto();
