@@ -17,8 +17,8 @@ const ProfileModal = ({ closeModal }) => {
   useEffect(() => {
     setIsChanged(
       name !== user?.name ||
-      username !== user?.username ||
-      phone !== user?.phone
+        username !== user?.username ||
+        phone !== user?.phone
     );
   }, [name, username, phone, user]);
 
@@ -50,10 +50,10 @@ const ProfileModal = ({ closeModal }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-4 z-50">
-      <div className="bg-white p-6 sm:p-6 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md max-h-[95vh] overflow-y-auto relative">
+      <div className="bg-white p-6 sm:p-6 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md max-h-[95vh] relative overflow-y-auto">
         {/* Close Button */}
         <button
-          className="absolute top-2 right-2 text-gray-500 text-xl hover:text-gray-700"
+          className="absolute top-2 right-2 text-gray-500 text-xl bg-transparent"
           onClick={closeModal}
           aria-label="Close"
         >
@@ -68,56 +68,63 @@ const ProfileModal = ({ closeModal }) => {
         {/* Form */}
         <form onSubmit={handleProfileSave} className="space-y-4">
           {/* Name */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Name:</label>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+            <label className="sm:w-1/3 text-sm font-semibold text-gray-700">
+              Name:
+            </label>
             <input
               type="text"
               value={name}
-              disabled={loading}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-400"
+              className="w-full sm:flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
               required
             />
           </div>
 
           {/* Username */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Username:</label>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+            <label className="sm:w-1/3 text-sm font-semibold text-gray-700">
+              Username:
+            </label>
             <input
               type="text"
               value={username}
-              disabled={loading}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-400"
+              className="w-full sm:flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
               required
             />
           </div>
 
-          {/* Email - Read-only */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Email:</label>
-            <p className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-sm">
+          {/* Email (Read-only) */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+            <label className="sm:w-1/3 text-sm font-semibold text-gray-700">
+              Email:
+            </label>
+            <p className="w-full sm:flex-1 px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-sm">
               {user.email}
             </p>
           </div>
 
-          {/* Department - Read-only */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Role:</label>
-            <p className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-sm">
+          {/* Role (Read-only) */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+            <label className="sm:w-1/3 text-sm font-semibold text-gray-700">
+              Role:
+            </label>
+            <p className="w-full sm:flex-1 px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-sm">
               {user.department || "N/A"}
             </p>
           </div>
 
-          {/* Phone Number */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1">Mobile Number:</label>
+          {/* Phone */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+            <label className="sm:w-1/3 text-sm font-semibold text-gray-700">
+              Mobile Number:
+            </label>
             <input
               type="tel"
               value={phone}
-              disabled={loading}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-400"
+              className="w-full sm:flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
               required
             />
           </div>
@@ -126,12 +133,7 @@ const ProfileModal = ({ closeModal }) => {
           {user.department === "manager" && (
             <div className="text-center">
               <button
-                type="button"
-                disabled={loading}
-                onClick={() => {
-                  closeModal();
-                  navigate("/admin-panel");
-                }}
+                onClick={() => navigate("/admin-panel")}
                 className="w-full px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition text-sm"
               >
                 Go to Admin Panel
@@ -140,22 +142,17 @@ const ProfileModal = ({ closeModal }) => {
           )}
 
           {/* Bottom Buttons */}
-          <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
+          <div className="flex flex-col sm:flex-row sm:justify-between gap-2 mt-4">
             <button
               type="button"
-              disabled={loading}
               className="w-full sm:w-auto px-4 py-2 bg-red-500 text-white rounded-md text-sm"
-              onClick={() => {
-                handleLogout();
-                closeModal();
-              }}
+              onClick={handleLogout}
             >
               Logout
             </button>
             <div className="flex gap-2 justify-end w-full sm:w-auto">
               <button
                 type="button"
-                disabled={loading}
                 className="px-4 py-2 bg-gray-300 text-black rounded-md text-sm"
                 onClick={closeModal}
               >
@@ -163,12 +160,12 @@ const ProfileModal = ({ closeModal }) => {
               </button>
               <button
                 type="submit"
-                disabled={!isChanged || loading}
                 className={`px-4 py-2 text-sm rounded-md ${
                   isChanged
-                    ? "bg-blue-500 text-white hover:bg-blue-600"
+                    ? "bg-blue-500 text-white"
                     : "bg-gray-400 text-gray-700 cursor-not-allowed"
                 }`}
+                disabled={!isChanged || loading}
               >
                 {loading ? "Saving..." : "Save"}
               </button>
