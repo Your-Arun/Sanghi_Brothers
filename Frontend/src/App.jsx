@@ -159,3 +159,4 @@ export default App;
 
 //login signup ki dikkt hai signup krne pr success hora hai pr login nhh hora usi id password se 
 //agr signup me passhashed krta hu to attnedance sheet me dikkt dega ..crreate krne time
+//staff panel me foto ka krna hai 
