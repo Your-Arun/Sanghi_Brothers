@@ -271,6 +271,7 @@ const UpdateDashboard = () => {
                 <img
                     src={profilePhoto || "/user.png"}
                     alt="Profile"
+                    onClick={() => setProfileOpen(true)} 
                     className="w-16 h-16 rounded-full object-cover border-2 border-gray-300 shadow-md cursor-pointer hover:scale-105 transition-transform duration-300"
                 />
 
