@@ -50,10 +50,10 @@ const ProfileModal = ({ closeModal }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-4 z-50">
-      <div className="bg-white p-6 sm:p-6 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md max-h-[95vh] relative">
+      <div className="bg-white p-6 sm:p-6 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md max-h-[95vh] overflow-y-auto relative">
         {/* Close Button */}
         <button
-          className="absolute top-2 right-2 text-gray-500 text-xl bg-transparent"
+          className="absolute top-2 right-2 text-gray-500 text-xl hover:text-gray-700"
           onClick={closeModal}
           aria-label="Close"
         >
@@ -61,7 +61,7 @@ const ProfileModal = ({ closeModal }) => {
         </button>
 
         {/* Title */}
-        <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4 text-center text-blue-600">
+        <h2 className="text-xl sm:text-2xl font-bold mb-4 text-center text-blue-600">
           Edit Profile
         </h2>
 
@@ -73,8 +73,9 @@ const ProfileModal = ({ closeModal }) => {
             <input
               type="text"
               value={name}
+              disabled={loading}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-400"
               required
             />
           </div>
@@ -85,8 +86,9 @@ const ProfileModal = ({ closeModal }) => {
             <input
               type="text"
               value={username}
+              disabled={loading}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-400"
               required
             />
           </div>
@@ -113,8 +115,9 @@ const ProfileModal = ({ closeModal }) => {
             <input
               type="tel"
               value={phone}
+              disabled={loading}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-400"
               required
             />
           </div>
@@ -123,7 +126,12 @@ const ProfileModal = ({ closeModal }) => {
           {user.department === "manager" && (
             <div className="text-center">
               <button
-                onClick={() => navigate("/admin-panel")}
+                type="button"
+                disabled={loading}
+                onClick={() => {
+                  closeModal();
+                  navigate("/admin-panel");
+                }}
                 className="w-full px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition text-sm"
               >
                 Go to Admin Panel
@@ -135,14 +143,19 @@ const ProfileModal = ({ closeModal }) => {
           <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
             <button
               type="button"
+              disabled={loading}
               className="w-full sm:w-auto px-4 py-2 bg-red-500 text-white rounded-md text-sm"
-              onClick={handleLogout}
+              onClick={() => {
+                handleLogout();
+                closeModal();
+              }}
             >
               Logout
             </button>
             <div className="flex gap-2 justify-end w-full sm:w-auto">
               <button
                 type="button"
+                disabled={loading}
                 className="px-4 py-2 bg-gray-300 text-black rounded-md text-sm"
                 onClick={closeModal}
               >
@@ -150,12 +163,12 @@ const ProfileModal = ({ closeModal }) => {
               </button>
               <button
                 type="submit"
+                disabled={!isChanged || loading}
                 className={`px-4 py-2 text-sm rounded-md ${
                   isChanged
-                    ? "bg-blue-500 text-white"
+                    ? "bg-blue-500 text-white hover:bg-blue-600"
                     : "bg-gray-400 text-gray-700 cursor-not-allowed"
                 }`}
-                disabled={!isChanged || loading}
               >
                 {loading ? "Saving..." : "Save"}
               </button>
