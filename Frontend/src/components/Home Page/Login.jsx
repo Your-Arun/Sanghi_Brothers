@@ -43,6 +43,7 @@ const Login = ({ embedMode, onClose }) => {
         identifier,
         password,
       });
+      console.log(data);
 
       sessionStorage.setItem(sessionKey, JSON.stringify(data.user));
       sessionStorage.setItem("authToken", data.token);
