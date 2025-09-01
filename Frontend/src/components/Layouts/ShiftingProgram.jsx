@@ -66,14 +66,50 @@ const ShiftManagementSystem = () => {
       }
     }
   };
+
+
+  const confirmDeleteToast = (onConfirm) => {
+    toast(
+      ({ closeToast }) => (
+        <div className="flex flex-col gap-2">
+          <p>Are you sure you want to delete this ?</p>
+          <div className="flex gap-4 mt-2">
+            <button
+              onClick={() => {
+                onConfirm()
+                closeToast()
+              }}
+              className="bg-red-500 text-white px-3 py-1 rounded"
+            >
+              Yes
+            </button>
+            <button
+              onClick={closeToast}
+              className="bg-gray-300 px-3 py-1 rounded"
+            >
+              No
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        position: "top-center",
+        autoClose: false,
+        closeOnClick: false,
+        closeButton: false,
+      }
+    )
+  }
   const handleRemoveMember = async (id) => {
-    if (!id) return;
-    try {
-      await axiosInstance.delete(`/shifting/${id}`);
-      setMembers(members.filter((m) => m._id !== id));
-    } catch (error) {
-      alert("Failed to delete member.");
-    }
+    confirmDeleteToast(async () => {
+      if (!id) return;
+      try {
+        await axiosInstance.delete(`/shifting/${id}`);
+        setMembers(members.filter((m) => m._id !== id));
+      } catch (error) {
+        alert("Failed to delete member.");
+      }
+    })
   };
   const handleUpdateAvailability = async (id, status) => {
     try {
@@ -101,10 +137,10 @@ const ShiftManagementSystem = () => {
       const shiftData = shifts.map((shift) => {
         const nozzles = shift.nozzles || [1, 2, 3, 4, 5, 6];
         const members = shift.members || [];
-  
+
         const isMorning = shift.name === "Morning Shift";
         const overtimeList = isMorning ? morningOvertimeMembers : eveningOvertimeMembers;
-  
+
         return {
           date: date,
           shiftType: shift.name,
@@ -116,7 +152,7 @@ const ShiftManagementSystem = () => {
           nozzles: nozzles.map((nozzle, index) => {
             const assignedMember = members[index] || null;
             const isOvertime = assignedMember && overtimeList.includes(assignedMember._id);
-  
+
             return {
               nozzleNumber: `Nozzle ${index + 1}`,
               member: assignedMember ? assignedMember.name : "Unassigned",
@@ -125,12 +161,12 @@ const ShiftManagementSystem = () => {
           }),
         };
       });
-  
+
       if (!date) {
         toast.warning("Please select Date");
         return;
       }
-  
+
       await axiosInstance.post("/shiftingsavee", shiftData);
       toast.success("Shift data saved successfully!");
     } catch (error) {
@@ -138,7 +174,7 @@ const ShiftManagementSystem = () => {
       console.error(error);
     }
   };
-  
+
   const handleAssignMorningShift = () => {
     if (members.length === 0) {
       alert("Please add team members first");
