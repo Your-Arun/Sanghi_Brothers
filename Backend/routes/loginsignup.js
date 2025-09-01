@@ -66,8 +66,11 @@ Router.post("/signup", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({ name, username, email, phone, password: hashedPassword, department });
     await newUser.save();
-
-    res.status(201).json({ message: "User registered successfully" });
+    
+    res.status(201).json({ message: "User registered successfully",
+      user: newUser,
+      token,
+     });
   } catch (err) {
     console.error("Signup Error:", err);
     res.status(500).json({ message: "Internal server error. Please try again later." });
