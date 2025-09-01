@@ -256,6 +256,7 @@ const StaffDashboard = () => {
                   className="bg-white border p-4 rounded-lg shadow hover:shadow-md transition"
                 >
                   <h3 className="text-blue-600 font-bold text-lg mb-2">{cashSlip.name}</h3>
+                  <p><strong>Date:</strong> {cashSlip.date}</p>
                   <p><strong>Shift:</strong> {cashSlip.shift}</p>
                   <p><strong>Nozzle No:</strong> {cashSlip.nozzleNo}</p>
                   <p><strong>Opening:</strong> {cashSlip.openingReading}</p>
