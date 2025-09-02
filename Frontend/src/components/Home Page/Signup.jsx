@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import axiosInstance from '../Dashboard/axiosInstance';
+import axiosInstance from "../Dashboard/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { GoogleLogin } from "@react-oauth/google"; // ✅ Google Auth library
+import jwt_decode from "jwt-decode"; // ✅ Decode JWT to extract user info
 
 const Signup = ({ embedMode, onClose }) => {
   const [name, setName] = useState("");
@@ -17,6 +19,7 @@ const Signup = ({ embedMode, onClose }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // ✅ Invitation Code Verification
   const handleInviteCodeVerification = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -32,20 +35,37 @@ const Signup = ({ embedMode, onClose }) => {
           setDepartment("staff");
         }
       } else {
-        alert("Invalid invitation code");
+        toast.error("Invalid invitation code");
       }
     } catch (err) {
-      alert("Error verifying invitation code");
+      toast.error("Error verifying invitation code");
     } finally {
       setLoading(false);
     }
   };
 
+  // ✅ Google Auth Success Handler
+  const handleGoogleSuccess = (credentialResponse) => {
+    try {
+      const decoded = jwt_decode(credentialResponse.credential);
+
+      // Google से आए data auto-fill कर देंगे
+      setName(decoded.name || "");
+      setEmail(decoded.email || "");
+      setUsername(decoded.email?.split("@")[0] || "");
+      setPhone(""); // Google number नहीं देता, manually fill करना होगा
+      toast.success("Google Authentication successful, please complete signup!");
+    } catch (err) {
+      toast.error("Google authentication failed");
+    }
+  };
+
+  // ✅ Signup Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!isValidInviteCode) {
-      alert("Please verify your invitation code first");
+      toast.error("Please verify your invitation code first");
       return;
     }
 
@@ -90,10 +110,13 @@ const Signup = ({ embedMode, onClose }) => {
         className="bg-white bg-opacity-90 backdrop-blur-md p-4 md:p-6 rounded-lg shadow-lg w-full max-w-xs md:max-w-sm mx-auto"
         onSubmit={isValidInviteCode ? handleSubmit : handleInviteCodeVerification}
       >
-        <h2 className="text-3xl font-bold text-center text-blue-600 mb-4">Signup</h2>
+        <h2 className="text-3xl font-bold text-center text-blue-600 mb-4">
+          Signup
+        </h2>
 
         {!isValidInviteCode ? (
           <>
+            {/* Invitation Code Field */}
             <input
               type="text"
               placeholder="Enter Invitation Code"
@@ -113,9 +136,19 @@ const Signup = ({ embedMode, onClose }) => {
         ) : (
           <>
             <h1 className="text-base font-semibold text-green-600 text-center mb-3">
-              Welcome as <span className="uppercase text-red-600">{type}❗</span>
+              Welcome as{" "}
+              <span className="uppercase text-red-600">{type}❗</span>
             </h1>
 
+            {/* ✅ Google Auth Button */}
+            <div className="mb-3 flex justify-center">
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => toast.error("Google Login Failed")}
+              />
+            </div>
+
+            {/* Normal Form Fields */}
             <input
               type="text"
               placeholder="Full Name"

@@ -88,7 +88,7 @@ const Login = ({ embedMode, onClose }) => {
     } catch (err) {
       toast.error(
         err.response?.data?.message ||
-          "Google Login failed or user not registered."
+          "Google Login failed or User not registered."
       );
     }
   };

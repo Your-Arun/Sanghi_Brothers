@@ -351,7 +351,7 @@ Router.post("/google-login", async (req, res) => {
     if (!user) {
       return res
         .status(400)
-        .json({ message: "User not registered, please contact admin" });
+        .json({ message: "User not registered" });
     }
 
     const token = jwt.sign(
