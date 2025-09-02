@@ -16,32 +16,28 @@ const Home = () => {
   return (
     <>
       {/* Main Layout */}
-      <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between 
-        min-h-[85vh] md:min-h-screen overflow-hidden bg-white">
+      <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between min-h-[auto] md:min-h-screen overflow-hidden">
 
         {/* Left Section */}
-        <div className="w-full md:w-1/2 px-4 sm:px-6 md:px-12 lg:px-20 py-8 sm:py-12">
+        <div className="w-full md:w-1/2 px-4 sm:px-6 md:px-12 lg:px-20 py-10 md:py-12 text-center md:text-left">
           <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-black mb-4 sm:mb-6 leading-snug">
             We are happily saying <br /> we are awesome
           </h1>
 
-          <p className="text-gray-600 mb-6 sm:mb-8 text-sm sm:text-lg max-w-md font-semibold">
-            THIS IS NOT THE YEAR YOU GET EVERYTHING YOU WANT, THIS IS THE YEAR
-            TO APPRECIATE EVERYTHING YOU HAVE.
+          <p className="text-gray-600 mb-6 sm:mb-8 text-sm sm:text-lg max-w-md mx-auto md:mx-0 font-semibold">
+            THIS IS NOT THE YEAR YOU GET EVERYTHING YOU WANT, THIS IS THE YEAR TO APPRECIATE EVERYTHING YOU HAVE.
           </p>
 
-          <div className="flex flex-col sm:flex-row mt-6 sm:mt-8 gap-3 sm:gap-4">
+          <div className="flex flex-col sm:flex-row mt-6 sm:mt-8 gap-3 sm:gap-4 justify-center md:justify-start">
             <button
               onClick={() => setAuthMode("login")}
-              className="bg-yellow-500 text-black px-5 py-2.5 sm:px-6 sm:py-3 rounded shadow 
-              hover:bg-yellow-400 transition font-semibold"
+              className="bg-yellow-500 text-black w-full sm:w-auto px-6 py-3 rounded shadow hover:bg-yellow-400 transition font-semibold"
             >
               LOGIN
             </button>
             <button
               onClick={() => setAuthMode("signup")}
-              className="border-2 border-black px-5 py-2.5 sm:px-6 sm:py-3 rounded shadow 
-              hover:bg-black hover:text-white transition font-semibold"
+              className="border-2 border-black w-full sm:w-auto px-6 py-3 rounded shadow hover:bg-black hover:text-white transition font-semibold"
             >
               SIGNUP
             </button>
