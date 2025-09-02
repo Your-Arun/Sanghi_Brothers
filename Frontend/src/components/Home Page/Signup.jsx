@@ -48,12 +48,10 @@ const Signup = ({ embedMode, onClose }) => {
   const handleGoogleSuccess = (credentialResponse) => {
     try {
       const decoded = jwt_decode(credentialResponse.credential);
-
-      // Google से आए data auto-fill कर देंगे
       setName(decoded.name || "");
       setEmail(decoded.email || "");
       setUsername(decoded.email?.split("@")[0] || "");
-      setPhone(""); // Google number नहीं देता, manually fill करना होगा
+      setPhone(""); 
       toast.success("Google Authentication successful, please complete signup!");
     } catch (err) {
       toast.error("Google authentication failed");

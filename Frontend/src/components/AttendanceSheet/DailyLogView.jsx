@@ -66,11 +66,13 @@ const DailyLogView = () => {
 
   // Filter users by name and selected attendance status
   const filteredUsers = users.filter((u) => {
-    const nameMatch = u.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const userName = u.name ? u.name.toLowerCase() : "";
+    const matchesSearch = userName.includes(search.toLowerCase());
     const statusMatch =
-      filter === "All" || attendanceData[u._id] === filter;
-    return nameMatch && statusMatch;
+      filter === "All" || (attendanceData[u._id] || "Not Marked") === filter;
+    return matchesSearch && statusMatch;
   });
+  
 
   const markAllPresent = () => {
     const updatedAttendance = {};
