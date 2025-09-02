@@ -24,7 +24,7 @@ const Home = () => {
             We are happily saying <br /> we are awesome
           </h1>
 
-          <p className="text-gray-600 mb-20 text-base sm:text-lg max-w-md mx-auto md:mx-0 font-medium leading-relaxed">
+          <p className="text-gray-600 mb-10 text-base sm:text-lg max-w-md mx-auto md:mx-0 font-medium leading-relaxed">
             THIS IS NOT THE YEAR YOU GET EVERYTHING YOU WANT, THIS IS THE YEAR TO APPRECIATE EVERYTHING YOU HAVE.
           </p>
 

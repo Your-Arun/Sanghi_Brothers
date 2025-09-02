@@ -4,11 +4,12 @@ import { Eye, EyeOff } from "lucide-react";
 import UserContext from "./UserContext";
 import axiosInstance from "../Dashboard/axiosInstance";
 import { toast } from "react-toastify";
-
+import { GoogleLogin } from "@react-oauth/google";
+import jwt_decode from "jwt-decode";
 
 const Login = ({ embedMode, onClose }) => {
   const { setUser } = useContext(UserContext);
-  const [identifier, setIdentifier] = useState(""); // email or phone
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -23,7 +24,6 @@ const Login = ({ embedMode, onClose }) => {
     const fetchUser = async () => {
       const sessionData = sessionStorage.getItem(sessionKey);
       if (!sessionData) return;
-
       try {
         const { data } = await axiosInstance.get("/profile");
         setUser(data.user);
@@ -34,16 +34,15 @@ const Login = ({ embedMode, onClose }) => {
     fetchUser();
   }, [setUser, sessionKey]);
 
+  // ---------------- NORMAL LOGIN ----------------
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       const { data } = await axiosInstance.post("/login", {
         identifier,
         password,
       });
-      console.log(data);
 
       sessionStorage.setItem(sessionKey, JSON.stringify(data.user));
       sessionStorage.setItem("authToken", data.token);
@@ -53,7 +52,9 @@ const Login = ({ embedMode, onClose }) => {
       if (data.user.department === "admin") {
         navigate("/admin-panel");
       } else {
-        navigate(data.user.department === "staff" ? "/staff-dashboard" : "/dashboard");
+        navigate(
+          data.user.department === "staff" ? "/staff-dashboard" : "/dashboard"
+        );
       }
     } catch (err) {
       toast.error(
@@ -61,6 +62,34 @@ const Login = ({ embedMode, onClose }) => {
       );
     } finally {
       setLoading(false);
+    }
+  };
+
+  // ---------------- GOOGLE LOGIN ----------------
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      const decoded = jwt_decode(credentialResponse.credential); // email, name, etc.
+      const { data } = await axiosInstance.post("/google-login", {
+        email: decoded.email,
+      });
+
+      sessionStorage.setItem(sessionKey, JSON.stringify(data.user));
+      sessionStorage.setItem("authToken", data.token);
+      setUser(data.user);
+      toast.success("Google Login Successful");
+
+      if (data.user.department === "admin") {
+        navigate("/admin-panel");
+      } else {
+        navigate(
+          data.user.department === "staff" ? "/staff-dashboard" : "/dashboard"
+        );
+      }
+    } catch (err) {
+      toast.error(
+        err.response?.data?.message ||
+          "Google Login failed or user not registered."
+      );
     }
   };
 
@@ -83,6 +112,7 @@ const Login = ({ embedMode, onClose }) => {
           Login
         </h2>
 
+        {/* Normal Login */}
         <input
           type="text"
           placeholder="Email or Phone"
@@ -123,6 +153,14 @@ const Login = ({ embedMode, onClose }) => {
             Reset it here
           </Link>
         </p>
+
+        {/* Google Login Button */}
+        <div className="mt-4 flex justify-center">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => toast.error("Google Login Failed")}
+          />
+        </div>
       </form>
     </div>
   );

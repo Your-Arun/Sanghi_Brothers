@@ -343,4 +343,28 @@ Router.post("/forgot-password", async (req, res) => {
   }
 });
 
+Router.post("/google-login", async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "User not registered, please contact admin" });
+    }
+
+    const token = jwt.sign(
+      { id: user._id, department: user.department },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.json({ token, user });
+  } catch (err) {
+    res.status(500).json({ message: "Google login failed" });
+  }
+});
+
+
 module.exports = Router;
