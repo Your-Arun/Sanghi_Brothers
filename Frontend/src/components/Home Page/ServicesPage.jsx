@@ -6,7 +6,7 @@ const Services = () => {
     {
       title: "Fuel Services",
       description:
-        "Premium quality petrol and diesel available 24/7. We ensure accurate measurements and competitive prices.",
+        "Premium quality petrol available. We ensure accurate measurements and competitive prices.",
       icon: <Fuel className="h-12 w-12 text-blue-600" />,
     },
     {
@@ -78,7 +78,9 @@ const Services = () => {
             Experience our premium fuel services and dedicated customer support. We're committed to keeping your vehicle running at its best.
           </p>
         </div>
-        <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-500 transition-all duration-300">
+        <button
+         onClick={() => window.open("https://maps.app.goo.gl/xtmPC8keYfEMaXfq7", "_blank")}
+         className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-500 transition-all duration-300">
           Get Directions
         </button>
       </div>

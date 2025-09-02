@@ -19,7 +19,7 @@ const Home = () => {
       <div className="relative flex flex-col md:flex-row items-center justify-between min-h-[auto] md:min-h-screen overflow-hidden">
 
         {/* Left Section */}
-        <div className="w-full md:w-1/2 px-6 sm:px-10 md:px-16 py-14 md:py-20 text-center md:text-left">
+        <div className="w-full md:w-1/2 px-6 sm:px-10 md:px-16 py-14 md:py-25 text-center md:text-left">
           <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-black mb-6 leading-snug">
             We are happily saying <br /> we are awesome
           </h1>
