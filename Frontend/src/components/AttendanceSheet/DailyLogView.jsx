@@ -53,10 +53,9 @@ const DailyLogView = () => {
         status,
       }));
       await axiosInstance.post("/mark-attendance", payload);
-      toast.success("✅ Attendance submitted successfully.");
+      toast.success("Attendance submitted successfully.");
     } catch (err) {
-      console.error("Submit failed:", err);
-      toast.error("❌ Error submitting attendance.");
+      toast.error("Error submitting attendance.");
     }
   };
 
