@@ -28,7 +28,7 @@ const Home = () => {
             THIS IS NOT THE YEAR YOU GET EVERYTHING YOU WANT, THIS IS THE YEAR TO APPRECIATE EVERYTHING YOU HAVE.
           </p>
 
-          <div className="flex flex-col sm:flex-row mt-6 sm:mt-8 gap-3 sm:gap-4 justify-center md:justify-start">
+          <div className="flex flex-col sm:flex-row mt-6 sm:mt-12 gap-3 sm:gap-4 justify-center md:justify-start">
             <button
               onClick={() => setAuthMode("login")}
               className="bg-yellow-500 text-black w-full sm:w-auto px-6 py-3 rounded shadow hover:bg-yellow-400 transition font-semibold"
