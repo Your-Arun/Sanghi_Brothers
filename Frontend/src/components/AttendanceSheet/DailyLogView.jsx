@@ -11,37 +11,33 @@ const DailyLogView = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("All");
 
-  // Fetch all users
-  const fetchUsers = async () => {
-    try {
-      const res = await axiosInstance.get("/users");
-      setUsers(res.data || []);
-    } catch (err) {
-      console.error("Failed to fetch users:", err);
-    }
-  };
-
-  // Fetch existing attendance for selected date
-  const fetchAttendance = async (dateStr) => {
-    try {
-      const res = await axiosInstance.get(`/daily-attendance?date=${dateStr}`);
-      const attendanceMap = {};
-      res.data.forEach((entry) => {
-        attendanceMap[entry._id] = entry.status;
-      });
-      setAttendanceData(attendanceMap);
-    } catch (err) {
-      console.error("Failed to fetch attendance:", err);
-    }
-  };
-
-  // On date change or mount, fetch users and attendance
+  // Fetch users + attendance together
   useEffect(() => {
-    const dateStr = selectedDate.toISOString().split("T")[0];
-    setLoading(true);
-    fetchUsers().then(() => {
-      fetchAttendance(dateStr).finally(() => setLoading(false));
-    });
+    const fetchData = async () => {
+      setLoading(true);
+      const dateStr = selectedDate.toISOString().split("T")[0];
+      try {
+        const [userRes, attendanceRes] = await Promise.all([
+          axiosInstance.get("/users"),
+          axiosInstance.get(`/daily-attendance?date=${dateStr}`)
+        ]);
+
+        setUsers(userRes.data || []);
+
+        const attendanceMap = {};
+        (attendanceRes.data || []).forEach((entry) => {
+          attendanceMap[entry._id] = entry.status;
+        });
+        setAttendanceData(attendanceMap);
+      } catch (err) {
+        console.error("Data fetch failed:", err);
+        toast.error("⚠️ Failed to load users/attendance");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [selectedDate]);
 
   const handleAttendanceChange = (userId, status) => {
@@ -57,32 +53,27 @@ const DailyLogView = () => {
         status,
       }));
       await axiosInstance.post("/mark-attendance", payload);
-      toast.success("Attendance submitted successfully.");
+      toast.success("✅ Attendance submitted successfully.");
     } catch (err) {
       console.error("Submit failed:", err);
-      toast.error("Error submitting attendance.");
+      toast.error("❌ Error submitting attendance.");
     }
   };
 
-  // Filter users by name and selected attendance status
+  // Filter users by search and status
   const filteredUsers = users.filter((u) => {
-    const userName = u.name ? u.name.toLowerCase() : "";
-    const matchesSearch = userName.includes(search.toLowerCase());
+    const nameMatch = u?.name?.toLowerCase().includes(searchTerm.toLowerCase());
     const statusMatch =
-      filter === "All" || (attendanceData[u._id] || "Not Marked") === filter;
-    return matchesSearch && statusMatch;
+      filter === "All" || attendanceData[u._id] === filter;
+    return nameMatch && statusMatch;
   });
-  
 
   const markAllPresent = () => {
     const updatedAttendance = {};
     filteredUsers.forEach((user) => {
       updatedAttendance[user._id] = "Present";
     });
-    setAttendanceData((prev) => ({
-      ...prev,
-      ...updatedAttendance,
-    }));
+    setAttendanceData((prev) => ({ ...prev, ...updatedAttendance }));
   };
 
   return (
@@ -166,12 +157,12 @@ const DailyLogView = () => {
                         ? "bg-green-400"
                         : "bg-green-800"
                       : status === "Absent"
-                        ? isSelected
-                          ? "bg-red-400"
-                          : "bg-red-800"
-                        : isSelected
-                          ? "bg-yellow-400"
-                          : "bg-yellow-700";
+                      ? isSelected
+                        ? "bg-red-400"
+                        : "bg-red-800"
+                      : isSelected
+                      ? "bg-yellow-400"
+                      : "bg-yellow-700";
 
                   return (
                     <button
@@ -189,7 +180,8 @@ const DailyLogView = () => {
           ))}
         </div>
       )}
-    <BackButton label="Go Back" />
+
+      <BackButton label="Go Back" />
     </div>
   );
 };
