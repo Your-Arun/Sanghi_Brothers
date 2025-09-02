@@ -44,7 +44,7 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Right Section (image on large screens only) */}
+        {/* Right Section (desktop image + embed form) */}
         <div className="relative w-full md:w-1/2 md:h-[480px] hidden md:block">
           <div
             className="absolute inset-0 bg-cover bg-center"
@@ -56,7 +56,7 @@ const Home = () => {
           ></div>
 
           {authMode && (
-            <div className="absolute left-1/2 top-4 transform -translate-x-1/2 w-[85%] md:w-[75%] lg:w-[60%] xl:w-[50%] z-20">
+            <div className="absolute left-1/2 top-6 transform -translate-x-1/2 w-[85%] md:w-[75%] lg:w-[60%] xl:w-[50%] z-20">
               {authMode === "login" ? (
                 <Login embedMode onClose={handleClose} />
               ) : (
@@ -65,19 +65,33 @@ const Home = () => {
             </div>
           )}
         </div>
-
-
       </div>
 
       {/* Mobile Full-Screen Modal */}
       {authMode && (
-        <div className="fixed inset-0 bg-white z-50 flex items-center justify-center px-4 md:hidden">
-          <div className="w-full max-w-sm p-4 pt-8">
-            {authMode === "login" ? (
-              <Login embedMode onClose={handleClose} />
-            ) : (
-              <Signup embedMode onClose={handleClose} />
-            )}
+        <div className="fixed inset-0 bg-white z-50 flex flex-col px-4 py-6 md:hidden overflow-y-auto">
+          {/* Header with close button */}
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-semibold">
+              {authMode === "login" ? "Login" : "Signup"}
+            </h2>
+            <button
+              onClick={handleClose}
+              className="text-gray-500 hover:text-black text-2xl font-bold"
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Form Section */}
+          <div className="flex-1 flex items-center justify-center">
+            <div className="w-full max-w-md">
+              {authMode === "login" ? (
+                <Login embedMode onClose={handleClose} />
+              ) : (
+                <Signup embedMode onClose={handleClose} />
+              )}
+            </div>
           </div>
         </div>
       )}
