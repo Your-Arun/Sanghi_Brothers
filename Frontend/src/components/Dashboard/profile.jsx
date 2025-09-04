@@ -83,7 +83,7 @@ const ProfileModal = ({ closeModal }) => {
         {/* Profile Photo */}
         <div className="flex flex-col items-center mb-4">
           <img
-            src={preview || "https://via.placeholder.com/100"}
+            src={preview || "/user.png"}
             alt="Profile"
             className="w-24 h-24 rounded-full object-cover border mb-2"
           />
@@ -91,7 +91,7 @@ const ProfileModal = ({ closeModal }) => {
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            className="text-sm"
+            className="text-sm items-center"
           />
         </div>
 
