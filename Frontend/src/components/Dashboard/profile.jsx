@@ -11,16 +11,27 @@ const ProfileModal = ({ closeModal }) => {
   const [name, setName] = useState(user?.name || "");
   const [username, setUsername] = useState(user?.username || "");
   const [phone, setPhone] = useState(user?.phone || "");
+  const [photo, setPhoto] = useState(null);
+  const [preview, setPreview] = useState(user?.photo || "");
   const [loading, setLoading] = useState(false);
   const [isChanged, setIsChanged] = useState(false);
 
   useEffect(() => {
     setIsChanged(
       name !== user?.name ||
-        username !== user?.username ||
-        phone !== user?.phone
+      username !== user?.username ||
+      phone !== user?.phone ||
+      photo !== null
     );
-  }, [name, username, phone, user]);
+  }, [name, username, phone, photo, user]);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setPhoto(file);
+      setPreview(URL.createObjectURL(file));
+    }
+  };
 
   const handleProfileSave = async (e) => {
     e.preventDefault();
@@ -28,10 +39,14 @@ const ProfileModal = ({ closeModal }) => {
 
     setLoading(true);
     try {
-      const { data } = await axiosInstance.put("/profile", {
-        name,
-        username,
-        phone,
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("username", username);
+      formData.append("phone", phone);
+      if (photo) formData.append("photo", photo);
+
+      const { data } = await axiosInstance.put(`/users/${user._id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       setUser(data.user);
@@ -64,6 +79,21 @@ const ProfileModal = ({ closeModal }) => {
         <h2 className="text-xl sm:text-2xl font-bold mb-4 text-center text-blue-600">
           Edit Profile
         </h2>
+
+        {/* Profile Photo */}
+        <div className="flex flex-col items-center mb-4">
+          <img
+            src={preview || "https://via.placeholder.com/100"}
+            alt="Profile"
+            className="w-24 h-24 rounded-full object-cover border mb-2"
+          />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="text-sm"
+          />
+        </div>
 
         {/* Form */}
         <form onSubmit={handleProfileSave} className="space-y-4">
@@ -134,6 +164,7 @@ const ProfileModal = ({ closeModal }) => {
             <div className="text-center">
               <button
                 onClick={() => navigate("/admin-panel")}
+                type="button"
                 className="w-full px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition text-sm"
               >
                 Go to Admin Panel

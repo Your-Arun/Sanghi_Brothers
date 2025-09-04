@@ -18,8 +18,6 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage });
 
-
-
 // ✅ Update user with photo
 Router.put("/users/:id", upload.single("photo"), async (req, res) => {
   try {
@@ -42,6 +40,15 @@ Router.put("/users/:id", upload.single("photo"), async (req, res) => {
   }
 });
 
+Router.get("/users/:id/photo", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select("photo");
+    if (!user) return res.status(404).json({ success: false, error: "User not found" });
+    res.json({ success: true, photo: user.photo });
+  } catch (err) {
+    res.status(500).json({ success: false, error: "Failed to fetch photo" });
+  }
+});
 
 
 
@@ -68,15 +75,7 @@ Router.get("/users", async (req, res) => {
   });
 
 
-  Router.get("/users/:id/photo", async (req, res) => {
-    try {
-      const user = await User.findById(req.params.id).select("photo");
-      if (!user) return res.status(404).json({ success: false, error: "User not found" });
-      res.json({ success: true, photo: user.photo });
-    } catch (err) {
-      res.status(500).json({ success: false, error: "Failed to fetch photo" });
-    }
-  });
+  
   
 
 
