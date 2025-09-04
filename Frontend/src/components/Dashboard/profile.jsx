@@ -81,9 +81,9 @@ const ProfileModal = ({ closeModal }) => {
         </h2>
 
         {/* Profile Photo */}
-        <div className="flex flex-col items-center mb-4">
+        <div className="flex flex-col items-center mb-6">
           <img
-            src={preview || "/user.png"}
+            src={preview || user?.photo || "/user.png"}
             alt="Profile"
             className="w-24 h-24 rounded-full object-cover border mb-2"
           />
@@ -191,11 +191,10 @@ const ProfileModal = ({ closeModal }) => {
               </button>
               <button
                 type="submit"
-                className={`px-4 py-2 text-sm rounded-md ${
-                  isChanged
+                className={`px-4 py-2 text-sm rounded-md ${isChanged
                     ? "bg-blue-500 text-white"
                     : "bg-gray-400 text-gray-700 cursor-not-allowed"
-                }`}
+                  }`}
                 disabled={!isChanged || loading}
               >
                 {loading ? "Saving..." : "Save"}
