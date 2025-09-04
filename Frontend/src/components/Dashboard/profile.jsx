@@ -91,7 +91,7 @@ const ProfileModal = ({ closeModal }) => {
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            className="text-sm  justify-center items-center"
+            className="text-sm text-center"
           />
         </div>
 
