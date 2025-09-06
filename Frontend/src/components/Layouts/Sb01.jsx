@@ -95,6 +95,11 @@ const Sb01 = () => {
     e25: 0,
     e26: 0,
     e27: 0,
+    j13: 0,
+    j14: 0,
+    a32: 0,
+    a33: 0,
+    d32: 0,
     date1:'',
     date2:'',
     date3:'',
@@ -104,11 +109,7 @@ const Sb01 = () => {
     date7:'',
     date8:'',
     date9:'',
-    j13: 0,
-    j14: 0,
-    a32: 0,
-    a33: 0,
-    d32: 0,
+
   });
   const handleInputChange = (e) => {
     const { id, value, type } = e.target;
@@ -116,7 +117,7 @@ const Sb01 = () => {
     setInputs({
       ...inputs,
       [id]: type === "number"
-        ? (value === "" ? 0 : parseFloat(value) || 0 || '')
+        ? (value === "" ? 0 : parseFloat(value) || 0)
         : value, // for text, date, etc.
     });
   };
@@ -260,7 +261,7 @@ const Sb01 = () => {
               </div>
             </div>
           </div>
-          <div className="">
+          <div className="table-container">
             <table className="">
               <thead>
                 <tr>
