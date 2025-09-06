@@ -70,7 +70,7 @@ const ContactUs = () => {
         <h2 className="text-2xl sm:text-3xl font-bold text-center text-indigo-600 mb-4">
           Get in Touch
         </h2>
-        <p className="text-gray-600 text-center mb-5 text-sm sm:text-base">
+        <p className="text-gray-600 text-center mb-1 text-sm sm:text-base">
           We'd love to hear from you. Fill out the form and we’ll be in touch soon.
         </p>
         {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
