@@ -241,3 +241,51 @@ button {
 .Toastify__toast-container {
   z-index: 99999 !important;
 }
+
+
+
+/* Table wrapper */
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Table header */
+.custom-table thead {
+  background-color: #e0f2fe; /* light blue */
+  color: #374151; /* dark gray */
+}
+
+.custom-table th {
+  border: 1px solid #d1d5db;
+  padding: 10px;
+  text-align: center;
+}
+
+/* Table body cells */
+.custom-table td {
+  border: 1px solid #d1d5db;
+  padding: 6px;
+  text-align: center;
+}
+
+/* Input box */
+.table-input {
+  width: 110px;
+  padding: 6px 8px;
+  border: 1px solid #9ca3af;
+  border-radius: 6px;
+  text-align: right;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.table-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+}
