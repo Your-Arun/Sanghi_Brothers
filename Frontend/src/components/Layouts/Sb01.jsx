@@ -9,124 +9,131 @@ import { toast } from 'react-toastify'
 const Sb01 = () => {
   const { user } = useContext(UserContext);
   const [inputs, setInputs] = useState({
-    c6: 0,
-    c7: 0,
-    c8: 0,
-    c9: 0,
-    c10: 0,
-    c11: 0,
-    c12: 0,
-    c13: 0,
-    c14: 0,
-    c15: 0,
-    c16: 0,
-    c17: 0,
-    c20:0,
-    d6: 0,
-    d7: 0,
-    d8: 0,
-    d9: 0,
-    d10: 0,
-    d11: 0,
-    d12: 0,
-    d13: 0,
-    d14: 0,
-    d15: 0,
-    d16: 0,
-    d17: 0,
-    e6: 0,
-    e7: 0,
-    e8: 0,
-    e9: 0,
-    e10: 0,
-    e11: 0,
-    e12: 0,
-    e13: 0,
-    e14: 0,
-    e15: 0,
-    e16: 0,
-    e17: 0,
-    j: 10,
-    j11: 0,
-    f6: 0,
-    f7: 0,
-    f8: 0,
-    f9: 0,
-    f10: 0,
-    f11: 0,
-    f12: 0,
-    f13: 0,
-    f14: 0,
-    f15: 0,
-    f16: 0,
-    f17: 0,
-    i6: 0,
-    i7: 0,
-    i8: 0,
-    i9: 0,
-    i10: 0,
-    i11: 0,
-    i12: 0,
-    i13: 0,
-    i14: 0,
-    i15: 0,
-    i16: 0,
-    i17: 0,
-    c21: 0,
-    c22: 0,
-    c23: 0,
-    c24: 0,
-    c25: 0,
-    c26: 0,
-    c27: 0,
-    c28: 0,
-    c29: 0,
-    c30: 0,
-    c31: 0,
-    c32: 0,
-    c33: 0,
-    c34: 0,
-    c35: 0,
-    c37: 0,
-    c36: 0,
-    c38: 0,
-    c39: 0,
-    e24: 0,
-    e25: 0,
-    e26: 0,
-    e27: 0,
-    date1:'',
-    date2:'',
-    date3:'',
-    date4:'',
-    date5:'',
-    date6:'',
-    date7:'',
-    date8:'',
-    date9:'',
+    c6: '',
+    c7: '',
+    c8: '',
+    c9: '',
+    c10: '',
+    c11: '',
+    c12: '',
+    c13: '',
+    c14: '',
+    c15: '',
+    c16: '',
+    c17: '',
+    c20: '',
+    d6: '',
+    d7: '',
+    d8: '',
+    d9: '',
+    d10: '',
+    d11: '',
+    d12: '',
+    d13: '',
+    d14: '',
+    d15: '',
+    d16: '',
+    d17: '',
+    e6: '',
+    e7: '',
+    e8: '',
+    e9: '',
+    e10: '',
+    e11: '',
+    e12: '',
+    e13: '',
+    e14: '',
+    e15: '',
+    e16: '',
+    e17: '',
+    j10: '',
+    j11: '',
+    f6: '',
+    f7: '',
+    f8: '',
+    f9: '',
+    f10: '',
+    f11: '',
+    f12: '',
+    f13: '',
+    f14: '',
+    f15: '',
+    f16: '',
+    f17: '',
+    i6: '',
+    i7: '',
+    i8: '',
+    i9: '',
+    i10: '',
+    i11: '',
+    i12: '',
+    i13: '',
+    i14: '',
+    i15: '',
+    i16: '',
+    i17: '',
+    c21: '',
+    c22: '',
+    c23: '',
+    c24: '',
+    c25: '',
+    c26: '',
+    c27: '',
+    c28: '',
+    c29: '',
+    c30: '',
+    c31: '',
+    c32: '',
+    c33: '',
+    c34: '',
+    c35: '',
+    c37: '',
+    c36: '',
+    c38: '',
+    c39: '',
+    e24: '',
+    e25: '',
+    e26: '',
+    e27: '',
+    date1: '',
+    date2: '',
+    date3: '',
+    date4: '',
+    date5: '',
+    date6: '',
+    date7: '',
+    date8: '',
+    date9: '',
   });
+
   const handleInputChange = (e) => {
     const { id, value, type } = e.target;
-  
+
     setInputs({
       ...inputs,
-      [id]: type === "number"
-        ? (value === "" ? 0 : parseFloat(value) || 0)
-        : value, // for text, date, etc.
+      [id]: type === "number" ? value : value,
+      // number aur text dono case me blank allow karna hai
     });
   };
   const handleDateChange = (e) => {
     const { id, value } = e.target;
     setInputs({
       ...inputs,
-      [id]: value || "",
+      [id]: value || '',
     });
   };
-  
+
 
   // handle save
   const handleSave = async (e) => {
     e.preventDefault();
+
+    // blank values ko 0 banake DB bhejna
+    const processedInputs = {};
+    Object.keys(inputs).forEach((key) => {
+      processedInputs[key] = inputs[key] === '' ? 0 : inputs[key];
+    });
+
     const saveData = {
       username: user?.username,
       Department: user?.department,
@@ -146,24 +153,17 @@ const Sb01 = () => {
         workingcap,
         e39result,
       },
-      inputs: {
-        ...inputs,
-      },
+      inputs: processedInputs, // ✅ Cleaned data bhejna
     };
 
     try {
-      const token = sessionStorage.getItem("authToken"); // ✅ Use sessionStorage
+      const token = sessionStorage.getItem("authToken");
       if (!token) {
         toast.warn("No valid session found. Please log in.");
         return;
       }
-      const response = await axiosInstance.post(
-        "/fundposition",
-        saveData,
-
-      );
+      await axiosInstance.post("/fundposition", saveData);
       toast.success("Data saved successfully");
-
     } catch (error) {
       toast.warn("Not Save Successfully...... ");
     }
