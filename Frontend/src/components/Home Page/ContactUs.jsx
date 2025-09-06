@@ -74,7 +74,7 @@ const ContactUs = () => {
           We'd love to hear from you. Fill out the form and we’ll be in touch soon.
         </p>
         {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-5 p-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">Name</label>
             <input
