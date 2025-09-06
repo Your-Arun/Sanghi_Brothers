@@ -255,8 +255,8 @@ const Sb01 = () => {
               </div>
             </div>
           </div>
-          <div className="table-container">
-            <table className="">
+          <div className="">
+            <table className="table-container">
               <thead>
                 <tr>
                   <th className="border p-2"><br /></th>
