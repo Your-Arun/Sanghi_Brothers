@@ -158,4 +158,3 @@ export default App;
 
 
 //agr signup me passhashed krta hu to attnedance sheet me dikkt dega ..crreate krne time
-//staff panel me foto ka krna hai 

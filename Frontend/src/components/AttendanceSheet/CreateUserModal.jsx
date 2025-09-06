@@ -22,35 +22,13 @@ const CreateUserPage = () => {
     photo: "",
   });
 
-  const handleFileChange = async (e) => {
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (!file) return;
-
-    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
-    if (!allowedTypes.includes(file.type)) {
-      toast.warning("Only JPG, JPEG, and PNG formats are allowed!");
-      return;
-    }
-
-    try {
-      const options = {
-        maxSizeMB: 0.5,
-        maxWidthOrHeight: 800,
-        useWebWorker: true,
-      };
-
-      const compressedFile = await imageCompression(file, options);
-
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewUser({ ...newUser, photo: reader.result });
-      };
-      reader.readAsDataURL(compressedFile);
-    } catch (error) {
-      console.error("Image compression error:", error);
-      toast.error("Failed to compress image.");
+    if (file) {
+      setNewUser((prev) => ({ ...prev, photo: file })); // direct file bhejna
     }
   };
+  
 
   const handleInputChange = (e, key) => {
     let value = e.target.value;
@@ -67,15 +45,20 @@ const CreateUserPage = () => {
       toast.error("Please fill in all required fields (Name, Email, Phone, Department)");
       return;
     }
-
+  
     try {
-      const userToSave = {
-        ...newUser,
-        password: newUser.phone,
-      };
-
-      await axiosInstance.post("/users", userToSave);
-
+      const formData = new FormData();
+      Object.entries(newUser).forEach(([key, value]) => {
+        if (value) formData.append(key, value);
+      });
+  
+      // ✅ Default password = phone
+      formData.append("password", newUser.phone);
+  
+      await axiosInstance.post("/users", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+  
       toast.success("User created successfully");
       setTimeout(() => navigate("/attendance-sheet"), 1500);
     } catch (err) {
@@ -83,6 +66,7 @@ const CreateUserPage = () => {
       toast.error("Something went wrong. Could not create user.");
     }
   };
+  
 
   const formatPlaceholder = (key) => {
     return key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1");
