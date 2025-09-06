@@ -21,7 +21,7 @@ const Sb01 = () => {
     c15: 0,
     c16: 0,
     c17: 0,
-    c20: 0,
+    c20:0,
     d6: 0,
     d7: 0,
     d8: 0,
@@ -95,15 +95,15 @@ const Sb01 = () => {
     e25: 0,
     e26: 0,
     e27: 0,
-    date1: '',
-    date2: '',
-    date3: '',
-    date4: '',
-    date5: '',
-    date6: '',
-    date7: '',
-    date8: '',
-    date9: '',
+    date1:'',
+    date2:'',
+    date3:'',
+    date4:'',
+    date5:'',
+    date6:'',
+    date7:'',
+    date8:'',
+    date9:'',
     j13: 0,
     j14: 0,
     a32: 0,
@@ -112,7 +112,7 @@ const Sb01 = () => {
   });
   const handleInputChange = (e) => {
     const { id, value, type } = e.target;
-
+  
     setInputs({
       ...inputs,
       [id]: type === "number"
@@ -127,7 +127,7 @@ const Sb01 = () => {
       [id]: value || "",
     });
   };
-
+  
 
   // handle save
   const handleSave = async (e) => {
@@ -261,17 +261,15 @@ const Sb01 = () => {
             </div>
           </div>
           <div className="">
-            <table className="custom-table">
+            <table className="">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Name</th>
-                  <th>Transfer 1</th>
-                  <th>Transfer 2</th>
-                  <th>To A/c No. 1</th>
-                  <th>To A/c No. 2</th>
-                  <th>Accounts</th>
-                  <th>Closing Balance</th>
+                  <th className="border p-2"><br /></th>
+                  <th className="border p-2">Name</th>
+                  <th className="border p-2" colSpan="2">Transfer</th>
+                  <th className="border p-2" colSpan="2">To A/c No.</th>
+                  <th className="border p-2">Accounts</th>
+                  <th className="border p-2">Closing Balance</th>
                 </tr>
               </thead>
               <tbody>
@@ -284,7 +282,7 @@ const Sb01 = () => {
                     <input
                       id="c6"
                       type="number"
-                      value={inputs.c6 || ''}
+                      value={inputs.c6}
                       onChange={handleInputChange}
                     />
                   </td>
@@ -293,7 +291,7 @@ const Sb01 = () => {
                     <input
                       id="d6"
                       type="number"
-                      value={inputs.d6 || ''}
+                      value={inputs.d6}
                       onChange={handleInputChange}
                     />
                   </td>
