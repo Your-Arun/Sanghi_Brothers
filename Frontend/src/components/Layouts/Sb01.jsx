@@ -46,7 +46,7 @@ const Sb01 = () => {
     e15: 0,
     e16: 0,
     e17: 0,
-    j: 10,
+    j10: 0,
     j11: 0,
     f6: 0,
     f7: 0,
@@ -104,17 +104,24 @@ const Sb01 = () => {
     date7:'',
     date8:'',
     date9:'',
+    j13: 0,
+    j14: 0,
+    a32: 0,
+    a33: 0,
+    d32: 0,
   });
   const handleInputChange = (e) => {
     const { id, value, type } = e.target;
   
     setInputs({
       ...inputs,
-      [id]: type === "number"
-        ? (value === "" ? 0 : parseFloat(value) || 0)
-        : value, // for text, date, etc.
+      [id]:
+        type === "number"
+          ? (value === "" ? "" : Number(value)) // 👈 blank string allow
+          : value,
     });
   };
+  
   const handleDateChange = (e) => {
     const { id, value } = e.target;
     setInputs({
