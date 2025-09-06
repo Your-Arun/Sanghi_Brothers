@@ -65,7 +65,7 @@ const ProfileModal = ({ closeModal }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center px-4 z-50">
-      <div className="bg-white p-6 sm:p-6 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md relative">
+      <div className="bg-white p-6 sm:p-6 rounded-lg shadow-lg w-full max-w-sm sm:max-w-md max-h-[95vh] relative overflow-y-auto">
         {/* Close Button */}
         <button
           className="absolute top-2 right-2 text-gray-500 text-xl bg-transparent"
@@ -91,10 +91,9 @@ const ProfileModal = ({ closeModal }) => {
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            className="text-sm text-center mx-auto block"
+            className="text-sm text-center ml-5"
           />
         </div>
-
 
         {/* Form */}
         <form onSubmit={handleProfileSave} className="space-y-4">
@@ -193,8 +192,8 @@ const ProfileModal = ({ closeModal }) => {
               <button
                 type="submit"
                 className={`px-4 py-2 text-sm rounded-md ${isChanged
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-400 text-gray-700 cursor-not-allowed"
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-400 text-gray-700 cursor-not-allowed"
                   }`}
                 disabled={!isChanged || loading}
               >
