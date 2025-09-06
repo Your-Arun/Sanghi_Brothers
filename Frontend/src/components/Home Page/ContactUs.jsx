@@ -76,7 +76,7 @@ const ContactUs = () => {
         {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Name</label>
+            <label className="block text-[15px] font-bold text-gray-700 ">Name</label>
             <input
               type="text"
               name="name"
@@ -87,7 +87,7 @@ const ContactUs = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-[15px] font-bold text-gray-700 ">Email</label>
             <input
               type="email"
               name="email"
@@ -98,7 +98,7 @@ const ContactUs = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Message</label>
+            <label className="block text-[15px] font-bold text-gray-700 ">Message</label>
             <textarea
               name="message"
               value={formData.message}
