@@ -115,13 +115,11 @@ const Sb01 = () => {
   
     setInputs({
       ...inputs,
-      [id]:
-        type === "number"
-          ? (value === "" ? "" : Number(value)) // 👈 blank string allow
-          : value,
+      [id]: type === "number"
+        ? (value === "" ? 0 : parseFloat(value) || 0 || '')
+        : value, // for text, date, etc.
     });
   };
-  
   const handleDateChange = (e) => {
     const { id, value } = e.target;
     setInputs({
