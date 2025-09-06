@@ -67,10 +67,10 @@ const ContactUs = () => {
     <div className="flex flex-col lg:flex-row justify-center items-center min-h-screen px-4 sm:px-6 py-8 sm:py-12 gap-8">
       {/* Contact Form Section */}
       <div className="w-full lg:w-2/5 bg-white p-2 sm:p-8 rounded-xl shadow-xl">
-        <h2 className="text-2xl sm:text-3xl font-bold text-center text-indigo-600 mb-4">
+        <h2 className="text-2xl sm:text-3xl font-bold text-center text-indigo-600 mb-1">
           Get in Touch
         </h2>
-        <p className="text-gray-600 text-center mb-1 text-sm sm:text-base">
+        <p className="text-gray-600 text-center mb-4 text-sm sm:text-base">
           We'd love to hear from you. Fill out the form and we’ll be in touch soon.
         </p>
         {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
