@@ -155,6 +155,3 @@ const AppContent = () => {
 };
 
 export default App;
-
-
-//agr signup me passhashed krta hu to attnedance sheet me dikkt dega ..crreate krne time
