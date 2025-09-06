@@ -66,7 +66,16 @@ const ContactUs = () => {
   return (
     <div className="flex flex-col lg:flex-row justify-center items-center min-h-screen px-4 sm:px-6 py-8 sm:py-12 gap-8">
       {/* Contact Form Section */}
-      <div className="w-full lg:w-2/5 bg-white p-6 sm:p-8 rounded-xl shadow-xl">
+      <div className="w-full max-w-md bg-white p-6 sm:p-8 rounded-xl shadow-xl relative">
+        {/* Avatar */}
+        <div className="flex justify-center -mt-14 mb-4">
+          <img
+            src="/user.png" // yaha apni image lagao
+            alt="User Avatar"
+            className="w-20 h-20 rounded-full border-4 border-white shadow-md"
+          />
+        </div>
+
         <h2 className="text-2xl sm:text-3xl font-bold text-center text-indigo-600 mb-4">
           Get in Touch
         </h2>
@@ -74,7 +83,7 @@ const ContactUs = () => {
           We'd love to hear from you. Fill out the form and we’ll be in touch soon.
         </p>
         {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
-        <form onSubmit={handleSubmit} className="space-y-5 p-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-gray-700">Name</label>
             <input
@@ -123,7 +132,7 @@ const ContactUs = () => {
       </div>
 
       {/* Google Maps Section */}
-      <div className="w-full lg:w-2/5">
+      <div className="w-full max-w-md">
         <div className="overflow-hidden rounded-xl shadow-xl h-[300px] sm:h-[350px] lg:h-[400px]">
           <iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3577.409611980526!2d73.01631247476406!3d26.2808180869613!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39418c4988d1fb21%3A0x8d0289bfdadecc10!2sSanghi%20Brothers%20Petrol%20Pump!5e0!3m2!1sen!2sin!4v1735299586647!5m2!1sen!2sin"
