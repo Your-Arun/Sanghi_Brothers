@@ -261,7 +261,7 @@ const Sb01 = () => {
             </div>
           </div>
           <div className="">
-            <table className="table-container">
+            <table className="">
               <thead>
                 <tr>
                   <th className="border p-2"><br /></th>

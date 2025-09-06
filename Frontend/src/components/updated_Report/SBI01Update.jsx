@@ -252,8 +252,8 @@ function SBI01Update() {
       </div>
       <div>
         <form>
-          <div className="table-container">
-            <table className="">
+          <div className="">
+            <table className="table-container">
               <tbody>
                 <tr>
                   <th>
