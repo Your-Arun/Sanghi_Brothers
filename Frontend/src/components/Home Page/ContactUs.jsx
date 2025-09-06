@@ -66,7 +66,7 @@ const ContactUs = () => {
   return (
     <div className="flex flex-col lg:flex-row justify-center items-center min-h-screen px-4 sm:px-6 py-8 sm:py-12 gap-8">
       {/* Contact Form Section */}
-      <div className="w-full lg:w-2/5 bg-white p-10 sm:p-8 rounded-xl shadow-xl">
+      <div className="w-full lg:w-2/5 bg-white p-4 sm:p-8 rounded-xl shadow-xl">
         <h2 className="text-2xl sm:text-3xl font-bold text-center text-indigo-600 mb-4">
           Get in Touch
         </h2>
