@@ -82,8 +82,11 @@ const Home = () => {
       )}
 
       {/* Other Sections */}
+      <hr />
       <AboutUs />
+      <hr />
       <ServicesPage />
+      <hr />
       <ContactUs />
     </>
   );
