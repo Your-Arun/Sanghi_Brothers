@@ -106,6 +106,11 @@ const sbi01Report = new mongoose.Schema({
         date7: { type: Date, default: 0 },
         date8: { type: Date, default: 0 },
         date9: { type: Date, default: 0 },
+        j13: { type: Number, default: 0 },
+        j14: { type: Number, default: 0 },
+        a32: { type: Number, default: 0 },
+        a33: { type: Number, default: 0 },
+        d32: { type: Number, default: 0 },
         
     },
     CalculatedValue:{
