@@ -209,7 +209,7 @@ const CashSlip = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full mx-auto px-4">
                     {fecthcashSlip.map((item, index) => (
                         <div key={index} className="bg-white shadow-md p-4 rounded-lg border border-gray-200 relative">
-                            <h3 className="text-lg font-bold text-blue-600">{item.name}</h3>
+                            <h3 className="text-lg font-bold text-blue-600">{item.name.toUpperCase()}</h3>
                             <p><strong>Date:</strong> {item.date}</p>
                             <p><strong>Shift:</strong> {item.shift}</p>
                             <p><strong>Nozzle No:</strong> {item.nozzleNo}</p>
