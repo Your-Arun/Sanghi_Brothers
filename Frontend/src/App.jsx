@@ -158,4 +158,3 @@ export default App;
 
 
 // jisme pump sheet hai usme lettr bhr nikl rhe hai
-// staff dashboard me bss latest wale hone chhaiye 
