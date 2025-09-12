@@ -32,6 +32,20 @@ const StaffDashboard = () => {
   const [showToggleButton, setShowToggleButton] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(window.scrollY);
 
+  // 🔹 Cash Slip filters
+  const [filter, setFilter] = useState("today");
+  const [customDate, setCustomDate] = useState("");
+
+  const today = new Date().toISOString().split("T")[0];
+  const filteredSlips =
+    filter === "today"
+      ? cashslip.filter((s) => s.date === today)
+      : filter === "other"
+      ? cashslip.filter((s) => s.date !== today)
+      : filter === "custom" && customDate
+      ? cashslip.filter((s) => s.date === customDate)
+      : cashslip;
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -99,7 +113,7 @@ const StaffDashboard = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* Toggle Button */}
+      {/* Sidebar Overlay */}
       {isSidebarOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-40 z-30 md:hidden"
@@ -107,6 +121,7 @@ const StaffDashboard = () => {
         />
       )}
 
+      {/* Sidebar */}
       <aside
         className={`fixed inset-y-0 left-0 w-64 bg-gradient-to-b from-blue-700 to-blue-500 text-white p-6 z-40 shadow-xl transform transition-transform duration-300 ease-in-out
     ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:relative md:translate-x-0`}
@@ -139,6 +154,8 @@ const StaffDashboard = () => {
           </button>
         </nav>
       </aside>
+
+      {/* Sidebar Toggle Btn */}
       {showToggleButton && !isSidebarOpen && (
         <button
           className="fixed top-4 left-4 z-50 p-2 bg-white rounded-full shadow-md text-blue-600 text-xl md:hidden hover:scale-110 transition-transform"
@@ -147,8 +164,6 @@ const StaffDashboard = () => {
           <FaBars />
         </button>
       )}
-
-
       {isSidebarOpen && (
         <button
           className="fixed top-3 left-3 z-50 p-2 bg-white rounded-full shadow-md text-blue-600 text-sm md:hidden hover:scale-110 transition-transform"
@@ -158,56 +173,74 @@ const StaffDashboard = () => {
         </button>
       )}
 
+      {/* Main Section */}
       <main className="flex-1 p-4 overflow-y-auto max-h-screen bg-gray-50">
         <h1 className="text-2xl text-center font-bold mb-6 text-gray-800">
           Welcome, <span className="text-blue-600 mb-10">{user.username}</span>
         </h1>
 
-        {/* ---------------- Dashboard ---------------- */}
-        {activeTab === "dashboard" && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {[
-              {
-                id: "cashslip",
-                label: "Cash Slips",
-                count: cashslip.length,
-                icon: <FaMoneyBill size={30} />,
-              },
-              {
-                id: "shifting",
-                label: "Shifting",
-                count: "-",
-                icon: <FaTruck size={30} />,
-              },
-              {
-                id: "complaint",
-                label: "Complaints",
-                count: reports.length,
-                icon: <FaExclamationTriangle size={30} />,
-              },
-              {
-                id: "lekhajokha",
-                label: "Lekha Jokha",
-                count: lekha.length,
-                icon: <BsOpencollective size={30} />,
-              },
-            ].map((item) => (
-              <div
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className="cursor-pointer rounded-lg shadow-md overflow-hidden bg-white border border-gray-200 transition-transform hover:scale-105"
+        {/* ---------------- Cash Slip ---------------- */}
+        {activeTab === "cashslip" && (
+          <>
+            <div className="bg-white p-6 rounded-lg shadow-md mt-6 text-center">
+              <h2 className="text-3xl font-bold text-gray-800">💵 Cash Slips</h2>
+              <button
+                onClick={() => navigate("/Cashslip")}
+                className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-lg shadow hover:bg-purple-700 transition-transform hover:scale-105"
               >
-                <div className="bg-yellow-400 p-4 relative">
-                  <div className="text-black text-center">{item.icon}</div>
-                  <div className="absolute bottom-0 left-0 w-full h-3 bg-white rounded-t-full" />
-                </div>
-                <div className="p-4 text-center">
-                  <h3 className="text-lg font-bold text-gray-800">{item.label}</h3>
-                  <p className="text-2xl font-semibold text-gray-700">{item.count}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+                Submit New Cash Slip
+              </button>
+            </div>
+
+            {/* 🔹 Filter Bar */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-4">
+              <select
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                className="border px-4 py-2 rounded-lg shadow text-gray-700"
+              >
+                <option value="today">Today</option>
+                <option value="other">Other</option>
+                <option value="custom">Custom Date</option>
+              </select>
+
+              {filter === "custom" && (
+                <input
+                  type="date"
+                  value={customDate}
+                  onChange={(e) => setCustomDate(e.target.value)}
+                  className="border px-4 py-2 rounded-lg shadow text-gray-700"
+                />
+              )}
+            </div>
+
+            {/* 🔹 Filtered Cash Slips */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
+              {filteredSlips.length > 0 ? (
+                filteredSlips.map((cashSlip, index) => (
+                  <div
+                    key={index}
+                    className="bg-white border p-4 rounded-lg shadow hover:shadow-md transition"
+                  >
+                    <h3 className="text-blue-600 font-bold text-lg mb-2">
+                      {cashSlip.name}
+                    </h3>
+                    <p><strong>Date:</strong> {cashSlip.date}</p>
+                    <p><strong>Shift:</strong> {cashSlip.shift}</p>
+                    <p><strong>Nozzle No:</strong> {cashSlip.nozzleNo}</p>
+                    <p><strong>Opening:</strong> {cashSlip.openingReading}</p>
+                    <p><strong>Closing:</strong> {cashSlip.closingReading}</p>
+                    <p><strong>Sales:</strong> {cashSlip.salesInLtr} L</p>
+                    <p className="mt-2 font-bold text-lg text-gray-900">
+                      Total: ₹{cashSlip.total}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-center text-gray-500 col-span-full">No slips found</p>
+              )}
+            </div>
+          </>
         )}
 
         {/* ---------------- Complaints ---------------- */}
@@ -236,41 +269,6 @@ const StaffDashboard = () => {
           </>
         )}
 
-        {/* ---------------- Cash Slip ---------------- */}
-        {activeTab === "cashslip" && (
-          <>
-            <div className="bg-white p-6 rounded-lg shadow-md mt-6 text-center">
-              <h2 className="text-3xl font-bold text-gray-800">💵 Cash Slips</h2>
-              <button
-                onClick={() => navigate("/Cashslip")}
-                className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-lg shadow hover:bg-purple-700 transition-transform hover:scale-105"
-              >
-                Submit New Cash Slip
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-              {cashslip.map((cashSlip, index) => (
-                <div
-                  key={index}
-                  className="bg-white border p-4 rounded-lg shadow hover:shadow-md transition"
-                >
-                  <h3 className="text-blue-600 font-bold text-lg mb-2">{cashSlip.name}</h3>
-                  <p><strong>Date:</strong> {cashSlip.date}</p>
-                  <p><strong>Shift:</strong> {cashSlip.shift}</p>
-                  <p><strong>Nozzle No:</strong> {cashSlip.nozzleNo}</p>
-                  <p><strong>Opening:</strong> {cashSlip.openingReading}</p>
-                  <p><strong>Closing:</strong> {cashSlip.closingReading}</p>
-                  <p><strong>Sales:</strong> {cashSlip.salesInLtr} L</p>
-                  <p className="mt-2 font-bold text-lg text-gray-900">
-                    Total: ₹{cashSlip.total}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-
         {/* ---------------- Lekha Jokha ---------------- */}
         {activeTab === "lekhajokha" && (
           <>
@@ -283,7 +281,6 @@ const StaffDashboard = () => {
                 Create Entry
               </button>
             </div>
-
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
               {lekha.map((item) => (
                 <div
@@ -314,9 +311,7 @@ const StaffDashboard = () => {
         )}
       </main>
 
-
-
-
+      {/* Department Modal */}
       {showModal2 && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md relative">
