@@ -41,10 +41,10 @@ const StaffDashboard = () => {
     filter === "today"
       ? cashslip.filter((s) => s.date === today)
       : filter === "other"
-      ? cashslip.filter((s) => s.date !== today)
-      : filter === "custom" && customDate
-      ? cashslip.filter((s) => s.date === customDate)
-      : cashslip;
+        ? cashslip.filter((s) => s.date !== today)
+        : filter === "custom" && customDate
+          ? cashslip.filter((s) => s.date === customDate)
+          : cashslip;
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -178,6 +178,45 @@ const StaffDashboard = () => {
         <h1 className="text-2xl text-center font-bold mb-6 text-gray-800">
           Welcome, <span className="text-blue-600 mb-10">{user.username}</span>
         </h1>
+
+        {/* ---------------- Dashboard ---------------- */}
+        {activeTab === "dashboard" && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+            {/* Total Cash Slips */}
+            <div className="bg-white p-6 rounded-lg shadow-md text-center">
+              <h3 className="text-lg font-bold text-gray-700">💵 Today Cash Slips</h3>
+              <p className="text-2xl font-bold text-blue-600 mt-2">
+                {cashslip.filter((s) => s.date === today).length}
+              </p>
+            </div>
+
+            {/* Complaints */}
+            <div className="bg-white p-6 rounded-lg shadow-md text-center">
+              <h3 className="text-lg font-bold text-gray-700">📒 Complaints</h3>
+              <p className="text-2xl font-bold text-red-600 mt-2">
+                {reports.length}
+              </p>
+            </div>
+
+            {/* Lekha Jokha */}
+            <div className="bg-white p-6 rounded-lg shadow-md text-center">
+              <h3 className="text-lg font-bold text-gray-700">⛽ Lekha Jokha</h3>
+              <p className="text-2xl font-bold text-green-600 mt-2">
+                {lekha.length}
+              </p>
+            </div>
+
+            {/* Shifts */}
+            <div className="bg-white p-6 rounded-lg shadow-md text-center">
+              <h3 className="text-lg font-bold text-gray-700">🚚 Active Shifts</h3>
+              <p className="text-2xl font-bold text-purple-600 mt-2">
+                {/* Example -> last shift ka naam ya count */}
+                {lekha.filter((item) => item.date === today).length}
+              </p>
+            </div>
+          </div>
+        )}
+
 
         {/* ---------------- Cash Slip ---------------- */}
         {activeTab === "cashslip" && (

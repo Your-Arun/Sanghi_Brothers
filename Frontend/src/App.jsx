@@ -158,3 +158,4 @@ export default App;
 
 
 // jisme pump sheet hai usme lettr bhr nikl rhe hai
+//admin panl me sb details honi chhaiye 
