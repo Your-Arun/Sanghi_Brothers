@@ -210,10 +210,15 @@ const CashSlip = () => {
                     {fecthcashSlip.map((item, index) => (
                         <div key={index} className="bg-white shadow-md p-4 rounded-lg border border-gray-200 relative">
                             <h3 className="text-lg font-bold text-blue-600">{item.name}</h3>
+                            <p><strong>Date:</strong> {item.date}</p>
                             <p><strong>Shift:</strong> {item.shift}</p>
                             <p><strong>Nozzle No:</strong> {item.nozzleNo}</p>
+                            <p><strong>Opening:</strong> {item.openingReading}</p>
+                            <p><strong>Closing:</strong> {item.closingReading}</p>
                             <p><strong>Sales:</strong> {item.salesInLtr} L</p>
-                            <p><strong>Total:</strong> ₹{item.total}</p>
+                            <p className="mt-2 font-bold text-lg text-gray-900">
+                                Total: ₹{item.total}
+                            </p>
                             {user.department === "manager" && (
                                 <button
                                     onClick={() => handleDelete(item._id)}
@@ -228,6 +233,7 @@ const CashSlip = () => {
             ) : (
                 <p className="text-gray-500 mt-6">No cash slips found for {selectedDate}</p>
             )}
+
 
             <div className="">
                 <BackButton previousImage="/previous.png" />
