@@ -10,7 +10,7 @@ import {
 import { LuLayoutDashboard } from "react-icons/lu";
 import { BsOpencollective } from "react-icons/bs";
 import ProfileModal from "./profile";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axiosInstance from "./axiosInstance";
 import { toast } from "react-toastify";
 import UserContext from "../Home Page/UserContext";
@@ -28,8 +28,6 @@ const StaffDashboard = () => {
   const [cashslip, setCashslip] = useState([]);
   const [lekha, setLekha] = useState([]);
   const navigate = useNavigate();
-  const location = useLocation();
-
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [showToggleButton, setShowToggleButton] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(window.scrollY);
@@ -37,6 +35,7 @@ const StaffDashboard = () => {
   // 🔹 Cash Slip filters
   const [filter, setFilter] = useState("today");
   const [customDate, setCustomDate] = useState("");
+
   const today = new Date().toISOString().split("T")[0];
   const filteredSlips =
     filter === "today"
@@ -47,26 +46,6 @@ const StaffDashboard = () => {
       ? cashslip.filter((s) => s.date === customDate)
       : cashslip;
 
-  // 🔹 Nav Items with routes
-  const navItems = [
-    { id: "dashboard", label: "Dashboard", icon: <LuLayoutDashboard />, route: "/staff/dashboard" },
-    { id: "cashslip", label: "Cash Slip", icon: <FaMoneyBill />, route: "/staff/cashslip" },
-    { id: "shifting", label: "Shifting Arrangement", icon: <FaTruck />, route: "/staff/shifting" },
-    { id: "complaint", label: "Complaints", icon: <FaExclamationTriangle />, route: "/staff/complaint" },
-    { id: "lekhajokha", label: "Lekha Jokha", icon: <BsOpencollective />, route: "/staff/lekhajokha" },
-  ];
-
-  // 🔹 Sync URL with activeTab
-  useEffect(() => {
-    const currentPath = location.pathname.split("/").pop();
-    if (currentPath && navItems.some((i) => i.id === currentPath)) {
-      setActiveTab(currentPath);
-    } else {
-      setActiveTab("dashboard");
-    }
-  }, [location.pathname]);
-
-  // 🔹 Fetch logged-in user
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -85,7 +64,6 @@ const StaffDashboard = () => {
     fetchUser();
   }, [setUser, navigate]);
 
-  // 🔹 Fetch data
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -113,7 +91,6 @@ const StaffDashboard = () => {
     setShowModal2(false);
   };
 
-  // 🔹 Sidebar auto hide on scroll
   useEffect(() => {
     const handleScroll = () => {
       setShowToggleButton(window.scrollY <= lastScrollY);
@@ -122,6 +99,14 @@ const StaffDashboard = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
+
+  const navItems = [
+    { id: "dashboard", label: "Dashboard", icon: <LuLayoutDashboard />, route: '' },
+    { id: "cashslip", label: "Cash Slip", icon: <FaMoneyBill />, route: '/cashslip' },
+    { id: "shifting", label: "Shifting Arrangement", icon: <FaTruck />, route: '/shifting' },
+    { id: "complaint", label: "Complaints", icon: <FaExclamationTriangle />, route: '/complaint' },
+    { id: "lekhajokha", label: "Lekha Jokha", icon: <BsOpencollective />, route: '/lekhajokha' },
+  ];
 
   if (loading) return <h3 className="text-center mt-20">Loading...</h3>;
   if (!user) return navigate("/");
@@ -139,7 +124,7 @@ const StaffDashboard = () => {
       {/* Sidebar */}
       <aside
         className={`fixed inset-y-0 left-0 w-64 bg-gradient-to-b from-blue-700 to-blue-500 text-white p-6 z-40 shadow-xl transform transition-transform duration-300 ease-in-out
-          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:relative md:translate-x-0`}
+    ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:relative md:translate-x-0`}
       >
         <h2 className="text-2xl font-bold mb-6 text-center border-b border-blue-300 pb-4">
           STAFF PANEL
@@ -150,7 +135,6 @@ const StaffDashboard = () => {
               key={item.id}
               onClick={() => {
                 setActiveTab(item.id);
-                navigate(item.route); // 🔹 push history
                 setSidebarOpen(false);
               }}
               className={`sidebar-btn ${activeTab === item.id ? "active" : ""}`}
@@ -195,13 +179,7 @@ const StaffDashboard = () => {
           Welcome, <span className="text-blue-600 mb-10">{user.username}</span>
         </h1>
 
-        {/* Tabs Rendering */}
-        {activeTab === "dashboard" && (
-          <div className="text-center text-gray-700">
-            <h2 className="text-xl font-bold">Dashboard Overview</h2>
-          </div>
-        )}
-
+        {/* ---------------- Cash Slip ---------------- */}
         {activeTab === "cashslip" && (
           <>
             <div className="bg-white p-6 rounded-lg shadow-md mt-6 text-center">
@@ -213,6 +191,8 @@ const StaffDashboard = () => {
                 Submit New Cash Slip
               </button>
             </div>
+
+            {/* 🔹 Filter Bar */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-4">
               <select
                 value={filter}
@@ -223,6 +203,7 @@ const StaffDashboard = () => {
                 <option value="other">Other</option>
                 <option value="custom">Custom Date</option>
               </select>
+
               {filter === "custom" && (
                 <input
                   type="date"
@@ -232,6 +213,8 @@ const StaffDashboard = () => {
                 />
               )}
             </div>
+
+            {/* 🔹 Filtered Cash Slips */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
               {filteredSlips.length > 0 ? (
                 filteredSlips.map((cashSlip, index) => (
@@ -260,6 +243,7 @@ const StaffDashboard = () => {
           </>
         )}
 
+        {/* ---------------- Complaints ---------------- */}
         {activeTab === "complaint" && (
           <>
             <div className="bg-white p-6 rounded-lg shadow-md mt-6 text-center">
@@ -285,6 +269,7 @@ const StaffDashboard = () => {
           </>
         )}
 
+        {/* ---------------- Lekha Jokha ---------------- */}
         {activeTab === "lekhajokha" && (
           <>
             <div className="bg-white p-6 rounded-lg shadow-md mt-6 text-center">
@@ -313,6 +298,7 @@ const StaffDashboard = () => {
           </>
         )}
 
+        {/* ---------------- Shifting ---------------- */}
         {activeTab === "shifting" && (
           <>
             <div className="bg-white p-6 rounded-lg shadow-md mt-6 text-center">
