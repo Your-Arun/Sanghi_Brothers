@@ -56,13 +56,14 @@ const ChekList = () => {
 
   return (
     <>
-      {/* 🔹 Floating Notice Bar */}
-      <div className="sticky top-0 z-50 bg-yellow-100 border-b border-yellow-300 text-yellow-800 px-4 py-2 flex items-center justify-center gap-2 shadow-md text-sm md:text-base">
+      {/* 🔹 Floating Notice Bar (Visible only on Mobile/Tablet) */}
+      <div className="sticky top-0 z-50 bg-yellow-100 border-b border-yellow-300 text-yellow-800 px-4 py-2 flex items-center justify-center gap-2 shadow-md text-sm md:hidden">
         <FaInfoCircle className="text-yellow-600" />
         <p className="font-medium text-center">
           📢 Please switch to <span className="font-bold">Desktop Mode</span> for the best experience.
         </p>
       </div>
+
 
       <div className="flex flex-col items-center justify-center p-6">
         <h1 className="text-4xl md:text-6xl font-bold text-center text-gray-800 mb-4">
