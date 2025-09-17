@@ -43,10 +43,10 @@ const StaffDashboard = () => {
     filter === "today"
       ? cashslip.filter((s) => s.date === today)
       : filter === "other"
-      ? cashslip.filter((s) => s.date !== today)
-      : filter === "custom" && customDate
-      ? cashslip.filter((s) => s.date === customDate)
-      : cashslip;
+        ? cashslip.filter((s) => s.date !== today)
+        : filter === "custom" && customDate
+          ? cashslip.filter((s) => s.date === customDate)
+          : cashslip;
 
   // 🔹 sync tab with URL
   useEffect(() => {
@@ -191,46 +191,51 @@ const StaffDashboard = () => {
 
         {/* ---------------- Dashboard ---------------- */}
         {activeTab === "dashboard" && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-            <div className="grid grid-cols-2">
-              <div>
-                {/* Total Cash Slips */}
-                <div className="bg-white p-6 rounded-lg shadow-md text-center">
-                  <h3 className="text-lg font-bold text-gray-700">💵 Today Cash Slips</h3>
-                  <p className="text-2xl font-bold text-blue-600 mt-2">
-                    {cashslip.filter((s) => s.date === today).length}
-                  </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+            {/* Cash Slip Card */}
+            <div className="bg-white shadow-md rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-800">Cash Slips</h2>
+                  <p className="text-sm text-gray-500">Total Slips</p>
                 </div>
-
-                {/* Complaints */}
-                <div className="bg-white p-6 rounded-lg shadow-md text-center">
-                  <h3 className="text-lg font-bold text-gray-700">📒 Complaints</h3>
-                  <p className="text-2xl font-bold text-red-600 mt-2">
-                    {reports.length}
-                  </p>
+                <div className="p-3 bg-blue-100 text-blue-600 rounded-full">
+                  <FaMoneyBill className="text-xl" />
                 </div>
               </div>
+              <p className="mt-4 text-3xl font-bold text-gray-700">{cashslip?.length || 0}</p>
+            </div>
 
-              <div>
-                {/* Lekha Jokha */}
-                <div className="bg-white p-6 rounded-lg shadow-md text-center">
-                  <h3 className="text-lg font-bold text-gray-700">⛽ Lekha Jokha</h3>
-                  <p className="text-2xl font-bold text-green-600 mt-2">
-                    {lekha.length}
-                  </p>
+            {/* Complaints Card */}
+            <div className="bg-white shadow-md rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-800">Complaints</h2>
+                  <p className="text-sm text-gray-500">Active Issues</p>
                 </div>
-
-                {/* Shifts */}
-                <div className="bg-white p-6 rounded-lg shadow-md text-center">
-                  <h3 className="text-lg font-bold text-gray-700">🚚 Active Shifts</h3>
-                  <p className="text-2xl font-bold text-purple-600 mt-2">
-                    {lekha.filter((item) => item.date === today).length}
-                  </p>
+                <div className="p-3 bg-red-100 text-red-600 rounded-full">
+                  <FaExclamationTriangle className="text-xl" />
                 </div>
               </div>
+              <p className="mt-4 text-3xl font-bold text-gray-700">{reports?.length || 0}</p>
+            </div>
+
+            {/* Lekha Jokha Card */}
+            <div className="bg-white shadow-md rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-800">Lekha Jokha</h2>
+                  <p className="text-sm text-gray-500">Entries Recorded</p>
+                </div>
+                <div className="p-3 bg-green-100 text-green-600 rounded-full">
+                  <BsOpencollective className="text-xl" />
+                </div>
+              </div>
+              <p className="mt-4 text-3xl font-bold text-gray-700">{lekha?.length || 0}</p>
             </div>
           </div>
         )}
+
 
         {/* ---------------- Cash Slip ---------------- */}
         {activeTab === "cashslip" && (
