@@ -38,14 +38,16 @@ const StaffDashboard = () => {
   const [filter, setFilter] = useState("today");
   const [customDate, setCustomDate] = useState("");
 
-  const today = new Date().toISOString().split("T")[0];
+  const formatDate = (dateString) =>
+    new Date(dateString).toISOString().split("T")[0];
+
   const filteredSlips =
     filter === "today"
-      ? cashslip.filter((s) => s.date === today)
+      ? cashslip.filter((s) => formatDate(s.date) === today)
       : filter === "other"
-        ? cashslip.filter((s) => s.date !== today)
+        ? cashslip.filter((s) => formatDate(s.date) !== today)
         : filter === "custom" && customDate
-          ? cashslip.filter((s) => s.date === customDate)
+          ? cashslip.filter((s) => formatDate(s.date) === customDate)
           : cashslip;
 
   // 🔹 sync tab with URL
@@ -148,7 +150,7 @@ const StaffDashboard = () => {
                 setSidebarOpen(false);
                 navigate(`?tab=${item.id}`);
               }}
-              className={`flex items-center gap-3 px-4 py-2 w-full rounded-lg hover:bg-blue-600 transition font-medium whitespace-nowrap text-sm ${activeTab === item.id ? "bg-white text-blue-700" : "text-white"
+              className={`flex items-center gap-3 px-4 py-2 w-full rounded-lg hover:bg-blue-600 transition font-medium whitespace-nowrap cursor-pointer text-sm ${activeTab === item.id ? "bg-white text-blue-700" : "text-white"
                 }`}
             >
               {item.icon}
@@ -162,7 +164,7 @@ const StaffDashboard = () => {
               setProfileOpen(true);
               setSidebarOpen(false);
             }}
-            className="flex items-center gap-3 px-4 py-2 w-full rounded-lg bg-white text-blue-700 hover:bg-blue-100 font-semibold whitespace-nowrap text-sm"
+            className="flex items-center cursor-pointer gap-3 px-4 py-2 w-full rounded-lg bg-white text-blue-700 hover:bg-blue-100 font-semibold whitespace-nowrap text-sm"
           >
             <FaUser /> Profile
           </div>
@@ -288,7 +290,10 @@ const StaffDashboard = () => {
                     <h3 className="text-blue-600 font-bold text-lg mb-2">
                       {cashSlip.name}
                     </h3>
-                    <p><strong>Date:</strong> {cashSlip.date}</p>
+                    <p>
+                      <strong>Date:</strong>{" "}
+                      {new Date(cashSlip.date).toLocaleDateString("en-GB")}
+                    </p>
                     <p><strong>Shift:</strong> {cashSlip.shift}</p>
                     <p><strong>Nozzle No:</strong> {cashSlip.nozzleNo}</p>
                     <p><strong>Opening:</strong> {cashSlip.openingReading}</p>
@@ -303,6 +308,7 @@ const StaffDashboard = () => {
                 <p className="text-center text-gray-500 col-span-full">No slips found</p>
               )}
             </div>
+
           </>
         )}
 
