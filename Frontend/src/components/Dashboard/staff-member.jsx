@@ -15,7 +15,6 @@ import axiosInstance from "./axiosInstance";
 import { toast } from "react-toastify";
 import UserContext from "../Home Page/UserContext";
 import ShiftComponent from "../Dashboard/Shift Component";
-import CashslipDashboard from "./CashslipDashboard";
 
 const StaffDashboard = () => {
   const { user, setUser } = useContext(UserContext);
@@ -139,7 +138,6 @@ const StaffDashboard = () => {
         <h2 className="text-2xl font-bold mb-6 text-center border-b border-blue-300 pb-4">
           STAFF PANEL
         </h2>
-
         <nav className="space-y-3">
           {navItems.map((item) => (
             <button
@@ -147,29 +145,25 @@ const StaffDashboard = () => {
               onClick={() => {
                 setActiveTab(item.id);
                 setSidebarOpen(false);
-                navigate(`?tab=${item.id}`);
+                navigate(`?tab=${item.id}`, { replace: false }); // ✅ history me entry add
               }}
-              className={`flex items-center gap-3 px-4 py-2 w-full rounded-lg hover:bg-blue-600 transition font-medium whitespace-nowrap text-sm ${activeTab === item.id ? "bg-white text-blue-700" : "text-white"
-                }`}
+              className={`sidebar-btn ${activeTab === item.id ? "active" : ""}`}
             >
               {item.icon}
               <span>{item.label}</span>
             </button>
           ))}
-
-          {/* Profile Button */}
           <button
             onClick={() => {
               setProfileOpen(true);
               setSidebarOpen(false);
             }}
-            className="flex items-center gap-3 px-4 py-2 w-full rounded-lg bg-white text-blue-700 hover:bg-blue-100 font-semibold whitespace-nowrap text-sm"
+            className="flex items-center gap-3 px-4 py-2 w-full rounded-lg bg-white text-blue-700 hover:bg-blue-100 font-semibold"
           >
             <FaUser /> Profile
           </button>
         </nav>
       </aside>
-
 
       {/* Sidebar Toggle Btn */}
       {showToggleButton && !isSidebarOpen && (
@@ -197,167 +191,115 @@ const StaffDashboard = () => {
 
         {/* ---------------- Dashboard ---------------- */}
         {activeTab === "dashboard" && (
-          <div className="mt-6">
-            {/* Cards Section */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Cash Slip Card */}
-              <div
-                onClick={() => {
-                  setActiveTab("cashslip");
-                  navigate("?tab=cashslip");
-                }}
-                className="bg-white shadow-md rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition cursor-pointer"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-lg font-semibold text-gray-800">Cash Slips</h2>
-                    <p className="text-sm text-gray-500">Total Slips</p>
-                  </div>
-                  <div className="p-3 bg-blue-100 text-blue-600 rounded-full">
-                    <FaMoneyBill className="text-xl" />
-                  </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+            {/* Cash Slip Card */}
+            <div className="bg-white shadow-md rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-800">Cash Slips</h2>
+                  <p className="text-sm text-gray-500">Total Slips</p>
                 </div>
-                <p className="mt-4 text-3xl font-bold text-gray-700">
-                  {cashslip?.length || 0}
-                </p>
-              </div>
-
-              {/* Complaints Card */}
-              <div
-                onClick={() => {
-                  setActiveTab("complaint");
-                  navigate("?tab=complaint");
-                }}
-                className="bg-white shadow-md rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition cursor-pointer"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-lg font-semibold text-gray-800">Complaints</h2>
-                    <p className="text-sm text-gray-500">Active Issues</p>
-                  </div>
-                  <div className="p-3 bg-red-100 text-red-600 rounded-full">
-                    <FaExclamationTriangle className="text-xl" />
-                  </div>
+                <div className="p-3 bg-blue-100 text-blue-600 rounded-full">
+                  <FaMoneyBill className="text-xl" />
                 </div>
-                <p className="mt-4 text-3xl font-bold text-gray-700">
-                  {reports?.length || 0}
-                </p>
               </div>
-
-              {/* Lekha Jokha Card */}
-              <div
-                onClick={() => {
-                  setActiveTab("lekhajokha");
-                  navigate("?tab=lekhajokha");
-                }}
-                className="bg-white shadow-md rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition cursor-pointer"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-lg font-semibold text-gray-800">Lekha Jokha</h2>
-                    <p className="text-sm text-gray-500">Entries Recorded</p>
-                  </div>
-                  <div className="p-3 bg-green-100 text-green-600 rounded-full">
-                    <BsOpencollective className="text-xl" />
-                  </div>
-                </div>
-                <p className="mt-4 text-3xl font-bold text-gray-700">
-                  {lekha?.length || 0}
-                </p>
-              </div>
+              <p className="mt-4 text-3xl font-bold text-gray-700">{cashslip?.length || 0}</p>
             </div>
 
-            {/* 👇 Cash Slip Pie Chart Section */}
-            <div className="mt-10">
-              <CashslipDashboard slips={cashslip} />
+            {/* Complaints Card */}
+            <div className="bg-white shadow-md rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-800">Complaints</h2>
+                  <p className="text-sm text-gray-500">Active Issues</p>
+                </div>
+                <div className="p-3 bg-red-100 text-red-600 rounded-full">
+                  <FaExclamationTriangle className="text-xl" />
+                </div>
+              </div>
+              <p className="mt-4 text-3xl font-bold text-gray-700">{reports?.length || 0}</p>
+            </div>
+
+            {/* Lekha Jokha Card */}
+            <div className="bg-white shadow-md rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-800">Lekha Jokha</h2>
+                  <p className="text-sm text-gray-500">Entries Recorded</p>
+                </div>
+                <div className="p-3 bg-green-100 text-green-600 rounded-full">
+                  <BsOpencollective className="text-xl" />
+                </div>
+              </div>
+              <p className="mt-4 text-3xl font-bold text-gray-700">{lekha?.length || 0}</p>
             </div>
           </div>
         )}
 
 
-
         {/* ---------------- Cash Slip ---------------- */}
         {activeTab === "cashslip" && (
-  <>
-    <div className="bg-white p-6 rounded-lg shadow-md mt-6 text-center">
-      <h2 className="text-3xl font-bold text-gray-800">💵 Cash Slips</h2>
-      <button
-        onClick={() => navigate("/Cashslip")}
-        className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-lg shadow hover:bg-purple-700 transition-transform hover:scale-105"
-      >
-        Submit New Cash Slip
-      </button>
-    </div>
-
-    {/* 🔹 Filter Bar */}
-    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-4">
-      <select
-        value={filter}
-        onChange={(e) => setFilter(e.target.value)}
-        className="border px-4 py-2 rounded-lg shadow text-gray-700"
-      >
-        <option value="today">Today</option>
-        <option value="other">Other</option>
-        <option value="custom">Custom Date</option>
-      </select>
-
-      {filter === "custom" && (
-        <input
-          type="date"
-          value={customDate}
-          onChange={(e) => setCustomDate(e.target.value)}
-          className="border px-4 py-2 rounded-lg shadow text-gray-700"
-        />
-      )}
-    </div>
-
-    {/* 🔹 Filtered Cash Slips */}
-    {(() => {
-      const today = new Date().toISOString().split("T")[0]; // ✅ aaj ki date (YYYY-MM-DD)
-
-      const filteredSlips = cashslip.filter((slip) => {
-        if (filter === "today") {
-          return slip.date === today;
-        } else if (filter === "custom") {
-          return slip.date === customDate;
-        } else {
-          return true;
-        }
-      });
-
-      return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-          {filteredSlips.length > 0 ? (
-            filteredSlips.map((cashSlip, index) => (
-              <div
-                key={index}
-                className="bg-white border p-4 rounded-lg shadow hover:shadow-md transition"
+          <>
+            <div className="bg-white p-6 rounded-lg shadow-md mt-6 text-center">
+              <h2 className="text-3xl font-bold text-gray-800">💵 Cash Slips</h2>
+              <button
+                onClick={() => navigate("/Cashslip")}
+                className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-lg shadow hover:bg-purple-700 transition-transform hover:scale-105"
               >
-                <h3 className="text-blue-600 font-bold text-lg mb-2">
-                  {cashSlip.name}
-                </h3>
-                <p><strong>Date:</strong> {cashSlip.date}</p>
-                <p><strong>Shift:</strong> {cashSlip.shift}</p>
-                <p><strong>Nozzle No:</strong> {cashSlip.nozzleNo}</p>
-                <p><strong>Opening:</strong> {cashSlip.openingReading}</p>
-                <p><strong>Closing:</strong> {cashSlip.closingReading}</p>
-                <p><strong>Sales:</strong> {cashSlip.salesInLtr} L</p>
-                <p className="mt-2 font-bold text-lg text-gray-900">
-                  Total: ₹{cashSlip.total}
-                </p>
-              </div>
-            ))
-          ) : (
-            <p className="text-center text-gray-500 col-span-full">
-              No slips found
-            </p>
-          )}
-        </div>
-      );
-    })()}
-  </>
-)}
+                Submit New Cash Slip
+              </button>
+            </div>
 
+            {/* 🔹 Filter Bar */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-4">
+              <select
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                className="border px-4 py-2 rounded-lg shadow text-gray-700"
+              >
+                <option value="today">Today</option>
+                <option value="other">Other</option>
+                <option value="custom">Custom Date</option>
+              </select>
+
+              {filter === "custom" && (
+                <input
+                  type="date"
+                  value={customDate}
+                  onChange={(e) => setCustomDate(e.target.value)}
+                  className="border px-4 py-2 rounded-lg shadow text-gray-700"
+                />
+              )}
+            </div>
+
+            {/* 🔹 Filtered Cash Slips */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
+              {filteredSlips.length > 0 ? (
+                filteredSlips.map((cashSlip, index) => (
+                  <div
+                    key={index}
+                    className="bg-white border p-4 rounded-lg shadow hover:shadow-md transition"
+                  >
+                    <h3 className="text-blue-600 font-bold text-lg mb-2">
+                      {cashSlip.name}
+                    </h3>
+                    <p><strong>Date:</strong> {cashSlip.date}</p>
+                    <p><strong>Shift:</strong> {cashSlip.shift}</p>
+                    <p><strong>Nozzle No:</strong> {cashSlip.nozzleNo}</p>
+                    <p><strong>Opening:</strong> {cashSlip.openingReading}</p>
+                    <p><strong>Closing:</strong> {cashSlip.closingReading}</p>
+                    <p><strong>Sales:</strong> {cashSlip.salesInLtr} L</p>
+                    <p className="mt-2 font-bold text-lg text-gray-900">
+                      Total: ₹{cashSlip.total}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-center text-gray-500 col-span-full">No slips found</p>
+              )}
+            </div>
+          </>
+        )}
 
         {/* ---------------- Complaints ---------------- */}
         {activeTab === "complaint" && (
