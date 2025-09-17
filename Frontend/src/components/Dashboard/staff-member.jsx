@@ -138,32 +138,37 @@ const StaffDashboard = () => {
         <h2 className="text-2xl font-bold mb-6 text-center border-b border-blue-300 pb-4">
           STAFF PANEL
         </h2>
+
         <nav className="space-y-3">
           {navItems.map((item) => (
-            <button
+            <div
               key={item.id}
               onClick={() => {
                 setActiveTab(item.id);
                 setSidebarOpen(false);
-                navigate(`?tab=${item.id}`, { replace: false }); // ✅ history me entry add
+                navigate(`?tab=${item.id}`);
               }}
-              className={`sidebar-btn ${activeTab === item.id ? "active" : ""}`}
+              className={`flex items-center gap-3 px-4 py-2 w-full rounded-lg hover:bg-blue-600 transition font-medium whitespace-nowrap text-sm ${activeTab === item.id ? "bg-white text-blue-700" : "text-white"
+                }`}
             >
               {item.icon}
               <span>{item.label}</span>
-            </button>
+            </div>
           ))}
-          <button
+
+          {/* Profile Button */}
+          <div
             onClick={() => {
               setProfileOpen(true);
               setSidebarOpen(false);
             }}
-            className="flex items-center gap-3 px-4 py-2 w-full rounded-lg bg-white text-blue-700 hover:bg-blue-100 font-semibold"
+            className="flex items-center gap-3 px-4 py-2 w-full rounded-lg bg-white text-blue-700 hover:bg-blue-100 font-semibold whitespace-nowrap text-sm"
           >
             <FaUser /> Profile
-          </button>
+          </div>
         </nav>
       </aside>
+
 
       {/* Sidebar Toggle Btn */}
       {showToggleButton && !isSidebarOpen && (
