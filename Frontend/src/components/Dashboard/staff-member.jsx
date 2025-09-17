@@ -38,6 +38,7 @@ const StaffDashboard = () => {
   const [filter, setFilter] = useState("today");
   const [customDate, setCustomDate] = useState("");
 
+  // helper function
   const formatDate = (dateString) =>
     new Date(dateString).toISOString().split("T")[0];
 
@@ -49,6 +50,7 @@ const StaffDashboard = () => {
         : filter === "custom" && customDate
           ? cashslip.filter((s) => formatDate(s.date) === customDate)
           : cashslip;
+
 
   // 🔹 sync tab with URL
   useEffect(() => {
@@ -278,6 +280,7 @@ const StaffDashboard = () => {
                 />
               )}
             </div>
+
 
             {/* 🔹 Filtered Cash Slips */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
