@@ -278,67 +278,86 @@ const StaffDashboard = () => {
 
         {/* ---------------- Cash Slip ---------------- */}
         {activeTab === "cashslip" && (
-          <>
-            <div className="bg-white p-6 rounded-lg shadow-md mt-6 text-center">
-              <h2 className="text-3xl font-bold text-gray-800">💵 Cash Slips</h2>
-              <button
-                onClick={() => navigate("/Cashslip")}
-                className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-lg shadow hover:bg-purple-700 transition-transform hover:scale-105"
+  <>
+    <div className="bg-white p-6 rounded-lg shadow-md mt-6 text-center">
+      <h2 className="text-3xl font-bold text-gray-800">💵 Cash Slips</h2>
+      <button
+        onClick={() => navigate("/Cashslip")}
+        className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-lg shadow hover:bg-purple-700 transition-transform hover:scale-105"
+      >
+        Submit New Cash Slip
+      </button>
+    </div>
+
+    {/* 🔹 Filter Bar */}
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-4">
+      <select
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
+        className="border px-4 py-2 rounded-lg shadow text-gray-700"
+      >
+        <option value="today">Today</option>
+        <option value="other">Other</option>
+        <option value="custom">Custom Date</option>
+      </select>
+
+      {filter === "custom" && (
+        <input
+          type="date"
+          value={customDate}
+          onChange={(e) => setCustomDate(e.target.value)}
+          className="border px-4 py-2 rounded-lg shadow text-gray-700"
+        />
+      )}
+    </div>
+
+    {/* 🔹 Filtered Cash Slips */}
+    {(() => {
+      const today = new Date().toISOString().split("T")[0]; // ✅ aaj ki date (YYYY-MM-DD)
+
+      const filteredSlips = cashSlips.filter((slip) => {
+        if (filter === "today") {
+          return slip.date === today;
+        } else if (filter === "custom") {
+          return slip.date === customDate;
+        } else {
+          return true;
+        }
+      });
+
+      return (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
+          {filteredSlips.length > 0 ? (
+            filteredSlips.map((cashSlip, index) => (
+              <div
+                key={index}
+                className="bg-white border p-4 rounded-lg shadow hover:shadow-md transition"
               >
-                Submit New Cash Slip
-              </button>
-            </div>
+                <h3 className="text-blue-600 font-bold text-lg mb-2">
+                  {cashSlip.name}
+                </h3>
+                <p><strong>Date:</strong> {cashSlip.date}</p>
+                <p><strong>Shift:</strong> {cashSlip.shift}</p>
+                <p><strong>Nozzle No:</strong> {cashSlip.nozzleNo}</p>
+                <p><strong>Opening:</strong> {cashSlip.openingReading}</p>
+                <p><strong>Closing:</strong> {cashSlip.closingReading}</p>
+                <p><strong>Sales:</strong> {cashSlip.salesInLtr} L</p>
+                <p className="mt-2 font-bold text-lg text-gray-900">
+                  Total: ₹{cashSlip.total}
+                </p>
+              </div>
+            ))
+          ) : (
+            <p className="text-center text-gray-500 col-span-full">
+              No slips found
+            </p>
+          )}
+        </div>
+      );
+    })()}
+  </>
+)}
 
-            {/* 🔹 Filter Bar */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-4">
-              <select
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-                className="border px-4 py-2 rounded-lg shadow text-gray-700"
-              >
-                <option value="today">Today</option>
-                <option value="other">Other</option>
-                <option value="custom">Custom Date</option>
-              </select>
-
-              {filter === "custom" && (
-                <input
-                  type="date"
-                  value={customDate}
-                  onChange={(e) => setCustomDate(e.target.value)}
-                  className="border px-4 py-2 rounded-lg shadow text-gray-700"
-                />
-              )}
-            </div>
-
-            {/* 🔹 Filtered Cash Slips */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-              {filteredSlips.length > 0 ? (
-                filteredSlips.map((cashSlip, index) => (
-                  <div
-                    key={index}
-                    className="bg-white border p-4 rounded-lg shadow hover:shadow-md transition"
-                  >
-                    <h3 className="text-blue-600 font-bold text-lg mb-2">
-                      {cashSlip.name}
-                    </h3>
-                    <p><strong>Date:</strong> {cashSlip.date}</p>
-                    <p><strong>Shift:</strong> {cashSlip.shift}</p>
-                    <p><strong>Nozzle No:</strong> {cashSlip.nozzleNo}</p>
-                    <p><strong>Opening:</strong> {cashSlip.openingReading}</p>
-                    <p><strong>Closing:</strong> {cashSlip.closingReading}</p>
-                    <p><strong>Sales:</strong> {cashSlip.salesInLtr} L</p>
-                    <p className="mt-2 font-bold text-lg text-gray-900">
-                      Total: ₹{cashSlip.total}
-                    </p>
-                  </div>
-                ))
-              ) : (
-                <p className="text-center text-gray-500 col-span-full">No slips found</p>
-              )}
-            </div>
-          </>
-        )}
 
         {/* ---------------- Complaints ---------------- */}
         {activeTab === "complaint" && (
