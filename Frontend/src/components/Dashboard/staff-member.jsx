@@ -38,18 +38,22 @@ const StaffDashboard = () => {
   const [filter, setFilter] = useState("today");
   const [customDate, setCustomDate] = useState("");
 
-  // helper function
-  const formatDate = (dateString) =>
-    new Date(dateString).toISOString().split("T")[0];
+// helper function
+const formatDate = (dateString) =>
+  new Date(dateString).toISOString().split("T")[0];
 
-  const filteredSlips =
-    filter === "today"
-      ? cashslip.filter((s) => formatDate(s.date) === today)
-      : filter === "other"
-        ? cashslip.filter((s) => formatDate(s.date) !== today)
-        : filter === "custom" && customDate
-          ? cashslip.filter((s) => formatDate(s.date) === customDate)
-          : cashslip;
+// aaj ki date
+const today = new Date().toISOString().split("T")[0];
+
+const filteredSlips =
+  filter === "today"
+    ? cashslip.filter((s) => formatDate(s.date) === today)
+    : filter === "other"
+      ? cashslip.filter((s) => formatDate(s.date) !== today)
+      : filter === "custom" && customDate
+        ? cashslip.filter((s) => formatDate(s.date) === customDate)
+        : cashslip;
+
 
 
   // 🔹 sync tab with URL
