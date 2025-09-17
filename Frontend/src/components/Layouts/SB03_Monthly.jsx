@@ -233,31 +233,36 @@ const SB03_Monthly = () => {
       <div className="flex-col items-center justify-center p-6">
         <form onSubmit={saveData}>
           <div className="p-4">
-            <h1 className="text-center text-3xl md:text-6xl font-bold text-blue-600 mb-6">
+            <h1 className="text-center text-2xl md:text-5xl font-bold text-blue-600 mb-6">
               Sales Reports
             </h1>
 
-            <div className="flex flex-col md:flex-row justify-evenly items-center gap-4">
-              {/* Back Button */}
-              <Link to="/dashboard" className="flex items-center">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+              {/* Back Button → Sirf md (tablet & desktop) pe dikhayega */}
+              <Link to="/dashboard" className="hidden md:flex items-center">
                 <img src={previousImage} width={50} alt="Back" />
               </Link>
 
               {/* Date Picker */}
-              <div className="text-center text-lg md:text-xl">
+              <div className="w-full md:w-auto text-center">
                 <input
                   type="date"
                   id="datee"
-                  className="bg-transparent border px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  className="w-full md:w-auto bg-white border px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
                 />
               </div>
 
               {/* Save Button */}
-              <button type="submit" className="bg-transparent flex items-center">
-                <img src={saveImage} width={50} alt="Save" />
+              <button
+                type="submit"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition flex items-center justify-center"
+              >
+                <img src={saveImage} width={30} alt="Save" className="mr-2" />
+                <span className="hidden md:inline">Save</span>
               </button>
             </div>
           </div>
+
 
           <div className="table-container table-cont2">
             <table className="">
