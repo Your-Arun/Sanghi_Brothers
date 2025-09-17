@@ -38,21 +38,21 @@ const StaffDashboard = () => {
   const [filter, setFilter] = useState("today");
   const [customDate, setCustomDate] = useState("");
 
-// helper function
-const formatDate = (dateString) =>
-  new Date(dateString).toISOString().split("T")[0];
+  // helper function
+  const formatDate = (dateString) =>
+    new Date(dateString).toISOString().split("T")[0];
 
-// aaj ki date
-const today = new Date().toISOString().split("T")[0];
+  // aaj ki date
+  const today = new Date().toISOString().split("T")[0];
 
-const filteredSlips =
-  filter === "today"
-    ? cashslip.filter((s) => formatDate(s.date) === today)
-    : filter === "other"
-      ? cashslip.filter((s) => formatDate(s.date) !== today)
-      : filter === "custom" && customDate
-        ? cashslip.filter((s) => formatDate(s.date) === customDate)
-        : cashslip;
+  const filteredSlips =
+    filter === "today"
+      ? cashslip.filter((s) => formatDate(s.date) === today)
+      : filter === "other"
+        ? cashslip.filter((s) => formatDate(s.date) !== today)
+        : filter === "custom" && customDate
+          ? cashslip.filter((s) => formatDate(s.date) === customDate)
+          : cashslip;
 
 
 
@@ -206,7 +206,11 @@ const filteredSlips =
         {activeTab === "dashboard" && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
             {/* Cash Slip Card */}
-            <div className="bg-white shadow-md rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition">
+            <div onClick={() => {
+              setActiveTab("cashslip");
+              navigate("?tab=cashslip");
+            }}
+              className="bg-white shadow-md rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-lg font-semibold text-gray-800">Cash Slips</h2>
@@ -220,7 +224,10 @@ const filteredSlips =
             </div>
 
             {/* Complaints Card */}
-            <div className="bg-white shadow-md rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition">
+            <div onClick={() => {
+              setActiveTab("complaint");
+              navigate("?tab=complaint");
+            }} className="bg-white shadow-md rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-lg font-semibold text-gray-800">Complaints</h2>
@@ -234,7 +241,10 @@ const filteredSlips =
             </div>
 
             {/* Lekha Jokha Card */}
-            <div className="bg-white shadow-md rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition">
+            <div onClick={() => {
+              setActiveTab("lekhajokha");
+              navigate("?tab=lekhajokha");
+            }} className="bg-white shadow-md rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-lg font-semibold text-gray-800">Lekha Jokha</h2>
