@@ -232,26 +232,33 @@ const SB03_Monthly = () => {
     <>
       <div className="flex-col items-center justify-center p-6">
         <form onSubmit={saveData}>
-          <div>
-            <h1 className="text-center text-6xl font-bold  text-blue-600">
+          <div className="p-4">
+            <h1 className="text-center text-3xl md:text-6xl font-bold text-blue-600 mb-6">
               Sales Reports
             </h1>
-            <div className="flex justify-evenly items-center  p-4">
-              <Link to={"/dashboard"}>
-                <div className="">
-                  <img src={previousImage} width={50} alt="Back" />
-                </div>
+
+            <div className="flex flex-col md:flex-row justify-evenly items-center gap-4">
+              {/* Back Button */}
+              <Link to="/dashboard" className="flex items-center">
+                <img src={previousImage} width={50} alt="Back" />
               </Link>
-              <div className="text-center mt-5 text-xl p-4">
-                <input type="date" id="datee" className='bg-transparent' />
+
+              {/* Date Picker */}
+              <div className="text-center text-lg md:text-xl">
+                <input
+                  type="date"
+                  id="datee"
+                  className="bg-transparent border px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                />
               </div>
-              <div>
-                <button type="submit" className='bg-transparent'>
-                  <img src={saveImage} width={50} alt="Save" />
-                </button>{" "}
-              </div>
+
+              {/* Save Button */}
+              <button type="submit" className="bg-transparent flex items-center">
+                <img src={saveImage} width={50} alt="Save" />
+              </button>
             </div>
           </div>
+
           <div className="table-container table-cont2">
             <table className="">
               <thead>
@@ -365,7 +372,7 @@ const SB03_Monthly = () => {
                           inputs[dayIndex].l -
                           inputs[dayIndex].p}
                       </td>
-                      <td  className='font-bold'>
+                      <td className='font-bold'>
                         {inputs[dayIndex].k +
                           inputs[dayIndex].m -
                           inputs[dayIndex].q}
@@ -379,7 +386,7 @@ const SB03_Monthly = () => {
                             inputs[dayIndex].m -
                             inputs[dayIndex].q)}
                       </td>
-                      <td  className='font-bold'>{inputs[dayIndex].p + inputs[dayIndex].q}</td>
+                      <td className='font-bold'>{inputs[dayIndex].p + inputs[dayIndex].q}</td>
                       <td>
                         <input
                           type="number"
@@ -546,7 +553,7 @@ const SB03_Monthly = () => {
                   <td></td>
                   <td></td>
                   <td className='font-bold'>{totalsaleee}</td>
-                  <td  className='font-bold'>{sumofW}</td>
+                  <td className='font-bold'>{sumofW}</td>
                   <td className='font-bold'>{sumofX}</td>
                   <td className='font-bold'>{sumofY}</td>
                   <td></td>
