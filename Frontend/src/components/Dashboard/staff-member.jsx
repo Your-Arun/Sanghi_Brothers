@@ -315,7 +315,7 @@ const StaffDashboard = () => {
     {(() => {
       const today = new Date().toISOString().split("T")[0]; // ✅ aaj ki date (YYYY-MM-DD)
 
-      const filteredSlips = cashSlips.filter((slip) => {
+      const filteredSlips = cashslip.filter((slip) => {
         if (filter === "today") {
           return slip.date === today;
         } else if (filter === "custom") {
