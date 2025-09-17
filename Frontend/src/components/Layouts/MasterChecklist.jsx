@@ -90,6 +90,7 @@ const MasterChecklist = () => {
             <input
               type="date"
               id="dat1"
+              placeholder="Date"
               className="bg-transparent"
               value={inputValues.dat1}
               onChange={handleInputChange}
@@ -99,6 +100,7 @@ const MasterChecklist = () => {
               className="bg-transparent"
               type="date"
               id="dat2"
+              placeholder="Date"
               value={inputValues.dat2}
               onChange={handleInputChange}
             />

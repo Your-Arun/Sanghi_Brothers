@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axiosInstance from '../Dashboard/axiosInstance'
-import { FaArrowLeft } from "react-icons/fa";
-import { toast } from 'react-toastify'
+import axiosInstance from "../Dashboard/axiosInstance";
+import { FaArrowLeft, FaInfoCircle } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const sections = [
   { key: "pumpSheetData", title: "Pump Report Sheet", route: "pumpsheet" },
@@ -17,12 +17,12 @@ const sections = [
 
 const ChekList = () => {
   const [data, setData] = useState({});
-  const [visibleCounts, setVisibleCounts] = useState({}); // Track visible reports per section
+  const [visibleCounts, setVisibleCounts] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = sessionStorage.getItem("authToken"); // ✅ Use sessionStorage
+        const token = sessionStorage.getItem("authToken");
         if (!token) {
           toast.warn("No valid session found. Please log in.");
           return;
@@ -38,7 +38,6 @@ const ChekList = () => {
 
         setData(newData);
 
-        // Initialize visible counts for each section (default: show 6 items)
         const initialCounts = sections.reduce((acc, section) => {
           acc[section.key] = 6;
           return acc;
@@ -51,20 +50,34 @@ const ChekList = () => {
     fetchData();
   }, []);
 
-  // Function to load more items
   const loadMore = (key) => {
     setVisibleCounts((prev) => ({ ...prev, [key]: prev[key] + 6 }));
   };
 
   return (
     <>
+      {/* 🔹 Floating Notice Bar */}
+      <div className="sticky top-0 z-50 bg-yellow-100 border-b border-yellow-300 text-yellow-800 px-4 py-2 flex items-center justify-center gap-2 shadow-md text-sm md:text-base">
+        <FaInfoCircle className="text-yellow-600" />
+        <p className="font-medium text-center">
+          📢 Please switch to <span className="font-bold">Desktop Mode</span> for the best experience.
+        </p>
+      </div>
+
       <div className="flex flex-col items-center justify-center p-6">
-        <h1 className="text-6xl font-bold text-center text-gray-80 mb-4">MASTER SHEET</h1>
+        <h1 className="text-4xl md:text-6xl font-bold text-center text-gray-800 mb-4">
+          MASTER SHEET
+        </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {sections.map(({ key, title, route }) => (
-            <div key={key} className="bg-white shadow-lg rounded-xl p-6 border border-gray-200">
-              <h2 className="text-2xl font-semibold text-center text-blue-600 font-serif mb-4">{title}</h2>
+            <div
+              key={key}
+              className="bg-white shadow-lg rounded-xl p-6 border border-gray-200"
+            >
+              <h2 className="text-xl md:text-2xl font-semibold text-center text-blue-600 font-serif mb-4">
+                {title}
+              </h2>
               <div className="flex flex-col items-center">
                 <Link
                   to={`/mastersheet/${route}`}
@@ -74,8 +87,7 @@ const ChekList = () => {
                 </Link>
               </div>
 
-              {/* Update Report Cards */}
-              <div className="grid mt-4 grid-cols-3 gap-3">
+              <div className="grid mt-4 grid-cols-2 md:grid-cols-3 gap-3">
                 {data[key]?.slice(0, visibleCounts[key]).map((item) => (
                   <Link
                     to={`/mastersheet/${route}/${item._id}`}
@@ -84,21 +96,16 @@ const ChekList = () => {
                   >
                     <p className="font-bold text-sm">Update</p>
                     <span className="text-gray-600">
-                      {(new Date(item.dat2).toLocaleDateString("en-GB", {
+                      {new Date(item.dat2 || item.date).toLocaleDateString("en-GB", {
                         day: "2-digit",
                         month: "2-digit",
                         year: "numeric",
-                      })) || (new Date(item.date).toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      }))}
+                      })}
                     </span>
                   </Link>
                 ))}
               </div>
 
-              {/* See More Button */}
               {data[key]?.length > visibleCounts[key] && (
                 <div className="flex justify-center mt-3">
                   <button
