@@ -90,7 +90,7 @@ const Lekhajokha = () => {
         try {
             const response = await axiosInstance.post("/newlekhajokha", data);
             toast.success("Lekha Jokha saved successfully!");
-         } catch (error) {
+        } catch (error) {
             toast.warn("Error saving Lekha Jokha!");
         }
     };
@@ -120,71 +120,80 @@ const Lekhajokha = () => {
 
 
                 <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-                    <div className="flex justify-between font-bold mb-4">
-                        <div className="w-1/3">
-                            <label htmlFor="rate">Petrol Rate:  <input
-
-
-                                type="number"
-                                id="rate"
-                                placeholder="Petrol Rate"
-                                value={rate}
-                                onChange={(e) => setrate(e.target.value)}
-                                className="p-3 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-                            />
+                    {/* First Row */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-bold mb-4">
+                        <div>
+                            <label htmlFor="rate">
+                                Petrol Rate:
+                                <input
+                                    type="number"
+                                    id="rate"
+                                    placeholder="Petrol Rate"
+                                    value={rate}
+                                    onChange={(e) => setrate(e.target.value)}
+                                    className="mt-1 p-3 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                />
                             </label>
                         </div>
-                        <div className="w-1/3 text-center">
-                            <label htmlFor="date">Date:  <input
-                                type="date"
-                                placeholder="Date"
-                                value={date}
-                                onChange={handleDateChange}
-
-                                className="p-3 w-1/3  border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-                            />
+                        <div>
+                            <label htmlFor="date" className="flex flex-col items-center md:items-start">
+                                Date:
+                                <input
+                                    type="date"
+                                    placeholder="Date"
+                                    value={date}
+                                    onChange={handleDateChange}
+                                    className="mt-1 p-3 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                />
                             </label>
                         </div>
-                        <div className="w-1/3">
-                            <label htmlFor="pytm">PAYTM Amount:  <input
-                                type="number"
-                                id="paytm"
-                                placeholder="PAYTM Amount"
-                                value={paytm}
-                                onChange={(e) => setPaytm(e.target.value)}
-                                className="p-3 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-                            />
+                        <div>
+                            <label htmlFor="paytm">
+                                PAYTM Amount:
+                                <input
+                                    type="number"
+                                    id="paytm"
+                                    placeholder="PAYTM Amount"
+                                    value={paytm}
+                                    onChange={(e) => setPaytm(e.target.value)}
+                                    className="mt-1 p-3 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                />
                             </label>
                         </div>
                     </div>
 
-                    <div className="flex font-bold justify-between mb-4">
-                        <div className="w-1/3">
-                            <label htmlFor="sale">Sale Amount:  <input
-                                type="number"
-                                id="sale"
-                                placeholder="Sale Amount"
-                                value={sale}
-                                onChange={(e) => setSale(e.target.value)}
-                                className="p-3 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-                            /></label>
+                    {/* Second Row */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-bold mb-4">
+                        <div>
+                            <label htmlFor="sale">
+                                Sale Amount:
+                                <input
+                                    type="number"
+                                    id="sale"
+                                    placeholder="Sale Amount"
+                                    value={sale}
+                                    onChange={(e) => setSale(e.target.value)}
+                                    className="mt-1 p-3 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                />
+                            </label>
                         </div>
-                        <div className="w-1/3">
-
-
-                            <label htmlFor="shift">Shift:  <select
-                                value={selectedShift}
-                                onChange={handleShiftChange}
-                                className="p-3 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-                            >
-                                <option value="">Select Shift</option>
-                                <option value="Morning">Morning</option>
-                                <option value="Evening">Evening</option>
-                            </select></label>
+                        <div>
+                            <label htmlFor="shift">
+                                Shift:
+                                <select
+                                    value={selectedShift}
+                                    onChange={handleShiftChange}
+                                    className="mt-1 p-3 w-full border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                >
+                                    <option value="">Select Shift</option>
+                                    <option value="Morning">Morning</option>
+                                    <option value="Evening">Evening</option>
+                                </select>
+                            </label>
                         </div>
-
                     </div>
                 </div>
+
 
                 <div className=" p-6 rounded-lg shadow-md">
                     <table className="w-full table-auto">
