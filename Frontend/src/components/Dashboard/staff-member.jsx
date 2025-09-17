@@ -15,6 +15,7 @@ import axiosInstance from "./axiosInstance";
 import { toast } from "react-toastify";
 import UserContext from "../Home Page/UserContext";
 import ShiftComponent from "../Dashboard/Shift Component";
+import CashslipDashboard from "./CashslipDashboard";
 
 const StaffDashboard = () => {
   const { user, setUser } = useContext(UserContext);
@@ -191,68 +192,83 @@ const StaffDashboard = () => {
 
         {/* ---------------- Dashboard ---------------- */}
         {activeTab === "dashboard" && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-            {/* Cash Slip Card */}
-            <div
-              onClick={() => {
-                setActiveTab("cashslip");
-                navigate("?tab=cashslip");
-              }}
-              className="bg-white shadow-md rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition cursor-pointer"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-lg font-semibold text-gray-800">Cash Slips</h2>
-                  <p className="text-sm text-gray-500">Total Slips</p>
+          <div className="mt-6">
+            {/* Cards Section */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Cash Slip Card */}
+              <div
+                onClick={() => {
+                  setActiveTab("cashslip");
+                  navigate("?tab=cashslip");
+                }}
+                className="bg-white shadow-md rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition cursor-pointer"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-800">Cash Slips</h2>
+                    <p className="text-sm text-gray-500">Total Slips</p>
+                  </div>
+                  <div className="p-3 bg-blue-100 text-blue-600 rounded-full">
+                    <FaMoneyBill className="text-xl" />
+                  </div>
                 </div>
-                <div className="p-3 bg-blue-100 text-blue-600 rounded-full">
-                  <FaMoneyBill className="text-xl" />
-                </div>
+                <p className="mt-4 text-3xl font-bold text-gray-700">
+                  {cashslip?.length || 0}
+                </p>
               </div>
-              <p className="mt-4 text-3xl font-bold text-gray-700">{cashslip?.length || 0}</p>
+
+              {/* Complaints Card */}
+              <div
+                onClick={() => {
+                  setActiveTab("complaint");
+                  navigate("?tab=complaint");
+                }}
+                className="bg-white shadow-md rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition cursor-pointer"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-800">Complaints</h2>
+                    <p className="text-sm text-gray-500">Active Issues</p>
+                  </div>
+                  <div className="p-3 bg-red-100 text-red-600 rounded-full">
+                    <FaExclamationTriangle className="text-xl" />
+                  </div>
+                </div>
+                <p className="mt-4 text-3xl font-bold text-gray-700">
+                  {reports?.length || 0}
+                </p>
+              </div>
+
+              {/* Lekha Jokha Card */}
+              <div
+                onClick={() => {
+                  setActiveTab("lekhajokha");
+                  navigate("?tab=lekhajokha");
+                }}
+                className="bg-white shadow-md rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition cursor-pointer"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-800">Lekha Jokha</h2>
+                    <p className="text-sm text-gray-500">Entries Recorded</p>
+                  </div>
+                  <div className="p-3 bg-green-100 text-green-600 rounded-full">
+                    <BsOpencollective className="text-xl" />
+                  </div>
+                </div>
+                <p className="mt-4 text-3xl font-bold text-gray-700">
+                  {lekha?.length || 0}
+                </p>
+              </div>
             </div>
 
-            {/* Complaints Card */}
-            <div
-              onClick={() => {
-                setActiveTab("complaint");
-                navigate("?tab=complaint");
-              }}
-              className="bg-white shadow-md rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition cursor-pointer"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-lg font-semibold text-gray-800">Complaints</h2>
-                  <p className="text-sm text-gray-500">Active Issues</p>
-                </div>
-                <div className="p-3 bg-red-100 text-red-600 rounded-full">
-                  <FaExclamationTriangle className="text-xl" />
-                </div>
-              </div>
-              <p className="mt-4 text-3xl font-bold text-gray-700">{reports?.length || 0}</p>
-            </div>
-
-            {/* Lekha Jokha Card */}
-            <div
-              onClick={() => {
-                setActiveTab("lekhajokha");
-                navigate("?tab=lekhajokha");
-              }}
-              className="bg-white shadow-md rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition cursor-pointer"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-lg font-semibold text-gray-800">Lekha Jokha</h2>
-                  <p className="text-sm text-gray-500">Entries Recorded</p>
-                </div>
-                <div className="p-3 bg-green-100 text-green-600 rounded-full">
-                  <BsOpencollective className="text-xl" />
-                </div>
-              </div>
-              <p className="mt-4 text-3xl font-bold text-gray-700">{lekha?.length || 0}</p>
+            {/* 👇 Cash Slip Pie Chart Section */}
+            <div className="mt-10">
+              <CashslipDashboard slips={cashslip} />
             </div>
           </div>
         )}
+
 
 
         {/* ---------------- Cash Slip ---------------- */}
