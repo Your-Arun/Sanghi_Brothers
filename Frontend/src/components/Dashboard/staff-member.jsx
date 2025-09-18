@@ -131,6 +131,9 @@ const StaffDashboard = () => {
   if (loading) return <h3 className="text-center mt-20">Loading...</h3>;
   if (!user) return navigate("/");
 
+  const usernamee = user.username;
+  const usernm = usernamee.toUpperCase();
+
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar Overlay */}
@@ -202,7 +205,7 @@ const StaffDashboard = () => {
       {/* Main Section */}
       <main className="flex-1 p-4 overflow-y-auto max-h-screen bg-gray-50">
         <h1 className="text-2xl text-center font-bold mb-6 text-gray-800">
-          Welcome, <span className="text-blue-600 mb-10">{user.username}</span>
+          Welcome, <span className="text-blue-600 mb-10">{usernm}</span>
         </h1>
 
         {/* ---------------- Dashboard ---------------- */}
