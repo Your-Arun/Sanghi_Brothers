@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const rowSchema = new mongoose.Schema({
   name: String,
@@ -11,9 +11,8 @@ const salePaytmSchema = new mongoose.Schema({
   shift: { type: String, enum: ["Morning", "Evening"], required: true },
   rows: [rowSchema],
 
-  // ✅ Add these fields
   totalSale: { type: Number, default: 0 },
   totalPaytm: { type: Number, default: 0 },
 });
 
-export default mongoose.model("SalePaytm", salePaytmSchema);
+module.exports = mongoose.model("SalePaytm", salePaytmSchema);
