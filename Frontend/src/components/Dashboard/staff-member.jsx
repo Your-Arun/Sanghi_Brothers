@@ -86,17 +86,19 @@ const StaffDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [departmentRes, reportRes, cashierRes, lekhajokha] =
+        const [departmentRes, reportRes, cashierRes, lekhajokha, salepytmm] =
           await Promise.all([
             axiosInstance.get("/departments", { withCredentials: true }),
             axiosInstance.get("/reports", { withCredentials: true }),
             axiosInstance.get("/Cashslip", { withCredentials: true }),
             axiosInstance.get("/newlekhajokha", { withCredentials: true }),
+            axiosInstance.get("/salepaytm", { withCredentials: true }),
           ]);
         setDepartments(departmentRes.data);
         setReports(reportRes.data);
         setCashslip(cashierRes.data);
         setLekha(lekhajokha.data);
+        setSalepytm(salepytmm.data);
       } catch {
         toast.warning("Failed to fetch data.");
       }
@@ -415,16 +417,30 @@ const StaffDashboard = () => {
               </button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-              {salepytm.map((item) => (
+              {salepytm.map((entry) => (
                 <div
-                  key={item.id}
-                  className="bg-white p-4 rounded-lg shadow-md border hover:shadow-lg transition text-center"
-                >
-                  <h3 className="text-blue-600 font-bold text-lg">{}</h3>
-                  <p className="text-red-500">{}</p>
-                  <p className="text-gray-600">
-                    {}
+                  key={entry._id}
+                  className="bg-white p-2 rounded-md shadow border text-[12px] hover:shadow-md hover:scale-105 cursor-pointer transition"
+                  >
+                  <p className="text-gray-500 text-[11px] mb-1">
+                    {new Date(entry.date).toLocaleDateString()} | <b>{entry.shift}</b>
                   </p>
+
+                  {/* Compact rows */}
+                  <div className="space-y-0.2 max-h-30  pr-1">
+                    {entry.rows.map((r, idx) => (
+                      <div key={idx} className="flex justify-between text-center">
+                        <span className="truncate w-14">{idx + 1}. {r.name || "—"}</span>
+                        <span className="text-green-600">₹{r.sale || 0}</span>
+                        <span className="text-yellow-600">₹{r.paytm || 0}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Totals */}
+                  <div className="mt-1 border-t pt-1 font-bold text-blue-700 text-[12px]">
+                    Sale: ₹{entry.totalSale} | Paytm: ₹{entry.totalPaytm}
+                  </div>
                 </div>
               ))}
             </div>

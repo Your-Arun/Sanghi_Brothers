@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axiosInstance from "./axiosInstance";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import BackButton from "../Home Page/backbutton";
 
 const SalePaytm = () => {
     const [rows, setRows] = useState(Array(6).fill({ name: "", sale: "", paytm: "" }));
@@ -52,6 +53,9 @@ const SalePaytm = () => {
                 ⛽ Sale / Paytm
             </h1>
 
+            <div className="mt-6">
+                <BackButton label="⬅ Go Back" />
+            </div>
             {/* Date + Shift + Save */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-end mb-6">
                 <input
