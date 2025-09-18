@@ -179,48 +179,36 @@ const SalePaytm = () => {
 
 
             {/* 🔹 Saved Entries Section */}
-            <h2 className="text-xl font-semibold mt-10 mb-4 text-gray-700">📦 Back Entries</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <h2 className="text-lg font-semibold mt-10 mb-3 text-gray-700">📦 Back Entries</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                 {entries.map((entry) => (
                     <div
                         key={entry._id}
-                        className="bg-white p-4 rounded-xl shadow-md border hover:shadow-lg transition"
+                        className="bg-white p-2 rounded-md shadow border text-[11px] hover:shadow-md transition"
                     >
-                        <div className="flex justify-between items-center mb-2">
-                            <p className="text-sm text-gray-500">
-                                {new Date(entry.date).toLocaleDateString()} | <b>{entry.shift}</b>
-                            </p>
+                        <p className="text-gray-500 text-[10px] mb-1">
+                            {new Date(entry.date).toLocaleDateString()} | <b>{entry.shift}</b>
+                        </p>
+
+                        {/* Compact rows */}
+                        <div className="space-y-0.5 max-h-24 overflow-y-auto pr-1">
+                            {entry.rows.map((r, idx) => (
+                                <div key={idx} className="flex justify-between">
+                                    <span className="truncate w-12">{idx + 1}. {r.name || "—"}</span>
+                                    <span className="text-green-600">₹{r.sale || 0}</span>
+                                    <span className="text-yellow-600">₹{r.paytm || 0}</span>
+                                </div>
+                            ))}
                         </div>
 
-                        {/* Same format as saved table */}
-                        <table className="w-full text-sm border">
-                            <thead className="bg-gray-100">
-                                <tr>
-                                    <th className="border px-2 py-1">Nozzle</th>
-                                    <th className="border px-2 py-1">Name</th>
-                                    <th className="border px-2 py-1">Sale</th>
-                                    <th className="border px-2 py-1">Paytm</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {entry.rows.map((r, idx) => (
-                                    <tr key={idx} className="odd:bg-white even:bg-gray-50">
-                                        <td className="border px-2 py-1">{idx + 1}</td>
-                                        <td className="border px-2 py-1">{r.name || "—"}</td>
-                                        <td className="border px-2 py-1">{r.sale || 0}</td>
-                                        <td className="border px-2 py-1">{r.paytm || 0}</td>
-                                    </tr>
-                                ))}
-                                <tr className="bg-yellow-50 font-bold">
-                                    <td className="border px-2 py-1" colSpan={2}>Total</td>
-                                    <td className="border px-2 py-1">{entry.totalSale}</td>
-                                    <td className="border px-2 py-1">{entry.totalPaytm}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        {/* Totals */}
+                        <div className="mt-1 border-t pt-1 font-bold text-blue-700 text-[11px]">
+                            Sale: ₹{entry.totalSale} | Paytm: ₹{entry.totalPaytm}
+                        </div>
                     </div>
                 ))}
             </div>
+
         </div>
     );
 };
