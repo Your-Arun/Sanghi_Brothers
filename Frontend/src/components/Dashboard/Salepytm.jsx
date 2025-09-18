@@ -4,11 +4,9 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const SalePaytm = () => {
-    const [rows, setRows] = useState(
-        Array(6).fill({ name: "", sale: "", paytm: "" })
-    );
+    const [rows, setRows] = useState(Array(6).fill({ name: "", sale: "", paytm: "" }));
     const [date, setDate] = useState("");
-    const [shift, setShift] = useState("Morning"); // ✅ New Shift field
+    const [shift, setShift] = useState("Morning");
     const [entries, setEntries] = useState([]);
     const [filterDate, setFilterDate] = useState("");
     const [totals, setTotals] = useState({ sale: 0, paytm: 0 });
@@ -22,12 +20,9 @@ const SalePaytm = () => {
         setRows(updatedRows);
     };
 
-    // Totals
+    // Totals (for input table only)
     const totalSale = rows.reduce((acc, r) => acc + (parseFloat(r.sale) || 0), 0);
-    const totalPaytm = rows.reduce(
-        (acc, r) => acc + (parseFloat(r.paytm) || 0),
-        0
-    );
+    const totalPaytm = rows.reduce((acc, r) => acc + (parseFloat(r.paytm) || 0), 0);
 
     // Save data
     const handleSave = async () => {
@@ -55,13 +50,11 @@ const SalePaytm = () => {
             if (res.data.length === 0) {
                 setEntries([]);
                 setTotals({ sale: 0, paytm: 0 });
-                setNoData(true); // ⚠️ show no data message
+                setNoData(true);
             } else {
                 setEntries(res.data);
 
-                // Calculate totals
-                let sale = 0,
-                    paytm = 0;
+                let sale = 0, paytm = 0;
                 res.data.forEach((e) => {
                     sale += e.totalSale;
                     paytm += e.totalPaytm;
@@ -74,7 +67,6 @@ const SalePaytm = () => {
             setLoading(false);
         }
     };
-
 
     useEffect(() => {
         fetchEntries();
@@ -90,64 +82,6 @@ const SalePaytm = () => {
             toast.error("❌ Error deleting entry");
         }
     };
-
-
-    {/* Cards */ }
-    {
-        loading ? (
-            <div className="text-center text-gray-500 mt-6 font-semibold">
-                ⏳ Loading...
-            </div>
-        ) : noData ? (
-            <div className="text-center text-gray-500 mt-6 font-semibold">
-                ❌ No records found
-            </div>
-        ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {entries.map((entry) => (
-                    <div
-                        key={entry._id}
-                        className="bg-white p-4 shadow rounded border relative"
-                    >
-                        <p className="text-sm text-gray-500 mb-2">
-                            Date: {new Date(entry.date).toLocaleDateString()} | Shift:{" "}
-                            <b>{entry.shift}</b>
-                        </p>
-
-                        {/* Each nozzle row */}
-                        <div className="space-y-2">
-                            {entry.rows.map((r, idx) => (
-                                <div
-                                    key={idx}
-                                    className="flex justify-between border-b pb-1 text-sm"
-                                >
-                                    <span>
-                                        <b>Nozzle {idx + 1}</b> - {r.name || "—"}
-                                    </span>
-                                    <span>Sale: {r.sale || 0}</span>
-                                    <span>Paytm: {r.paytm || 0}</span>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Totals */}
-                        <div className="mt-3 font-bold text-sm flex justify-between">
-                            <span>Total Sale: {entry.totalSale}</span>
-                            <span>Total Paytm: {entry.totalPaytm}</span>
-                        </div>
-
-                        {/* Delete button */}
-                        <button
-                            onClick={() => handleDelete(entry._id)}
-                            className="absolute top-2 right-2 text-red-500 hover:text-red-700"
-                        >
-                            🗑
-                        </button>
-                    </div>
-                ))}
-            </div>
-        )
-    }
 
     return (
         <div className="p-6 max-w-6xl mx-auto">
@@ -170,7 +104,6 @@ const SalePaytm = () => {
                     <option value="Morning">Morning</option>
                     <option value="Evening">Evening</option>
                 </select>
-
                 <button
                     onClick={handleSave}
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
@@ -179,7 +112,7 @@ const SalePaytm = () => {
                 </button>
             </div>
 
-            {/* Table */}
+            {/* Input Table */}
             <table className="w-full border text-center mb-6">
                 <thead className="bg-gray-200">
                     <tr>
@@ -221,9 +154,7 @@ const SalePaytm = () => {
                         </tr>
                     ))}
                     <tr className="bg-gray-100 font-bold">
-                        <td className="border p-2" colSpan={2}>
-                            Total
-                        </td>
+                        <td className="border p-2" colSpan={2}>Total</td>
                         <td className="border p-2">{totalSale}</td>
                         <td className="border p-2">{totalPaytm}</td>
                     </tr>
@@ -246,56 +177,56 @@ const SalePaytm = () => {
                 </button>
             </div>
 
-            {/* Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {entries.map((entry) => (
-                    <div
-                        key={entry._id}
-                        className="bg-white p-4 shadow rounded border relative"
-                    >
-                        <p className="text-sm text-gray-500 mb-2">
-                            Date: {new Date(entry.date).toLocaleDateString()} | Shift:{" "}
-                            <b>{entry.shift}</b>
-                        </p>
-
-                        {/* Each nozzle row */}
-                        <div className="space-y-2">
-                            {entry.rows.map((r, idx) => (
-                                <div
-                                    key={idx}
-                                    className="flex justify-between border-b pb-1 text-sm"
-                                >
-                                    <span>
-                                        <b>Nozzle {idx + 1}</b> - {r.name || "—"}
-                                    </span>
-                                    <span>Sale: {r.sale || 0}</span>
-                                    <span>Paytm: {r.paytm || 0}</span>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Totals */}
-                        <div className="mt-3 font-bold text-sm flex justify-between">
-                            <span>Total Sale: {entry.totalSale}</span>
-                            <span>Total Paytm: {entry.totalPaytm}</span>
-                        </div>
-
-                        {/* Delete button */}
-                        <button
-                            onClick={() => handleDelete(entry._id)}
-                            className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+            {/* Cards / Loader / NoData */}
+            {loading ? (
+                <div className="text-center text-gray-500 mt-6 font-semibold">⏳ Loading...</div>
+            ) : noData ? (
+                <div className="text-center text-gray-500 mt-6 font-semibold">❌ No records found</div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {entries.map((entry) => (
+                        <div
+                            key={entry._id}
+                            className="bg-white p-4 shadow rounded border relative"
                         >
-                            🗑
-                        </button>
-                    </div>
-                ))}
-            </div>
+                            <p className="text-sm text-gray-500 mb-2">
+                                Date: {new Date(entry.date).toLocaleDateString()} | Shift:{" "}
+                                <b>{entry.shift}</b>
+                            </p>
 
-            {/* Overall Totals when filter applied */}
-            {filterDate && (
+                            <div className="space-y-2">
+                                {entry.rows.map((r, idx) => (
+                                    <div key={idx} className="flex justify-between border-b pb-1 text-sm">
+                                        <span>
+                                            <b>Nozzle {idx + 1}</b> - {r.name || "—"}
+                                        </span>
+                                        <span>Sale: {r.sale || 0}</span>
+                                        <span>Paytm: {r.paytm || 0}</span>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="mt-3 font-bold text-sm flex justify-between">
+                                <span>Total Sale: {entry.totalSale}</span>
+                                <span>Total Paytm: {entry.totalPaytm}</span>
+                            </div>
+
+                            <button
+                                onClick={() => handleDelete(entry._id)}
+                                className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                            >
+                                🗑
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {/* Summary when filter applied */}
+            {filterDate && !loading && !noData && (
                 <div className="mt-6 p-4 bg-yellow-100 border rounded text-center font-bold">
-                    Date {new Date(filterDate).toLocaleDateString()} Summary → Total Sale:{" "}
-                    {totals.sale} | Total Paytm: {totals.paytm}
+                    Date {new Date(filterDate).toLocaleDateString()} Summary → 
+                    Total Sale: {totals.sale} | Total Paytm: {totals.paytm}
                 </div>
             )}
         </div>
