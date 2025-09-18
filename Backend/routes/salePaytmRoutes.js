@@ -5,12 +5,15 @@ const SalePaytm = require("../models/SalePaytm");
 // Create new entry
 router.post("/salepaytm", async (req, res) => {
   try {
-    const { name, date, rows } = req.body;
-    const totalSale = rows.reduce((sum, r) => sum + (r.sale || 0), 0);
-    const totalPaytm = rows.reduce((sum, r) => sum + (r.paytm || 0), 0);
+    const { date, rows } = req.body;
 
-    const newEntry = new SalePaytm({ name, date, rows, totalSale, totalPaytm });
+    // calculate totals
+    const totalSale = rows.reduce((sum, r) => sum + (parseFloat(r.sale) || 0), 0);
+    const totalPaytm = rows.reduce((sum, r) => sum + (parseFloat(r.paytm) || 0), 0);
+
+    const newEntry = new SalePaytm({ date, rows, totalSale, totalPaytm });
     await newEntry.save();
+
     res.status(201).json(newEntry);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -22,7 +25,15 @@ router.get("/salepaytm", async (req, res) => {
   try {
     const { date } = req.query;
     let filter = {};
-    if (date) filter.date = new Date(date);
+
+    if (date) {
+      // only date part match (ignores time)
+      const start = new Date(date);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(date);
+      end.setHours(23, 59, 59, 999);
+      filter.date = { $gte: start, $lte: end };
+    }
 
     const entries = await SalePaytm.find(filter).sort({ date: -1 });
     res.json(entries);
@@ -34,13 +45,14 @@ router.get("/salepaytm", async (req, res) => {
 // Update entry
 router.put("/salepaytm/:id", async (req, res) => {
   try {
-    const { name, date, rows } = req.body;
-    const totalSale = rows.reduce((sum, r) => sum + (r.sale || 0), 0);
-    const totalPaytm = rows.reduce((sum, r) => sum + (r.paytm || 0), 0);
+    const { date, rows } = req.body;
+
+    const totalSale = rows.reduce((sum, r) => sum + (parseFloat(r.sale) || 0), 0);
+    const totalPaytm = rows.reduce((sum, r) => sum + (parseFloat(r.paytm) || 0), 0);
 
     const updated = await SalePaytm.findByIdAndUpdate(
       req.params.id,
-      { name, date, rows, totalSale, totalPaytm },
+      { date, rows, totalSale, totalPaytm },
       { new: true }
     );
 

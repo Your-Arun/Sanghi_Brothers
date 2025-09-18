@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import axiosInstance from "./axiosInstance";
 
 const SalePaytm = () => {
-  const [rows, setRows] = useState(Array(6).fill({ sale: "", paytm: "" }));
+  const [rows, setRows] = useState(
+    Array(6).fill({ name: "", sale: "", paytm: "" })
+  );
   const [date, setDate] = useState("");
-  const [name, setName] = useState("");
   const [entries, setEntries] = useState([]);
   const [filterDate, setFilterDate] = useState("");
 
@@ -16,14 +16,19 @@ const SalePaytm = () => {
     setRows(updatedRows);
   };
 
+  // Totals
   const totalSale = rows.reduce((acc, r) => acc + (parseFloat(r.sale) || 0), 0);
-  const totalPaytm = rows.reduce((acc, r) => acc + (parseFloat(r.paytm) || 0), 0);
+  const totalPaytm = rows.reduce(
+    (acc, r) => acc + (parseFloat(r.paytm) || 0),
+    0
+  );
 
   // Save data
   const handleSave = async () => {
-    if (!name || !date) return alert("Name & Date required!");
+    if (!date) return alert("Date required!");
     try {
-      await axiosInstance.post("/salepaytm", { name, date, rows });
+      await axiosInstance.post("/salepaytm", { date, rows });
+      setRows(Array(6).fill({ name: "", sale: "", paytm: "" })); // reset
       fetchEntries();
     } catch (err) {
       alert("Error saving data");
@@ -53,18 +58,11 @@ const SalePaytm = () => {
   };
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
+    <div className="p-6 max-w-6xl mx-auto">
       <h1 className="text-3xl font-bold text-center mb-6">Sale / Paytm</h1>
 
-      {/* Input Form */}
-      <div className="mb-4 flex gap-4">
-        <input
-          type="text"
-          placeholder="Enter Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="border px-3 py-2 rounded w-1/2"
-        />
+      {/* Date + Save */}
+      <div className="mb-4 flex gap-4 justify-end">
         <input
           type="date"
           value={date}
@@ -84,6 +82,7 @@ const SalePaytm = () => {
         <thead className="bg-gray-200">
           <tr>
             <th className="border p-2">Nozzle</th>
+            <th className="border p-2">Name</th>
             <th className="border p-2">Sale</th>
             <th className="border p-2">Paytm</th>
           </tr>
@@ -92,6 +91,15 @@ const SalePaytm = () => {
           {rows.map((row, i) => (
             <tr key={i}>
               <td className="border p-2">{i + 1}</td>
+              <td className="border p-2">
+                <input
+                  type="text"
+                  value={row.name}
+                  onChange={(e) => handleChange(i, "name", e.target.value)}
+                  className="w-full px-2 py-1 border rounded"
+                  placeholder="Enter Name"
+                />
+              </td>
               <td className="border p-2">
                 <input
                   type="number"
@@ -111,7 +119,9 @@ const SalePaytm = () => {
             </tr>
           ))}
           <tr className="bg-gray-100 font-bold">
-            <td className="border p-2">Total</td>
+            <td className="border p-2" colSpan={2}>
+              Total
+            </td>
             <td className="border p-2">{totalSale}</td>
             <td className="border p-2">{totalPaytm}</td>
           </tr>
@@ -141,13 +151,27 @@ const SalePaytm = () => {
             key={entry._id}
             className="bg-white p-4 shadow rounded border relative"
           >
-            <h2 className="text-lg font-bold">{entry.name}</h2>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 mb-2">
               Date: {new Date(entry.date).toLocaleDateString()}
             </p>
-            <p className="mt-2">Total Sale: {entry.totalSale}</p>
-            <p>Total Paytm: {entry.totalPaytm}</p>
 
+            {/* Each nozzle row */}
+            <div className="space-y-2">
+              {entry.rows.map((r, idx) => (
+                <div
+                  key={idx}
+                  className="flex justify-between border-b pb-1 text-sm"
+                >
+                  <span>
+                    <b>Nozzle {idx + 1}</b> - {r.name || "—"}
+                  </span>
+                  <span>Sale: {r.sale || 0}</span>
+                  <span>Paytm: {r.paytm || 0}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Delete button */}
             <button
               onClick={() => handleDelete(entry._id)}
               className="absolute top-2 right-2 text-red-500 hover:text-red-700"

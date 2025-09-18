@@ -1,16 +1,14 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const salePaytmSchema = new mongoose.Schema({
-  name: { type: String, required: true, trim: true },
-  date: { type: Date, required: true },
-  rows: [
-    {
-      sale: { type: Number, default: 0 },
-      paytm: { type: Number, default: 0 },
-    },
-  ],
-  totalSale: { type: Number, default: 0 },
-  totalPaytm: { type: Number, default: 0 },
+const rowSchema = new mongoose.Schema({
+  name: String,
+  sale: Number,
+  paytm: Number,
 });
 
-module.exports = mongoose.model("SalePaytm", salePaytmSchema);
+const salePaytmSchema = new mongoose.Schema({
+  date: { type: Date, required: true },
+  rows: [rowSchema],
+});
+
+export default mongoose.model("SalePaytm", salePaytmSchema);
