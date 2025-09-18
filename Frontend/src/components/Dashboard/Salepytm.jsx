@@ -62,7 +62,7 @@ const SalePaytm = () => {
                 setTotals({ sale, paytm });
             }
         } catch (err) {
-            toast.error("❌ Error fetching data");
+            toast.error("Error fetching data");
         } finally {
             setLoading(false);
         }

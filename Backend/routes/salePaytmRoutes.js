@@ -19,26 +19,34 @@ router.post("/salepaytm", async (req, res) => {
   }
 });
 
-// Get all entries (with optional date filter)
 router.get("/salepaytm", async (req, res) => {
-  try {
-    const { date } = req.query;
-    let filter = {};
-
-    if (date) {
-      const start = new Date(date);
-      start.setHours(0, 0, 0, 0);
-      const end = new Date(date);
-      end.setHours(23, 59, 59, 999);
-      filter.date = { $gte: start, $lte: end };
+    try {
+      const { date } = req.query;
+      let filter = {};
+  
+      if (date) {
+        const parsed = new Date(date);
+        if (isNaN(parsed.getTime())) {
+          return res.status(400).json({ message: "Invalid date format" });
+        }
+  
+        const start = new Date(parsed);
+        start.setHours(0, 0, 0, 0);
+  
+        const end = new Date(parsed);
+        end.setHours(23, 59, 59, 999);
+  
+        filter.date = { $gte: start, $lte: end };
+      }
+  
+      const entries = await SalePaytm.find(filter).sort({ date: -1 });
+      res.json(entries);
+    } catch (err) {
+      console.error("Error in /salepaytm:", err); // log for debugging
+      res.status(500).json({ message: "Internal Server Error", error: err.message });
     }
-
-    const entries = await SalePaytm.find(filter).sort({ date: -1 });
-    res.json(entries);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
+  });
+  
 
 // Update entry
 router.put("/salepaytm/:id", async (req, res) => {
