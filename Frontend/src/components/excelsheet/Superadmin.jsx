@@ -7,13 +7,21 @@ const SuperAdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
   const [isAddingUser, setIsAddingUser] = useState(false);
+
   const [formData, setFormData] = useState({
+    name: "",
     username: "",
     email: "",
-    department: "manager",
     phone: "",
+    department: "",
+    photo: "",
+    address: "",
+    aadhaar: "",
+    designation: "",
+    joiningDate: "",
+    salary: "",
     password: "",
-    role: "user", // ✅ extra field role
+    role: "user",
   });
 
   const navigate = useNavigate();
@@ -34,11 +42,19 @@ const SuperAdminPanel = () => {
   const handleEditClick = (user) => {
     setEditingUser(user._id);
     setFormData({
-      username: user.username,
-      email: user.email,
-      department: user.department || "",
+      name: user.name || "",
+      username: user.username || "",
+      email: user.email || "",
       phone: user.phone || "",
+      department: user.department || "",
+      photo: user.photo || "",
+      address: user.address || "",
+      aadhaar: user.aadhaar || "",
+      designation: user.designation || "",
+      joiningDate: user.joiningDate ? user.joiningDate.split("T")[0] : "",
+      salary: user.salary || "",
       role: user.role || "user",
+      password: "", // password change अलग से करेंगे
     });
   };
 
@@ -79,10 +95,17 @@ const SuperAdminPanel = () => {
       fetchUsers();
       setIsAddingUser(false);
       setFormData({
+        name: "",
         username: "",
         email: "",
-        department: "manager",
         phone: "",
+        department: "",
+        photo: "",
+        address: "",
+        aadhaar: "",
+        designation: "",
+        joiningDate: "",
+        salary: "",
         password: "",
         role: "user",
       });
@@ -101,207 +124,134 @@ const SuperAdminPanel = () => {
       </button>
 
       <h1 className="text-3xl font-bold text-blue-600 text-center mb-6">
-        🔑 Super Admin Panel
+        🛡 Super Admin Panel
       </h1>
 
-      <div className="w-full mx-auto bg-white p-4 sm:p-6 rounded-lg shadow-md overflow-x-auto">
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
-          <h2 className="text-xl font-bold">👥 All Users</h2>
+      {/* User Table */}
+      <div className="bg-white p-4 rounded-lg shadow-md overflow-x-auto">
+        <div className="flex justify-between mb-4">
+          <h2 className="text-lg font-bold">All Users</h2>
           <button
             onClick={() => setIsAddingUser(true)}
-            className="bg-green-500 text-white px-4 py-2 rounded text-sm sm:text-base"
+            className="bg-green-500 text-white px-4 py-2 rounded"
           >
             + Add User
           </button>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm sm:text-base border">
-            <thead>
-              <tr className="bg-blue-500 text-white">
-                <th className="p-2">Username</th>
-                <th className="p-2">Email</th>
-                <th className="p-2">Department</th>
-                <th className="p-2">Phone</th>
-                <th className="p-2">Role</th>
-                <th className="p-2">Actions</th>
+        <table className="min-w-full text-sm border">
+          <thead>
+            <tr className="bg-blue-500 text-white text-center">
+              <th className="p-2">Name</th>
+              <th className="p-2">Username</th>
+              <th className="p-2">Email</th>
+              <th className="p-2">Phone</th>
+              <th className="p-2">Department</th>
+              <th className="p-2">Designation</th>
+              <th className="p-2">Salary</th>
+              <th className="p-2">Role</th>
+              <th className="p-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user._id} className="border-b text-center">
+                <td>{user.name || "N/A"}</td>
+                <td>{user.username}</td>
+                <td>{user.email}</td>
+                <td>{user.phone}</td>
+                <td>{user.department}</td>
+                <td>{user.designation || "N/A"}</td>
+                <td>{user.salary || "N/A"}</td>
+                <td>{user.role}</td>
+                <td className="space-x-2">
+                  <button
+                    onClick={() => handleEditClick(user)}
+                    className="bg-yellow-500 text-white px-3 py-1 rounded"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeleteUser(user._id)}
+                    className="bg-red-500 text-white px-3 py-1 rounded"
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <tr key={user._id} className="border-b text-center">
-                  <td className="p-2">{user.username}</td>
-                  <td className="p-2">{user.email}</td>
-                  <td className="p-2">{user.department || "N/A"}</td>
-                  <td className="p-2">{user.phone || "N/A"}</td>
-                  <td className="p-2 font-semibold">
-                    {user.role === "superadmin"
-                      ? "🛡 Super Admin"
-                      : user.role || "User"}
-                  </td>
-                  <td className="p-2 space-x-2">
-                    <button
-                      onClick={() => handleEditClick(user)}
-                      className="bg-yellow-500 text-white px-3 py-1 rounded"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteUser(user._id)}
-                      className="bg-red-500 text-white px-3 py-1 rounded"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
 
-      {/* Edit User Modal */}
-      {editingUser && (
+      {/* Add/Edit Modal */}
+      {(isAddingUser || editingUser) && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white p-4 w-11/12 sm:w-96 rounded-lg shadow-lg">
-            <h2 className="text-lg sm:text-xl font-bold text-center mb-4">
-              Edit User
+          <div className="bg-white p-4 w-11/12 sm:w-96 rounded-lg shadow-lg overflow-y-auto max-h-[90vh]">
+            <h2 className="text-lg font-bold text-center mb-4">
+              {editingUser ? "Edit User" : "Add User"}
             </h2>
-            <input
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              className="w-full mb-2 p-2 border rounded"
-              placeholder="Username"
-            />
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full mb-2 p-2 border rounded"
-              placeholder="Email"
-            />
-            <select
-              name="department"
-              value={formData.department}
-              onChange={handleChange}
-              className="w-full mb-2 p-2 border rounded"
-            >
-              <option value="manager">Manager</option>
-              <option value="accounts/finance">Accounts/Finance</option>
-              <option value="backoffice">Back Office</option>
-              <option value="staff">Staff</option>
-            </select>
+
+            {[
+              { name: "name", type: "text", placeholder: "Full Name" },
+              { name: "username", type: "text", placeholder: "Username" },
+              { name: "email", type: "email", placeholder: "Email" },
+              { name: "phone", type: "tel", placeholder: "Phone" },
+              { name: "department", type: "text", placeholder: "Department" },
+              { name: "photo", type: "text", placeholder: "Photo URL" },
+              { name: "address", type: "text", placeholder: "Address" },
+              { name: "aadhaar", type: "text", placeholder: "Aadhaar No." },
+              { name: "designation", type: "text", placeholder: "Designation" },
+              { name: "joiningDate", type: "date", placeholder: "Joining Date" },
+              { name: "salary", type: "number", placeholder: "Salary" },
+            ].map((field) => (
+              <input
+                key={field.name}
+                type={field.type}
+                name={field.name}
+                value={formData[field.name]}
+                onChange={handleChange}
+                placeholder={field.placeholder}
+                className="w-full mb-2 p-2 border rounded"
+              />
+            ))}
+
+            {!editingUser && (
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Password"
+                className="w-full mb-2 p-2 border rounded"
+              />
+            )}
+
             <select
               name="role"
               value={formData.role}
               onChange={handleChange}
-              className="w-full mb-2 p-2 border rounded"
+              className="w-full mb-4 p-2 border rounded"
             >
               <option value="user">User</option>
               <option value="admin">Admin</option>
               <option value="superadmin">Super Admin</option>
             </select>
-            <input
-              type="tel"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              className="w-full mb-4 p-2 border rounded"
-              placeholder="Phone"
-            />
+
             <div className="flex justify-between">
               <button
-                onClick={() => setEditingUser(null)}
+                onClick={() =>
+                  editingUser ? setEditingUser(null) : setIsAddingUser(false)
+                }
                 className="bg-gray-400 text-white px-4 py-2 rounded"
               >
                 Cancel
               </button>
               <button
-                onClick={handleUpdateUser}
+                onClick={editingUser ? handleUpdateUser : handleAddUser}
                 className="bg-blue-600 text-white px-4 py-2 rounded"
               >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Add User Modal */}
-      {isAddingUser && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white p-4 w-11/12 sm:w-96 rounded-lg shadow-lg">
-            <h2 className="text-lg sm:text-xl font-bold text-center mb-4">
-              Add User
-            </h2>
-            <input
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              className="w-full mb-2 p-2 border rounded"
-              placeholder="Username"
-            />
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full mb-2 p-2 border rounded"
-              placeholder="Email"
-            />
-            <select
-              name="department"
-              value={formData.department}
-              onChange={handleChange}
-              className="w-full mb-2 p-2 border rounded"
-            >
-              <option value="manager">Manager</option>
-              <option value="accounts/finance">Accounts/Finance</option>
-              <option value="backoffice">Back Office</option>
-              <option value="staff">Staff</option>
-            </select>
-            <select
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              className="w-full mb-2 p-2 border rounded"
-            >
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-              <option value="superadmin">Super Admin</option>
-            </select>
-            <input
-              type="tel"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              className="w-full mb-2 p-2 border rounded"
-              placeholder="Phone Number"
-            />
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full mb-4 p-2 border rounded"
-              placeholder="Password"
-            />
-            <div className="flex justify-between">
-              <button
-                onClick={() => setIsAddingUser(false)}
-                className="bg-gray-400 text-white px-4 py-2 rounded"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleAddUser}
-                className="bg-green-500 text-white px-4 py-2 rounded"
-              >
-                Add
+                {editingUser ? "Save" : "Add"}
               </button>
             </div>
           </div>
