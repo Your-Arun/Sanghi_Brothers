@@ -184,9 +184,10 @@ const SalePaytm = () => {
                 {entries.map((entry) => (
                     <div
                         key={entry._id}
-                        className="bg-white p-2 rounded-md shadow border text-[11px] hover:shadow-md transition"
+                        className="bg-white p-2 rounded-md shadow border text-[12px] hover:shadow-md hover:scale-105 cursor-pointer transition"
+                        onClick={() => setSelected(entry)} // ✅ modal open
                     >
-                        <p className="text-gray-500 text-[10px] mb-1">
+                        <p className="text-gray-500 text-[11px] mb-1">
                             {new Date(entry.date).toLocaleDateString()} | <b>{entry.shift}</b>
                         </p>
 
@@ -194,7 +195,7 @@ const SalePaytm = () => {
                         <div className="space-y-0.5 max-h-24 overflow-y-auto pr-1">
                             {entry.rows.map((r, idx) => (
                                 <div key={idx} className="flex justify-between">
-                                    <span className="truncate w-12">{idx + 1}. {r.name || "—"}</span>
+                                    <span className="truncate w-14">{idx + 1}. {r.name || "—"}</span>
                                     <span className="text-green-600">₹{r.sale || 0}</span>
                                     <span className="text-yellow-600">₹{r.paytm || 0}</span>
                                 </div>
@@ -202,12 +203,57 @@ const SalePaytm = () => {
                         </div>
 
                         {/* Totals */}
-                        <div className="mt-1 border-t pt-1 font-bold text-blue-700 text-[11px]">
+                        <div className="mt-1 border-t pt-1 font-bold text-blue-700 text-[12px]">
                             Sale: ₹{entry.totalSale} | Paytm: ₹{entry.totalPaytm}
                         </div>
                     </div>
                 ))}
             </div>
+
+            {/* 🔹 Modal for detail view */}
+            {selected && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-white rounded-lg p-5 w-11/12 md:w-2/3 lg:w-1/2 shadow-xl transform scale-105 transition">
+                        <button
+                            onClick={() => setSelected(null)}
+                            className="float-right text-red-600 font-bold text-lg"
+                        >
+                            ✕
+                        </button>
+                        <h3 className="text-lg font-bold mb-2 text-center">
+                            📅 {new Date(selected.date).toLocaleDateString()} ({selected.shift})
+                        </h3>
+
+                        {/* Table View */}
+                        <table className="w-full border text-sm">
+                            <thead>
+                                <tr className="bg-gray-200">
+                                    <th className="border p-2">#</th>
+                                    <th className="border p-2">Name</th>
+                                    <th className="border p-2">Sale</th>
+                                    <th className="border p-2">Paytm</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {selected.rows.map((r, idx) => (
+                                    <tr key={idx}>
+                                        <td className="border p-2">{idx + 1}</td>
+                                        <td className="border p-2">{r.name}</td>
+                                        <td className="border p-2 text-green-700">₹{r.sale}</td>
+                                        <td className="border p-2 text-yellow-700">₹{r.paytm}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+
+                        {/* Totals */}
+                        <p className="mt-4 font-semibold text-gray-900 text-center">
+                            Total Sale: ₹{selected.totalSale} | Total Paytm: ₹{selected.totalPaytm}
+                        </p>
+                    </div>
+                </div>
+            )}
+
 
         </div>
     );
