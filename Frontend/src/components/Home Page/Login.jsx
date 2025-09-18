@@ -32,7 +32,7 @@ const Login = ({ embedMode, onClose }) => {
       }
     };
     fetchUser();
-  }, [setUser, sessionKey]);z
+  }, [setUser, sessionKey]);
 
   // ---------------- NORMAL LOGIN ----------------
   const handleSubmit = async (e) => {
