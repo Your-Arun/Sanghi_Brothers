@@ -182,7 +182,7 @@ const SalePaytm = () => {
             {/* 🔹 Saved Entries Section */}
             <h2 className="text-lg font-semibold mt-10 mb-3 text-gray-700">📦 Back Entries</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-                {entries.map((entry) => (
+                {entries.slice(0, 6).map((entry) => (
                     <div
                         key={entry._id}
                         className="bg-white p-2 rounded-md shadow border text-[12px] hover:shadow-md hover:scale-105 cursor-pointer transition"
@@ -195,7 +195,7 @@ const SalePaytm = () => {
                         {/* Compact rows */}
                         <div className="space-y-0.2 max-h-30  pr-1">
                             {entry.rows.map((r, idx) => (
-                                <div key={idx} className="flex justify-between">
+                                <div key={idx} className="flex justify-between text-center">
                                     <span className="truncate w-14">{idx + 1}. {r.name || "—"}</span>
                                     <span className="text-green-600">₹{r.sale || 0}</span>
                                     <span className="text-yellow-600">₹{r.paytm || 0}</span>
@@ -210,6 +210,18 @@ const SalePaytm = () => {
                     </div>
                 ))}
             </div>
+
+            {/* ✅ See More button */}
+            {entries.length > 6 && (
+                <div className="text-center mt-3">
+                    <button
+                        className="text-blue-600 underline font-semibold"
+                        onClick={() => toast.warning("⚠️ Manager se Milo!")} // simple popup message
+                    >
+                        See More
+                    </button>
+                </div>
+            )}
 
             {/* 🔹 Modal for detail view */}
             {selected && (
