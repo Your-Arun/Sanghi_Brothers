@@ -8,6 +8,7 @@ const SalePaytm = () => {
     const [date, setDate] = useState("");
     const [shift, setShift] = useState("Morning");
     const [entries, setEntries] = useState([]);
+    const [selected, setSelected] = useState(null);
 
 
     useEffect(() => {
