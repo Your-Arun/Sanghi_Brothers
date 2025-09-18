@@ -125,7 +125,7 @@ const StaffDashboard = () => {
     { id: "shifting", label: "Shifting Arrangement", icon: <FaTruck /> },
     { id: "complaint", label: "Complaints", icon: <FaExclamationTriangle /> },
     { id: "lekhajokha", label: "Lekha Jokha", icon: <BsOpencollective /> },
-    { id: "sale&pytm", label: "Sale&pytm", icon: <IoIosAlert /> },
+    { id: "salepytm", label: "Sale&pytm", icon: <IoIosAlert /> },
   ];
 
   if (loading) return <h3 className="text-center mt-20">Loading...</h3>;
@@ -403,7 +403,7 @@ const StaffDashboard = () => {
         )}
 
         {/* ---------------- Lekha Jokha ---------------- */}
-        {activeTab === "sale&pytm" && (
+        {activeTab === "salepytm" && (
           <>
             <div className="bg-white p-6 rounded-lg shadow-md mt-6 text-center">
               <h2 className="text-3xl font-bold text-gray-800">💰 Sale & Paytm</h2>

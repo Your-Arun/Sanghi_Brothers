@@ -66,6 +66,7 @@ const ReportComplaint = require("./routes/reportcomlaint");
 const shiftApi = require("./models/shifting/shiftsapi");
 const Attendance = require("./models/attendancewala/userRoutes");
 const User = require("./routes/user");
+const salePaytmRoutes = require('./routes/salePaytmRoutes')
 
 // ✅ MongoDB Connection
 mongoose
@@ -78,6 +79,7 @@ app.use("", LoginSignup);
 app.use("/", Contactus);
 app.use("/", Attendance);
 app.use("/", User);
+
 // ✅ Protected Routes
 app.use("/bank", FlowRoute);
 app.use("/bank", Monthlyfundflow);
@@ -99,6 +101,8 @@ app.use("/", CashSlip);
 app.use("/", FundPosition);
 app.use("/", ReportComplaint);
 app.use("/", shiftApi);
+app.use("/", salePaytmRoutes);
+
 
 // ✅ Root
 app.get("/", (req, res) => {

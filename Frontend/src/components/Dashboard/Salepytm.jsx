@@ -1,48 +1,89 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import axiosInstance from "./axiosInstance";
 
 const SalePaytm = () => {
-  const [rows, setRows] = useState([
-    { sale: "", paytm: "" },
-    { sale: "", paytm: "" },
-    { sale: "", paytm: "" },
-    { sale: "", paytm: "" },
-    { sale: "", paytm: "" },
-    { sale: "", paytm: "" },
-  ]);
+  const [rows, setRows] = useState(Array(6).fill({ sale: "", paytm: "" }));
   const [date, setDate] = useState("");
+  const [name, setName] = useState("");
+  const [entries, setEntries] = useState([]);
+  const [filterDate, setFilterDate] = useState("");
 
-  // Handle row value change
+  // Handle row change
   const handleChange = (index, field, value) => {
     const updatedRows = [...rows];
-    updatedRows[index][field] = value;
+    updatedRows[index] = { ...updatedRows[index], [field]: value };
     setRows(updatedRows);
   };
 
-  // Calculate totals
   const totalSale = rows.reduce((acc, r) => acc + (parseFloat(r.sale) || 0), 0);
   const totalPaytm = rows.reduce((acc, r) => acc + (parseFloat(r.paytm) || 0), 0);
 
+  // Save data
+  const handleSave = async () => {
+    if (!name || !date) return alert("Name & Date required!");
+    try {
+      await axiosInstance.post("/salepaytm", { name, date, rows });
+      fetchEntries();
+    } catch (err) {
+      alert("Error saving data");
+    }
+  };
+
+  // Fetch data
+  const fetchEntries = async () => {
+    try {
+      const res = await axiosInstance.get("/salepaytm", {
+        params: filterDate ? { date: filterDate } : {},
+      });
+      setEntries(res.data);
+    } catch (err) {
+      alert("Error fetching data");
+    }
+  };
+
+  useEffect(() => {
+    fetchEntries();
+  }, [filterDate]);
+
+  // Delete entry
+  const handleDelete = async (id) => {
+    await axiosInstance.delete(`/salepaytm/${id}`);
+    fetchEntries();
+  };
+
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      {/* Date Input */}
-      <div className="mb-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-center w-full">Sale / Paytm</h1>
-      </div>
-      <div className="flex justify-end mb-4">
-        <label className="mr-2 font-medium">Date:</label>
+    <div className="p-6 max-w-5xl mx-auto">
+      <h1 className="text-3xl font-bold text-center mb-6">Sale / Paytm</h1>
+
+      {/* Input Form */}
+      <div className="mb-4 flex gap-4">
+        <input
+          type="text"
+          placeholder="Enter Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="border px-3 py-2 rounded w-1/2"
+        />
         <input
           type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="border px-2 py-1 rounded"
+          className="border px-3 py-2 rounded"
         />
+        <button
+          onClick={handleSave}
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Save
+        </button>
       </div>
 
       {/* Table */}
-      <table className="w-full border border-gray-400 text-center">
+      <table className="w-full border text-center mb-6">
         <thead className="bg-gray-200">
           <tr>
-            <th className="border p-2">#</th>
+            <th className="border p-2">Nozzle</th>
             <th className="border p-2">Sale</th>
             <th className="border p-2">Paytm</th>
           </tr>
@@ -69,7 +110,6 @@ const SalePaytm = () => {
               </td>
             </tr>
           ))}
-          {/* Totals */}
           <tr className="bg-gray-100 font-bold">
             <td className="border p-2">Total</td>
             <td className="border p-2">{totalSale}</td>
@@ -77,6 +117,46 @@ const SalePaytm = () => {
           </tr>
         </tbody>
       </table>
+
+      {/* Filter */}
+      <div className="mb-4 flex gap-4">
+        <input
+          type="date"
+          value={filterDate}
+          onChange={(e) => setFilterDate(e.target.value)}
+          className="border px-3 py-2 rounded"
+        />
+        <button
+          onClick={fetchEntries}
+          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        >
+          Search
+        </button>
+      </div>
+
+      {/* Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {entries.map((entry) => (
+          <div
+            key={entry._id}
+            className="bg-white p-4 shadow rounded border relative"
+          >
+            <h2 className="text-lg font-bold">{entry.name}</h2>
+            <p className="text-sm text-gray-500">
+              Date: {new Date(entry.date).toLocaleDateString()}
+            </p>
+            <p className="mt-2">Total Sale: {entry.totalSale}</p>
+            <p>Total Paytm: {entry.totalPaytm}</p>
+
+            <button
+              onClick={() => handleDelete(entry._id)}
+              className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+            >
+              🗑
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
