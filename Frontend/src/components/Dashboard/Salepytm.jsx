@@ -47,7 +47,7 @@ const SalePaytm = () => {
   return (
     <div className="p-4 sm:p-6 max-w-7xl mx-auto">
       <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6 text-blue-700">
-        ⛽ Sale / Paytm Manager
+        ⛽ Sale / Paytm 
       </h1>
 
       {/* Date + Shift + Save */}
@@ -138,15 +138,15 @@ const SalePaytm = () => {
               <p className="text-sm text-gray-500">
                 {new Date(entry.date).toLocaleDateString()} | <b>{entry.shift}</b>
               </p>
-              <button
+              <div
                 onClick={() => handleDelete(entry._id)}
                 className="text-red-500 hover:text-red-700"
               >
                 🗑
-              </button>
+              </div>
             </div>
 
-            <div className="overflow-x-auto">
+            <div className="p-5">
               <table className="w-full text-sm border">
                 <thead className="bg-gray-100">
                   <tr>
