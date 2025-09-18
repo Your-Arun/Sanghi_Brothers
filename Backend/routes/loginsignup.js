@@ -113,7 +113,6 @@ Router.post("/login", async (req, res) => {
 
       return res.status(200).json({ user: adminUser, token });
     }
-    
 
     // Check if identifier is an email or phone
     const isEmail = /\S+@\S+\.\S+/.test(identifier);
