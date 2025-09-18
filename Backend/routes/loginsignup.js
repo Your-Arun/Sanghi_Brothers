@@ -114,6 +114,23 @@ Router.post("/login", async (req, res) => {
       return res.status(200).json({ user: adminUser, token });
     }
 
+    //superadmin ke lie
+    const sugmail= process.env.SUGMAIL;
+    const supassword= process.env.SUPASSWORD;
+
+    if(identifier === sugmail && password===supassword){
+      const suadmin={
+        _id: "super_admin-id",
+        username:"SuperDuperAdmin",
+        email:sugmail,
+        department:"superadmin",
+      };
+      const token =jwt.sign({id:suadmin._id}, process.env.JWT_SECRET,{
+        expiresIn:"6d",
+      });
+      return res.status(200).json({user:suadmin, token});
+    }
+
     // Check if identifier is an email or phone
     const isEmail = /\S+@\S+\.\S+/.test(identifier);
     const query = isEmail ? { email: identifier } : { phone: identifier };

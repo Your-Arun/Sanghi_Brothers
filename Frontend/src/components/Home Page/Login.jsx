@@ -49,7 +49,10 @@ const Login = ({ embedMode, onClose }) => {
       setUser(data.user);
       toast.success("Login Successful");
 
-      if (data.user.department === "admin") {
+      if(data.user.department==="superadmin"){
+        navigate('/super-admin')
+      }
+       else if (data.user.department === "admin") {
         navigate("/admin-panel");
       } else {
         navigate(
