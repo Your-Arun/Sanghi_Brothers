@@ -24,4 +24,16 @@ router.post("/salepaytm", async (req, res) => {
   }
 });
 
+// Get all entries
+router.get("/salepaytm", async (req, res) => {
+    try {
+      const entries = await SalePaytm.find().sort({ date: -1 });
+      res.json(entries);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+  
+
+
 module.exports = router;
