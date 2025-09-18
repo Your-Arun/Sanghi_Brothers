@@ -7,6 +7,7 @@ import {
   FaBars,
   FaTimes,
 } from "react-icons/fa";
+import { IoIosAlert } from "react-icons/io";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { BsOpencollective } from "react-icons/bs";
 import ProfileModal from "./profile";
@@ -30,6 +31,7 @@ const StaffDashboard = () => {
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [cashslip, setCashslip] = useState([]);
   const [lekha, setLekha] = useState([]);
+  const [salepytm, setSalepytm] = useState([]);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [showToggleButton, setShowToggleButton] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(window.scrollY);
@@ -96,7 +98,7 @@ const StaffDashboard = () => {
         setCashslip(cashierRes.data);
         setLekha(lekhajokha.data);
       } catch {
-        alert("Failed to fetch data.");
+        toast.warning("Failed to fetch data.");
       }
     };
     fetchData();
@@ -123,6 +125,7 @@ const StaffDashboard = () => {
     { id: "shifting", label: "Shifting Arrangement", icon: <FaTruck /> },
     { id: "complaint", label: "Complaints", icon: <FaExclamationTriangle /> },
     { id: "lekhajokha", label: "Lekha Jokha", icon: <BsOpencollective /> },
+    { id: "sale&pytm", label: "Sale&pytm", icon: <IoIosAlert /> },
   ];
 
   if (loading) return <h3 className="text-center mt-20">Loading...</h3>;
@@ -355,6 +358,18 @@ const StaffDashboard = () => {
           </>
         )}
 
+        {/* ---------------- Shifting ---------------- */}
+        {activeTab === "shifting" && (
+          <>
+            <div className="bg-white p-6 rounded-lg shadow-md mt-6 text-center">
+              <h2 className="text-3xl font-bold text-gray-800">🚚 Shifting Arrangement</h2>
+            </div>
+            <div className="mt-6">
+              <ShiftComponent />
+            </div>
+          </>
+        )}
+
         {/* ---------------- Lekha Jokha ---------------- */}
         {activeTab === "lekhajokha" && (
           <>
@@ -384,17 +399,36 @@ const StaffDashboard = () => {
           </>
         )}
 
-        {/* ---------------- Shifting ---------------- */}
-        {activeTab === "shifting" && (
+        {/* ---------------- Lekha Jokha ---------------- */}
+        {activeTab === "sale&pytm" && (
           <>
             <div className="bg-white p-6 rounded-lg shadow-md mt-6 text-center">
-              <h2 className="text-3xl font-bold text-gray-800">🚚 Shifting Arrangement</h2>
+              <h2 className="text-3xl font-bold text-gray-800">💰 Sale & Paytm</h2>
+              <button
+                onClick={() => navigate("/salepytm")}
+                className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-lg shadow hover:bg-purple-700 transition-transform hover:scale-105"
+              >
+                Create Entry
+              </button>
             </div>
-            <div className="mt-6">
-              <ShiftComponent />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
+              {salepytm.map((item) => (
+                <div
+                  key={item.id}
+                  className="bg-white p-4 rounded-lg shadow-md border hover:shadow-lg transition text-center"
+                >
+                  <h3 className="text-blue-600 font-bold text-lg">{}</h3>
+                  <p className="text-red-500">{}</p>
+                  <p className="text-gray-600">
+                    {}
+                  </p>
+                </div>
+              ))}
             </div>
           </>
         )}
+
+
       </main>
 
       {/* Department Modal */}

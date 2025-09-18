@@ -61,6 +61,7 @@ import DailyLogView from "./components/AttendanceSheet/DailyLogView.jsx";
 import CreateUserPage from "./components/AttendanceSheet/CreateUserModal.jsx";
 import Footer from "./components/Home Page/Footer.jsx"; // ✅ Footer import
 // import Superadmin  from "./components/excelsheet/Superadmin.jsx"
+import Salepytm from './components/Dashboard/Salepytm.jsx'
 
 const App = () => {
   return (
@@ -104,6 +105,7 @@ const AppContent = () => {
           <Route path="/admin-panel" element={<AdminPanel />} />
           {/* <Route path="/super-admin" element={<Superadmin />} /> */}
           <Route path="/staff-dashboard" element={<Staffmember />} />
+          <Route path="/salepytm" element={<Salepytm />} />
           <Route path="/sbbank" element={<Mergesb01Inflo />} />
           <Route path="/fundposition" element={<Sb01 />} />
           <Route path="/fundposition/:id" element={<SBI01Update />} />
