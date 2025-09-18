@@ -98,8 +98,12 @@ Router.post("/login", async (req, res) => {
     const adminEmail = process.env.GMAIL;
     const adminPassword = process.env.PASSWORD;
 
-    // ✅ Check if this is the admin user (from env)
-    if (identifier === adminEmail && password === adminPassword) {
+    // ✅ Check for SuperAdmin first (env-based)
+    if (identifier === adminEmail) {
+      if (password !== adminPassword) {
+        return res.status(400).json({ message: "Invalid SuperAdmin credentials" });
+      }
+
       const adminUser = {
         _id: "admin-id",
         username: "SuperAdmin",
@@ -114,7 +118,7 @@ Router.post("/login", async (req, res) => {
       return res.status(200).json({ user: adminUser, token });
     }
 
-    // Check if identifier is an email or phone
+    // ✅ Normal User Login
     const isEmail = /\S+@\S+\.\S+/.test(identifier);
     const query = isEmail ? { email: identifier } : { phone: identifier };
 
@@ -138,6 +142,7 @@ Router.post("/login", async (req, res) => {
     res.status(500).json({ message: "Something went wrong" });
   }
 });
+
 
 
 // ✅ Profile Route (Fixed missing token vali  dation)
