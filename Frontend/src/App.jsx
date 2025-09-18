@@ -161,5 +161,4 @@ const AppContent = () => {
 export default App;
 
 
-// jisme pump sheet hai usme lettr bhr nikl rhe hai
-//admin panl me sb details honi chhaiye 
+// sale pytm dashboard me add krn hai ...pura sb kch  dikhna bhi chhiaye
