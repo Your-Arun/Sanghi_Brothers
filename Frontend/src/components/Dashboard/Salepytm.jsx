@@ -193,7 +193,7 @@ const SalePaytm = () => {
                         </p>
 
                         {/* Compact rows */}
-                        <div className="space-y-0.5 max-h-24 overflow-y-auto pr-1">
+                        <div className="space-y-0.2 max-h-30  pr-1">
                             {entry.rows.map((r, idx) => (
                                 <div key={idx} className="flex justify-between">
                                     <span className="truncate w-14">{idx + 1}. {r.name || "—"}</span>
