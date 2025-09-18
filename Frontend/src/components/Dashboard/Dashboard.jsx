@@ -266,7 +266,7 @@ const UpdateDashboard = () => {
         <div className="min-h-screen bg-gray-400 p-6">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
-                <h1 className="text-6xl font-bold text-gray-800 dashboardfont">DASHBOARD</h1>
+                <h1 className="text-6xl font-sarif text-gray-800 ">DASHBOARD</h1>
                 <img
                     src={profilePhoto || "/user.png"}
                     alt="Profile"
