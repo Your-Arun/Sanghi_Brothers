@@ -4,14 +4,18 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const SalePaytm = () => {
+    const today = new Date().toISOString().split("T")[0];
+
     const [rows, setRows] = useState(Array(6).fill({ name: "", sale: "", paytm: "" }));
     const [date, setDate] = useState("");
     const [shift, setShift] = useState("Morning");
-    const [entries, setEntries] = useState([]);
-    const [filterDate, setFilterDate] = useState("");
-    const [totals, setTotals] = useState({ sale: 0, paytm: 0 });
+
+    const [entries, setEntries] = useState([]);       // all data
+    const [totals, setTotals] = useState({ sale: 0, paytm: 0 }); // today summary
     const [loading, setLoading] = useState(true);
     const [noData, setNoData] = useState(false);
+
+    const [filterDate, setFilterDate] = useState(today); // default today
 
     // Handle row change
     const handleChange = (index, field, value) => {
@@ -43,19 +47,19 @@ const SalePaytm = () => {
             setLoading(true);
             setNoData(false);
 
-            const res = await axiosInstance.get("/salepaytm", {
-                params: filterDate ? { date: filterDate } : {},
-            });
+            // 1. fetch all entries
+            const allRes = await axiosInstance.get("/salepaytm");
+            setEntries(allRes.data);
 
-            if (res.data.length === 0) {
-                setEntries([]);
+            // 2. fetch today summary
+            const todayRes = await axiosInstance.get("/salepaytm", { params: { date: today } });
+
+            if (todayRes.data.length === 0) {
                 setTotals({ sale: 0, paytm: 0 });
                 setNoData(true);
             } else {
-                setEntries(res.data);
-
                 let sale = 0, paytm = 0;
-                res.data.forEach((e) => {
+                todayRes.data.forEach((e) => {
                     sale += e.totalSale;
                     paytm += e.totalPaytm;
                 });
@@ -70,7 +74,7 @@ const SalePaytm = () => {
 
     useEffect(() => {
         fetchEntries();
-    }, [filterDate]);
+    }, []);
 
     // Delete entry
     const handleDelete = async (id) => {
@@ -161,26 +165,10 @@ const SalePaytm = () => {
                 </tbody>
             </table>
 
-            {/* Filter */}
-            <div className="mb-4 flex gap-4">
-                <input
-                    type="date"
-                    value={filterDate}
-                    onChange={(e) => setFilterDate(e.target.value)}
-                    className="border px-3 py-2 rounded"
-                />
-                <button
-                    onClick={fetchEntries}
-                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                >
-                    Search
-                </button>
-            </div>
-
-            {/* Cards / Loader / NoData */}
+            {/* Loader / NoData / Entries */}
             {loading ? (
                 <div className="text-center text-gray-500 mt-6 font-semibold">⏳ Loading...</div>
-            ) : noData ? (
+            ) : noData && entries.length === 0 ? (
                 <div className="text-center text-gray-500 mt-6 font-semibold">❌ No records found</div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -222,11 +210,10 @@ const SalePaytm = () => {
                 </div>
             )}
 
-            {/* Summary when filter applied */}
-            {filterDate && !loading && !noData && (
-                <div className="mt-6 p-4 bg-yellow-100 border rounded text-center font-bold">
-                    Date {new Date(filterDate).toLocaleDateString()} Summary → 
-                    Total Sale: {totals.sale} | Total Paytm: {totals.paytm}
+            {/* Today Summary */}
+            {!loading && (
+                <div className="mt-6 p-4 bg-green-100 border rounded text-center font-bold">
+                    Today Summary → Total Sale: {totals.sale} | Total Paytm: {totals.paytm}
                 </div>
             )}
         </div>
