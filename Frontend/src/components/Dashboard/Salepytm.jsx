@@ -12,6 +12,8 @@ const SalePaytm = () => {
     const [entries, setEntries] = useState([]);
     const [filterDate, setFilterDate] = useState("");
     const [totals, setTotals] = useState({ sale: 0, paytm: 0 });
+    const [loading, setLoading] = useState(true);
+    const [noData, setNoData] = useState(false);
 
     // Handle row change
     const handleChange = (index, field, value) => {
@@ -43,23 +45,36 @@ const SalePaytm = () => {
     // Fetch data
     const fetchEntries = async () => {
         try {
+            setLoading(true);
+            setNoData(false);
+
             const res = await axiosInstance.get("/salepaytm", {
                 params: filterDate ? { date: filterDate } : {},
             });
-            setEntries(res.data);
 
-            // Calculate totals for filtered data
-            let sale = 0,
-                paytm = 0;
-            res.data.forEach((e) => {
-                sale += e.totalSale;
-                paytm += e.totalPaytm;
-            });
-            setTotals({ sale, paytm });
+            if (res.data.length === 0) {
+                setEntries([]);
+                setTotals({ sale: 0, paytm: 0 });
+                setNoData(true); // ⚠️ show no data message
+            } else {
+                setEntries(res.data);
+
+                // Calculate totals
+                let sale = 0,
+                    paytm = 0;
+                res.data.forEach((e) => {
+                    sale += e.totalSale;
+                    paytm += e.totalPaytm;
+                });
+                setTotals({ sale, paytm });
+            }
         } catch (err) {
             toast.error("❌ Error fetching data");
+        } finally {
+            setLoading(false);
         }
     };
+
 
     useEffect(() => {
         fetchEntries();
@@ -75,6 +90,64 @@ const SalePaytm = () => {
             toast.error("❌ Error deleting entry");
         }
     };
+
+
+    {/* Cards */ }
+    {
+        loading ? (
+            <div className="text-center text-gray-500 mt-6 font-semibold">
+                ⏳ Loading...
+            </div>
+        ) : noData ? (
+            <div className="text-center text-gray-500 mt-6 font-semibold">
+                ❌ No records found
+            </div>
+        ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {entries.map((entry) => (
+                    <div
+                        key={entry._id}
+                        className="bg-white p-4 shadow rounded border relative"
+                    >
+                        <p className="text-sm text-gray-500 mb-2">
+                            Date: {new Date(entry.date).toLocaleDateString()} | Shift:{" "}
+                            <b>{entry.shift}</b>
+                        </p>
+
+                        {/* Each nozzle row */}
+                        <div className="space-y-2">
+                            {entry.rows.map((r, idx) => (
+                                <div
+                                    key={idx}
+                                    className="flex justify-between border-b pb-1 text-sm"
+                                >
+                                    <span>
+                                        <b>Nozzle {idx + 1}</b> - {r.name || "—"}
+                                    </span>
+                                    <span>Sale: {r.sale || 0}</span>
+                                    <span>Paytm: {r.paytm || 0}</span>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Totals */}
+                        <div className="mt-3 font-bold text-sm flex justify-between">
+                            <span>Total Sale: {entry.totalSale}</span>
+                            <span>Total Paytm: {entry.totalPaytm}</span>
+                        </div>
+
+                        {/* Delete button */}
+                        <button
+                            onClick={() => handleDelete(entry._id)}
+                            className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                        >
+                            🗑
+                        </button>
+                    </div>
+                ))}
+            </div>
+        )
+    }
 
     return (
         <div className="p-6 max-w-6xl mx-auto">
