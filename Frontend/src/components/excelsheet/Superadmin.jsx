@@ -149,7 +149,6 @@ const SuperAdminPanel = () => {
               <th className="p-2">Department</th>
               <th className="p-2">Designation</th>
               <th className="p-2">Salary</th>
-              <th className="p-2">Role</th>
               <th className="p-2">Actions</th>
             </tr>
           </thead>
@@ -163,7 +162,6 @@ const SuperAdminPanel = () => {
                 <td>{user.department}</td>
                 <td>{user.designation || "N/A"}</td>
                 <td>{user.salary || "N/A"}</td>
-                <td>{user.role}</td>
                 <td className="space-x-2">
                   <button
                     onClick={() => handleEditClick(user)}
