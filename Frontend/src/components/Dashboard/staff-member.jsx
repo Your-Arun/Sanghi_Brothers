@@ -417,7 +417,7 @@ const StaffDashboard = () => {
               </button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-              {salepytm.map((entry) => (
+              {salepytmslice(0,3).map((entry) => (
                 <div
                   key={entry._id}
                   className="bg-white p-2 rounded-md shadow border text-[12px] hover:shadow-md hover:scale-105 cursor-pointer transition"
