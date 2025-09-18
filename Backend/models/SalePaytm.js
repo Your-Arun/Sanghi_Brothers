@@ -9,6 +9,8 @@ const rowSchema = new mongoose.Schema({
 const salePaytmSchema = new mongoose.Schema({
   date: { type: Date, required: true },
   rows: [rowSchema],
+  shift: { type: String, enum: ["Morning", "Evening"], required: true },
+
 });
 
 export default mongoose.model("SalePaytm", salePaytmSchema);

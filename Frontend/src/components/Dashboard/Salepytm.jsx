@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "./axiosInstance";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SalePaytm = () => {
   const [rows, setRows] = useState(
     Array(6).fill({ name: "", sale: "", paytm: "" })
   );
   const [date, setDate] = useState("");
+  const [shift, setShift] = useState("Morning"); // ✅ New Shift field
   const [entries, setEntries] = useState([]);
   const [filterDate, setFilterDate] = useState("");
+  const [totals, setTotals] = useState({ sale: 0, paytm: 0 });
 
   // Handle row change
   const handleChange = (index, field, value) => {
@@ -25,13 +29,14 @@ const SalePaytm = () => {
 
   // Save data
   const handleSave = async () => {
-    if (!date) return alert("Date required!");
+    if (!date) return toast.error("⚠️ Date required!");
     try {
-      await axiosInstance.post("/salepaytm", { date, rows });
+      await axiosInstance.post("/salepaytm", { date, shift, rows });
       setRows(Array(6).fill({ name: "", sale: "", paytm: "" })); // reset
+      toast.success("✅ Data saved successfully!");
       fetchEntries();
     } catch (err) {
-      alert("Error saving data");
+      toast.error("❌ Error saving data");
     }
   };
 
@@ -42,8 +47,17 @@ const SalePaytm = () => {
         params: filterDate ? { date: filterDate } : {},
       });
       setEntries(res.data);
+
+      // Calculate totals for filtered data
+      let sale = 0,
+        paytm = 0;
+      res.data.forEach((e) => {
+        sale += e.totalSale;
+        paytm += e.totalPaytm;
+      });
+      setTotals({ sale, paytm });
     } catch (err) {
-      alert("Error fetching data");
+      toast.error("❌ Error fetching data");
     }
   };
 
@@ -53,15 +67,20 @@ const SalePaytm = () => {
 
   // Delete entry
   const handleDelete = async (id) => {
-    await axiosInstance.delete(`/salepaytm/${id}`);
-    fetchEntries();
+    try {
+      await axiosInstance.delete(`/salepaytm/${id}`);
+      toast.info("🗑 Entry deleted");
+      fetchEntries();
+    } catch (err) {
+      toast.error("❌ Error deleting entry");
+    }
   };
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <h1 className="text-3xl font-bold text-center mb-6">Sale / Paytm</h1>
 
-      {/* Date + Save */}
+      {/* Date + Shift + Save */}
       <div className="mb-4 flex gap-4 justify-end">
         <input
           type="date"
@@ -69,6 +88,14 @@ const SalePaytm = () => {
           onChange={(e) => setDate(e.target.value)}
           className="border px-3 py-2 rounded"
         />
+        <select
+          value={shift}
+          onChange={(e) => setShift(e.target.value)}
+          className="border px-3 py-2 rounded"
+        >
+          <option value="Morning">Morning</option>
+          <option value="Evening">Evening</option>
+        </select>
         <button
           onClick={handleSave}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
@@ -152,7 +179,8 @@ const SalePaytm = () => {
             className="bg-white p-4 shadow rounded border relative"
           >
             <p className="text-sm text-gray-500 mb-2">
-              Date: {new Date(entry.date).toLocaleDateString()}
+              Date: {new Date(entry.date).toLocaleDateString()} | Shift:{" "}
+              <b>{entry.shift}</b>
             </p>
 
             {/* Each nozzle row */}
@@ -171,6 +199,12 @@ const SalePaytm = () => {
               ))}
             </div>
 
+            {/* Totals */}
+            <div className="mt-3 font-bold text-sm flex justify-between">
+              <span>Total Sale: {entry.totalSale}</span>
+              <span>Total Paytm: {entry.totalPaytm}</span>
+            </div>
+
             {/* Delete button */}
             <button
               onClick={() => handleDelete(entry._id)}
@@ -181,6 +215,14 @@ const SalePaytm = () => {
           </div>
         ))}
       </div>
+
+      {/* Overall Totals when filter applied */}
+      {filterDate && (
+        <div className="mt-6 p-4 bg-yellow-100 border rounded text-center font-bold">
+          Date {new Date(filterDate).toLocaleDateString()} Summary → Total Sale:{" "}
+          {totals.sale} | Total Paytm: {totals.paytm}
+        </div>
+      )}
     </div>
   );
 };

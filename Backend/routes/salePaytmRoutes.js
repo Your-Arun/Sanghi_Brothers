@@ -5,13 +5,13 @@ const SalePaytm = require("../models/SalePaytm");
 // Create new entry
 router.post("/salepaytm", async (req, res) => {
   try {
-    const { date, rows } = req.body;
+    const { date,shift ,rows } = req.body;
 
     // calculate totals
     const totalSale = rows.reduce((sum, r) => sum + (parseFloat(r.sale) || 0), 0);
     const totalPaytm = rows.reduce((sum, r) => sum + (parseFloat(r.paytm) || 0), 0);
 
-    const newEntry = new SalePaytm({ date, rows, totalSale, totalPaytm });
+    const newEntry = new SalePaytm({ date, shift,rows, totalSale, totalPaytm });
     await newEntry.save();
 
     res.status(201).json(newEntry);
@@ -45,14 +45,14 @@ router.get("/salepaytm", async (req, res) => {
 // Update entry
 router.put("/salepaytm/:id", async (req, res) => {
   try {
-    const { date, rows } = req.body;
+    const { date, rows,shift } = req.body;
 
     const totalSale = rows.reduce((sum, r) => sum + (parseFloat(r.sale) || 0), 0);
     const totalPaytm = rows.reduce((sum, r) => sum + (parseFloat(r.paytm) || 0), 0);
 
     const updated = await SalePaytm.findByIdAndUpdate(
       req.params.id,
-      { date, rows, totalSale, totalPaytm },
+      { date, rows, shift,totalSale, totalPaytm },
       { new: true }
     );
 
