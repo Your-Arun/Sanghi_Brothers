@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axiosInstance from "./axiosInstance";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import BackButton from "../Home Page/backbutton";
 
 const SalePaytm = () => {
     const [rows, setRows] = useState(Array(6).fill({ name: "", sale: "", paytm: "" }));
@@ -53,9 +52,7 @@ const SalePaytm = () => {
                 ⛽ Sale / Paytm
             </h1>
 
-            <div className="mt-6">
-                <BackButton label="⬅ Go Back" />
-            </div>
+            
             {/* Date + Shift + Save */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-end mb-6">
                 <input
@@ -231,21 +228,21 @@ const SalePaytm = () => {
             {selected && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                     <div className="bg-white rounded-lg p-5 w-11/12 md:w-2/3 lg:w-1/2 shadow-xl transform scale-105 transition">
-                        <button
+                        <div
                             onClick={() => setSelected(null)}
                             className="float-right text-red-600 font-bold text-lg"
                         >
                             ✕
-                        </button>
+                        </div>
                         <h3 className="text-lg font-bold mb-2 text-center">
                             📅 {new Date(selected.date).toLocaleDateString()} ({selected.shift})
                         </h3>
 
                         {/* Table View */}
-                        <table className="w-full border text-sm">
+                        <table className="w-full border text-sm overflow-x-auto">
                             <thead>
                                 <tr className="bg-gray-200">
-                                    <th className="border p-2">#</th>
+                                    <th className="border p-2">SNo.</th>
                                     <th className="border p-2">Name</th>
                                     <th className="border p-2">Sale</th>
                                     <th className="border p-2">Paytm</th>
