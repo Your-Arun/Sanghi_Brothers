@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "./Dashboard/axiosInstance";
+import BackButton from "./Home Page/BackButtonn";
 
 const SalePaytm = () => {
   const [salepaytm, setSalePaytm] = useState([]);
@@ -53,7 +54,7 @@ const SalePaytm = () => {
                   </td>
                   <td className="border p-2 text-left">{entry.shift}</td>
                   <td className="border p-2 text-green-700 font-medium text-right">
-                    ₹{entry.totalSale}
+                    {entry.totalSale}
                   </td>
                   <td className="border p-2 text-yellow-700 font-medium text-right">
                     ₹{entry.totalPaytm}
@@ -95,7 +96,7 @@ const SalePaytm = () => {
               {selected.rows.map((r, idx) => (
                 <div key={idx} className="flex justify-between text-sm border-b pb-1">
                   <span className="truncate w-24">{idx + 1}. {r.name || "—"}</span>
-                  <span className="text-green-600">₹{r.sale || 0}</span>
+                  <span className="text-green-600">{r.sale || 0}</span>
                   <span className="text-yellow-600">₹{r.paytm || 0}</span>
                 </div>
               ))}
@@ -104,13 +105,15 @@ const SalePaytm = () => {
             {/* Totals */}
             <div className="mt-4 text-center">
               <p className="font-semibold text-gray-900 text-sm sm:text-base md:text-lg">
-                Total Sale: <span className="text-green-700">₹{selected.totalSale}</span> |{" "}
+                Total Sale: <span className="text-green-700">{selected.totalSale}</span> |{" "}
                 Total Paytm: <span className="text-yellow-700">₹{selected.totalPaytm}</span>
               </p>
             </div>
           </div>
         </div>
       )}
+
+      <BackButton label="Back Button"/>
     </div>
   );
 };
