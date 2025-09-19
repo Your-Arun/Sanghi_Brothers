@@ -503,7 +503,7 @@ const StaffDashboard = () => {
 
       {selected && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white rounded-xl p-6 w-11/12 md:w-3/4 lg:w-2/3 shadow-2xl transform scale-105 transition-all">
+          <div className="bg-white rounded-xl p-4 sm:p-6 w-11/12 md:w-3/4 lg:w-2/3 max-h-[90vh] shadow-2xl transform transition-all scale-100 overflow-y-auto">
             {/* Close button */}
             <div
               onClick={() => setSelected(null)}
@@ -513,13 +513,13 @@ const StaffDashboard = () => {
             </div>
 
             {/* Heading */}
-            <h3 className="text-xl font-bold mb-4 text-center text-gray-800">
+            <h3 className="text-lg sm:text-xl font-bold mb-4 text-center text-gray-800">
               📅 {new Date(selected.date).toLocaleDateString()} ({selected.shift})
             </h3>
 
-            {/* Table Container */}
+            {/* Table */}
             <div className="overflow-x-auto">
-              <table className="w-full border border-gray-300 rounded-lg text-sm md:text-base">
+              <table className="w-full border border-gray-300 rounded-lg text-xs sm:text-sm md:text-base">
                 <thead>
                   <tr className="bg-gray-100 text-gray-700">
                     <th className="border p-2">SNo.</th>
@@ -530,10 +530,7 @@ const StaffDashboard = () => {
                 </thead>
                 <tbody>
                   {selected.rows.map((r, idx) => (
-                    <tr
-                      key={idx}
-                      className="hover:bg-gray-50 transition"
-                    >
+                    <tr key={idx} className="hover:bg-gray-50 transition">
                       <td className="border p-2 text-center">{idx + 1}</td>
                       <td className="border p-2">{r.name}</td>
                       <td className="border p-2 text-green-700 font-medium text-center">
@@ -550,14 +547,15 @@ const StaffDashboard = () => {
 
             {/* Totals */}
             <div className="mt-4 text-center">
-              <p className="font-semibold text-gray-900 text-lg">
-                Total Sale: <span className="text-green-700">₹{selected.totalSale}</span> |
+              <p className="font-semibold text-gray-900 text-sm sm:text-base md:text-lg">
+                Total Sale: <span className="text-green-700">₹{selected.totalSale}</span> |{" "}
                 Total Paytm: <span className="text-yellow-700">₹{selected.totalPaytm}</span>
               </p>
             </div>
           </div>
         </div>
       )}
+
 
 
     </div>

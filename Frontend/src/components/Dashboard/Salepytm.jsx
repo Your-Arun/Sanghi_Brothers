@@ -65,7 +65,7 @@ const SalePaytm = () => {
 
             {/* ✅ Desktop Table */}
             <div className="hidden sm:block overflow-x-auto shadow-lg rounded-lg border">
-                <table className="w-full text-sm sm:text-base">
+                <table className="w-full p-4 text-sm sm:text-base">
                     <thead className="bg-gradient-to-r from-blue-100 to-blue-200">
                         <tr>
                             <th className="border p-2">Nozzle</th>
