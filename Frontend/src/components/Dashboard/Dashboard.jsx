@@ -26,6 +26,8 @@ const UpdateDashboard = () => {
     const [masterSheet, setMasterSheet] = useState([]);
     const [cashierTotal, setCashierTotal] = useState(0);
     const [profilePhoto, setProfilePhoto] = useState(null);
+    const [salepytm, setSalepytm] = useState([]);
+
 
 
     const navigate = useNavigate();
@@ -41,7 +43,8 @@ const UpdateDashboard = () => {
                     bankRes,
                     fundRes,
                     flowRes,
-                    masterRes
+                    masterRes,
+                    salepytmm
                 ] = await Promise.all([
                     axiosInstance.get("/reports"),
                     axiosInstance.get("/cashier"),
@@ -49,7 +52,8 @@ const UpdateDashboard = () => {
                     axiosInstance.get("/bank/monthlyfundflow"),
                     axiosInstance.get("/fundposition"),
                     axiosInstance.get("/bank/monthlyflow"),
-                    axiosInstance.get("/mastersheet/finance")
+                    axiosInstance.get("/mastersheet/finance"),
+                    axiosInstance.get("/salepaytm")
                 ]);
 
                 setReports(reportRes.data);
@@ -59,6 +63,7 @@ const UpdateDashboard = () => {
                 setFundPosition(fundRes.data);
                 setInOutFlow(flowRes.data);
                 setMasterSheet(masterRes.data);
+                setSalepytm(salepytmm.data);
 
                 // ✅ Calculate cashier total here
                 const total = cashierRes.data.reduce((sum, item) => sum + item.amount, 0);

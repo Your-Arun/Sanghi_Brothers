@@ -522,7 +522,7 @@ const StaffDashboard = () => {
       <div className="overflow-x-auto">
         <table className="w-full border border-gray-300 rounded-lg text-sm md:text-base table-fixed">
           <thead>
-            <tr className="bg-blue-900 text-white">
+            <tr className="bg-blue-900 text-white overflow-x-auto">
               <th className="border p-2 w-25 text-center">SNo.</th>
               <th className="border p-2 w-25 text-center">Name</th>
               <th className="border p-2 w-25 text-center">Sale</th>
