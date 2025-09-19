@@ -520,13 +520,13 @@ const StaffDashboard = () => {
 
       {/* Table */}
       <div className="">
-        <table className="w-full border border-gray-300 rounded-lg text-sm md:text-base table-fixed">
+        <table className="w-full p-4 border border-gray-300 rounded-lg text-sm md:text-base table-fixed">
           <thead>
             <tr className="bg-blue-900 text-white">
-              <th className="border p-2 w-25 text-center">SNo.</th>
+              <th className="border p-2 w-15 text-center">SNo.</th>
               <th className="border p-2 w-25 text-center">Name</th>
-              <th className="border p-2 w-25 text-center">Sale</th>
-              <th className="border p-2 w-25 text-center">Paytm</th>
+              <th className="border p-2 w-30 text-center">Sale</th>
+              <th className="border p-2 w-30 text-center">Paytm</th>
             </tr>
           </thead>
           <tbody>
