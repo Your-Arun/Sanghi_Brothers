@@ -35,6 +35,8 @@ const StaffDashboard = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [showToggleButton, setShowToggleButton] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(window.scrollY);
+  const [selected, setSelected] = useState(null);
+
 
   // 🔹 Cash Slip filters
   const [filter, setFilter] = useState("today");
@@ -416,12 +418,14 @@ const StaffDashboard = () => {
                 Create Entry
               </button>
             </div>
+            <h2 className="text-lg font-semibold mt-10 mb-3 text-gray-700">📦 Back Entries</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-              {salepytm.slice(0,3).map((entry) => (
+              {salepytm.slice(0, 3).map((entry) => (
                 <div
                   key={entry._id}
+                  onClick={() => setSelected(entry)}
                   className="bg-white p-2 rounded-md shadow border text-[12px] hover:shadow-md hover:scale-105 cursor-pointer transition"
-                  >
+                >
                   <p className="text-gray-500 text-[11px] mb-1">
                     {new Date(entry.date).toLocaleDateString()} | <b>{entry.shift}</b>
                   </p>
@@ -496,6 +500,50 @@ const StaffDashboard = () => {
       )}
 
       {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
+
+      {selected && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg p-5 w-11/12 md:w-2/3 lg:w-1/2 shadow-xl transform scale-105 transition">
+            <div
+              onClick={() => setSelected(null)}
+              className="float-right text-red-600 font-bold text-lg cursor-pointer"
+            >
+              ✕
+            </div>
+            <h3 className="text-lg font-bold mb-2 text-center">
+              📅 {new Date(selected.date).toLocaleDateString()} ({selected.shift})
+            </h3>
+
+            {/* Table View */}
+            <table className="border w-9/12 text-sm overflow-x-auto">
+              <thead>
+                <tr className="bg-gray-200">
+                  <th className="border p-2">SNo.</th>
+                  <th className="border p-2">Name</th>
+                  <th className="border p-2">Sale</th>
+                  <th className="border p-2">Paytm</th>
+                </tr>
+              </thead>
+              <tbody>
+                {selected.rows.map((r, idx) => (
+                  <tr key={idx}>
+                    <td className="border p-2">{idx + 1}</td>
+                    <td className="border p-2">{r.name}</td>
+                    <td className="border p-2 text-green-700">₹{r.sale}</td>
+                    <td className="border p-2 text-yellow-700">₹{r.paytm}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {/* Totals */}
+            <p className="mt-4 font-semibold text-gray-900 text-center">
+              Total Sale: ₹{selected.totalSale} | Total Paytm: ₹{selected.totalPaytm}
+            </p>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
