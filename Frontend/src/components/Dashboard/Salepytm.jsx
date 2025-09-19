@@ -33,7 +33,7 @@ const SalePaytm = () => {
 
     return (
         <div className="p-3 sm:p-4 max-w-6xl mx-auto">
-            <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6 text-blue-700">
+            <h1 className="text-2xl sm:text-3xl font-bold text-center mb-4 text-blue-700">
                 ⛽ Sale / Paytm
             </h1>
 

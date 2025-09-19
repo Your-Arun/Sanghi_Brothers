@@ -531,7 +531,7 @@ const StaffDashboard = () => {
                 <tbody>
                   {selected.rows.map((r, idx) => (
                     <tr key={idx} className="hover:bg-gray-50 transition">
-                      <td className="border p-2 text-center">{idx + 1}</td>
+                      <td className="border p-2 text-center w-[30%]">{idx + 1}</td>
                       <td className="border p-2">{r.name}</td>
                       <td className="border p-2 text-green-700 font-medium text-center">
                         ₹{r.sale}
