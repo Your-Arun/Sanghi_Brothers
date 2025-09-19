@@ -275,8 +275,8 @@ const UpdateDashboard = () => {
                     onClick={() => setBankReport(item)}
                     className="min-w-[180px] p-3 bg-gray-100 rounded shadow cursor-pointer"
                 >
-                    <div className="font-bold">{item.datee}</div>
-                    <div className="text-sm text-gray-600">{item.username}</div>
+                    <div className="font-bold">{item.Date}</div>
+                    <div className="text-sm text-gray-600">{}</div>
                 </div>
             ),
         },
