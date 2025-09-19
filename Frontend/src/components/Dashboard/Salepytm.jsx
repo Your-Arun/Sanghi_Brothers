@@ -239,7 +239,7 @@ const SalePaytm = () => {
                         </h3>
 
                         {/* Table View */}
-                        <table className="border text-sm overflow-x-auto">
+                        <table className="border w-9/12 text-sm overflow-x-auto">
                             <thead>
                                 <tr className="bg-gray-200">
                                     <th className="border p-2">SNo.</th>
