@@ -266,9 +266,9 @@ const UpdateDashboard = () => {
             icon: <FaFolderOpen className="text-4xl text-red-500" />,
             count: reports.length,
             onAdd: () => navigate("/bank/monthlyfundflow"),
-            onView: () => setActiveModal("monthlyfundflow"),
-            items: monthlyfundflow,
-            more: activeModal === "monthlyfundflow",
+            onView: () => setActiveModal("bankReport"),
+            items: bankReport,
+            more: activeModal === "bankReport",
             renderItem: (item) => (
                 <div
                     key={item._id}
