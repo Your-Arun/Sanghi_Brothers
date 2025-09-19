@@ -4,12 +4,13 @@ import axiosInstance from "./Dashboard/axiosInstance";
 const SalePaytm = () => {
   const [salepaytm, setSalePaytm] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState(null); // 🔹 details ke liye
 
   // Fetch data on mount
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axiosInstance.get("salepaytm"); // 🔹 API endpoint change kar lena
+        const res = await axiosInstance.get("salepaytm");
         setSalePaytm(res.data);
       } catch (err) {
         console.error("Error fetching SalePaytm:", err);
@@ -40,6 +41,7 @@ const SalePaytm = () => {
                 <th className="border p-2 text-left">Shift</th>
                 <th className="border p-2 text-right">Total Sale</th>
                 <th className="border p-2 text-right">Total Paytm</th>
+                <th className="border p-2 text-center w-20">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -56,10 +58,57 @@ const SalePaytm = () => {
                   <td className="border p-2 text-yellow-700 font-medium text-right">
                     ₹{entry.totalPaytm}
                   </td>
+                  <td className="border p-2 text-center">
+                    <button
+                      onClick={() => setSelected(entry)}
+                      className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+                    >
+                      View
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* 🔹 Modal for details */}
+      {selected && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-xl p-4 sm:p-6 w-11/12 md:w-3/4 lg:w-2/3 max-h-[90vh] shadow-2xl overflow-y-auto">
+            {/* Close button */}
+            <div
+              onClick={() => setSelected(null)}
+              className="float-right text-red-600 font-bold text-xl cursor-pointer"
+            >
+              ✕
+            </div>
+
+            {/* Heading */}
+            <h3 className="text-lg sm:text-xl font-bold mb-4 text-center text-gray-800">
+              📅 {new Date(selected.date).toLocaleDateString()} ({selected.shift})
+            </h3>
+
+            {/* Compact rows view */}
+            <div className="space-y-1 max-h-64 overflow-y-auto border rounded p-3 bg-gray-50">
+              {selected.rows.map((r, idx) => (
+                <div key={idx} className="flex justify-between text-sm border-b pb-1">
+                  <span className="truncate w-24">{idx + 1}. {r.name || "—"}</span>
+                  <span className="text-green-600">₹{r.sale || 0}</span>
+                  <span className="text-yellow-600">₹{r.paytm || 0}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Totals */}
+            <div className="mt-4 text-center">
+              <p className="font-semibold text-gray-900 text-sm sm:text-base md:text-lg">
+                Total Sale: <span className="text-green-700">₹{selected.totalSale}</span> |{" "}
+                Total Paytm: <span className="text-yellow-700">₹{selected.totalPaytm}</span>
+              </p>
+            </div>
+          </div>
         </div>
       )}
     </div>

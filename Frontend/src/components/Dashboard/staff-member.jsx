@@ -35,7 +35,6 @@ const StaffDashboard = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [showToggleButton, setShowToggleButton] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(window.scrollY);
-  const [selected, setSelected] = useState(null);
 
 
   // 🔹 Cash Slip filters
@@ -423,7 +422,6 @@ const StaffDashboard = () => {
               {salepytm.slice(0, 3).map((entry) => (
                 <div
                   key={entry._id}
-                  onClick={() => setSelected(entry)}
                   className="bg-white p-2 rounded-md shadow border text-[12px] hover:shadow-md hover:scale-105 cursor-pointer transition"
                 >
                   <p className="text-gray-500 text-[11px] mb-1">
@@ -435,7 +433,7 @@ const StaffDashboard = () => {
                     {entry.rows.map((r, idx) => (
                       <div key={idx} className="flex justify-between text-center">
                         <span className="truncate w-14">{idx + 1}. {r.name || "—"}</span>
-                        <span className="text-green-600">₹{r.sale || 0}</span>
+                        <span className="text-green-600">{r.sale || 0}</span>
                         <span className="text-yellow-600">₹{r.paytm || 0}</span>
                       </div>
                     ))}
@@ -443,7 +441,7 @@ const StaffDashboard = () => {
 
                   {/* Totals */}
                   <div className="mt-1 border-t pt-1 font-bold text-blue-700 text-[12px]">
-                    Sale: ₹{entry.totalSale} | Paytm: ₹{entry.totalPaytm}
+                    Sale: {entry.totalSale} | Paytm: ₹{entry.totalPaytm}
                   </div>
                 </div>
               ))}
@@ -500,71 +498,6 @@ const StaffDashboard = () => {
       )}
 
       {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
-
-      {selected && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-    <div className="bg-white rounded-xl p-6 w-11/12 md:w-3/4 lg:w-2/3 max-h-[90vh] shadow-2xl overflow-y-auto">
-      
-      {/* Close button */}
-      <div
-        onClick={() => setSelected(null)}
-        className="float-right text-red-600 font-bold text-xl cursor-pointer"
-      >
-        ✕
-      </div>
-
-      {/* Heading */}
-      <h3 className="text-lg sm:text-xl font-bold mb-6 text-center text-gray-800">
-        📅 {new Date(selected.date).toLocaleDateString()} ({selected.shift})
-      </h3>
-
-      {/* Table */}
-      <div className="">
-        <table className="w-full p-4 border border-gray-300 rounded-lg text-sm md:text-base table-fixed">
-          <thead>
-            <tr className="bg-blue-900 text-white">
-              <th className="border p-2 w-15 text-center">SNo.</th>
-              <th className="border p-2 w-25 text-center">Name</th>
-              <th className="border p-2 w-30 text-center">Sale</th>
-              <th className="border p-2 w-30 text-center">Paytm</th>
-            </tr>
-          </thead>
-          <tbody>
-            {selected.rows.map((r, idx) => (
-              <tr key={idx} className="hover:bg-gray-50 transition">
-                <td className="border p-2 text-center">{idx + 1}</td>
-                <td className="border p-2 text-center">{r.name || "-"}</td>
-                <td className="border p-2 text-green-700 font-medium text-center">
-                  ₹{r.sale || 0}
-                </td>
-                <td className="border p-2 text-yellow-700 font-medium text-center">
-                  ₹{r.paytm || 0}
-                </td>
-              </tr>
-            ))}
-
-            {/* Totals row */}
-            <tr className="bg-gray-100 font-bold">
-              <td className="border p-2 text-center" colSpan={2}>
-                Totals
-              </td>
-              <td className="border p-2 text-green-700 text-right">
-                ₹{selected.totalSale}
-              </td>
-              <td className="border p-2 text-yellow-700 text-right">
-                ₹{selected.totalPaytm}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-)}
-
-
-
-
     </div>
   );
 };
