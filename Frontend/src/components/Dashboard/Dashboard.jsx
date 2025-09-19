@@ -261,6 +261,25 @@ const UpdateDashboard = () => {
                 </div>
             ),
         },
+        {
+            title: "Sale Reports",
+            icon: <FaFolderOpen className="text-4xl text-red-500" />,
+            count: reports.length,
+            onAdd: () => navigate("/bank/monthlyfundflow"),
+            onView: () => setActiveModal("monthlyfundflow"),
+            items: monthlyfundflow,
+            more: activeModal === "monthlyfundflow",
+            renderItem: (item) => (
+                <div
+                    key={item._id}
+                    onClick={() => setBankReport(item)}
+                    className="min-w-[180px] p-3 bg-gray-100 rounded shadow cursor-pointer"
+                >
+                    <div className="font-bold">{item.date}</div>
+                    <div className="text-sm text-gray-600">{item.username}</div>
+                </div>
+            ),
+        },
     ];
 
     return (
