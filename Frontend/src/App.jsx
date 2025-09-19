@@ -62,6 +62,8 @@ import CreateUserPage from "./components/AttendanceSheet/CreateUserModal.jsx";
 import Footer from "./components/Home Page/Footer.jsx"; // ✅ Footer import
 // import Superadmin  from "./components/excelsheet/Superadmin.jsx"
 import Salepytm from './components/Dashboard/Salepytm.jsx'
+import AllSalePytm from './components/Salepytmall.jsx'
+
 
 const App = () => {
   return (
@@ -149,6 +151,7 @@ const AppContent = () => {
           <Route path="/attendance-sheet" element={<AttendancePage />} />
           <Route path="/daily-log-view" element={<DailyLogView />} />
           <Route path="/create-user" element={<CreateUserPage />} />
+          <Route path="/allsalepaytm" element={<AllSalePytm />} />
         </Route>
       </Routes>
 

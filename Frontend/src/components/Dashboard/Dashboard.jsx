@@ -26,7 +26,6 @@ const UpdateDashboard = () => {
     const [masterSheet, setMasterSheet] = useState([]);
     const [cashierTotal, setCashierTotal] = useState(0);
     const [profilePhoto, setProfilePhoto] = useState(null);
-    const [salepytm, setSalepytm] = useState([]);
 
 
 
@@ -44,7 +43,6 @@ const UpdateDashboard = () => {
                     fundRes,
                     flowRes,
                     masterRes,
-                    salepytmm
                 ] = await Promise.all([
                     axiosInstance.get("/reports"),
                     axiosInstance.get("/cashier"),
@@ -53,7 +51,6 @@ const UpdateDashboard = () => {
                     axiosInstance.get("/fundposition"),
                     axiosInstance.get("/bank/monthlyflow"),
                     axiosInstance.get("/mastersheet/finance"),
-                    axiosInstance.get("/salepaytm")
                 ]);
 
                 setReports(reportRes.data);
@@ -63,7 +60,6 @@ const UpdateDashboard = () => {
                 setFundPosition(fundRes.data);
                 setInOutFlow(flowRes.data);
                 setMasterSheet(masterRes.data);
-                setSalepytm(salepytmm.data);
 
                 // ✅ Calculate cashier total here
                 const total = cashierRes.data.reduce((sum, item) => sum + item.amount, 0);
@@ -400,6 +396,13 @@ const UpdateDashboard = () => {
                         aria-label="attendance-sheet"
                     >
                         💵 <span className="ml-2">Attendance Sheet</span>
+                    </button>
+                    <button
+                        onClick={() => navigate("/allsalepaytm")}
+                        className="bg-red-700 text-white flex items-center px-6 py-3 rounded-full shadow-lg hover:bg-red-400 transform hover:scale-105 transition-all ease-in-out w-full"
+                        aria-label="attendance-sheet"
+                    >
+                        💵 <span className="ml-2">Today Sale&Paytm</span>
                     </button>
                 </div>
             </div>

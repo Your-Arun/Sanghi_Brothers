@@ -519,10 +519,10 @@ const StaffDashboard = () => {
       </h3>
 
       {/* Table */}
-      <div className="overflow-x-auto">
+      <div className="">
         <table className="w-full border border-gray-300 rounded-lg text-sm md:text-base table-fixed">
           <thead>
-            <tr className="bg-blue-900 text-white overflow-x-auto">
+            <tr className="bg-blue-900 text-white">
               <th className="border p-2 w-25 text-center">SNo.</th>
               <th className="border p-2 w-25 text-center">Name</th>
               <th className="border p-2 w-25 text-center">Sale</th>
