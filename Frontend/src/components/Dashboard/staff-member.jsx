@@ -523,10 +523,10 @@ const StaffDashboard = () => {
         <table className="w-full border border-gray-300 rounded-lg text-sm md:text-base table-fixed">
           <thead>
             <tr className="bg-blue-900 text-white">
-              <th className="border p-2 w-16 text-center">SNo.</th>
-              <th className="border p-2 text-center">Name</th>
-              <th className="border p-2 w-28 text-center">Sale</th>
-              <th className="border p-2 w-28 text-center">Paytm</th>
+              <th className="border p-2 w-25 text-center">SNo.</th>
+              <th className="border p-2 w-25 text-center">Name</th>
+              <th className="border p-2 w-25 text-center">Sale</th>
+              <th className="border p-2 w-25 text-center">Paytm</th>
             </tr>
           </thead>
           <tbody>
