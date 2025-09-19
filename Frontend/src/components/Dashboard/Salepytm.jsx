@@ -227,10 +227,10 @@ const SalePaytm = () => {
             {/* 🔹 Modal for detail view */}
             {selected && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-white rounded-lg p-5 w-11/12 md:w-2/3 lg:w-1/2 shadow-xl transform scale-105 transition">
+                    <div className="bg-white relative rounded-lg p-5 w-11/12 md:w-2/3 lg:w-1/2 shadow-xl transform scale-105 transition">
                         <div
                             onClick={() => setSelected(null)}
-                            className="float-right text-red-600 font-bold text-lg"
+                            className="float-right text-red-600 font-bold text-lg cursor-pointer"
                         >
                             ✕
                         </div>
@@ -239,7 +239,7 @@ const SalePaytm = () => {
                         </h3>
 
                         {/* Table View */}
-                        <table className="w-full border text-sm overflow-x-auto">
+                        <table className="absolute border text-sm overflow-x-auto">
                             <thead>
                                 <tr className="bg-gray-200">
                                     <th className="border p-2">SNo.</th>
