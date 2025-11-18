@@ -7,7 +7,7 @@ import { toast } from 'react-toastify'
 
 const ShiftManagementSystem = () => {
 
-const [showadd, setshowAdd]=useState([true]);
+const [showadd, setshowAdd]=useState(true);
 
 
   const navigate = useNavigate();
