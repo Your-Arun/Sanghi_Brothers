@@ -6,6 +6,10 @@ import { useNavigate } from "react-router-dom"; import { IoTrashBinOutline } fro
 import { toast } from 'react-toastify'
 
 const ShiftManagementSystem = () => {
+
+const [showadd, setshowAdd]=useState([true]);
+
+
   const navigate = useNavigate();
   const [date, setDate] = useState('');
   const [members, setMembers] = useState([]);
@@ -354,54 +358,15 @@ const ShiftManagementSystem = () => {
     <div className="flex flex-col items-center justify-center p-6">
       <h1 className="text-3xl fo nt-bold  bg-gradient-to-r from-blue-800 to-yellow-800 text-transparent bg-clip-text text-center mb-5">SHIFT MANAGEMENT SYSTEM</h1>
 
+    <div>
+    <h2 onClick={setshowAdd()} className="flex justify-end text-3xl font-bold text-center text-blue-600 mb-6">➕ </h2>
+
+    </div>
 
       <div className="flex flex-col items-center justify-start min-h-screen p-6 overflow-x-hidden">
         {/* Add Member Card */}
         <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-5xl mb-8">
-          <h2 className="text-3xl font-bold text-center text-blue-600 mb-6">➕ Add Member</h2>
-          <form onSubmit={handleAddMember} className="flex flex-wrap justify-center gap-4">
-            <input
-              type="text"
-              placeholder="Enter member name"
-              value={newMember.name}
-              onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
-              className="border p-3 rounded-lg w-48"
-            />
-            <select
-              value={newMember.role}
-              onChange={(e) => setNewMember({ ...newMember, role: e.target.value })}
-              className="border p-3 rounded-lg w-48"
-            >
-              <option value="">Select Role</option>
-              <option value="operator">Operator</option>
-              <option value="supervisor">Supervisor</option>
-              <option value="air boy">Air Boy</option>
-            </select>
-            <select
-              value={newMember.shift}
-              onChange={(e) => setNewMember({ ...newMember, shift: e.target.value })}
-              className="border p-3 rounded-lg w-48"
-            >
-              <option value="">Select Shift</option>
-              <option value="morning">Morning</option>
-              <option value="evening">Evening</option>
-            </select>
-            <select
-              value={newMember.available}
-              onChange={(e) => setNewMember({ ...newMember, available: e.target.value })}
-              className="border p-3 rounded-lg w-48"
-            >
-              <option value="">Select Availability</option>
-              <option value="present">Present</option>
-              <option value="absent">Absent</option>
-            </select>
-            <button
-              type="submit"
-              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 flex items-center gap-2"
-            >
-              <FaPlus /> Add
-            </button>
-          </form>
+          
         </div>
 
         {/* Member List Card */}
@@ -604,6 +569,56 @@ const ShiftManagementSystem = () => {
       <div>
         <BackButton previousImage="/previous.png" />
       </div>
+
+
+      { showadd()&& 
+      <div>
+        <h2 className="text-3xl font-bold text-center text-blue-600 mb-6">➕ Add Member</h2>
+          <form onSubmit={handleAddMember} className="flex flex-wrap justify-center gap-4">
+            <input
+              type="text"
+              placeholder="Enter member name"
+              value={newMember.name}
+              onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
+              className="border p-3 rounded-lg w-48"
+            />
+            <select
+              value={newMember.role}
+              onChange={(e) => setNewMember({ ...newMember, role: e.target.value })}
+              className="border p-3 rounded-lg w-48"
+            >
+              <option value="">Select Role</option>
+              <option value="operator">Operator</option>
+              <option value="supervisor">Supervisor</option>
+              <option value="air boy">Air Boy</option>
+            </select>
+            <select
+              value={newMember.shift}
+              onChange={(e) => setNewMember({ ...newMember, shift: e.target.value })}
+              className="border p-3 rounded-lg w-48"
+            >
+              <option value="">Select Shift</option>
+              <option value="morning">Morning</option>
+              <option value="evening">Evening</option>
+            </select>
+            <select
+              value={newMember.available}
+              onChange={(e) => setNewMember({ ...newMember, available: e.target.value })}
+              className="border p-3 rounded-lg w-48"
+            >
+              <option value="">Select Availability</option>
+              <option value="present">Present</option>
+              <option value="absent">Absent</option>
+            </select>
+            <button
+              type="submit"
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 flex items-center gap-2"
+            >
+              <FaPlus /> Add
+            </button>
+          </form>
+      </div>
+      }
     </div>
   );
 };
