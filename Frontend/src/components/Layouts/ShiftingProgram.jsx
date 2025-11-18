@@ -367,11 +367,7 @@ const [showadd, setshowAdd]=useState(false);
 
 
       <div className="flex flex-col items-center justify-start min-h-screen p-6 overflow-x-hidden">
-        {/* Add Member Card */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-5xl mb-8">
-          
-        </div>
-
+      
         {/* Member List Card */}
         <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-7xl">
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">👥 Member List</h2>
