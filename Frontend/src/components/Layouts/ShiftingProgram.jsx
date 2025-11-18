@@ -358,10 +358,12 @@ const [showadd, setshowAdd]=useState(true);
     <div className="flex flex-col items-center justify-center p-6">
       <h1 className="text-3xl fo nt-bold  bg-gradient-to-r from-blue-800 to-yellow-800 text-transparent bg-clip-text text-center mb-5">SHIFT MANAGEMENT SYSTEM</h1>
 
-    <div>
-    <h2 onClick={setshowAdd()} className="flex justify-end text-3xl font-bold text-center text-blue-600 mb-6">➕ </h2>
-
-    </div>
+      <button
+  onClick={() => setshowAdd(!showadd)}
+  className="fixed top-20 right-6 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-xl transition"
+>
+  <FaPlus className="text-xl" />
+</button>
 
       <div className="flex flex-col items-center justify-start min-h-screen p-6 overflow-x-hidden">
         {/* Add Member Card */}
@@ -571,54 +573,72 @@ const [showadd, setshowAdd]=useState(true);
       </div>
 
 
-      { showadd()&& 
-      <div>
-        <h2 className="text-3xl font-bold text-center text-blue-600 mb-6">➕ Add Member</h2>
-          <form onSubmit={handleAddMember} className="flex flex-wrap justify-center gap-4">
-            <input
-              type="text"
-              placeholder="Enter member name"
-              value={newMember.name}
-              onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
-              className="border p-3 rounded-lg w-48"
-            />
-            <select
-              value={newMember.role}
-              onChange={(e) => setNewMember({ ...newMember, role: e.target.value })}
-              className="border p-3 rounded-lg w-48"
-            >
-              <option value="">Select Role</option>
-              <option value="operator">Operator</option>
-              <option value="supervisor">Supervisor</option>
-              <option value="air boy">Air Boy</option>
-            </select>
-            <select
-              value={newMember.shift}
-              onChange={(e) => setNewMember({ ...newMember, shift: e.target.value })}
-              className="border p-3 rounded-lg w-48"
-            >
-              <option value="">Select Shift</option>
-              <option value="morning">Morning</option>
-              <option value="evening">Evening</option>
-            </select>
-            <select
-              value={newMember.available}
-              onChange={(e) => setNewMember({ ...newMember, available: e.target.value })}
-              className="border p-3 rounded-lg w-48"
-            >
-              <option value="">Select Availability</option>
-              <option value="present">Present</option>
-              <option value="absent">Absent</option>
-            </select>
-            <button
-              type="submit"
-              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 flex items-center gap-2"
-            >
-              <FaPlus /> Add
-            </button>
-          </form>
-      </div>
-      }
+      {showadd && (
+  <div className="bg-white shadow-xl rounded-2xl p-6 w-full max-w-xl mx-auto mb-8 mt-6 border">
+    <h2 className="text-xl font-bold text-blue-700 mb-4 text-center">
+      Add Member
+    </h2>
+
+    <form
+      onSubmit={handleAddMember}
+      className="grid grid-cols-1 md:grid-cols-2 gap-4"
+    >
+      <input
+        type="text"
+        placeholder="Member Name"
+        value={newMember.name}
+        onChange={(e) =>
+          setNewMember({ ...newMember, name: e.target.value })
+        }
+        className="border p-3 rounded-lg w-full"
+      />
+
+      <select
+        value={newMember.role}
+        onChange={(e) =>
+          setNewMember({ ...newMember, role: e.target.value })
+        }
+        className="border p-3 rounded-lg w-full"
+      >
+        <option value="">Select Role</option>
+        <option value="operator">Operator</option>
+        <option value="supervisor">Supervisor</option>
+        <option value="air boy">Air Boy</option>
+      </select>
+
+      <select
+        value={newMember.shift}
+        onChange={(e) =>
+          setNewMember({ ...newMember, shift: e.target.value })
+        }
+        className="border p-3 rounded-lg w-full"
+      >
+        <option value="">Select Shift</option>
+        <option value="morning">Morning</option>
+        <option value="evening">Evening</option>
+      </select>
+
+      <select
+        value={newMember.available}
+        onChange={(e) =>
+          setNewMember({ ...newMember, available: e.target.value })
+        }
+        className="border p-3 rounded-lg w-full"
+      >
+        <option value="">Availability</option>
+        <option value="present">Present</option>
+        <option value="absent">Absent</option>
+      </select>
+
+      <button
+        type="submit"
+        className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2 col-span-1 md:col-span-2 transition shadow"
+      >
+        <FaPlus /> Add Member
+      </button>
+    </form>
+  </div>
+)}
     </div>
   );
 };
