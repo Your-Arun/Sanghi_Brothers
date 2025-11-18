@@ -7,7 +7,7 @@ import { toast } from 'react-toastify'
 
 const ShiftManagementSystem = () => {
 
-const [showadd, setshowAdd]=useState(true);
+const [showadd, setshowAdd]=useState(false);
 
 
   const navigate = useNavigate();
@@ -364,6 +364,7 @@ const [showadd, setshowAdd]=useState(true);
 >
   <FaPlus className="text-xl" />
 </button>
+
 
       <div className="flex flex-col items-center justify-start min-h-screen p-6 overflow-x-hidden">
         {/* Add Member Card */}
