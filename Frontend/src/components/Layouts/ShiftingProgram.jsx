@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { FaPlus, FaCalendarAlt } from "react-icons/fa";
 import { IoTrashBinOutline } from "react-icons/io5";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import html2canvas from "html2canvas";
+
 import axiosInstance from "../Dashboard/axiosInstance";
 import BackButton from "../Home Page/backbutton";
 import { useNavigate } from "react-router-dom";
