@@ -1,648 +1,387 @@
-import React, { useState, useEffect, useRef } from "react";
-import { FaPlus, FaCalendarAlt } from "react-icons/fa";
-import { IoTrashBinOutline } from "react-icons/io5";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import axiosInstance from "../Dashboard/axiosInstance";
-import BackButton from "../Home Page/backbutton";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import React, { useState } from 'react';
+import { Menu, Users, FileText, Share2, Calendar } from 'lucide-react';
+import {
+  DndContext,
+  DragOverlay,
+  useDraggable,
+  useDroppable,
+  TouchSensor,
+  MouseSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import { CSS } from '@dnd-kit/utilities';
 
-/**
- * Fixed & cleaned version of your ShiftManagementSystemMobile component.
- * Key fixes:
- * - Removed top-level await / dynamic import moved to inside handler (no SSR/build break).
- * - DragDropContext wraps the interactive area (all Droppables/Draggables).
- * - Provided placeholder image URLs (use your PNGs from /public/assets by replacing these).
- * - Proper handling of present/absent lists, slot assignments, add/delete members, and submit/share flow.
- *
- * NOTE:
- * - For production builds on Vercel + Vite you should add this to vite.config.js:
- *   ssr: { noExternal: ["react-beautiful-dnd"] }
- * - Replace placeholder image URLs with your real /assets/*.png paths when ready.
- */
-
-const fallbackPhoto = "https://via.placeholder.com/100?text=User";
-const mpdImage = "https://via.placeholder.com/220x220?text=MPD";
-const nozzleAssets = [
-  "https://via.placeholder.com/80?text=N1",
-  "https://via.placeholder.com/80?text=N2",
-  "https://via.placeholder.com/80?text=N3",
-  "https://via.placeholder.com/80?text=N4",
-  "https://via.placeholder.com/80?text=N5",
-  "https://via.placeholder.com/80?text=N6",
+// --- Mock Data (Aapka staff list yahan aayega) ---
+const initialStaff = [
+  { id: '1', name: 'Raju', avatar: 'https://i.pravatar.cc/150?u=1' },
+  { id: '2', name: 'Amit', avatar: 'https://i.pravatar.cc/150?u=2' },
+  { id: '3', name: 'Sonu', avatar: 'https://i.pravatar.cc/150?u=3' },
+  { id: '4', name: 'Vikram', avatar: 'https://i.pravatar.cc/150?u=4' },
+  { id: '5', name: 'Rahul', avatar: 'https://i.pravatar.cc/150?u=5' },
+  { id: '6', name: 'Deepak', avatar: 'https://i.pravatar.cc/150?u=6' },
+  { id: '7', name: 'Ajay', avatar: 'https://i.pravatar.cc/150?u=7' },
+  { id: '8', name: 'Suresh', avatar: 'https://i.pravatar.cc/150?u=8' },
 ];
 
-const ShiftManagementSystemMobile = () => {
-  const navigate = useNavigate();
-  const [showAdd, setShowAdd] = useState(false);
-  const [date, setDate] = useState("");
-  const [members, setMembers] = useState([]);
-  const [presentList, setPresentList] = useState([]);
-  const [absentList, setAbsentList] = useState([]);
-  const [slotAssignments, setSlotAssignments] = useState({
-    nozzle1: null,
-    nozzle2: null,
-    nozzle3: null,
-    nozzle4: null,
-    nozzle5: null,
-    nozzle6: null,
-  });
-  const [newMember, setNewMember] = useState({
-    name: "",
-    role: "operator",
-    shift: "morning",
-    available: "present",
-    photo: "",
+// Nozzle Configuration
+const nozzles = [
+  { id: 'N2', label: 'Nozzle 2' }, // Top Left
+  { id: 'N1', label: 'Nozzle 1' }, // Top Right
+  { id: 'N3', label: 'Nozzle 3' }, // Bottom Left
+  { id: 'N4', label: 'Nozzle 4' }, // Bottom Right
+];
+
+const hangingNozzles = [
+  { id: 'N5', label: 'Nozzle 5' },
+  { id: 'N6', label: 'Nozzle 6' },
+];
+
+// --- 1. Draggable Component (Staff Photo) ---
+const DraggableStaff = ({ id, staffMember, isOverlay = false }) => {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: id,
+    data: { staffMember },
   });
 
-  const containerRef = useRef(null);
-
-  useEffect(() => {
-    const fetchMembers = async () => {
-      try {
-        const res = await axiosInstance.get("/shifting");
-        const data = Array.isArray(res.data) ? res.data : [];
-        setMembers(data);
-        setAbsentList(data.filter((m) => m.available === "absent"));
-        setPresentList(data.filter((m) => m.available === "present"));
-      } catch (err) {
-        console.error("fetchMembers error:", err);
-        toast.warn("Failed to fetch members");
-      }
-    };
-    fetchMembers();
-  }, []);
-
-  const getMemberById = (id) =>
-    members.find((m) => m._id === id) || presentList.find((m) => m._id === id);
-
-  const onDragEnd = (result) => {
-    const { source, destination, draggableId } = result;
-    if (!destination) return;
-
-    // Present list -> slot (assign)
-    if (source.droppableId === "present-list" && destination.droppableId.startsWith("slot-")) {
-      const slotKey = destination.droppableId.replace("slot-", "nozzle");
-      setSlotAssignments((prev) => {
-        if (prev[slotKey] === draggableId) return prev; // no-op
-        // remove from present list
-        setPresentList((pl) => pl.filter((m) => m._id !== draggableId));
-        // if slot occupied, put existing occupant back to present list
-        const copy = { ...prev };
-        const existing = copy[slotKey];
-        if (existing) {
-          const existingMember = getMemberById(existing);
-          if (existingMember) setPresentList((pl) => [existingMember, ...pl]);
-        }
-        copy[slotKey] = draggableId;
-        return copy;
-      });
-      return;
-    }
-
-    // Slot -> Present list (unassign)
-    if (source.droppableId.startsWith("slot-") && destination.droppableId === "present-list") {
-      const slotKey = source.droppableId.replace("slot-", "nozzle");
-      setSlotAssignments((prev) => {
-        const copy = { ...prev, [slotKey]: null };
-        const movedMember = getMemberById(draggableId);
-        if (movedMember) {
-          setPresentList((pl) => {
-            const arr = Array.from(pl);
-            arr.splice(destination.index, 0, movedMember);
-            return arr;
-          });
-        }
-        return copy;
-      });
-      return;
-    }
-
-    // Slot -> Slot (swap)
-    if (source.droppableId.startsWith("slot-") && destination.droppableId.startsWith("slot-")) {
-      const srcKey = source.droppableId.replace("slot-", "nozzle");
-      const dstKey = destination.droppableId.replace("slot-", "nozzle");
-      setSlotAssignments((prev) => {
-        const copy = { ...prev };
-        const a = copy[srcKey];
-        const b = copy[dstKey];
-        copy[dstKey] = a;
-        copy[srcKey] = b;
-        return copy;
-      });
-      return;
-    }
-
-    // Reorder present list
-    if (source.droppableId === "present-list" && destination.droppableId === "present-list") {
-      const items = Array.from(presentList);
-      const [removed] = items.splice(source.index, 1);
-      items.splice(destination.index, 0, removed);
-      setPresentList(items);
-      return;
-    }
-  };
-
-  const handleAddMember = async (e) => {
-    e.preventDefault();
-    if (!newMember.name.trim()) {
-      toast.warn("Enter name");
-      return;
-    }
-    try {
-      const res = await axiosInstance.post("/shifting", newMember);
-      const saved = res.data;
-      setMembers((prev) => [...prev, saved]);
-      if (saved.available === "present") setPresentList((p) => [saved, ...p]);
-      else setAbsentList((a) => [saved, ...a]);
-      setNewMember({ name: "", role: "operator", shift: "morning", available: "present", photo: "" });
-      setShowAdd(false);
-      toast.success("Member added");
-    } catch (err) {
-      console.error("add member error:", err);
-      toast.warn("Failed to add");
-    }
-  };
-
-  const handleRemoveMember = async (id) => {
-    try {
-      await axiosInstance.delete(`/shifting/${id}`);
-      setMembers((prev) => prev.filter((m) => m._id !== id));
-      setPresentList((prev) => prev.filter((m) => m._id !== id));
-      setAbsentList((prev) => prev.filter((m) => m._id !== id));
-      setSlotAssignments((prev) => {
-        const copy = { ...prev };
-        Object.keys(copy).forEach((k) => {
-          if (copy[k] === id) copy[k] = null;
-        });
-        return copy;
-      });
-      toast.success("Deleted");
-    } catch (err) {
-      console.error("delete member err:", err);
-      toast.warn("Delete failed");
-    }
-  };
-
-  const handleSubmitAndShare = async () => {
-    // prepare payload similar to original function
-    const nozzleOrder = ["nozzle1", "nozzle2", "nozzle3", "nozzle4", "nozzle5", "nozzle6"];
-    const assignedMembers = nozzleOrder.map((n) => getMemberById(slotAssignments[n]) || null);
-
-    const payload = [
-      {
-        date,
-        shiftType: "Mobile-Generated",
-        startTime: "06:00",
-        endTime: "23:00",
-        supervisor: "Not Assigned",
-        airBoy: "Not Assigned",
-        extraOperator: "Not Assigned",
-        nozzles: assignedMembers.map((m, idx) => ({
-          nozzleNumber: `Nozzle ${idx + 1}`,
-          member: m ? m.name : "Unassigned",
-          overtime: false,
-        })),
-      },
-    ];
-
-    // post to server (best-effort; continue even on failure)
-    try {
-      await axiosInstance.post("/shiftingsavee", payload);
-      toast.success("Shift data saved to server (attempted).");
-    } catch (err) {
-      console.warn("save shift data failed:", err);
-      toast.warn("Failed to save shift data to server.");
-    }
-
-    // lazy-load html2canvas in browser only
-    if (typeof window === "undefined" || !containerRef.current) {
-      toast.warn("Unable to create screenshot here.");
-      return;
-    }
-
-    try {
-      const mod = await import("html2canvas");
-      const html2canvas = mod.default || mod;
-      const canvas = await html2canvas(containerRef.current, { scale: 2 });
-      const dataUrl = canvas.toDataURL("image/png");
-      const blob = await (await fetch(dataUrl)).blob();
-      const file = new File([blob], `shift-${Date.now()}.png`, { type: "image/png" });
-
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({
-          files: [file],
-          title: "Shift Assignment",
-          text: `Shift assignments for ${date || "today"}`,
-        });
-        toast.success("Shared via native share (choose WhatsApp).");
-        return;
-      }
-
-      // fallback: open image in new tab so user can long-press & share manually
-      const imageWindow = window.open();
-      if (imageWindow) {
-        imageWindow.document.write(`<title>Shift Screenshot</title>`);
-        imageWindow.document.write(`<img src="${dataUrl}" style="max-width:100%;height:auto"/>`);
-        imageWindow.document.close();
-        toast.info("Screenshot opened. Share it to WhatsApp group manually.");
-        return;
-      }
-
-      // final fallback: open WhatsApp web with text summary
-      const summary = assignedMembers.map((m, i) => `Nozzle ${i + 1}: ${m ? m.name : "Unassigned"}`).join("\n");
-      const waUrl = `https://wa.me/?text=${encodeURIComponent(`Shift (${date || "today"}):\n${summary}`)}`;
-      window.open(waUrl, "_blank");
-      toast.info("WhatsApp web opened to paste summary.");
-    } catch (err) {
-      console.error("screenshot/share error:", err);
-      toast.warn("Unable to create screenshot for sharing. Ensure browser supports canvas & sharing.");
-    }
-  };
-
-  // UI helpers
-  const renderSlotInner = (slotKey) => {
-    const memberId = slotAssignments[slotKey];
-    if (!memberId) {
-      // show nozzle asset if empty
-      const idx = Number(slotKey.replace("nozzle", "")) - 1;
-      return <img src={nozzleAssets[idx] || nozzleAssets[0]} alt={slotKey} className="w-10 h-10" />;
-    }
-    const member = getMemberById(memberId);
-    if (!member) {
-      const idx = Number(slotKey.replace("nozzle", "")) - 1;
-      return <img src={nozzleAssets[idx] || nozzleAssets[0]} alt={slotKey} className="w-10 h-10" />;
-    }
-    return (
-      <div className="flex items-center gap-2">
-        <img src={member.photo || fallbackPhoto} alt={member.name} className="w-12 h-12 rounded-full object-cover" />
-      </div>
-    );
+  const style = {
+    transform: CSS.Translate.toString(transform),
+    zIndex: isDragging || isOverlay ? 999 : 1,
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white p-4">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <button onClick={() => setShowAdd(true)} className="p-2 bg-indigo-600 rounded-md text-white shadow">
-            <FaPlus />
-          </button>
-          <div className="text-lg font-bold text-indigo-700">Shift Manager</div>
-        </div>
-        <div className="flex items-center gap-2">
-          <FaCalendarAlt className="text-slate-400" />
-          <input
-            className="text-sm outline-none bg-transparent"
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
-        </div>
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      className={`flex flex-col items-center justify-center touch-none ${
+        isOverlay ? 'scale-110 opacity-90' : ''
+      }`}
+    >
+      <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-blue-500 bg-white shadow-md">
+        <img
+          src={staffMember.avatar}
+          alt={staffMember.name}
+          className="w-full h-full object-cover pointer-events-none"
+        />
       </div>
-
-      {/* DragDropContext wraps interactive area */}
-      <DragDropContext onDragEnd={onDragEnd}>
-        {/* Main container to screenshot (all droppables inside) */}
-        <div ref={containerRef} className="bg-white rounded-xl p-3 shadow-md">
-          <div className="flex flex-col items-center">
-            <div className="relative w-full max-w-md flex items-center justify-center">
-              {/* MPD */}
-              <img src={mpdImage} alt="MPD" className="w-44 h-44 object-cover rounded-lg shadow-lg" />
-
-              {/* Top-left nozzle 1 */}
-              <div className="absolute left-6 -top-3 flex flex-col items-center">
-                <Droppable droppableId="slot-nozzle1">
-                  {(provided) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                      className="w-20 h-20 rounded-full bg-white border flex items-center justify-center shadow cursor-pointer"
-                    >
-                      {slotAssignments.nozzle1 ? (
-                        <Draggable draggableId={slotAssignments.nozzle1} index={0}>
-                          {(drp) => (
-                            <div
-                              ref={drp.innerRef}
-                              {...drp.draggableProps}
-                              {...drp.dragHandleProps}
-                              className="flex items-center gap-2"
-                            >
-                              <img
-                                src={getMemberById(slotAssignments.nozzle1)?.photo || fallbackPhoto}
-                                alt=""
-                                className="w-12 h-12 rounded-full object-cover"
-                              />
-                            </div>
-                          )}
-                        </Draggable>
-                      ) : (
-                        <>{renderSlotInner("nozzle1")}</>
-                      )}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-                <div className="text-xs mt-1">Nozzle 1</div>
-              </div>
-
-              {/* Top-right nozzle 2 */}
-              <div className="absolute right-6 -top-3 flex flex-col items-center">
-                <Droppable droppableId="slot-nozzle2">
-                  {(provided) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                      className="w-20 h-20 rounded-full bg-white border flex items-center justify-center shadow cursor-pointer"
-                    >
-                      {slotAssignments.nozzle2 ? (
-                        <Draggable draggableId={slotAssignments.nozzle2} index={0}>
-                          {(drp) => (
-                            <div ref={drp.innerRef} {...drp.draggableProps} {...drp.dragHandleProps}>
-                              <img
-                                src={getMemberById(slotAssignments.nozzle2)?.photo || fallbackPhoto}
-                                alt=""
-                                className="w-12 h-12 rounded-full object-cover"
-                              />
-                            </div>
-                          )}
-                        </Draggable>
-                      ) : (
-                        <>{renderSlotInner("nozzle2")}</>
-                      )}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-                <div className="text-xs mt-1">Nozzle 2</div>
-              </div>
-
-              {/* Bottom-left nozzle 3 */}
-              <div className="absolute left-10 bottom-[-18px] flex flex-col items-center">
-                <Droppable droppableId="slot-nozzle3">
-                  {(provided) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                      className="w-20 h-20 rounded-full bg-white border flex items-center justify-center shadow cursor-pointer"
-                    >
-                      {slotAssignments.nozzle3 ? (
-                        <Draggable draggableId={slotAssignments.nozzle3} index={0}>
-                          {(drp) => (
-                            <div ref={drp.innerRef} {...drp.draggableProps} {...drp.dragHandleProps}>
-                              <img
-                                src={getMemberById(slotAssignments.nozzle3)?.photo || fallbackPhoto}
-                                alt=""
-                                className="w-12 h-12 rounded-full object-cover"
-                              />
-                            </div>
-                          )}
-                        </Draggable>
-                      ) : (
-                        <>{renderSlotInner("nozzle3")}</>
-                      )}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-                <div className="text-xs mt-1">Nozzle 3</div>
-              </div>
-
-              {/* Bottom-right nozzle 4 */}
-              <div className="absolute right-10 bottom-[-18px] flex flex-col items-center">
-                <Droppable droppableId="slot-nozzle4">
-                  {(provided) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                      className="w-20 h-20 rounded-full bg-white border flex items-center justify-center shadow cursor-pointer"
-                    >
-                      {slotAssignments.nozzle4 ? (
-                        <Draggable draggableId={slotAssignments.nozzle4} index={0}>
-                          {(drp) => (
-                            <div ref={drp.innerRef} {...drp.draggableProps} {...drp.dragHandleProps}>
-                              <img
-                                src={getMemberById(slotAssignments.nozzle4)?.photo || fallbackPhoto}
-                                alt=""
-                                className="w-12 h-12 rounded-full object-cover"
-                              />
-                            </div>
-                          )}
-                        </Draggable>
-                      ) : (
-                        <>{renderSlotInner("nozzle4")}</>
-                      )}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-                <div className="text-xs mt-1">Nozzle 4</div>
-              </div>
-
-              {/* Right hanging column for nozzle 5 & 6 */}
-              <div className="absolute right-[-60px] top-8 flex flex-col items-center gap-4">
-                <Droppable droppableId="slot-nozzle5">
-                  {(provided) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                      className="w-16 h-16 rounded-full bg-white border flex items-center justify-center shadow cursor-pointer"
-                    >
-                      {slotAssignments.nozzle5 ? (
-                        <Draggable draggableId={slotAssignments.nozzle5} index={0}>
-                          {(drp) => (
-                            <div ref={drp.innerRef} {...drp.draggableProps} {...drp.dragHandleProps}>
-                              <img
-                                src={getMemberById(slotAssignments.nozzle5)?.photo || fallbackPhoto}
-                                alt=""
-                                className="w-12 h-12 rounded-full object-cover"
-                              />
-                            </div>
-                          )}
-                        </Draggable>
-                      ) : (
-                        <>{renderSlotInner("nozzle5")}</>
-                      )}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-                <div className="text-xs">Nozzle 5</div>
-
-                <Droppable droppableId="slot-nozzle6">
-                  {(provided) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                      className="w-16 h-16 rounded-full bg-white border flex items-center justify-center shadow cursor-pointer"
-                    >
-                      {slotAssignments.nozzle6 ? (
-                        <Draggable draggableId={slotAssignments.nozzle6} index={0}>
-                          {(drp) => (
-                            <div ref={drp.innerRef} {...drp.draggableProps} {...drp.dragHandleProps}>
-                              <img
-                                src={getMemberById(slotAssignments.nozzle6)?.photo || fallbackPhoto}
-                                alt=""
-                                className="w-12 h-12 rounded-full object-cover"
-                              />
-                            </div>
-                          )}
-                        </Draggable>
-                      ) : (
-                        <>{renderSlotInner("nozzle6")}</>
-                      )}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-                <div className="text-xs">Nozzle 6</div>
-              </div>
-            </div>
-
-            {/* Absent row */}
-            <div className="mt-6 w-full">
-              <div className="text-sm font-semibold mb-2">Absent</div>
-              <div className="flex gap-2 overflow-x-auto pb-2">
-                {absentList.length === 0 && <div className="text-xs text-gray-400">No absentees</div>}
-                {absentList.map((a) => (
-                  <div key={a._id} className="flex flex-col items-center text-xs bg-red-50 border rounded-md px-2 py-1">
-                    <img src={a.photo || fallbackPhoto} alt={a.name} className="w-10 h-10 rounded-full object-cover" />
-                    <div className="mt-1 font-medium">{a.name}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Present list (source) */}
-          <div className="mt-6">
-            <div className="flex items-center justify-between mb-2">
-              <div className="text-sm font-semibold">Present (Drag to nozzle)</div>
-              <div className="text-xs text-gray-400">Tap & hold to drag</div>
-            </div>
-
-            <Droppable droppableId="present-list" direction="horizontal">
-              {(provided) => (
-                <div ref={provided.innerRef} {...provided.droppableProps} className="flex gap-3 overflow-x-auto pb-3">
-                  {presentList.map((m, idx) => (
-                    <Draggable key={m._id} draggableId={m._id} index={idx}>
-                      {(dr) => (
-                        <div
-                          ref={dr.innerRef}
-                          {...dr.draggableProps}
-                          {...dr.dragHandleProps}
-                          className="w-20 flex-shrink-0 bg-white border rounded-md p-2 flex flex-col items-center gap-1 shadow"
-                          title={`${m.name} • ${m.role}`}
-                        >
-                          <img src={m.photo || fallbackPhoto} alt={m.name} className="w-12 h-12 rounded-full object-cover" />
-                          <div className="text-xs text-center font-medium">{m.name.split(" ")[0]}</div>
-                          <button
-                            type="button"
-                            className="text-red-500 text-xs mt-1"
-                            onClick={() => handleRemoveMember(m._id)}
-                          >
-                            <IoTrashBinOutline />
-                          </button>
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </div>
-
-          {/* Assigned summary */}
-          <div className="mt-4">
-            <div className="text-sm font-semibold mb-2">Assigned Summary</div>
-            <div className="grid grid-cols-2 gap-2">
-              {["nozzle1", "nozzle2", "nozzle3", "nozzle4", "nozzle5", "nozzle6"].map((key, i) => {
-                const mem = getMemberById(slotAssignments[key]);
-                return (
-                  <div key={key} className="p-2 bg-slate-50 rounded-md flex items-center gap-3">
-                    <div className="text-xs w-24">Nozzle {i + 1}</div>
-                    <div className="flex items-center gap-2">
-                      <img src={mem?.photo || fallbackPhoto} alt={mem?.name || ""} className="w-8 h-8 rounded-full object-cover" />
-                      <div className="text-xs">
-                        <div className="font-medium">{mem ? mem.name : "Unassigned"}</div>
-                        <div className="text-gray-400">{mem ? mem.role : ""}</div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </DragDropContext>
-
-      {/* Footer actions */}
-      <div className="mt-4 flex gap-3">
-        <button onClick={() => setShowAdd(true)} className="flex-1 bg-indigo-600 text-white py-3 rounded-md shadow">Add Member</button>
-        <button onClick={handleSubmitAndShare} className="flex-1 bg-emerald-600 text-white py-3 rounded-md shadow">Submit & Share</button>
-      </div>
-
-      <div className="mt-4">
-        <BackButton previousImage="/previous.png" />
-      </div>
-
-      {/* Add Member Modal */}
-      {showAdd && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-black/40" onClick={() => setShowAdd(false)} />
-          <div className="relative w-full max-w-md bg-white rounded-2xl p-5 z-10 shadow-lg">
-            <div className="flex items-center justify-between mb-3">
-              <div className="text-lg font-bold">Add Member</div>
-              <button onClick={() => setShowAdd(false)} className="text-gray-500 font-bold">✕</button>
-            </div>
-            <form onSubmit={handleAddMember} className="space-y-3">
-              <input
-                value={newMember.name}
-                onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
-                placeholder="Name"
-                className="w-full border rounded px-3 py-2"
-              />
-              <select
-                value={newMember.role}
-                onChange={(e) => setNewMember({ ...newMember, role: e.target.value })}
-                className="w-full border rounded px-3 py-2"
-              >
-                <option value="operator">Operator</option>
-                <option value="supervisor">Supervisor</option>
-                <option value="air boy">Air Boy</option>
-              </select>
-              <select
-                value={newMember.shift}
-                onChange={(e) => setNewMember({ ...newMember, shift: e.target.value })}
-                className="w-full border rounded px-3 py-2"
-              >
-                <option value="morning">Morning</option>
-                <option value="evening">Evening</option>
-              </select>
-              <select
-                value={newMember.available}
-                onChange={(e) => setNewMember({ ...newMember, available: e.target.value })}
-                className="w-full border rounded px-3 py-2"
-              >
-                <option value="present">Present</option>
-                <option value="absent">Absent</option>
-              </select>
-              <input
-                value={newMember.photo}
-                onChange={(e) => setNewMember({ ...newMember, photo: e.target.value })}
-                placeholder="Photo path (e.g. /assets/me.png)"
-                className="w-full border rounded px-3 py-2"
-              />
-              <div className="flex gap-2">
-                <button type="submit" className="flex-1 bg-indigo-600 text-white py-2 rounded">Add</button>
-                <button type="button" onClick={() => setShowAdd(false)} className="flex-1 bg-gray-100 py-2 rounded">Cancel</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <span className="text-[10px] font-bold text-gray-800 mt-1 bg-white/80 px-1 rounded shadow-sm">
+        {staffMember.name}
+      </span>
     </div>
   );
 };
 
-export default ShiftManagementSystemMobile;
+// --- 2. Droppable Zone (Nozzles & Absent Box) ---
+const DroppableZone = ({ id, children, className, label }) => {
+  const { setNodeRef, isOver } = useDroppable({ id });
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={`relative transition-colors duration-200 ${className} ${
+        isOver ? 'bg-green-100 ring-2 ring-green-500' : ''
+      }`}
+    >
+      {/* Label Badge */}
+      {label && (
+        <span className="absolute -top-2 left-2 bg-gray-800 text-white text-[10px] px-1.5 py-0.5 rounded z-0">
+          {label}
+        </span>
+      )}
+      {children}
+    </div>
+  );
+};
+
+// --- MAIN COMPONENT ---
+export default function ShiftManagerUI() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [shift, setShift] = useState('Morning');
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+
+  // Assignments State: { 'N1': staffObj, 'N2': null, 'absent': [staffObj] }
+  const [assignments, setAssignments] = useState({});
+  const [activeId, setActiveId] = useState(null);
+  const [activeStaff, setActiveStaff] = useState(null);
+
+  // Mobile Touch & Mouse Sensors
+  const sensors = useSensors(
+    useSensor(MouseSensor, { activationConstraint: { distance: 10 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } })
+  );
+
+  // Calculate Available Staff
+  const assignedIds = Object.values(assignments)
+    .flat()
+    .map((s) => s?.id)
+    .filter(Boolean);
+    
+  const availableStaff = initialStaff.filter((s) => !assignedIds.includes(s.id));
+  const absentStaff = assignments['absent'] || [];
+
+  // --- Drag Start ---
+  const handleDragStart = (event) => {
+    const { active } = event;
+    setActiveId(active.id);
+
+    // Find the staff being dragged (either from list, nozzle, or absent)
+    let staff = initialStaff.find((s) => s.id === active.id);
+    setActiveStaff(staff);
+  };
+
+  // --- Drag End (The Logic) ---
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    setActiveId(null);
+    setActiveStaff(null);
+
+    if (!over) return; // Dropped nowhere
+
+    const staffId = active.id;
+    const targetZone = over.id; // e.g., 'N1', 'N2', 'absent'
+
+    // Get full staff details
+    const draggedStaff = initialStaff.find((s) => s.id === staffId);
+
+    setAssignments((prev) => {
+      const newAssignments = { ...prev };
+
+      // 1. Remove from old location (clean up previous spot)
+      Object.keys(newAssignments).forEach((key) => {
+        if (key === 'absent') {
+          // Remove from absent array
+          if (newAssignments[key]) {
+            newAssignments[key] = newAssignments[key].filter((s) => s.id !== staffId);
+          }
+        } else if (newAssignments[key]?.id === staffId) {
+          // Remove from nozzle
+          newAssignments[key] = null;
+        }
+      });
+
+      // 2. Add to new location
+      if (targetZone === 'absent') {
+        const currentAbsent = newAssignments['absent'] || [];
+        newAssignments['absent'] = [...currentAbsent, draggedStaff];
+      } else {
+        // Assign to Nozzle (Overwrite functionality)
+        newAssignments[targetZone] = draggedStaff;
+      }
+
+      return newAssignments;
+    });
+  };
+
+  // --- WhatsApp Submit ---
+  const handleSubmit = () => {
+    let message = `*⛽ Petrol Pump Shift Report*\n`;
+    message += `📅 Date: ${date}\n🕒 Shift: ${shift}\n\n`;
+
+    message += `*--- Assignments ---*\n`;
+    [...nozzles, ...hangingNozzles].forEach((n) => {
+      const staff = assignments[n.id];
+      message += `${n.label}: ${staff ? staff.name : '❌ Empty'}\n`;
+    });
+
+    const absentNames = assignments['absent']?.map((s) => s.name).join(', ');
+    if (absentNames) {
+      message += `\n⚠️ *Absent:* ${absentNames}`;
+    }
+
+    const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  };
+
+  return (
+    <div className="h-screen bg-gray-100 flex flex-col font-sans overflow-hidden text-gray-900">
+      
+      {/* 1. TOP NAVBAR */}
+      <header className="bg-blue-800 text-white p-4 flex justify-between items-center shadow-md shrink-0 z-30">
+        <button onClick={() => setIsSidebarOpen(true)}>
+          <Menu size={28} />
+        </button>
+        <h1 className="text-lg font-bold tracking-wide">Shift Manager</h1>
+        <div className="w-8"></div>
+      </header>
+
+      {/* Sidebar Overlay */}
+      {isSidebarOpen && (
+        <div className="absolute inset-0 z-50 flex">
+          <div className="bg-white w-64 h-full shadow-2xl p-6 flex flex-col gap-6 animate-in slide-in-from-left duration-200">
+            <h2 className="text-2xl font-bold text-blue-800 border-b pb-2">Menu</h2>
+            <button className="flex items-center gap-3 text-gray-700 hover:text-blue-600 font-medium text-lg">
+              <Users size={24} /> Add Member
+            </button>
+            <button className="flex items-center gap-3 text-gray-700 hover:text-blue-600 font-medium text-lg">
+              <FileText size={24} /> Member List
+            </button>
+            <button className="flex items-center gap-3 text-gray-700 hover:text-blue-600 font-medium text-lg">
+              <Calendar size={24} /> All Shift Reports
+            </button>
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="mt-auto text-red-500 font-bold text-lg"
+            >
+              Close Menu
+            </button>
+          </div>
+          <div className="flex-1 bg-black/50" onClick={() => setIsSidebarOpen(false)}></div>
+        </div>
+      )}
+
+      {/* SHIFT & DATE SELECTOR */}
+      <div className="p-3 bg-white shadow-sm flex flex-col gap-2 shrink-0 z-20">
+        <div className="flex bg-gray-200 rounded-lg p-1">
+          {['Morning', 'Evening', 'Night'].map((s) => (
+            <button
+              key={s}
+              onClick={() => setShift(s)}
+              className={`flex-1 py-2 rounded-md text-sm font-bold transition-all ${
+                shift === s ? 'bg-blue-600 text-white shadow' : 'text-gray-600'
+              }`}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          className="border rounded p-2 text-sm w-full bg-gray-50 font-medium"
+        />
+      </div>
+
+      {/* MAIN DRAG & DROP AREA */}
+      <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+        <div className="flex-1 p-2 overflow-y-auto flex flex-col items-center gap-4 mt-2 pb-32">
+          
+          {/* PUMP CONTAINER */}
+          <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-4 border border-gray-200 relative">
+            <h3 className="text-center text-gray-400 text-xs mb-4 uppercase tracking-widest font-bold">
+              Pump Island Layout
+            </h3>
+
+            <div className="flex w-full min-h-[280px]">
+              {/* GRID for Main Nozzles & MPD */}
+              <div className="flex-1 grid grid-cols-2 gap-x-4 gap-y-12 relative pr-3 border-r-2 border-dashed border-gray-300">
+                
+                {/* Nozzle 2 (Top Left) */}
+                <DroppableZone
+                  id="N2"
+                  label="2"
+                  className="bg-gray-50 rounded-lg border-2 border-gray-300 flex items-center justify-center h-24"
+                >
+                  {assignments['N2'] && <DraggableStaff id={assignments['N2'].id} staffMember={assignments['N2']} />}
+                </DroppableZone>
+
+                {/* Nozzle 1 (Top Right) */}
+                <DroppableZone
+                  id="N1"
+                  label="1"
+                  className="bg-gray-50 rounded-lg border-2 border-gray-300 flex items-center justify-center h-24"
+                >
+                  {assignments['N1'] && <DraggableStaff id={assignments['N1'].id} staffMember={assignments['N1']} />}
+                </DroppableZone>
+
+                {/* CENTER MPD BLOCK (Absolute Positioned) */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-28 bg-gray-800 rounded-lg shadow-2xl flex flex-col items-center justify-center text-yellow-400 font-bold z-10 border-2 border-gray-600">
+                  <span className="text-2xl">MPD</span>
+                  <span className="text-[10px] text-gray-400 mt-1">CENTER</span>
+                </div>
+
+                {/* Nozzle 3 (Bottom Left) */}
+                <DroppableZone
+                  id="N3"
+                  label="3"
+                  className="bg-gray-50 rounded-lg border-2 border-gray-300 flex items-center justify-center h-24"
+                >
+                  {assignments['N3'] && <DraggableStaff id={assignments['N3'].id} staffMember={assignments['N3']} />}
+                </DroppableZone>
+
+                {/* Nozzle 4 (Bottom Right) */}
+                <DroppableZone
+                  id="N4"
+                  label="4"
+                  className="bg-gray-50 rounded-lg border-2 border-gray-300 flex items-center justify-center h-24"
+                >
+                  {assignments['N4'] && <DraggableStaff id={assignments['N4'].id} staffMember={assignments['N4']} />}
+                </DroppableZone>
+              </div>
+
+              {/* RIGHT SIDE: Hanging Nozzles */}
+              <div className="w-20 pl-3 flex flex-col justify-between py-1">
+                <DroppableZone
+                  id="N5"
+                  label="5"
+                  className="flex-1 bg-blue-50 rounded-lg border-2 border-blue-200 flex items-center justify-center mb-3"
+                >
+                  {assignments['N5'] && <DraggableStaff id={assignments['N5'].id} staffMember={assignments['N5']} />}
+                </DroppableZone>
+                <DroppableZone
+                  id="N6"
+                  label="6"
+                  className="flex-1 bg-blue-50 rounded-lg border-2 border-blue-200 flex items-center justify-center"
+                >
+                  {assignments['N6'] && <DraggableStaff id={assignments['N6'].id} staffMember={assignments['N6']} />}
+                </DroppableZone>
+              </div>
+            </div>
+          </div>
+
+          {/* ABSENT ZONE */}
+          <div className="w-full max-w-md">
+             <div className="text-xs font-bold text-red-400 uppercase mb-1 pl-1">Absent Staff</div>
+             <DroppableZone
+              id="absent"
+              className="w-full bg-red-50 border-2 border-dashed border-red-300 rounded-lg p-2 min-h-[80px] flex flex-wrap gap-2 items-center"
+            >
+              {absentStaff.length === 0 && (
+                <span className="text-red-300 text-xs w-full text-center">Drop Absent Staff Here</span>
+              )}
+              {absentStaff.map((s) => (
+                <DraggableStaff key={s.id} id={s.id} staffMember={s} />
+              ))}
+            </DroppableZone>
+          </div>
+         
+        </div>
+
+        {/* BOTTOM FIXED AREA: Present List & Submit */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_10px_rgba(0,0,0,0.1)] border-t rounded-t-2xl z-40 flex flex-col">
+          
+          {/* Present Staff List (Horizontal Scroll) */}
+          <div className="pt-3 pb-2 px-4 border-b">
+            <p className="text-[10px] font-bold text-gray-500 uppercase mb-2">Available Staff (Drag to assign)</p>
+            <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+              {availableStaff.map((staff) => (
+                <DraggableStaff key={staff.id} id={staff.id} staffMember={staff} />
+              ))}
+              {availableStaff.length === 0 && (
+                <span className="text-gray-400 text-sm italic w-full text-center">All staff assigned ✅</span>
+              )}
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <div className="p-4 bg-gray-50">
+            <button
+              onClick={handleSubmit}
+              className="w-full bg-green-600 hover:bg-green-700 active:scale-95 transition-transform text-white font-bold py-3 rounded-xl text-lg flex items-center justify-center gap-2 shadow-lg"
+            >
+              <Share2 size={20} /> Submit to WhatsApp
+            </button>
+          </div>
+        </div>
+
+        {/* DRAG OVERLAY (Visual feedback when moving item) */}
+        <DragOverlay>
+          {activeStaff ? <DraggableStaff id={activeStaff.id} staffMember={activeStaff} isOverlay /> : null}
+        </DragOverlay>
+
+      </DndContext>
+    </div>
+  );
+}
