@@ -12,32 +12,32 @@ import {
 } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 
-// --- Mock Data (Aapka staff list yahan aayega) ---
+// --- Mock Data ---
 const initialStaff = [
-  { id: '1', name: 'Raju', avatar: 'https://i.pravatar.cc/150?u=1' },
-  { id: '2', name: 'Amit', avatar: 'https://i.pravatar.cc/150?u=2' },
-  { id: '3', name: 'Sonu', avatar: 'https://i.pravatar.cc/150?u=3' },
-  { id: '4', name: 'Vikram', avatar: 'https://i.pravatar.cc/150?u=4' },
-  { id: '5', name: 'Rahul', avatar: 'https://i.pravatar.cc/150?u=5' },
-  { id: '6', name: 'Deepak', avatar: 'https://i.pravatar.cc/150?u=6' },
-  { id: '7', name: 'Ajay', avatar: 'https://i.pravatar.cc/150?u=7' },
-  { id: '8', name: 'Suresh', avatar: 'https://i.pravatar.cc/150?u=8' },
+  { id: '1', name: 'Raju', avatar: 'https://i.pravatar.cc/300?u=1' },
+  { id: '2', name: 'Amit', avatar: 'https://i.pravatar.cc/300?u=2' },
+  { id: '3', name: 'Sonu', avatar: 'https://i.pravatar.cc/300?u=3' },
+  { id: '4', name: 'Vikram', avatar: 'https://i.pravatar.cc/300?u=4' },
+  { id: '5', name: 'Rahul', avatar: 'https://i.pravatar.cc/300?u=5' },
+  { id: '6', name: 'Deepak', avatar: 'https://i.pravatar.cc/300?u=6' },
+  { id: '7', name: 'Ajay', avatar: 'https://i.pravatar.cc/300?u=7' },
+  { id: '8', name: 'Suresh', avatar: 'https://i.pravatar.cc/300?u=8' },
 ];
 
 // Nozzle Configuration
 const nozzles = [
-  { id: 'N2', label: 'Nozzle 2' }, // Top Left
-  { id: 'N1', label: 'Nozzle 1' }, // Top Right
-  { id: 'N3', label: 'Nozzle 3' }, // Bottom Left
-  { id: 'N4', label: 'Nozzle 4' }, // Bottom Right
+  { id: 'N2', label: 'Nozzle 2' },
+  { id: 'N1', label: 'Nozzle 1' },
+  { id: 'N3', label: 'Nozzle 3' },
+  { id: 'N4', label: 'Nozzle 4' },
 ];
 
 const hangingNozzles = [
-  { id: 'N5', label: 'Nozzle 5' },
-  { id: 'N6', label: 'Nozzle 6' },
+  { id: 'N5', label: 'Hanging 5' },
+  { id: 'N6', label: 'Hanging 6' },
 ];
 
-// --- 1. Draggable Component (Staff Photo) ---
+// --- 1. Draggable Component (BIGGER & BOLDER) ---
 const DraggableStaff = ({ id, staffMember, isOverlay = false }) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: id,
@@ -55,40 +55,43 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false }) => {
       style={style}
       {...listeners}
       {...attributes}
-      className={`flex flex-col items-center justify-center touch-none ${
-        isOverlay ? 'scale-110 opacity-90' : ''
+      className={`flex flex-col items-center justify-center touch-none transition-transform ${
+        isOverlay ? 'scale-110 opacity-95' : ''
       }`}
     >
-      <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-blue-500 bg-white shadow-md">
+      {/* BIGGER IMAGE SIZE (w-20 h-20) */}
+      <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-lg bg-gray-200">
         <img
           src={staffMember.avatar}
           alt={staffMember.name}
           className="w-full h-full object-cover pointer-events-none"
         />
       </div>
-      <span className="text-[10px] font-bold text-gray-800 mt-1 bg-white/80 px-1 rounded shadow-sm">
+      <span className="text-xs font-black text-gray-900 mt-[-10px] bg-white px-3 py-1 rounded-full shadow-md border border-gray-200 z-10 uppercase tracking-wider">
         {staffMember.name}
       </span>
     </div>
   );
 };
 
-// --- 2. Droppable Zone (Nozzles & Absent Box) ---
-const DroppableZone = ({ id, children, className, label }) => {
+// --- 2. Droppable Zone (Stronger Borders) ---
+const DroppableZone = ({ id, children, className, label, isAbsent = false }) => {
   const { setNodeRef, isOver } = useDroppable({ id });
 
   return (
     <div
       ref={setNodeRef}
-      className={`relative transition-colors duration-200 ${className} ${
-        isOver ? 'bg-green-100 ring-2 ring-green-500' : ''
+      className={`relative transition-all duration-200 ${className} ${
+        isOver 
+          ? (isAbsent ? 'bg-red-100 border-red-500 scale-105' : 'bg-green-100 border-green-600 scale-105 shadow-xl') 
+          : ''
       }`}
     >
       {/* Label Badge */}
       {label && (
-        <span className="absolute -top-2 left-2 bg-gray-800 text-white text-[10px] px-1.5 py-0.5 rounded z-0">
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-sm z-20 whitespace-nowrap">
           {label}
-        </span>
+        </div>
       )}
       {children}
     </div>
@@ -100,149 +103,112 @@ export default function ShiftManagerUI() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [shift, setShift] = useState('Morning');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-
-  // Assignments State: { 'N1': staffObj, 'N2': null, 'absent': [staffObj] }
   const [assignments, setAssignments] = useState({});
   const [activeId, setActiveId] = useState(null);
   const [activeStaff, setActiveStaff] = useState(null);
 
-  // Mobile Touch & Mouse Sensors
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 10 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } })
+    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 5 } })
   );
 
-  // Calculate Available Staff
-  const assignedIds = Object.values(assignments)
-    .flat()
-    .map((s) => s?.id)
-    .filter(Boolean);
-    
+  // Logic to calculate available staff
+  const assignedIds = Object.values(assignments).flat().map((s) => s?.id).filter(Boolean);
   const availableStaff = initialStaff.filter((s) => !assignedIds.includes(s.id));
   const absentStaff = assignments['absent'] || [];
 
-  // --- Drag Start ---
   const handleDragStart = (event) => {
     const { active } = event;
     setActiveId(active.id);
-
-    // Find the staff being dragged (either from list, nozzle, or absent)
     let staff = initialStaff.find((s) => s.id === active.id);
     setActiveStaff(staff);
   };
 
-  // --- Drag End (The Logic) ---
   const handleDragEnd = (event) => {
     const { active, over } = event;
     setActiveId(null);
     setActiveStaff(null);
 
-    if (!over) return; // Dropped nowhere
+    if (!over) return;
 
     const staffId = active.id;
-    const targetZone = over.id; // e.g., 'N1', 'N2', 'absent'
-
-    // Get full staff details
+    const targetZone = over.id;
     const draggedStaff = initialStaff.find((s) => s.id === staffId);
 
     setAssignments((prev) => {
       const newAssignments = { ...prev };
 
-      // 1. Remove from old location (clean up previous spot)
+      // Remove from old location
       Object.keys(newAssignments).forEach((key) => {
         if (key === 'absent') {
-          // Remove from absent array
-          if (newAssignments[key]) {
-            newAssignments[key] = newAssignments[key].filter((s) => s.id !== staffId);
-          }
+          if (newAssignments[key]) newAssignments[key] = newAssignments[key].filter((s) => s.id !== staffId);
         } else if (newAssignments[key]?.id === staffId) {
-          // Remove from nozzle
           newAssignments[key] = null;
         }
       });
 
-      // 2. Add to new location
+      // Add to new location
       if (targetZone === 'absent') {
         const currentAbsent = newAssignments['absent'] || [];
         newAssignments['absent'] = [...currentAbsent, draggedStaff];
       } else {
-        // Assign to Nozzle (Overwrite functionality)
         newAssignments[targetZone] = draggedStaff;
       }
-
       return newAssignments;
     });
   };
 
-  // --- WhatsApp Submit ---
   const handleSubmit = () => {
-    let message = `*⛽ Petrol Pump Shift Report*\n`;
-    message += `📅 Date: ${date}\n🕒 Shift: ${shift}\n\n`;
-
-    message += `*--- Assignments ---*\n`;
+    let message = `*⛽ Petrol Pump Shift Report*\n📅 Date: ${date}\n🕒 Shift: ${shift}\n\n*Assignments:*\n`;
     [...nozzles, ...hangingNozzles].forEach((n) => {
       const staff = assignments[n.id];
       message += `${n.label}: ${staff ? staff.name : '❌ Empty'}\n`;
     });
-
     const absentNames = assignments['absent']?.map((s) => s.name).join(', ');
-    if (absentNames) {
-      message += `\n⚠️ *Absent:* ${absentNames}`;
-    }
+    if (absentNames) message += `\n⚠️ *Absent:* ${absentNames}`;
 
-    const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
+    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
   };
 
   return (
-    <div className="h-screen bg-gray-100 flex flex-col font-sans overflow-hidden text-gray-900">
+    <div className="h-screen bg-slate-100 flex flex-col font-sans overflow-hidden text-gray-900">
       
-      {/* 1. TOP NAVBAR */}
-      <header className="bg-blue-800 text-white p-4 flex justify-between items-center shadow-md shrink-0 z-30">
+      {/* HEADER */}
+      <header className="bg-slate-900 text-white p-4 flex justify-between items-center shadow-lg shrink-0 z-30">
         <button onClick={() => setIsSidebarOpen(true)}>
           <Menu size={28} />
         </button>
-        <h1 className="text-lg font-bold tracking-wide">Shift Manager</h1>
+        <h1 className="text-xl font-black tracking-wider uppercase">Pump Manager</h1>
         <div className="w-8"></div>
       </header>
 
-      {/* Sidebar Overlay */}
+      {/* SIDEBAR */}
       {isSidebarOpen && (
         <div className="absolute inset-0 z-50 flex">
-          <div className="bg-white w-64 h-full shadow-2xl p-6 flex flex-col gap-6 animate-in slide-in-from-left duration-200">
-            <h2 className="text-2xl font-bold text-blue-800 border-b pb-2">Menu</h2>
-            <button className="flex items-center gap-3 text-gray-700 hover:text-blue-600 font-medium text-lg">
-              <Users size={24} /> Add Member
-            </button>
-            <button className="flex items-center gap-3 text-gray-700 hover:text-blue-600 font-medium text-lg">
-              <FileText size={24} /> Member List
-            </button>
-            <button className="flex items-center gap-3 text-gray-700 hover:text-blue-600 font-medium text-lg">
-              <Calendar size={24} /> All Shift Reports
-            </button>
-            <button
-              onClick={() => setIsSidebarOpen(false)}
-              className="mt-auto text-red-500 font-bold text-lg"
-            >
-              Close Menu
-            </button>
+          <div className="bg-white w-72 h-full shadow-2xl p-6 flex flex-col gap-6 animate-in slide-in-from-left">
+            <h2 className="text-2xl font-black text-slate-800 border-b-4 border-slate-800 pb-2">MENU</h2>
+            <button className="flex items-center gap-4 text-lg font-bold text-gray-700"><Users /> Add Member</button>
+            <button className="flex items-center gap-4 text-lg font-bold text-gray-700"><FileText /> Member List</button>
+            <button className="flex items-center gap-4 text-lg font-bold text-gray-700"><Calendar /> All Reports</button>
+            <button onClick={() => setIsSidebarOpen(false)} className="mt-auto text-red-600 font-black text-xl uppercase">Close X</button>
           </div>
-          <div className="flex-1 bg-black/50" onClick={() => setIsSidebarOpen(false)}></div>
+          <div className="flex-1 bg-black/60 backdrop-blur-sm" onClick={() => setIsSidebarOpen(false)}></div>
         </div>
       )}
 
-      {/* SHIFT & DATE SELECTOR */}
-      <div className="p-3 bg-white shadow-sm flex flex-col gap-2 shrink-0 z-20">
-        <div className="flex bg-gray-200 rounded-lg p-1">
-          {['Morning', 'Evening', 'Night'].map((s) => (
+      {/* SHIFT & DATE */}
+      <div className="p-4 bg-white shadow-md z-20">
+        <div className="flex bg-gray-200 rounded-xl p-1.5 mb-3">
+          {/* Removed NIGHT shift here */}
+          {['Morning', 'Evening'].map((s) => (
             <button
               key={s}
               onClick={() => setShift(s)}
-              className={`flex-1 py-2 rounded-md text-sm font-bold transition-all ${
-                shift === s ? 'bg-blue-600 text-white shadow' : 'text-gray-600'
+              className={`flex-1 py-3 rounded-lg text-sm font-black uppercase tracking-wide transition-all ${
+                shift === s ? 'bg-blue-600 text-white shadow-lg scale-105' : 'text-gray-500 hover:text-gray-700'
               }`}
             >
-              {s}
+              {s} Shift
             </button>
           ))}
         </div>
@@ -250,133 +216,114 @@ export default function ShiftManagerUI() {
           type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="border rounded p-2 text-sm w-full bg-gray-50 font-medium"
+          className="block w-full bg-slate-50 border-2 border-slate-200 rounded-xl p-3 text-slate-700 font-bold outline-none focus:border-blue-500"
         />
       </div>
 
-      {/* MAIN DRAG & DROP AREA */}
+      {/* MAIN SCROLLABLE AREA */}
       <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-        <div className="flex-1 p-2 overflow-y-auto flex flex-col items-center gap-4 mt-2 pb-32">
-          
-          {/* PUMP CONTAINER */}
-          <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-4 border border-gray-200 relative">
-            <h3 className="text-center text-gray-400 text-xs mb-4 uppercase tracking-widest font-bold">
-              Pump Island Layout
-            </h3>
+        <div className="flex-1 overflow-y-auto bg-slate-100">
+          {/* Added pb-80 to fix scrolling issue */}
+          <div className="flex flex-col items-center p-4 gap-6 pb-80">
+            
+            {/* PUMP ISLAND CARD */}
+            <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl border-2 border-slate-200 p-5 relative mt-2">
+              <h3 className="text-center text-slate-400 text-xs font-black uppercase tracking-[0.2em] mb-6">Filling Station Layout</h3>
 
-            <div className="flex w-full min-h-[280px]">
-              {/* GRID for Main Nozzles & MPD */}
-              <div className="flex-1 grid grid-cols-2 gap-x-4 gap-y-12 relative pr-3 border-r-2 border-dashed border-gray-300">
-                
-                {/* Nozzle 2 (Top Left) */}
-                <DroppableZone
-                  id="N2"
-                  label="2"
-                  className="bg-gray-50 rounded-lg border-2 border-gray-300 flex items-center justify-center h-24"
-                >
-                  {assignments['N2'] && <DraggableStaff id={assignments['N2'].id} staffMember={assignments['N2']} />}
-                </DroppableZone>
+              <div className="flex w-full">
+                {/* LEFT: 4 Nozzles + MPD */}
+                <div className="flex-1 grid grid-cols-2 gap-x-4 gap-y-10 relative pr-4 border-r-4 border-dashed border-slate-300">
+                  
+                  {/* Corners */}
+                  <DroppableZone id="N2" label="Nozzle 2 (TL)" className="bg-blue-50 h-28 rounded-xl border-4 border-blue-200 flex items-center justify-center">
+                    {assignments['N2'] && <DraggableStaff id={assignments['N2'].id} staffMember={assignments['N2']} />}
+                  </DroppableZone>
 
-                {/* Nozzle 1 (Top Right) */}
-                <DroppableZone
-                  id="N1"
-                  label="1"
-                  className="bg-gray-50 rounded-lg border-2 border-gray-300 flex items-center justify-center h-24"
-                >
-                  {assignments['N1'] && <DraggableStaff id={assignments['N1'].id} staffMember={assignments['N1']} />}
-                </DroppableZone>
+                  <DroppableZone id="N1" label="Nozzle 1 (TR)" className="bg-blue-50 h-28 rounded-xl border-4 border-blue-200 flex items-center justify-center">
+                    {assignments['N1'] && <DraggableStaff id={assignments['N1'].id} staffMember={assignments['N1']} />}
+                  </DroppableZone>
 
-                {/* CENTER MPD BLOCK (Absolute Positioned) */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-28 bg-gray-800 rounded-lg shadow-2xl flex flex-col items-center justify-center text-yellow-400 font-bold z-10 border-2 border-gray-600">
-                  <span className="text-2xl">MPD</span>
-                  <span className="text-[10px] text-gray-400 mt-1">CENTER</span>
+                  {/* MPD Center - Bold Digital Look */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-32 bg-gray-900 rounded-lg shadow-2xl flex flex-col items-center justify-center border-4 border-gray-700 z-10">
+                    <span className="text-3xl font-mono text-yellow-400 font-bold animate-pulse">0.00</span>
+                    <span className="text-[10px] text-gray-400 font-bold tracking-widest mt-1">MPD-1</span>
+                  </div>
+
+                  <DroppableZone id="N3" label="Nozzle 3 (BL)" className="bg-blue-50 h-28 rounded-xl border-4 border-blue-200 flex items-center justify-center">
+                    {assignments['N3'] && <DraggableStaff id={assignments['N3'].id} staffMember={assignments['N3']} />}
+                  </DroppableZone>
+
+                  <DroppableZone id="N4" label="Nozzle 4 (BR)" className="bg-blue-50 h-28 rounded-xl border-4 border-blue-200 flex items-center justify-center">
+                    {assignments['N4'] && <DraggableStaff id={assignments['N4'].id} staffMember={assignments['N4']} />}
+                  </DroppableZone>
                 </div>
 
-                {/* Nozzle 3 (Bottom Left) */}
-                <DroppableZone
-                  id="N3"
-                  label="3"
-                  className="bg-gray-50 rounded-lg border-2 border-gray-300 flex items-center justify-center h-24"
-                >
-                  {assignments['N3'] && <DraggableStaff id={assignments['N3'].id} staffMember={assignments['N3']} />}
-                </DroppableZone>
-
-                {/* Nozzle 4 (Bottom Right) */}
-                <DroppableZone
-                  id="N4"
-                  label="4"
-                  className="bg-gray-50 rounded-lg border-2 border-gray-300 flex items-center justify-center h-24"
-                >
-                  {assignments['N4'] && <DraggableStaff id={assignments['N4'].id} staffMember={assignments['N4']} />}
-                </DroppableZone>
-              </div>
-
-              {/* RIGHT SIDE: Hanging Nozzles */}
-              <div className="w-20 pl-3 flex flex-col justify-between py-1">
-                <DroppableZone
-                  id="N5"
-                  label="5"
-                  className="flex-1 bg-blue-50 rounded-lg border-2 border-blue-200 flex items-center justify-center mb-3"
-                >
-                  {assignments['N5'] && <DraggableStaff id={assignments['N5'].id} staffMember={assignments['N5']} />}
-                </DroppableZone>
-                <DroppableZone
-                  id="N6"
-                  label="6"
-                  className="flex-1 bg-blue-50 rounded-lg border-2 border-blue-200 flex items-center justify-center"
-                >
-                  {assignments['N6'] && <DraggableStaff id={assignments['N6'].id} staffMember={assignments['N6']} />}
-                </DroppableZone>
+                {/* RIGHT: Hanging */}
+                <div className="w-24 pl-4 flex flex-col gap-4 justify-center">
+                   <DroppableZone id="N5" label="Hang 5" className="flex-1 bg-indigo-50 rounded-xl border-4 border-indigo-200 flex items-center justify-center">
+                    {assignments['N5'] && <DraggableStaff id={assignments['N5'].id} staffMember={assignments['N5']} />}
+                  </DroppableZone>
+                   <DroppableZone id="N6" label="Hang 6" className="flex-1 bg-indigo-50 rounded-xl border-4 border-indigo-200 flex items-center justify-center">
+                    {assignments['N6'] && <DraggableStaff id={assignments['N6'].id} staffMember={assignments['N6']} />}
+                  </DroppableZone>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* ABSENT ZONE */}
-          <div className="w-full max-w-md">
-             <div className="text-xs font-bold text-red-400 uppercase mb-1 pl-1">Absent Staff</div>
-             <DroppableZone
-              id="absent"
-              className="w-full bg-red-50 border-2 border-dashed border-red-300 rounded-lg p-2 min-h-[80px] flex flex-wrap gap-2 items-center"
-            >
-              {absentStaff.length === 0 && (
-                <span className="text-red-300 text-xs w-full text-center">Drop Absent Staff Here</span>
-              )}
-              {absentStaff.map((s) => (
-                <DraggableStaff key={s.id} id={s.id} staffMember={s} />
-              ))}
-            </DroppableZone>
+            {/* ABSENT SECTION (Fixed Visibility) */}
+            <div className="w-full max-w-lg mt-2">
+               <div className="text-sm font-black text-red-500 uppercase mb-2 ml-1">Absent Staff Zone</div>
+               <DroppableZone 
+                id="absent" 
+                isAbsent={true}
+                className="w-full bg-red-50 border-4 border-dashed border-red-300 rounded-2xl p-4 min-h-[120px] flex flex-wrap gap-4 items-center justify-center"
+              >
+                {absentStaff.length === 0 && (
+                  <span className="text-red-300 font-bold uppercase text-xs">Drop absent members here</span>
+                )}
+                {absentStaff.map((s) => (
+                  <DraggableStaff key={s.id} id={s.id} staffMember={s} />
+                ))}
+              </DroppableZone>
+            </div>
+
           </div>
-         
         </div>
 
-        {/* BOTTOM FIXED AREA: Present List & Submit */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_10px_rgba(0,0,0,0.1)] border-t rounded-t-2xl z-40 flex flex-col">
+        {/* BOTTOM DOCK (Present List + Submit) */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white shadow-[0_-10px_20px_rgba(0,0,0,0.1)] border-t-2 border-gray-100 rounded-t-3xl z-40 flex flex-col">
           
-          {/* Present Staff List (Horizontal Scroll) */}
-          <div className="pt-3 pb-2 px-4 border-b">
-            <p className="text-[10px] font-bold text-gray-500 uppercase mb-2">Available Staff (Drag to assign)</p>
-            <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-              {availableStaff.map((staff) => (
-                <DraggableStaff key={staff.id} id={staff.id} staffMember={staff} />
-              ))}
-              {availableStaff.length === 0 && (
-                <span className="text-gray-400 text-sm italic w-full text-center">All staff assigned ✅</span>
-              )}
-            </div>
+          {/* List Header */}
+          <div className="pt-4 px-6">
+            <p className="text-xs font-black text-gray-400 uppercase tracking-wider">Available Staff</p>
+          </div>
+
+          {/* Horizontal Scroll List */}
+          <div className="flex gap-4 overflow-x-auto px-6 py-4 scrollbar-hide">
+            {availableStaff.map((staff) => (
+              <div key={staff.id} className="shrink-0">
+                <DraggableStaff id={staff.id} staffMember={staff} />
+              </div>
+            ))}
+            {availableStaff.length === 0 && (
+              <div className="w-full text-center py-4 text-gray-400 font-medium italic bg-gray-50 rounded-xl">
+                All staff assigned!
+              </div>
+            )}
           </div>
 
           {/* Submit Button */}
-          <div className="p-4 bg-gray-50">
+          <div className="p-4 bg-gray-50 border-t border-gray-200">
             <button
               onClick={handleSubmit}
-              className="w-full bg-green-600 hover:bg-green-700 active:scale-95 transition-transform text-white font-bold py-3 rounded-xl text-lg flex items-center justify-center gap-2 shadow-lg"
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-black text-lg py-4 rounded-2xl shadow-green-200 shadow-lg flex items-center justify-center gap-3 active:scale-95 transition-transform"
             >
-              <Share2 size={20} /> Submit to WhatsApp
+              <Share2 size={24} strokeWidth={3} /> 
+              SUBMIT REPORT
             </button>
           </div>
         </div>
 
-        {/* DRAG OVERLAY (Visual feedback when moving item) */}
         <DragOverlay>
           {activeStaff ? <DraggableStaff id={activeStaff.id} staffMember={activeStaff} isOverlay /> : null}
         </DragOverlay>
