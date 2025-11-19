@@ -21,6 +21,11 @@ import { toast } from "react-toastify";
  * - Members returned from API should include: {_id, name, role, shift, available, photo} (photo optional - fallback used)
  */
 
+let html2canvas = null;
+if (typeof window !== "undefined") {
+  html2canvas = (await import("html2canvas")).default;
+}
+
 const fallbackPhoto = "";
 const mpdImage = "";
 const nozzleAssets = [
