@@ -21,15 +21,10 @@ import { toast } from "react-toastify";
  * - Members returned from API should include: {_id, name, role, shift, available, photo} (photo optional - fallback used)
  */
 
-const fallbackPhoto = "/assets/user-placeholder.png";
-const mpdImage = "/assets/mpd.png";
+const fallbackPhoto = "";
+const mpdImage = "";
 const nozzleAssets = [
-  "/assets/nozzle1.png",
-  "/assets/nozzle2.png",
-  "/assets/nozzle3.png",
-  "/assets/nozzle4.png",
-  "/assets/nozzle5.png",
-  "/assets/nozzle6.png",
+  "",
 ];
 
 const ShiftManagementSystemMobile = () => {
