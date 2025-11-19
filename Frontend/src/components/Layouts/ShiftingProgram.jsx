@@ -363,30 +363,24 @@ const ShiftManagementSystem = () => {
                 {/* LEFT (MPD + 4 Corners) */}
                 <div className="flex-1 grid grid-cols-2 gap-x-2 gap-y-8 relative pr-2 border-r-4 border-dashed border-slate-300">
                   
-                  <DroppableZone id="N2" label="2 (TL)" className="bg-blue-50 h-24 rounded-xl border-4 border-blue-200 flex items-center justify-center">
+                  <DroppableZone id="N2" label="2" className="bg-blue-50 h-24 rounded-xl border-4 border-blue-200 flex items-center justify-center">
                     {assignments['N2'] && <DraggableStaff id={assignments['N2'].id} staffMember={assignments['N2']} />}
                   </DroppableZone>
 
-                  <DroppableZone id="N1" label="1 (TR)" className="bg-blue-50 h-24 rounded-xl border-4 border-blue-200 flex items-center justify-center">
+                  <DroppableZone id="N1" label="1" className="bg-blue-50 h-24 rounded-xl border-4 border-blue-200 flex items-center justify-center">
                     {assignments['N1'] && <DraggableStaff id={assignments['N1'].id} staffMember={assignments['N1']} />}
                   </DroppableZone>
 
                   {/* CENTER MPD */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-28 bg-gray-900 rounded-lg shadow-2xl flex flex-col items-center justify-center border-4 border-gray-700 z-10">
-                    <div className="bg-black px-1 rounded mb-1 w-16 text-right">
-                        <span className="text-lg font-mono text-red-500 font-bold block leading-none mt-1">0.00</span>
-                    </div>
-                    <div className="bg-black px-1 rounded w-16 text-right">
-                        <span className="text-sm font-mono text-yellow-400 font-bold block leading-none mb-1">0.00</span>
-                    </div>
-                    <span className="text-[8px] text-gray-500 font-bold tracking-widest mt-1">MPD</span>
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-30 h-20 bg-gray-900 rounded-lg shadow-2xl flex flex-col items-center justify-center border-4 border-gray-700 z-10">
+                    <span className="text-[12px] text-gray-500 font-bold tracking-widest mt-1">MPD</span>
                   </div>
 
-                  <DroppableZone id="N3" label="3 (BL)" className="bg-blue-50 h-24 rounded-xl border-4 border-blue-200 flex items-center justify-center">
+                  <DroppableZone id="N3" label="3" className="bg-blue-50 h-24 rounded-xl border-4 border-blue-200 flex items-center justify-center">
                     {assignments['N3'] && <DraggableStaff id={assignments['N3'].id} staffMember={assignments['N3']} />}
                   </DroppableZone>
 
-                  <DroppableZone id="N4" label="4 (BR)" className="bg-blue-50 h-24 rounded-xl border-4 border-blue-200 flex items-center justify-center">
+                  <DroppableZone id="N4" label="4" className="bg-blue-50 h-24 rounded-xl border-4 border-blue-200 flex items-center justify-center">
                     {assignments['N4'] && <DraggableStaff id={assignments['N4'].id} staffMember={assignments['N4']} />}
                   </DroppableZone>
                 </div>
