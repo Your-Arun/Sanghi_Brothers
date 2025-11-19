@@ -3,12 +3,12 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
+  ssr: {
+    noExternal: ["react-beautiful-dnd"],
+  },
   build: {
     rollupOptions: {
-      external: []
-    }
+      external: [],
+    },
   },
-  ssr: {
-    noExternal: ["react-beautiful-dnd"]
-  }
 });
