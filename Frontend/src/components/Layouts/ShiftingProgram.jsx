@@ -246,9 +246,9 @@ const ShiftManagementSystem = () => {
             <button onClick={() => setIsSidebarOpen(true)}><Menu size={28} /></button>
             <h1 className="text-xl md:text-2xl font-black tracking-wider uppercase">Pump Manager</h1>
         </div>
-        <button onClick={() => setShowAddModal(true)} className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-full shadow-lg flex items-center gap-2 font-bold text-sm">
+        <div onClick={() => setShowAddModal(true)} className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-full shadow-lg flex items-center gap-2 font-bold text-sm cursor-pointer">
             <Plus size={20} /> <span className="hidden md:inline">Add Staff</span>
-        </button>
+        </div>
       </header>
 
       {/* --- SIDEBAR OVERLAY --- */}
@@ -257,7 +257,7 @@ const ShiftManagementSystem = () => {
           <div className="bg-white w-72 h-full shadow-2xl p-6 flex flex-col gap-6 animate-in slide-in-from-left">
             <div className="flex justify-between items-center border-b-4 border-slate-800 pb-2">
                 <h2 className="text-2xl font-black text-slate-800">MENU</h2>
-                <button onClick={() => setIsSidebarOpen(false)}><X className="text-red-600" /></button>
+                <div onClick={() => setIsSidebarOpen(false)}><X className="text-red-600 cursor-pointer" /></div>
             </div>
             <button onClick={() => { setShowAddModal(true); setIsSidebarOpen(false); }} className="flex items-center gap-4 text-lg font-bold text-gray-700 hover:text-blue-600 bg-gray-50 p-3 rounded-xl"><Users /> Add Member</button>
             <button onClick={() => { setShowMemberListModal(true); setIsSidebarOpen(false); }} className="flex items-center gap-4 text-lg font-bold text-gray-700 hover:text-blue-600 bg-gray-50 p-3 rounded-xl"><FileText /> Member List</button>
@@ -278,7 +278,7 @@ const ShiftManagementSystem = () => {
                 <div className="p-3 bg-white md:rounded-2xl shadow-md z-20 flex flex-col md:flex-row gap-3 md:items-center md:justify-between mb-4 mx-0 md:mx-auto w-full md:max-w-4xl">
                     <div className="flex bg-gray-200 rounded-xl p-1 w-full md:w-64">
                         {['Morning', 'Evening'].map((s) => (
-                            <button key={s} onClick={() => setShift(s)} className={`flex-1 py-2 rounded-lg text-sm font-black uppercase tracking-wide transition-all ${shift === s ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-500'}`}>{s}</button>
+                            <button key={s} onClick={() => setShift(s)} className={`flex-1 py-2 rounded-lg text-sm font-black uppercase tracking-wide transition-all ${shift === s ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-700 bg-red-400'}`}>{s}</button>
                         ))}
                     </div>
                     <div className="flex gap-2 w-full md:w-auto">
@@ -291,33 +291,31 @@ const ShiftManagementSystem = () => {
 
                 {/* Pump Map Container */}
                 <div className="flex flex-col items-center p-2 gap-4 pb-48 md:pb-10">
-                    <div className="w-full max-w-md md:max-w-2xl bg-white rounded-3xl shadow-xl border-2 border-slate-200 p-4 md:p-8 relative mt-2">
+                    <div className="w-full max-w-md md:max-w-2xl bg-white rounded-3xl shadow-xl border-2 border-slate-200 p-4 md:p-8 relative">
                         <h3 className="text-center text-slate-400 text-[10px] md:text-xs font-black uppercase tracking-[0.3em] mb-6">Pump Station Map</h3>
                         
                         <div className="flex w-full justify-center">
                             {/* Grid System for Nozzles */}
                             <div className="flex-1 grid grid-cols-2 gap-x-4 gap-y-10 md:gap-y-16 relative pr-4 border-r-4 border-dashed border-slate-300 max-w-lg">
                                 
-                                <DroppableZone id="N2" label="2 (TL)" className="bg-blue-50 h-24 md:h-32 rounded-xl border-4 border-blue-200 flex items-center justify-center">
+                                <DroppableZone id="N2" label="2" className="bg-blue-50 h-24 md:h-32 rounded-xl border-4 border-blue-200 flex items-center justify-center">
                                     {assignments['N2'] && <DraggableStaff id={assignments['N2'].id} staffMember={assignments['N2']} />}
                                 </DroppableZone>
 
-                                <DroppableZone id="N1" label="1 (TR)" className="bg-blue-50 h-24 md:h-32 rounded-xl border-4 border-blue-200 flex items-center justify-center">
+                                <DroppableZone id="N1" label="1" className="bg-blue-50 h-24 md:h-32 rounded-xl border-4 border-blue-200 flex items-center justify-center">
                                     {assignments['N1'] && <DraggableStaff id={assignments['N1'].id} staffMember={assignments['N1']} />}
                                 </DroppableZone>
 
                                 {/* MPD Center (Larger on Desktop) */}
                                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-32 md:w-32 md:h-40 bg-gray-900 rounded-lg shadow-2xl flex flex-col items-center justify-center border-4 border-gray-700 z-10">
-                                    <div className="bg-black px-2 py-1 rounded mb-1 w-20 md:w-24 text-right border border-gray-800"><span className="text-lg md:text-2xl font-mono text-red-500 font-bold block leading-none">0.00</span></div>
-                                    <div className="bg-black px-2 py-1 rounded w-20 md:w-24 text-right border border-gray-800"><span className="text-sm md:text-lg font-mono text-yellow-400 font-bold block leading-none">0.00</span></div>
                                     <span className="text-[8px] md:text-[10px] text-gray-500 font-bold tracking-widest mt-2">MPD-SYSTEM</span>
                                 </div>
 
-                                <DroppableZone id="N3" label="3 (BL)" className="bg-blue-50 h-24 md:h-32 rounded-xl border-4 border-blue-200 flex items-center justify-center">
+                                <DroppableZone id="N3" label="3" className="bg-blue-50 h-24 md:h-32 rounded-xl border-4 border-blue-200 flex items-center justify-center">
                                     {assignments['N3'] && <DraggableStaff id={assignments['N3'].id} staffMember={assignments['N3']} />}
                                 </DroppableZone>
 
-                                <DroppableZone id="N4" label="4 (BR)" className="bg-blue-50 h-24 md:h-32 rounded-xl border-4 border-blue-200 flex items-center justify-center">
+                                <DroppableZone id="N4" label="4" className="bg-blue-50 h-24 md:h-32 rounded-xl border-4 border-blue-200 flex items-center justify-center">
                                     {assignments['N4'] && <DraggableStaff id={assignments['N4'].id} staffMember={assignments['N4']} />}
                                 </DroppableZone>
                             </div>
@@ -340,11 +338,7 @@ const ShiftManagementSystem = () => {
             
             {/* Desktop: Right Sidebar */}
             <div className="hidden md:flex flex-col w-96 bg-white border-l border-gray-200 shadow-xl z-10">
-                <div className="p-4 bg-gray-50 border-b border-gray-200">
-                    <h3 className="text-lg font-black text-gray-700 uppercase">Roster</h3>
-                    <p className="text-sm text-gray-500">Drag staff to the map</p>
-                </div>
-                
+               
                 {/* Available List Desktop */}
                 <div className="flex-1 overflow-y-auto p-4">
                     <h4 className="text-xs font-bold text-green-600 uppercase mb-2">Available ({availableStaff.length})</h4>
