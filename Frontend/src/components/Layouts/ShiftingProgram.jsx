@@ -275,7 +275,7 @@ const ShiftManagementSystem = () => {
             <div className="flex-1 flex flex-col overflow-y-auto bg-slate-100 overscroll-y-contain md:p-6">
                 
                 {/* Controls (Date/Shift) */}
-                <div className="p-3 bg-white md:rounded-2xl shadow-md z-20 flex flex-col md:flex-row gap-3 md:items-center md:justify-between mb-4 mx-0 md:mx-auto w-full md:max-w-4xl">
+                <div className="p-3 bg-white md:rounded-2xl shadow-md z-20 flex flex-col md:flex-row gap-3 md:items-center md:justify-between mb-1 mx-0 md:mx-auto w-full md:max-w-4xl">
                     <div className="flex bg-gray-200 rounded-xl p-1 w-full md:w-64">
                         {['Morning', 'Evening'].map((s) => (
                             <button key={s} onClick={() => setShift(s)} className={`flex-1 py-2 rounded-lg text-sm font-black uppercase tracking-wide transition-all ${shift === s ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-700 bg-red-400'}`}>{s}</button>
