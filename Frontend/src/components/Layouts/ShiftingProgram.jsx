@@ -283,9 +283,7 @@ const ShiftManagementSystem = () => {
             <button onClick={() => setIsSidebarOpen(true)}><Menu size={28} /></button>
             <h1 className="text-xl md:text-2xl font-black tracking-wider uppercase">Pump Manager</h1>
         </div>
-        <button onClick={() => setShowAddModal(true)} className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-full shadow-lg flex items-center gap-2 font-bold text-sm">
-            <Plus size={20} /> <span className="hidden md:inline">Add Staff</span>
-        </button>
+       
       </header>
 
       {/* SIDEBAR */}
