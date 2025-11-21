@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Menu, Users, FileText, Share2, Calendar, Plus, Trash2, RefreshCw, X, Download, Wind 
+  Menu, Users, FileText, Share2, Calendar, Plus, RefreshCw, X, Download, Wind 
 } from 'lucide-react';
 import {
   DndContext,
@@ -15,7 +15,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import html2canvas from 'html2canvas'; // Make sure to install this
+import html2canvas from 'html2canvas';
 import axiosInstance from '../Dashboard/axiosInstance'; 
 
 // --- 1. Draggable Staff Card ---
@@ -30,7 +30,6 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
     zIndex: isDragging || isOverlay ? 999 : 1,
   };
 
-  // Sizing logic
   const isSmall = size === "small";
   const imgSize = isSmall ? "w-12 h-12 md:w-14 md:h-14" : "w-20 h-20 md:w-24 md:h-24"; 
   const textSize = isSmall ? "text-[10px]" : "text-xs md:text-sm";
@@ -52,8 +51,6 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
           className="w-full h-full object-cover pointer-events-none select-none"
         />
       </div>
-      
-      {/* Hide Name if requested (Point 3) */}
       {!hideName && (
         <span className={`${textSize} font-black text-gray-900 mt-[-10px] bg-white px-3 py-0.5 rounded-full shadow-md border border-gray-200 z-10 uppercase tracking-wider whitespace-nowrap`}>
           {staffMember.name}
@@ -64,13 +61,14 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
 };
 
 // --- 2. Droppable Zone ---
-const DroppableZone = ({ id, children, className, label, isAbsent = false, isAir = false }) => {
+const DroppableZone = ({ id, children, className, label, isAbsent = false, isAir = false, isPool = false }) => {
   const { setNodeRef, isOver } = useDroppable({ id });
 
   let activeClass = '';
   if (isOver) {
-    if (isAbsent) activeClass = 'bg-red-100 border-red-500 scale-105';
+    if (isAbsent) activeClass = 'bg-red-100 border-red-500 scale-105 ring-2 ring-red-300';
     else if (isAir) activeClass = 'bg-cyan-100 border-cyan-500 scale-105 shadow-xl';
+    else if (isPool) activeClass = 'bg-gray-100 border-blue-400'; // For returning to list
     else activeClass = 'bg-green-100 border-green-600 scale-105 shadow-xl';
   }
 
@@ -92,7 +90,7 @@ const DroppableZone = ({ id, children, className, label, isAbsent = false, isAir
 // --- MAIN COMPONENT ---
 const ShiftManagementSystem = () => {
   const navigate = useNavigate();
-  const pumpMapRef = useRef(null); // Ref for saving image
+  const pumpMapRef = useRef(null); 
   
   // -- UI State --
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -111,15 +109,14 @@ const ShiftManagementSystem = () => {
     name: "", role: "operator", shift: 'morning', available: 'present', image: null
   });
 
-  // -- SENSORS (Fix for Desktop Dragging - Point 4) --
+  // -- SENSORS (Optimized for Mobile) --
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 10 } }),
     useSensor(TouchSensor, { 
-      activationConstraint: { delay: 150, tolerance: 5 } // Lower delay for responsiveness
+      activationConstraint: { delay: 150, tolerance: 15 } // Tolerance increased to 15px
     })
   );
 
-  // -- Fetch Data --
   useEffect(() => {
     const fetchMembers = async () => {
       try {
@@ -142,7 +139,7 @@ const ShiftManagementSystem = () => {
   const availableStaff = members.filter((s) => s.available === 'present' && !assignedIds.includes(s.id));
   const absentStaff = assignments['absent'] || [];
 
-  // -- Handlers --
+  // -- Drag Handlers --
   const handleDragStart = (event) => {
     const { active } = event;
     setActiveId(active.id);
@@ -154,72 +151,82 @@ const ShiftManagementSystem = () => {
     const { active, over } = event;
     setActiveId(null);
     setActiveStaff(null);
-    if (!over) return;
+
+    if (!over) return; // Dropped outside any zone
 
     const staffId = active.id;
-    const targetZone = over.id;
+    const targetZone = over.id; // e.g., 'N1', 'absent', 'available-pool'
     const draggedStaff = members.find((s) => s.id === staffId);
 
     setAssignments((prev) => {
       const newAssignments = { ...prev };
-      
-      // Remove from old location
+
+      // 1. STEP: Remove from OLD location (Clean up)
+      // Check if they were in Absent list
+      if (newAssignments['absent']) {
+        newAssignments['absent'] = newAssignments['absent'].filter((s) => s.id !== staffId);
+      }
+      // Check if they were on a Nozzle
       Object.keys(newAssignments).forEach((key) => {
-        if (key === 'absent') {
-          if (newAssignments[key]) newAssignments[key] = newAssignments[key].filter((s) => s.id !== staffId);
-        } else if (newAssignments[key]?.id === staffId) {
+        if (key !== 'absent' && newAssignments[key]?.id === staffId) {
           newAssignments[key] = null;
         }
       });
 
-      // Add to new location
+      // 2. STEP: Add to NEW location
       if (targetZone === 'absent') {
-        // Point 8: Logic keeps them here until moved back
+        // Dropped in Absent Zone
         const currentAbsent = newAssignments['absent'] || [];
-        newAssignments['absent'] = [...currentAbsent, draggedStaff];
+        // Prevent duplicates
+        if (!currentAbsent.find(s => s.id === staffId)) {
+          newAssignments['absent'] = [...currentAbsent, draggedStaff];
+        }
+      } else if (targetZone === 'available-pool') {
+        // Dropped back to List -> Do nothing (already removed from assignments above)
+        // This effectively makes them "Present" again.
       } else {
-        // Handles N1-N6 and Air
+        // Dropped on Nozzle or Air
         newAssignments[targetZone] = draggedStaff;
       }
+
       return newAssignments;
     });
   };
 
-  // -- Point 6: Save as Image --
   const handleSaveImage = async () => {
     if (pumpMapRef.current) {
         try {
-            const canvas = await html2canvas(pumpMapRef.current, {
-                backgroundColor: '#ffffff',
-                scale: 2, // Better quality
-            });
+            const canvas = await html2canvas(pumpMapRef.current, { backgroundColor: '#ffffff', scale: 2 });
             const link = document.createElement('a');
             link.download = `Pump_Shift_${shift}_${date}.png`;
             link.href = canvas.toDataURL();
             link.click();
             toast.success("Map Image Saved!");
-        } catch (error) {
-            toast.error("Failed to save image");
-        }
+        } catch (error) { toast.error("Failed to save image"); }
     }
-  };
-
-  const shuffleArray = (array) => {
-    let shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      let j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
   };
 
   const handleAutoAssign = () => {
+    const assignedIds = Object.values(assignments).flat().map((s) => s?.id).filter(Boolean);
     const availableForShift = members.filter((m) => m.available === "present" && !assignedIds.includes(m.id));
+    
+    const shuffleArray = (array) => {
+        let shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          let j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    };
+
     let operators = availableForShift.filter(m => m.shift.toLowerCase() === shift.toLowerCase() && m.role === 'operator');
     operators = shuffleArray(operators);
+    
     const newAssigns = { ...assignments };
     ['N1', 'N2', 'N3', 'N4', 'N5', 'N6'].forEach((nid, index) => {
-        if (operators[index]) newAssigns[nid] = operators[index];
+        if (operators[index] && !newAssigns[nid]) { // Only fill empty spots
+            newAssigns[nid] = operators[index];
+        }
     });
     setAssignments(newAssigns);
     toast.success(`Auto-assigned ${shift} Shift!`);
@@ -235,9 +242,7 @@ const ShiftManagementSystem = () => {
       setNewMember({ name: "", role: "operator", shift: "morning", available: "present", image: null });
       setShowAddModal(false);
       toast.success("Member Added");
-    } catch (error) {
-      toast.error("Failed");
-    }
+    } catch (error) { toast.error("Failed"); }
   };
 
   const handleImageChange = (e) => {
@@ -272,7 +277,7 @@ const ShiftManagementSystem = () => {
   return (
     <div className="h-screen bg-slate-100 flex flex-col font-sans overflow-hidden text-gray-900">
       
-      {/* --- HEADER --- */}
+      {/* HEADER */}
       <header className="bg-gradient-to-r from-blue-900 to-slate-800 text-white p-4 flex justify-between items-center shadow-lg shrink-0 z-30">
         <div className="flex items-center gap-4">
             <button onClick={() => setIsSidebarOpen(true)}><Menu size={28} /></button>
@@ -283,7 +288,7 @@ const ShiftManagementSystem = () => {
         </button>
       </header>
 
-      {/* --- SIDEBAR OVERLAY --- */}
+      {/* SIDEBAR */}
       {isSidebarOpen && (
         <div className="absolute inset-0 z-50 flex">
           <div className="bg-white w-72 h-full shadow-2xl p-6 flex flex-col gap-6 animate-in slide-in-from-left">
@@ -299,14 +304,13 @@ const ShiftManagementSystem = () => {
         </div>
       )}
 
-      {/* --- MAIN CONTENT WRAPPER --- */}
       <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
 
-            {/* === LEFT SIDE: PUMP MAP === */}
+            {/* === LEFT: PUMP MAP === */}
             <div className="flex-1 flex flex-col overflow-y-auto bg-slate-100 overscroll-contain md:p-6">
                 
-                {/* Point 1: Big Gap & Bold Buttons */}
+                {/* Shift Controls */}
                 <div className="p-3 bg-white md:rounded-2xl shadow-md z-20 flex flex-col md:flex-row gap-6 md:items-center md:justify-between mb-4 mx-0 md:mx-auto w-full md:max-w-4xl">
                     <div className="flex gap-6 bg-gray-100 rounded-xl p-2 w-full md:w-96">
                         {['Morning', 'Evening'].map((s) => (
@@ -321,20 +325,16 @@ const ShiftManagementSystem = () => {
                     </div>
                 </div>
 
-                {/* Pump Map Container (Point 5: Mobile Scroll Fix) */}
-                <div className="flex flex-col items-center p-2 gap-4 pb-52 md:pb-10">
-                    
-                    {/* Save Button (Point 6) */}
+                {/* Map Container */}
+                <div className="flex flex-col items-center p-2 gap-4 pb-64 md:pb-10"> {/* increased padding bottom for mobile */}
                     <button onClick={handleSaveImage} className="flex items-center gap-2 text-blue-600 font-bold bg-blue-50 px-4 py-2 rounded-full hover:bg-blue-100 self-end mr-2 md:mr-10">
-                        <Download size={18}/> Save Map as Image
+                        <Download size={18}/> Save Map
                     </button>
 
-                    {/* THE MAP CARD (Ref for image saving) */}
                     <div ref={pumpMapRef} className="w-full max-w-md md:max-w-2xl bg-white rounded-3xl shadow-2xl border-2 border-slate-200 p-4 md:p-8 relative mt-2">
                         <h3 className="text-center text-slate-400 text-[10px] md:text-xs font-black uppercase tracking-[0.3em] mb-8">Pump Station Layout</h3>
                         
                         <div className="flex w-full justify-center">
-                            {/* Grid System */}
                             <div className="flex-1 grid grid-cols-2 gap-x-4 gap-y-16 relative pr-4 border-r-4 border-dashed border-slate-300 max-w-lg">
                                 
                                 <DroppableZone id="N2" label="Nozzle 2" className="bg-blue-50 h-24 md:h-32 rounded-xl border-4 border-blue-200 flex items-center justify-center">
@@ -345,7 +345,7 @@ const ShiftManagementSystem = () => {
                                     {assignments['N1'] && <DraggableStaff id={assignments['N1'].id} staffMember={assignments['N1']} />}
                                 </DroppableZone>
 
-                                {/* Point 2: MPD Wide Rectangle */}
+                                {/* MPD */}
                                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-16 md:w-60 md:h-20 bg-gray-900 rounded-lg shadow-2xl flex flex-row items-center justify-around border-4 border-gray-700 z-10 px-2">
                                     <div className="bg-black px-2 rounded w-16 text-center border border-gray-700"><span className="text-lg font-mono text-yellow-500 font-bold">0.00</span></div>
                                     <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">MPD</span>
@@ -361,7 +361,6 @@ const ShiftManagementSystem = () => {
                                 </DroppableZone>
                             </div>
 
-                            {/* Right Side Hanging */}
                             <div className="w-24 md:w-32 pl-4 flex flex-col gap-6 justify-start pt-2">
                                 <DroppableZone id="N5" label="H-5" className="h-24 md:h-32 bg-indigo-50 rounded-xl border-4 border-indigo-200 flex items-center justify-center">
                                     {assignments['N5'] && <DraggableStaff id={assignments['N5'].id} staffMember={assignments['N5']} />}
@@ -370,7 +369,6 @@ const ShiftManagementSystem = () => {
                                     {assignments['N6'] && <DraggableStaff id={assignments['N6'].id} staffMember={assignments['N6']} />}
                                 </DroppableZone>
 
-                                {/* Point 7: AIR BOY SECTION */}
                                 <div className="mt-auto">
                                     <DroppableZone id="Air" label="Air Boy" isAir={true} className="h-20 md:h-24 bg-cyan-50 rounded-full border-4 border-cyan-200 flex items-center justify-center relative mt-4">
                                         <Wind className="absolute text-cyan-200 w-8 h-8 z-0" />
@@ -381,9 +379,9 @@ const ShiftManagementSystem = () => {
                         </div>
                     </div>
 
-                    {/* Mobile Absent Zone (Moved out of fixed dock for better scrolling) */}
+                    {/* Mobile Absent Zone */}
                     <div className="md:hidden w-full max-w-md mt-4">
-                       <div className="text-xs font-black text-red-400 uppercase mb-1 ml-1">Absent List</div>
+                       <div className="text-xs font-black text-red-400 uppercase mb-1 ml-1">Absent List (Drop here)</div>
                        <DroppableZone id="absent" isAbsent={true} className="w-full bg-red-50 border-4 border-dashed border-red-200 rounded-2xl p-2 h-[120px] overflow-y-auto flex flex-wrap gap-3 content-start">
                         {absentStaff.length === 0 && <span className="text-red-300 w-full text-center mt-8 font-bold uppercase text-[10px]">Drop Absent Staff Here</span>}
                         {absentStaff.map((s) => <DraggableStaff key={s.id} id={s.id} staffMember={s} size="small" />)}
@@ -393,27 +391,29 @@ const ShiftManagementSystem = () => {
                 </div>
             </div>
 
-            {/* === RIGHT SIDE: DESKTOP PANEL / MOBILE DOCK === */}
+            {/* === RIGHT: PANEL / DOCK === */}
             
-            {/* Desktop: Right Sidebar */}
+            {/* Desktop Sidebar */}
             <div className="hidden md:flex flex-col w-96 bg-white border-l border-gray-200 shadow-xl z-10">
                 <div className="p-6 border-b border-gray-200 bg-gray-50">
                     <h3 className="text-xl font-black text-gray-800 uppercase tracking-wide">Staff Roster</h3>
-                    <p className="text-sm text-gray-500">Drag to assign</p>
+                    <p className="text-sm text-gray-500">Drag to map / Drag back to reset</p>
                 </div>
                 
-                {/* Available List Desktop (Point 3: Hide Name = true) */}
+                {/* Available Staff Drop Zone (id="available-pool") */}
                 <div className="flex-1 overflow-y-auto p-6">
-                    <h4 className="text-xs font-bold text-green-600 uppercase mb-3">Available Staff</h4>
-                    <div className="grid grid-cols-4 gap-4 mb-8">
-                        {availableStaff.map((staff) => (
-                            <DraggableStaff key={staff.id} id={staff.id} staffMember={staff} size="small" hideName={true} />
-                        ))}
-                        {availableStaff.length === 0 && <div className="col-span-4 text-gray-400 italic text-sm text-center py-4 border-2 border-dashed rounded-lg">All Assigned</div>}
-                    </div>
+                    <h4 className="text-xs font-bold text-green-600 uppercase mb-3">Available Pool</h4>
+                    <DroppableZone id="available-pool" isPool={true} className="min-h-[100px] border-2 border-dashed border-gray-300 rounded-xl p-4 mb-8">
+                        <div className="grid grid-cols-4 gap-4">
+                            {availableStaff.map((staff) => (
+                                <DraggableStaff key={staff.id} id={staff.id} staffMember={staff} size="small" hideName={true} />
+                            ))}
+                            {availableStaff.length === 0 && <div className="col-span-4 text-gray-400 italic text-sm text-center">All Assigned</div>}
+                        </div>
+                    </DroppableZone>
 
-                    <h4 className="text-xs font-bold text-red-500 uppercase mb-3">Absent / Unassigned</h4>
-                    <DroppableZone id="absent" isAbsent={true} className="bg-red-50 border-2 border-dashed border-red-200 rounded-xl p-4 min-h-[200px] flex flex-wrap gap-3 content-start">
+                    <h4 className="text-xs font-bold text-red-500 uppercase mb-3">Absent List</h4>
+                    <DroppableZone id="absent" isAbsent={true} className="bg-red-50 border-2 border-dashed border-red-200 rounded-xl p-4 min-h-[150px] flex flex-wrap gap-3 content-start">
                          {absentStaff.length === 0 && <span className="text-red-300 w-full text-center mt-10 font-bold text-xs">Drop Absent Staff Here</span>}
                          {absentStaff.map((s) => <DraggableStaff key={s.id} id={s.id} staffMember={s} size="small" />)}
                     </DroppableZone>
@@ -421,24 +421,24 @@ const ShiftManagementSystem = () => {
 
                 <div className="p-6 border-t border-gray-200 bg-gray-50">
                      <button onClick={handleSubmitReport} className="w-full bg-green-600 hover:bg-green-700 text-white font-black text-lg py-4 rounded-xl shadow-lg flex items-center justify-center gap-3 transform transition hover:-translate-y-1">
-                        <Share2 size={22} /> Share to WhatsApp
+                        <Share2 size={22} /> WhatsApp Report
                     </button>
                 </div>
             </div>
 
-            {/* Mobile: Bottom Dock */}
+            {/* Mobile Bottom Dock */}
             <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_20px_rgba(0,0,0,0.15)] border-t-2 border-gray-100 rounded-t-3xl z-40 flex flex-col pb-safe">
                 <div className="px-4 pt-3 pb-2">
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-2">Available Staff (Drag Images)</p>
-                    {/* Point 3: Hide Name = true */}
-                    <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide min-h-[80px] items-center touch-pan-x px-2">
+                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-2">Available Staff (Drag back here to reset)</p>
+                    {/* Droppable Zone for Available on Mobile */}
+                    <DroppableZone id="available-pool" isPool={true} className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide min-h-[80px] items-center touch-pan-x px-2 border-t border-dashed border-gray-200">
                         {availableStaff.map((staff) => (
                             <div key={staff.id} className="shrink-0">
                                 <DraggableStaff id={staff.id} staffMember={staff} size="small" hideName={true} />
                             </div>
                         ))}
                         {availableStaff.length === 0 && <div className="text-gray-400 text-xs italic w-full text-center">All assigned!</div>}
-                    </div>
+                    </DroppableZone>
                 </div>
                 <div className="px-4 pb-4">
                     <button onClick={handleSubmitReport} className="w-full bg-green-600 active:bg-green-700 text-white font-black text-lg py-3 rounded-xl shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-transform">
@@ -449,11 +449,10 @@ const ShiftManagementSystem = () => {
 
         </div>
 
-        {/* --- OVERLAY --- */}
         <DragOverlay>{activeStaff ? <DraggableStaff id={activeStaff.id} staffMember={activeStaff} isOverlay /> : null}</DragOverlay>
       </DndContext>
 
-      {/* --- ADD MEMBER MODAL --- */}
+      {/* MODALS (Add/List) */}
       {showAddModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
             <div className="bg-white w-full max-w-sm rounded-2xl p-6 shadow-2xl animate-in zoom-in-95">
@@ -478,8 +477,6 @@ const ShiftManagementSystem = () => {
             </div>
         </div>
       )}
-
-      {/* --- MEMBER LIST MODAL --- */}
       {showMemberListModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-2">
             <div className="bg-white w-full max-w-lg rounded-2xl p-4 shadow-2xl h-[80vh] flex flex-col animate-in slide-in-from-bottom-10">
