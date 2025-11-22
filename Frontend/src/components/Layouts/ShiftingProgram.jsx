@@ -390,9 +390,7 @@ const ShiftManagementSystem = () => {
                                 </DroppableZone>
 
                                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-16 md:w-64 md:h-20 bg-slate-900 rounded-xl shadow-2xl flex flex-row items-center justify-around border-4 border-slate-700 z-10 px-2">
-                                    <div className="bg-black px-3 py-1 rounded w-16 text-center border border-gray-700"><span className="text-lg md:text-lg font-mono text-yellow-500 font-bold">0.00</span></div>
                                     <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">MPD</span>
-                                    <div className="bg-black px-3 py-1 rounded w-16 text-center border border-gray-700"><span className="text-lg md:text-lg font-mono text-yellow-500 font-bold">0.00</span></div>
                                 </div>
 
                                 <DroppableZone id="N3" label="Nozzle 3" className="bg-blue-50 h-28 md:h-32 rounded-2xl border-4 border-blue-200 flex items-center justify-center">
