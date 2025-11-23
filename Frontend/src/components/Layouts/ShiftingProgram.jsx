@@ -389,7 +389,7 @@ const ShiftManagementSystem = () => {
             </div>
 
             {/* MAP AREA */}
-            <div className="flex-1 overflow-y-auto md:overflow-hidden p-2 pb-56 md:pb-0 flex flex-col items-center justify-start md:justify-center">
+            <div className="flex-1 overflow-y-auto md:overflow-hidden p-4 pb-45 md:pb-0 flex flex-col items-center justify-start md:justify-center">
 
               {/* ======================================================= */}
               {/*                     THE MAP CARD                        */}
