@@ -5,7 +5,6 @@ const memberSchema = new mongoose.Schema({
   role: String,
   shift: String,
   available: String,
-  overtime: String,
 });
 
 
