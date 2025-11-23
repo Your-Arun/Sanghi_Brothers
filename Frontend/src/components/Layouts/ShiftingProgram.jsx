@@ -69,7 +69,7 @@ const DroppableZone = ({ id, children, className, label, isAbsent = false, isAir
     if (isAbsent) activeClass = 'bg-red-100 border-red-500 ring-4 ring-red-200 scale-105';
     else if (isAir) activeClass = 'bg-cyan-100 border-cyan-500 scale-110 shadow-xl';
     else if (isSupervisor) activeClass = 'bg-purple-100 border-purple-500 scale-110 shadow-xl';
-    else if (isExtra) activeClass = 'bg-orange-100 border-orange-500 scale-110 shadow-xl'; // Orange for Extra
+    else if (isExtra) activeClass = 'bg-orange-100 border-orange-500 scale-110 shadow-xl';
     else if (isPool) activeClass = 'bg-blue-100 border-blue-500 ring-4 ring-blue-200';
     else activeClass = 'bg-green-100 border-green-600 scale-105 shadow-xl';
   }
@@ -123,11 +123,10 @@ const ShiftManagementSystem = () => {
     useSensor(TouchSensor, { activationConstraint: { delay: 100, tolerance: 10 } })
   );
 
-  // 1. Check for existing map image when Date or Shift changes
   useEffect(() => {
     const checkSavedMap = async () => {
       try {
-        setSavedMapImage(null); // Reset first
+        setSavedMapImage(null); 
         const res = await axiosInstance.get(`/shifting/get-map?date=${date}&shift=${shift}`);
         if (res.data.image) {
           setSavedMapImage(res.data.image);
@@ -139,7 +138,6 @@ const ShiftManagementSystem = () => {
     checkSavedMap();
   }, [date, shift]);
 
-  // 2. Fetch Members
   useEffect(() => {
     const fetchMembers = async () => {
       try {
@@ -164,7 +162,6 @@ const ShiftManagementSystem = () => {
   const getCleanId = (id) => String(id).replace(/^(desk-|mob-)/, '');
   const normalizeZone = (zoneId) => zoneId ? String(zoneId).replace(/-mobile$/, '') : null;
 
-  // --- Drag Handlers ---
   const handleDragStart = (event) => {
     const { active } = event;
     setActiveId(active.id);
@@ -208,7 +205,6 @@ const ShiftManagementSystem = () => {
     });
   };
 
-  // --- Save Image Function ---
   const handleSaveImage = async () => {
     if (pumpMapRef.current) {
       try {
@@ -216,9 +212,7 @@ const ShiftManagementSystem = () => {
           backgroundColor: '#ffffff',
           scale: 2
         });
-
         const base64Image = canvas.toDataURL('image/jpeg', 0.7);
-
         const link = document.createElement('a');
         link.download = `Pump_Shift_${shift}_${date}.jpg`;
         link.href = base64Image;
@@ -229,10 +223,8 @@ const ShiftManagementSystem = () => {
           shift: shift,
           image: base64Image
         });
-
         setSavedMapImage(base64Image);
         toast.success("Map Saved to Database!");
-
       } catch (error) {
         console.error(error);
         toast.error("Failed to save image");
@@ -304,9 +296,7 @@ const ShiftManagementSystem = () => {
     });
     const absentNames = assignments['absent']?.map((s) => s.name).join(', ');
     if (absentNames) message += `\n⚠️ *Absent:* ${absentNames}`;
-
     if (caption) message += `\n📝 *Note:* ${caption}`;
-
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
   };
 
@@ -359,8 +349,8 @@ const ShiftManagementSystem = () => {
             </nav>
           </aside>
 
-          {/* CENTER AREA */}
-          <div className="flex-1 flex flex-col bg-slate-100 relative h-full md:overflow-hidden">
+          {/* CENTER AREA - FIXED LAYOUT SCROLLING */}
+          <div className="flex-1 flex flex-col bg-slate-100 relative h-full overflow-hidden">
             {/* Desktop Top Bar */}
             <div className="hidden md:flex p-3 bg-white shadow-sm justify-between items-center z-20 shrink-0">
               <h2 className="text-sm font-black text-gray-800 uppercase tracking-wide">Dashboard</h2>
@@ -388,121 +378,110 @@ const ShiftManagementSystem = () => {
               </div>
             </div>
 
-            {/* MAP AREA */}
-            <div className="flex-1 overflow-y-auto md:overflow-hidden p-4 pb-45 md:pb-0 flex flex-col items-center justify-start md:justify-center">
+            {/* MAP AREA - ENABLED SCROLLING FOR ALL SIZES */}
+            <div className="flex-1 overflow-y-auto p-2">
+                {/* Flex container with min-height to allow centering but prevent clipping */}
+                <div className="min-h-full flex flex-col items-center justify-center py-10 pb-40 md:pb-10">
 
-              {/* ======================================================= */}
-              {/*                     THE MAP CARD                        */}
-              {/* ======================================================= */}
-              <div ref={pumpMapRef} className="bg-white rounded-[2rem] shadow-xl border-[4px] border-slate-200 p-4 md:p-8 relative flex flex-col items-center justify-center transform scale-100 w-full max-w-[360px] md:max-w-none md:w-auto">
+                    {/* THE MAP CARD */}
+                    <div ref={pumpMapRef} className="bg-white rounded-[2rem] shadow-xl border-[4px] border-slate-200 p-4 md:p-8 relative flex flex-col items-center justify-center w-full max-w-[360px] md:max-w-none md:w-auto">
 
-                {/* Title inside Card */}
-                <div className="absolute top-3 w-full text-center">
-                  <h3 className="text-slate-300 text-[9px] font-black uppercase tracking-[0.3em]">Pump Map</h3>
-                </div>
+                        {/* Title inside Card */}
+                        <div className="absolute top-3 w-full text-center">
+                        <h3 className="text-slate-300 text-[9px] font-black uppercase tracking-[0.3em]">Pump Map</h3>
+                        </div>
 
-                {/* Supervisor - Top Left Absolute */}
-                <div className="absolute top-4 left-4 z-20">
-                  <DroppableZone id="Supervisor" label="Supervisor" isSupervisor={true} className="w-16 h-16 md:w-20 md:h-20 bg-purple-50 rounded-full border-[3px] border-purple-200 flex items-center justify-center relative shadow-sm">
-                    <ShieldCheck className="absolute text-purple-200 w-6 h-6 md:w-8 md:h-8 z-0" />
-                    {assignments['Supervisor'] && <DraggableStaff id={assignments['Supervisor'].id} staffMember={assignments['Supervisor']} size="small" />}
-                  </DroppableZone>
-                </div>
+                        {/* Supervisor - Top Left Absolute */}
+                        <div className="absolute top-4 left-4 z-20">
+                        <DroppableZone id="Supervisor" label="Supervisor" isSupervisor={true} className="w-16 h-16 md:w-20 md:h-20 bg-purple-50 rounded-full border-[3px] border-purple-200 flex items-center justify-center relative shadow-sm">
+                            <ShieldCheck className="absolute text-purple-200 w-6 h-6 md:w-8 md:h-8 z-0" />
+                            {assignments['Supervisor'] && <DraggableStaff id={assignments['Supervisor'].id} staffMember={assignments['Supervisor']} size="small" />}
+                        </DroppableZone>
+                        </div>
 
-                {/* Layout Container */}
-                <div className="mt-8 flex gap-4 md:gap-8 items-center">
+                        {/* Layout Container */}
+                        <div className="mt-10 md:mt-8 flex gap-4 md:gap-8 items-center">
 
-                  {/* LEFT SIDE: The 4 Nozzles + MPD */}
-                  <div className="relative p-2 md:p-4">
-                    {/* Dotted Border for the island */}
-                    <div className="absolute inset-0 border-2 border-dashed border-slate-200 rounded-[2rem] -z-10"></div>
+                            {/* LEFT SIDE: The 4 Nozzles + MPD */}
+                            <div className="relative p-2 md:p-4">
+                                <div className="absolute inset-0 border-2 border-dashed border-slate-200 rounded-[2rem] -z-10"></div>
+                                <div className="grid grid-cols-2 gap-x-12 gap-y-12 md:gap-x-24 md:gap-y-24 relative z-10 p-2">
+                                <DroppableZone id="N2" label="Nozzle 2" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
+                                    {assignments['N2'] && <DraggableStaff id={assignments['N2'].id} staffMember={assignments['N2']} size="small" />}
+                                </DroppableZone>
+                                <DroppableZone id="N1" label="Nozzle 1" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
+                                    {assignments['N1'] && <DraggableStaff id={assignments['N1'].id} staffMember={assignments['N1']} size="small" />}
+                                </DroppableZone>
+                                <DroppableZone id="N3" label="Nozzle 3" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
+                                    {assignments['N3'] && <DraggableStaff id={assignments['N3'].id} staffMember={assignments['N3']} size="small" />}
+                                </DroppableZone>
+                                <DroppableZone id="N4" label="Nozzle 4" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
+                                    {assignments['N4'] && <DraggableStaff id={assignments['N4'].id} staffMember={assignments['N4']} size="small" />}
+                                </DroppableZone>
+                                </div>
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 md:w-28 md:h-28 bg-slate-800 rounded-xl md:rounded-2xl shadow-2xl flex flex-col items-center justify-center border-2 md:border-4 border-slate-600 z-0">
+                                <span className="text-lg md:text-2xl font-black text-white tracking-widest">MPD</span>
+                                </div>
+                            </div>
 
-                    {/* The Grid for Nozzles */}
-                    <div className="grid grid-cols-2 gap-x-12 gap-y-12 md:gap-x-24 md:gap-y-24 relative z-10 p-2">
-                      {/* Top Row: N2, N1 */}
-                      <DroppableZone id="N2" label="Nozzle 2" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
-                        {assignments['N2'] && <DraggableStaff id={assignments['N2'].id} staffMember={assignments['N2']} size="small" />}
-                      </DroppableZone>
-                      <DroppableZone id="N1" label="Nozzle 1" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
-                        {assignments['N1'] && <DraggableStaff id={assignments['N1'].id} staffMember={assignments['N1']} size="small" />}
-                      </DroppableZone>
+                            {/* RIGHT SIDE: Hanging + Extra + Air */}
+                            <div className="flex flex-col gap-4 md:gap-5 border-l-2 border-dashed border-slate-200 pl-4 md:pl-8 py-2">
+                                <DroppableZone id="N5" label="H-5" className="w-16 h-16 md:w-20 md:h-20 bg-indigo-50 rounded-full border-[3px] border-indigo-200 flex items-center justify-center shadow-sm">
+                                {assignments['N5'] && <DraggableStaff id={assignments['N5'].id} staffMember={assignments['N5']} size="small" />}
+                                </DroppableZone>
+                                <DroppableZone id="N6" label="H-6" className="w-16 h-16 md:w-20 md:h-20 bg-indigo-50 rounded-full border-[3px] border-indigo-200 flex items-center justify-center shadow-sm">
+                                {assignments['N6'] && <DraggableStaff id={assignments['N6'].id} staffMember={assignments['N6']} size="small" />}
+                                </DroppableZone>
+                                <div className="mt-1">
+                                <DroppableZone id="Extra" label="Extra" isExtra={true} className="w-16 h-16 md:w-20 md:h-20 bg-orange-50 rounded-full border-[3px] border-orange-200 flex items-center justify-center relative shadow-sm">
+                                    <UserPlus className="absolute text-orange-200 w-6 h-6 md:w-8 md:h-8 z-0" />
+                                    {assignments['Extra'] && <DraggableStaff id={assignments['Extra'].id} staffMember={assignments['Extra']} size="small" />}
+                                </DroppableZone>
+                                </div>
+                                <div className="mt-1">
+                                <DroppableZone id="Air" label="Air Boy" isAir={true} className="w-16 h-16 md:w-20 md:h-20 bg-cyan-50 rounded-full border-[3px] border-cyan-200 flex items-center justify-center relative shadow-sm">
+                                    <Wind className="absolute text-cyan-200 w-6 h-6 md:w-8 md:h-8 z-0" />
+                                    {assignments['Air'] && <DraggableStaff id={assignments['Air'].id} staffMember={assignments['Air']} size="small" />}
+                                </DroppableZone>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {/* Caption Input (Fixed Spacing) */}
+                        <div className="mt-6 mb-2 w-full border-t-2 border-dashed border-slate-100 pt-3 flex items-center gap-2">
+                            <Edit3 size={16} className="text-slate-400 shrink-0" />
+                            <input
+                                type="text"
+                                value={caption}
+                                onChange={(e) => setCaption(e.target.value)}
+                                placeholder="Write a note/caption here..."
+                                className="w-full bg-slate-50 px-3 py-2 rounded-lg outline-none font-bold text-slate-600 text-xs md:text-sm placeholder-slate-300 text-center border border-slate-100 focus:border-blue-200 focus:ring-2 focus:ring-blue-50 transition-all"
+                            />
+                        </div>
 
-                      {/* Bottom Row: N3, N4 */}
-                      <DroppableZone id="N3" label="Nozzle 3" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
-                        {assignments['N3'] && <DraggableStaff id={assignments['N3'].id} staffMember={assignments['N3']} size="small" />}
-                      </DroppableZone>
-                      <DroppableZone id="N4" label="Nozzle 4" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
-                        {assignments['N4'] && <DraggableStaff id={assignments['N4'].id} staffMember={assignments['N4']} size="small" />}
-                      </DroppableZone>
                     </div>
 
-                    {/* CENTER MPD DIV */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 md:w-28 md:h-28 bg-slate-800 rounded-xl md:rounded-2xl shadow-2xl flex flex-col items-center justify-center border-2 md:border-4 border-slate-600 z-0">
-                      <span className="text-lg md:text-2xl font-black text-white tracking-widest">MPD</span>
-                    </div>
-                  </div>
-
-                  {/* RIGHT SIDE: Hanging + Extra + Air */}
-                  <div className="flex flex-col gap-4 md:gap-5 border-l-2 border-dashed border-slate-200 pl-4 md:pl-8 py-2">
-                    <DroppableZone id="N5" label="H-5" className="w-16 h-16 md:w-20 md:h-20 bg-indigo-50 rounded-full border-[3px] border-indigo-200 flex items-center justify-center shadow-sm">
-                      {assignments['N5'] && <DraggableStaff id={assignments['N5'].id} staffMember={assignments['N5']} size="small" />}
-                    </DroppableZone>
-                    <DroppableZone id="N6" label="H-6" className="w-16 h-16 md:w-20 md:h-20 bg-indigo-50 rounded-full border-[3px] border-indigo-200 flex items-center justify-center shadow-sm">
-                      {assignments['N6'] && <DraggableStaff id={assignments['N6'].id} staffMember={assignments['N6']} size="small" />}
-                    </DroppableZone>
-
-                    {/* EXTRA MEMBER ZONE (New) */}
-                    <div className="mt-1">
-                      <DroppableZone id="Extra" label="Extra" isExtra={true} className="w-16 h-16 md:w-20 md:h-20 bg-orange-50 rounded-full border-[3px] border-orange-200 flex items-center justify-center relative shadow-sm">
-                        <UserPlus className="absolute text-orange-200 w-6 h-6 md:w-8 md:h-8 z-0" />
-                        {assignments['Extra'] && <DraggableStaff id={assignments['Extra'].id} staffMember={assignments['Extra']} size="small" />}
-                      </DroppableZone>
+                    {/* Mobile Absent Zone */}
+                    <div className="md:hidden w-full max-w-[360px] mt-6">
+                        <div className="flex items-center gap-1 mb-1 ml-1 text-xs font-black text-red-400 uppercase"><AlertCircle size={12} /> Absent Zone</div>
+                        <DroppableZone id="absent-mobile" isAbsent={true} className="w-full bg-red-50 border-4 border-dashed border-red-200 rounded-2xl p-2 min-h-[70px] flex items-center gap-2 overflow-x-auto px-4">
+                        {absentStaff.length === 0 && <span className="text-red-300 w-full text-center font-bold uppercase text-[10px]">Drag Absent Staff Here</span>}
+                        {absentStaff.map((s) => <div key={s.id} className="shrink-0"><DraggableStaff id={`mob-${s.id}`} staffMember={s} size="small" hideName={true} /></div>)}
+                        </DroppableZone>
                     </div>
 
-                    <div className="mt-1">
-                      <DroppableZone id="Air" label="Air Boy" isAir={true} className="w-16 h-16 md:w-20 md:h-20 bg-cyan-50 rounded-full border-[3px] border-cyan-200 flex items-center justify-center relative shadow-sm">
-                        <Wind className="absolute text-cyan-200 w-6 h-6 md:w-8 md:h-8 z-0" />
-                        {assignments['Air'] && <DraggableStaff id={assignments['Air'].id} staffMember={assignments['Air']} size="small" />}
-                      </DroppableZone>
-                    </div>
-                  </div>
+                    {/* Mobile Save Button */}
+                    <button onClick={handleSaveImage} className="md:hidden flex items-center gap-2 text-blue-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-blue-100 hover:bg-blue-50 text-sm mt-4 w-full max-w-[360px] justify-center">
+                        <Download size={18} /> Save Map Image
+                    </button>
+
+                    {/* Mobile VIEW Saved Button */}
+                    {savedMapImage && (
+                        <button onClick={() => setViewMode(true)} className="md:hidden flex items-center gap-2 text-green-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-green-100 hover:bg-green-50 text-sm mt-2 w-full max-w-[360px] justify-center">
+                            <FileText size={18}/> View Saved Map
+                        </button>
+                    )}
                 </div>
-                
-                {/* Caption Input (Fixed Layout) */}
-                <div className="mt-4 mb-2 w-full border-t-2 border-dashed border-slate-100 pt-3 flex items-center gap-2">
-                  <Edit3 size={16} className="text-slate-400 shrink-0" />
-                  <input
-                    type="text"
-                    value={caption}
-                    onChange={(e) => setCaption(e.target.value)}
-                    placeholder="Write a note/caption here..."
-                    className="w-full bg-slate-50 px-3 py-2 rounded-lg outline-none font-bold text-slate-600 text-xs md:text-sm placeholder-slate-300 text-center border border-slate-100 focus:border-blue-200 focus:ring-2 focus:ring-blue-50 transition-all"
-                  />
-                </div>
-
-              </div>
-
-              {/* Mobile Absent Zone */}
-              <div className="md:hidden w-full max-w-[360px] mt-6">
-                <div className="flex items-center gap-1 mb-1 ml-1 text-xs font-black text-red-400 uppercase"><AlertCircle size={12} /> Absent Zone</div>
-                <DroppableZone id="absent-mobile" isAbsent={true} className="w-full bg-red-50 border-4 border-dashed border-red-200 rounded-2xl p-2 min-h-[70px] flex items-center gap-2 overflow-x-auto px-4">
-                  {absentStaff.length === 0 && <span className="text-red-300 w-full text-center font-bold uppercase text-[10px]">Drag Absent Staff Here</span>}
-                  {absentStaff.map((s) => <div key={s.id} className="shrink-0"><DraggableStaff id={`mob-${s.id}`} staffMember={s} size="small" hideName={true} /></div>)}
-                </DroppableZone>
-              </div>
-
-              {/* Mobile Save Button */}
-              <button onClick={handleSaveImage} className="md:hidden flex items-center gap-2 text-blue-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-blue-100 hover:bg-blue-50 text-sm mt-4 w-full max-w-[360px] justify-center">
-                <Download size={18} /> Save Map Image
-              </button>
-
-               {/* Mobile VIEW Saved Button (Only if image exists) */}
-               {savedMapImage && (
-                <button onClick={() => setViewMode(true)} className="md:hidden flex items-center gap-2 text-green-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-green-100 hover:bg-green-50 text-sm mt-2 w-full max-w-[360px] justify-center">
-                    <FileText size={18}/> View Saved Map
-                </button>
-              )}
-
             </div>
           </div>
 
