@@ -123,6 +123,7 @@ const ShiftManagementSystem = () => {
     useSensor(TouchSensor, { activationConstraint: { delay: 100, tolerance: 10 } })
   );
 
+  // 1. Check for existing map image when Date or Shift changes
   useEffect(() => {
     const checkSavedMap = async () => {
       try {
@@ -138,6 +139,7 @@ const ShiftManagementSystem = () => {
     checkSavedMap();
   }, [date, shift]);
 
+  // 2. Fetch Members
   useEffect(() => {
     const fetchMembers = async () => {
       try {
@@ -205,27 +207,44 @@ const ShiftManagementSystem = () => {
     });
   };
 
-  // --- FIXED SAVE IMAGE FUNCTION ---
+  // --- ROBUST SAVE IMAGE FUNCTION ---
   const handleSaveImage = async () => {
     if (pumpMapRef.current) {
       try {
+        // Using html2canvas with specific onClone to fix input and cutoff issues
         const canvas = await html2canvas(pumpMapRef.current, {
           backgroundColor: '#ffffff',
           scale: 2,
-          useCORS: true, // Enables cross-origin images (avatars)
-          // This function fixes the BLANK CAPTION issue
+          useCORS: true, 
+          scrollY: -window.scrollY, // Helps with scrolling issues
           onClone: (clonedDoc) => {
+            // 1. FIX CAPTION: Convert Input to Div
             const input = clonedDoc.getElementById('caption-input');
             if (input) {
               const div = clonedDoc.createElement('div');
-              div.innerText = input.value; // Read current value
-              div.style.cssText = window.getComputedStyle(input).cssText;
+              div.innerText = input.value; // Ensure text is copied
+              
+              // Copy all styles from input to div to match appearance
+              const computedStyle = window.getComputedStyle(pumpMapRef.current.querySelector('#caption-input'));
+              Array.from(computedStyle).forEach(key => {
+                  div.style.setProperty(key, computedStyle.getPropertyValue(key), computedStyle.getPropertyPriority(key));
+              });
+              
               div.style.display = 'flex';
               div.style.alignItems = 'center';
               div.style.justifyContent = 'center';
-              div.style.border = 'none';
-              div.style.backgroundColor = '#f8fafc'; // match slate-50
+              div.style.height = 'auto'; // Allow height to fit
+              div.style.minHeight = '40px';
+              
               input.parentNode.replaceChild(div, input);
+            }
+
+            // 2. FIX CUTOFF: Force container to show everything
+            const clonedMap = clonedDoc.getElementById('pump-map-container');
+            if (clonedMap) {
+                clonedMap.style.height = 'auto';
+                clonedMap.style.overflow = 'visible';
+                clonedMap.style.paddingBottom = '50px'; // Add Extra Padding at bottom
             }
           }
         });
@@ -401,8 +420,8 @@ const ShiftManagementSystem = () => {
             <div className="flex-1 overflow-y-auto p-2">
                 <div className="min-h-full flex flex-col items-center justify-center py-10 pb-40 md:pb-10">
 
-                    {/* THE MAP CARD - Added pb-12 for clipping fix */}
-                    <div ref={pumpMapRef} className="bg-white rounded-[2rem] shadow-xl border-[4px] border-slate-200 p-4 md:p-8 pb-12 relative flex flex-col items-center justify-center w-full max-w-[360px] md:max-w-none md:w-auto">
+                    {/* THE MAP CARD - Added ID for cloning & increased bottom padding */}
+                    <div id="pump-map-container" ref={pumpMapRef} className="bg-white rounded-[2rem] shadow-xl border-[4px] border-slate-200 p-4 md:p-8 pb-16 relative flex flex-col items-center justify-center w-full max-w-[360px] md:max-w-none md:w-auto">
 
                         {/* Title inside Card */}
                         <div className="absolute top-3 w-full text-center">
@@ -489,7 +508,7 @@ const ShiftManagementSystem = () => {
                     </div>
 
                     {/* Mobile Save Button */}
-                    <button onClick={handleSaveImage} className="md:hidden flex items-center gap-2 text-blue-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-blue-100 hover:bg-blue-50 text-sm mt-4 mb-10 w-full max-w-[360px] justify-center">
+                    <button onClick={handleSaveImage} className="md:hidden flex items-center gap-2 text-blue-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-blue-100 hover:bg-blue-50 text-sm mt-4 w-full max-w-[360px] justify-center">
                         <Download size={18} /> Save Map Image
                     </button>
 

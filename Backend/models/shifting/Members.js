@@ -10,36 +10,17 @@
 
 
 
-const mongoose = require("mongoose");
+// models/Member.js
+const mongoose = require('mongoose');
 
-const NozzleSchema = new mongoose.Schema({
-  nozzleNumber: { type: String, required: true },
-  member: { type: String, default: "Unassigned" },
-  overtime: { type: Boolean, default: false },
+const MemberSchema = new mongoose.Schema({
+  name: { type: String, required: true, trim: true },
+  role: { type: String, default: 'operator' },        // operator, supervisor, air boy etc.
+  shift: { type: String, default: 'morning' },        // morning/evening
+  available: { type: String, default: 'present' },    // present/absent
+  avatar: { type: String, default: null },            // URL or base64 data
+}, {
+  timestamps: true
 });
 
-const ShiftSchema = new mongoose.Schema({
-  date: { type: String, required: true },
-  shiftType: { type: String, enum: ["Morning", "Evening"], required: true }, // Changed enum to match frontend values
-  startTime: { type: String, default: "" }, // Made optional/default for easier saving
-  endTime: { type: String, default: "" },
-  supervisor: { type: String, default: "Not Assigned" },
-  airBoy: { type: String, default: "Not Assigned" },
-  extraOperator: { type: String, default: "Not Assigned" },
-  
-  // --- NEW FIELD FOR IMAGE ---
-  shiftMapImage: { type: String, default: "" }, // Stores Base64 string
-  
-  nozzles: [NozzleSchema],
-});
-
-// Middleware to standardize date
-ShiftSchema.pre("save", function (next) {
-  if (this.date instanceof Date) {
-    this.date = this.date.toISOString().split("T")[0];
-  }
-  next();
-});
-
-const Shift = mongoose.model("Shift", ShiftSchema);
-module.exports = Shift;
+module.exports = mongoose.model('Member', MemberSchema);

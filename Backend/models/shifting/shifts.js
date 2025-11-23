@@ -28,44 +28,80 @@
 // const Shift = mongoose.model("Shift", ShiftSchema);
 // module.exports = Shift;
 
-const express = require('express');
-const router = express.Router();
-const Shift = require('../shifting/Members'); // Path adjust karein apne folder ke hisab se
+// controllers/shiftingController.js
+const Member = require('./Members');
+const MapSnapshot = require('./MapSnapshot');
 
-// 1. SAVE MAP IMAGE
-router.post('/save-map', async (req, res) => {
+exports.listMembers = async (req, res) => {
   try {
-    const { date, shift, image } = req.body;
-
-    // Find existing shift or create new one
-    // Upsert logic: Update if exists, Insert if not
-    const updatedShift = await Shift.findOneAndUpdate(
-      { date: date, shiftType: shift },
-      { $set: { shiftMapImage: image } },
-      { new: true, upsert: true } // upsert: true creates doc if not found
-    );
-
-    res.status(200).json({ message: "Map Saved to DB", data: updatedShift });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server Error" });
+    const members = await Member.find().sort({ name: 1 });
+    return res.json(members);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Server error' });
   }
-});
+};
 
-// 2. GET MAP IMAGE (To view it)
-router.get('/get-map', async (req, res) => {
+exports.addMember = async (req, res) => {
+  try {
+    const { name, role, shift, available, image } = req.body;
+    if (!name) return res.status(400).json({ message: 'Name is required' });
+
+    const member = new Member({
+      name,
+      role: role || 'operator',
+      shift: shift || 'morning',
+      available: available || 'present',
+      avatar: image || null
+    });
+
+    const saved = await member.save();
+    return res.status(201).json(saved);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Failed to add member' });
+  }
+};
+
+exports.deleteMember = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Member.findByIdAndDelete(id);
+    return res.json({ message: 'Deleted' });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Failed to delete' });
+  }
+};
+
+exports.getMap = async (req, res) => {
   try {
     const { date, shift } = req.query;
-    const foundShift = await Shift.findOne({ date: date, shiftType: shift });
-    
-    if (foundShift && foundShift.shiftMapImage) {
-      res.status(200).json({ image: foundShift.shiftMapImage });
-    } else {
-      res.status(404).json({ message: "No image found" });
-    }
-  } catch (error) {
-    res.status(500).json({ message: "Server Error" });
+    if (!date || !shift) return res.status(400).json({ message: 'date and shift are required' });
+    const snap = await MapSnapshot.findOne({ date, shift });
+    if (!snap) return res.json({ message: 'No map', image: null });
+    return res.json({ image: snap.image, caption: snap.caption, date: snap.date, shift: snap.shift, createdAt: snap.createdAt });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Failed to fetch map' });
   }
-});
+};
 
-module.exports = router;
+exports.saveMap = async (req, res) => {
+  try {
+    const { date, shift, image, caption } = req.body;
+    if (!date || !shift || !image) return res.status(400).json({ message: 'date, shift and image are required' });
+
+    // Upsert: replace existing snapshot for date+shift
+    const updated = await MapSnapshot.findOneAndUpdate(
+      { date, shift },
+      { image, caption: caption || '', createdAt: new Date() },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+
+    return res.json({ message: 'Saved', snapshot: updated });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Failed to save map' });
+  }
+};

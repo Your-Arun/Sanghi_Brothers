@@ -68,3 +68,29 @@
 
 
 // module.exports = router;
+
+
+
+
+
+// routes/shifting.js
+const express = require('express');
+const router = express.Router();
+const controller = require('./shifts');
+
+// List all members
+router.get('/', controller.listMembers);
+
+// Add new member
+router.post('/', controller.addMember);
+
+// Delete member
+router.delete('/:id', controller.deleteMember);
+
+// Get map snapshot (by date & shift)
+router.get('/get-map', controller.getMap);
+
+// Save map snapshot
+router.post('/save-map', controller.saveMap);
+
+module.exports = router;
