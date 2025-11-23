@@ -54,25 +54,22 @@ exports.listMembers = async (req, res) => {
 
 exports.addMember = async (req, res) => {
   try {
-    const { name, role, shift, available } = req.body;
+    // Agar file upload hui hai, to Cloudinary ka path lelo
+    // req.file.path me pura link hota hai (https://res.cloudinary...)
+    const avatarUrl = req.file ? req.file.path : null; 
 
-    // Handle file upload (Cloudinary provides 'path')
-    const avatarUrl = req.file ? req.file.path : null;
-
-    const member = new Member({
-      name,
-      role: role || "operator",
-      shift: shift || "morning",
-      available: available || "present",
-      avatar: avatarUrl,
+    const newMember = new Member({
+      name: req.body.name,
+      role: req.body.role,
+      shift: req.body.shift,
+      available: req.body.available,
+      avatar: avatarUrl, // <--- YAHAN 'req.file.path' SAVE KARNA HAI
     });
 
-    const saved = await member.save();
-    return res.json(saved);
-
-  } catch (err) {
-    console.error("Add Member Error:", err);
-    return res.status(500).json({ message: "Failed to add member" });
+    const savedMember = await newMember.save();
+    res.status(201).json(savedMember);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 

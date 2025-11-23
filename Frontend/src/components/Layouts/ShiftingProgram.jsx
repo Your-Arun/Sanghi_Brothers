@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import axiosInstance from '../Dashboard/axiosInstance';
 
-/* --- DraggableStaff (Fixed Gap) --- */
+/* --- DraggableStaff (Cloudinary Version) --- */
 const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", hideName = false }) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: String(id),
@@ -33,18 +33,12 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
 
   const isMap = size === "map";
   const isSmall = size === "small";
-
-  // If 'map', fill 100%. If 'small', use fixed pixels.
-  const containerClasses = isMap
-    ? "w-full h-full"
-    : (isSmall ? "w-10 h-10 md:w-12 md:h-12" : "w-14 h-14 md:w-16 md:h-16");
-
+  const containerClasses = isMap ? "w-full h-full" : (isSmall ? "w-10 h-10 md:w-12 md:h-12" : "w-14 h-14 md:w-16 md:h-16");
   const textSize = isMap || isSmall ? "text-[8px] md:text-[9px]" : "text-[10px]";
+  const borderClasses = isMap ? "" : "border-[2px] border-white shadow-sm";
 
-  // Dynamic classes: Remove border/shadow when inside map to prevent gaps
-  const borderClasses = isMap
-    ? "" // No border inside map (allows image to touch zone border)
-    : "border-[2px] border-white shadow-sm"; // White border for sidebar/overlay
+  // Fallback (Agar image na ho to Initials dikhaye)
+  const fallbackImage = `https://ui-avatars.com/api/?name=${staffMember.name}&background=random&color=fff&bold=true`;
 
   return (
     <div
@@ -53,13 +47,16 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
       {...listeners}
       {...attributes}
       className={`flex flex-col items-center justify-center touch-none transition-transform ${isOverlay ? 'scale-110 opacity-95 cursor-grabbing' : 'cursor-grab hover:scale-105 active:cursor-grabbing'
-        } ${isMap ? 'w-full h-full p-[1px]' : ''}`} // p-[1px] prevents slight bleeding over rounded edges
+        } ${isMap ? 'w-full h-full p-[1px]' : ''}`}
     >
       <div className={`${containerClasses} ${borderClasses} rounded-full overflow-hidden bg-gray-200 transition-all relative`}>
         <img
-          src={staffMember.avatar || `https://ui-avatars.com/api/?name=${staffMember.name}&background=random`}
+          // Cloudinary ka link direct use karein
+          src={staffMember.avatar || fallbackImage}
           alt={staffMember.name}
-          className="w-full h-full object-cover pointer-events-none select-none"
+          // Agar link broken ho, to turant fallback image lag jaye
+          onError={(e) => { e.target.onerror = null; e.target.src = fallbackImage; }}
+          className="w-full h-full object-cover pointer-events-none select-none bg-white"
         />
       </div>
 
