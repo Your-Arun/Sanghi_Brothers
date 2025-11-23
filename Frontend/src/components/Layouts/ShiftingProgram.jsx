@@ -218,85 +218,67 @@ const ShiftManagementSystem = () => {
   };
 
   const handleSaveImage = async () => {
-    if (pumpMapRef.current) {
-      try {
-        const canvas = await html2canvas(pumpMapRef.current, {
-          backgroundColor: "#ffffff",
-          scale: 4,
-          useCORS: true,
-          scrollY: -window.scrollY,
+    if (!pumpMapRef.current) return;
   
-          onClone: (clonedDoc) => {
-            const input = clonedDoc.getElementById("caption-input");
+    try {
+      const canvas = await html2canvas(pumpMapRef.current, {
+        backgroundColor: "#ffffff",
+        scale: 4,
+        useCORS: true,
+        scrollY: -window.scrollY,
   
-            if (input) {
-              const div = clonedDoc.createElement("div");
-              div.innerText = caption || "";
+        onClone: (clonedDoc) => {
+          // Remove original input completely
+          const input = clonedDoc.getElementById("caption-input");
+          if (input) input.remove();
   
-              // FINAL PERFECT STYLES
-              div.style.width = "100%";
-              div.style.textAlign = "center";
-              div.style.fontWeight = "bold";
-              div.style.color = "#475569";
-              div.style.fontSize = "16px";
-              div.style.background = "#f8fafc";
-              div.style.padding = "12px 10px";
-              div.style.borderRadius = "10px";
-              div.style.border = "1px solid #e2e8f0";
-              div.style.boxSizing = "border-box";
+          // Find main pump container
+          const mapContainer = clonedDoc.getElementById("pump-map-container");
   
-              // ⭐ CENTER FIX
-              div.style.display = "flex";
-              div.style.justifyContent = "center";
-              div.style.alignItems = "center";
+          if (mapContainer) {
+            // Create clean caption div at bottom
+            const captionDiv = clonedDoc.createElement("div");
+            captionDiv.innerText = caption || "";
+            captionDiv.style.width = "100%";
+            captionDiv.style.textAlign = "center";
+            captionDiv.style.fontWeight = "bold";
+            captionDiv.style.color = "#475569";
+            captionDiv.style.fontSize = "18px";
+            captionDiv.style.background = "#f8fafc";
+            captionDiv.style.padding = "14px";
+            captionDiv.style.marginTop = "30px";
+            captionDiv.style.border = "1px solid #e2e8f0";
+            captionDiv.style.borderRadius = "10px";
+            captionDiv.style.boxSizing = "border-box";
   
-              // ⭐ WRAPPER FIX
-              const wrapper = clonedDoc.getElementById("caption-wrapper");
-              if (wrapper) {
-                wrapper.style.width = "100%";
-                wrapper.style.display = "flex";
-                wrapper.style.justifyContent = "center";
-                wrapper.style.alignItems = "center";
-              }
+            // Add caption at end
+            mapContainer.appendChild(captionDiv);
+          }
+        }
+      });
   
-              input.parentNode.replaceChild(div, input);
-            }
+      const base64Image = canvas.toDataURL("image/png");
   
-            // Pump map container adjustments
-            const clonedMap = clonedDoc.getElementById("pump-map-container");
-            if (clonedMap) {
-              clonedMap.style.height = "auto";
-              clonedMap.style.overflow = "visible";
-              clonedMap.style.paddingBottom = "60px";
-            }
-          },
-        });
+      const link = document.createElement("a");
+      link.download = `Pump_Shift_${shift}_${date}.png`;
+      link.href = base64Image;
+      link.click();
   
-        // Convert to PNG
-        const base64Image = canvas.toDataURL("image/png");
+      await axiosInstance.post("/shifting/save-map", {
+        date,
+        shift,
+        image: base64Image,
+        caption
+      });
   
-        // Download PNG
-        const link = document.createElement("a");
-        link.download = `Pump_Shift_${shift}_${date}.png`;
-        link.href = base64Image;
-        link.click();
-  
-        // Save to backend
-        await axiosInstance.post("/shifting/save-map", {
-          date: date,
-          shift: shift,
-          image: base64Image,
-          caption: caption,
-        });
-  
-        setSavedMapImage(base64Image);
-        toast.success("Map Saved Successfully!");
-      } catch (error) {
-        console.error(error);
-        toast.error("Failed to save image");
-      }
+      setSavedMapImage(base64Image);
+      toast.success("Map Saved with Caption!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to Save");
     }
   };
+  
   
 
   const handleAutoAssign = () => {
