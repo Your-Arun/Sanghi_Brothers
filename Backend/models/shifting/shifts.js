@@ -30,7 +30,7 @@
 
 const express = require('express');
 const router = express.Router();
-const Shift = require('../models/Shift'); // Path adjust karein apne folder ke hisab se
+const Shift = require('../shifting/Members'); // Path adjust karein apne folder ke hisab se
 
 // 1. SAVE MAP IMAGE
 router.post('/save-map', async (req, res) => {
