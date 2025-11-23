@@ -205,14 +205,33 @@ const ShiftManagementSystem = () => {
     });
   };
 
+  // --- FIXED SAVE IMAGE FUNCTION ---
   const handleSaveImage = async () => {
     if (pumpMapRef.current) {
       try {
         const canvas = await html2canvas(pumpMapRef.current, {
           backgroundColor: '#ffffff',
-          scale: 2
+          scale: 2,
+          useCORS: true, // Enables cross-origin images (avatars)
+          // This function fixes the BLANK CAPTION issue
+          onClone: (clonedDoc) => {
+            const input = clonedDoc.getElementById('caption-input');
+            if (input) {
+              const div = clonedDoc.createElement('div');
+              div.innerText = input.value; // Read current value
+              div.style.cssText = window.getComputedStyle(input).cssText;
+              div.style.display = 'flex';
+              div.style.alignItems = 'center';
+              div.style.justifyContent = 'center';
+              div.style.border = 'none';
+              div.style.backgroundColor = '#f8fafc'; // match slate-50
+              input.parentNode.replaceChild(div, input);
+            }
+          }
         });
-        const base64Image = canvas.toDataURL('image/jpeg', 0.7);
+
+        const base64Image = canvas.toDataURL('image/jpeg', 0.8);
+
         const link = document.createElement('a');
         link.download = `Pump_Shift_${shift}_${date}.jpg`;
         link.href = base64Image;
@@ -349,7 +368,7 @@ const ShiftManagementSystem = () => {
             </nav>
           </aside>
 
-          {/* CENTER AREA - FIXED LAYOUT SCROLLING */}
+          {/* CENTER AREA */}
           <div className="flex-1 flex flex-col bg-slate-100 relative h-full overflow-hidden">
             {/* Desktop Top Bar */}
             <div className="hidden md:flex p-3 bg-white shadow-sm justify-between items-center z-20 shrink-0">
@@ -378,20 +397,19 @@ const ShiftManagementSystem = () => {
               </div>
             </div>
 
-            {/* MAP AREA - ENABLED SCROLLING FOR ALL SIZES */}
+            {/* MAP AREA */}
             <div className="flex-1 overflow-y-auto p-2">
-                {/* Flex container with min-height to allow centering but prevent clipping */}
                 <div className="min-h-full flex flex-col items-center justify-center py-10 pb-40 md:pb-10">
 
-                    {/* THE MAP CARD */}
-                    <div ref={pumpMapRef} className="bg-white rounded-[2rem] shadow-xl border-[4px] border-slate-200 p-4 md:p-8 relative flex flex-col items-center justify-center w-full max-w-[360px] md:max-w-none md:w-auto">
+                    {/* THE MAP CARD - Added pb-12 for clipping fix */}
+                    <div ref={pumpMapRef} className="bg-white rounded-[2rem] shadow-xl border-[4px] border-slate-200 p-4 md:p-8 pb-12 relative flex flex-col items-center justify-center w-full max-w-[360px] md:max-w-none md:w-auto">
 
                         {/* Title inside Card */}
                         <div className="absolute top-3 w-full text-center">
                         <h3 className="text-slate-300 text-[9px] font-black uppercase tracking-[0.3em]">Pump Map</h3>
                         </div>
 
-                        {/* Supervisor - Top Left Absolute */}
+                        {/* Supervisor */}
                         <div className="absolute top-4 left-4 z-20">
                         <DroppableZone id="Supervisor" label="Supervisor" isSupervisor={true} className="w-16 h-16 md:w-20 md:h-20 bg-purple-50 rounded-full border-[3px] border-purple-200 flex items-center justify-center relative shadow-sm">
                             <ShieldCheck className="absolute text-purple-200 w-6 h-6 md:w-8 md:h-8 z-0" />
@@ -401,8 +419,7 @@ const ShiftManagementSystem = () => {
 
                         {/* Layout Container */}
                         <div className="mt-10 md:mt-8 flex gap-4 md:gap-8 items-center">
-
-                            {/* LEFT SIDE: The 4 Nozzles + MPD */}
+                            {/* LEFT SIDE */}
                             <div className="relative p-2 md:p-4">
                                 <div className="absolute inset-0 border-2 border-dashed border-slate-200 rounded-[2rem] -z-10"></div>
                                 <div className="grid grid-cols-2 gap-x-12 gap-y-12 md:gap-x-24 md:gap-y-24 relative z-10 p-2">
@@ -424,7 +441,7 @@ const ShiftManagementSystem = () => {
                                 </div>
                             </div>
 
-                            {/* RIGHT SIDE: Hanging + Extra + Air */}
+                            {/* RIGHT SIDE */}
                             <div className="flex flex-col gap-4 md:gap-5 border-l-2 border-dashed border-slate-200 pl-4 md:pl-8 py-2">
                                 <DroppableZone id="N5" label="H-5" className="w-16 h-16 md:w-20 md:h-20 bg-indigo-50 rounded-full border-[3px] border-indigo-200 flex items-center justify-center shadow-sm">
                                 {assignments['N5'] && <DraggableStaff id={assignments['N5'].id} staffMember={assignments['N5']} size="small" />}
@@ -447,10 +464,11 @@ const ShiftManagementSystem = () => {
                             </div>
                         </div>
                         
-                        {/* Caption Input (Fixed Spacing) */}
+                        {/* Caption Input - Added ID for html2canvas */}
                         <div className="mt-6 mb-2 w-full border-t-2 border-dashed border-slate-100 pt-3 flex items-center gap-2">
                             <Edit3 size={16} className="text-slate-400 shrink-0" />
                             <input
+                                id="caption-input" 
                                 type="text"
                                 value={caption}
                                 onChange={(e) => setCaption(e.target.value)}
