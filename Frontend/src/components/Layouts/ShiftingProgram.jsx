@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import axiosInstance from '../Dashboard/axiosInstance';
 
-/* --- DraggableStaff (Updated for Zero Gap) --- */
+/* --- DraggableStaff (Fixed Gap) --- */
 const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", hideName = false }) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: String(id),
@@ -31,9 +31,8 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
     zIndex: isDragging || isOverlay ? 9999 : 10,
   };
 
-  // Logic to handle Map Size (Fill Parent) vs Sidebar Size (Fixed Small)
   const isMap = size === "map";
-  const isSmall = size === "small"; // Sidebar
+  const isSmall = size === "small";
 
   // If 'map', fill 100%. If 'small', use fixed pixels.
   const containerClasses = isMap
@@ -42,16 +41,22 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
 
   const textSize = isMap || isSmall ? "text-[8px] md:text-[9px]" : "text-[10px]";
 
+  // Dynamic classes: Remove border/shadow when inside map to prevent gaps
+  const borderClasses = isMap 
+    ? "" // No border inside map (allows image to touch zone border)
+    : "border-[2px] border-white shadow-sm"; // White border for sidebar/overlay
+
   return (
     <div
       ref={setNodeRef}
       style={style}
       {...listeners}
       {...attributes}
-      className={`flex flex-col items-center justify-center touch-none transition-transform ${isOverlay ? 'scale-110 opacity-95 cursor-grabbing' : 'cursor-grab hover:scale-105 active:cursor-grabbing'
-        } ${isMap ? 'w-full h-full' : ''}`} // Force full size in map mode
+      className={`flex flex-col items-center justify-center touch-none transition-transform ${
+        isOverlay ? 'scale-110 opacity-95 cursor-grabbing' : 'cursor-grab hover:scale-105 active:cursor-grabbing'
+      } ${isMap ? 'w-full h-full p-[1px]' : ''}`} // p-[1px] prevents slight bleeding over rounded edges
     >
-      <div className={`${containerClasses} rounded-full overflow-hidden border-[2px] border-white shadow-sm bg-gray-200 transition-all relative`}>
+      <div className={`${containerClasses} ${borderClasses} rounded-full overflow-hidden bg-gray-200 transition-all relative`}>
         <img
           src={staffMember.avatar || `https://ui-avatars.com/api/?name=${staffMember.name}&background=random`}
           alt={staffMember.name}
@@ -106,11 +111,11 @@ const ShiftManagementSystem = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showMemberListModal, setShowMemberListModal] = useState(false);
-
+  
   // Drag State
   const [activeId, setActiveId] = useState(null);
   const [activeStaff, setActiveStaff] = useState(null);
-
+  
   // Data State
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [shift, setShift] = useState('Morning');
@@ -123,7 +128,7 @@ const ShiftManagementSystem = () => {
   const [viewMode, setViewMode] = useState(false);
 
   const [newMember, setNewMember] = useState({
-    name: "", role: "operator", shift: 'morning', available: 'present', image: null
+    name: "", role: "operator", shift: 'morning', available: 'present', file: null, preview: null
   });
 
   const sensors = useSensors(
@@ -131,11 +136,10 @@ const ShiftManagementSystem = () => {
     useSensor(TouchSensor, { activationConstraint: { delay: 100, tolerance: 10 } })
   );
 
-  // 1. Check for existing map image when Date or Shift changes
   useEffect(() => {
     const checkSavedMap = async () => {
       try {
-        setSavedMapImage(null);
+        setSavedMapImage(null); 
         const res = await axiosInstance.get(`/shifting/get-map?date=${date}&shift=${shift}`);
         if (res.data.image) {
           setSavedMapImage(res.data.image);
@@ -147,7 +151,6 @@ const ShiftManagementSystem = () => {
     checkSavedMap();
   }, [date, shift]);
 
-  // 2. Fetch Members
   useEffect(() => {
     const fetchMembers = async () => {
       try {
@@ -215,23 +218,19 @@ const ShiftManagementSystem = () => {
     });
   };
 
-  // --- HIGH QUALITY SAVE IMAGE FUNCTION ---
   const handleSaveImage = async () => {
     if (pumpMapRef.current) {
       try {
         const canvas = await html2canvas(pumpMapRef.current, {
           backgroundColor: '#ffffff',
-          scale: 4, // High Quality Scale
+          scale: 4, 
           useCORS: true,
           scrollY: -window.scrollY,
-
           onClone: (clonedDoc) => {
-            // Fix Caption Input
             const input = clonedDoc.getElementById('caption-input');
             if (input) {
               const div = clonedDoc.createElement('div');
-              div.innerText = caption || "";
-
+              div.innerText = caption || ""; 
               div.style.width = '100%';
               div.style.textAlign = 'center';
               div.style.fontWeight = 'bold';
@@ -245,22 +244,18 @@ const ShiftManagementSystem = () => {
               div.style.display = 'flex';
               div.style.alignItems = 'center';
               div.style.justifyContent = 'center';
-
               input.parentNode.replaceChild(div, input);
             }
-
-            // Fix Cut-off
             const clonedMap = clonedDoc.getElementById('pump-map-container');
             if (clonedMap) {
-              clonedMap.style.height = 'auto';
-              clonedMap.style.overflow = 'visible';
-              clonedMap.style.paddingBottom = '60px';
+                clonedMap.style.height = 'auto';
+                clonedMap.style.overflow = 'visible';
+                clonedMap.style.paddingBottom = '60px';
             }
           }
         });
 
-        const base64Image = canvas.toDataURL('image/png'); // PNG Format
-
+        const base64Image = canvas.toDataURL('image/png');
         const link = document.createElement('a');
         link.download = `Pump_Shift_${shift}_${date}.png`;
         link.href = base64Image;
@@ -271,10 +266,9 @@ const ShiftManagementSystem = () => {
           shift: shift,
           image: base64Image
         });
-
+        
         setSavedMapImage(base64Image);
         toast.success("Map Saved (PNG)!");
-
       } catch (error) {
         console.error(error);
         toast.error("Failed to save image");
@@ -303,9 +297,9 @@ const ShiftManagementSystem = () => {
     toast.success(`Auto-assigned ${shift}!`);
   };
 
+  // --- FIXED ADD MEMBER SUBMIT ---
   const handleAddMemberSubmit = async (e) => {
     e.preventDefault();
-  
     if (!newMember.name) return;
   
     try {
@@ -313,53 +307,43 @@ const ShiftManagementSystem = () => {
       formData.append("name", newMember.name);
       formData.append("role", newMember.role);
       formData.append("shift", newMember.shift);
-      formData.append("available", newMember.available);
+      formData.append("available", newMember.available || 'present');
   
       if (newMember.file) {
-        formData.append("avatar", newMember.file);  // cloudinary upload
+        formData.append("avatar", newMember.file); 
       }
   
-      const response = await axiosInstance.post("/shifting", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      // Axios automatically sets Content-Type for FormData
+      const response = await axiosInstance.post("/shifting", formData);
   
       const saved = {
         ...response.data,
         id: response.data._id,
-        avatar: response.data.avatar, // actual cloudinary url
+        avatar: response.data.avatar,
       };
   
       setMembers([...members, saved]);
-  
       setNewMember({
-        name: "",
-        role: "operator",
-        shift: "morning",
-        available: "present",
-        file: null,
-        preview: null,
+        name: "", role: "operator", shift: "morning", available: "present", file: null, preview: null,
       });
   
       setShowAddModal(false);
       toast.success("Member Added");
     } catch (error) {
       console.error(error);
-      toast.error("Failed");
+      toast.error("Failed to add member");
     }
   };
-  
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-  
     setNewMember(prev => ({
       ...prev,
-      file: file, // real file for Cloudinary
-      preview: URL.createObjectURL(file), // preview in UI
+      file: file, 
+      preview: URL.createObjectURL(file), 
     }));
   };
-  
 
   const handleDeleteMember = async (id) => {
     if (window.confirm("Delete?")) {
@@ -376,7 +360,7 @@ const ShiftManagementSystem = () => {
     const mapLabels = {
       'Supervisor': '👮 Supervisor',
       'N1': '⛽ Nozzle 1', 'N2': '⛽ Nozzle 2', 'N3': '⛽ Nozzle 3', 'N4': '⛽ Nozzle 4',
-      'N5': '🪝 Hanging 5', 'N6': '🪝 Hanging 6',
+      'N5': '🪝 Hanging 5', 'N6': '🪝 Hanging 6', 
       'Extra': '👷 Extra', 'Air': '💨 Air Boy'
     };
     Object.entries(mapLabels).forEach(([key, label]) => {
@@ -469,108 +453,107 @@ const ShiftManagementSystem = () => {
 
             {/* MAP AREA */}
             <div className="flex-1 overflow-y-auto p-2">
-              <div className="min-h-full flex flex-col items-center justify-center py-10 pb-40 md:pb-10">
+                <div className="min-h-full flex flex-col items-center justify-center py-10 pb-40 md:pb-10">
 
-                {/* THE MAP CARD - Added ID for cloning & increased bottom padding */}
-                <div id="pump-map-container" ref={pumpMapRef} className="bg-white rounded-[2rem] shadow-xl border-[4px] border-slate-200 p-4 md:p-8 pb-12 relative flex flex-col items-center justify-center w-full max-w-[360px] md:max-w-none md:w-auto">
+                    {/* THE MAP CARD */}
+                    <div id="pump-map-container" ref={pumpMapRef} className="bg-white rounded-[2rem] shadow-xl border-[4px] border-slate-200 p-4 md:p-8 pb-12 relative flex flex-col items-center justify-center w-full max-w-[360px] md:max-w-none md:w-auto">
 
-                  {/* Title inside Card */}
-                  <div className="absolute top-3 w-full text-center">
-                    <h3 className="text-slate-300 text-[9px] font-black uppercase tracking-[0.3em]">Pump Map</h3>
-                  </div>
+                        {/* Title inside Card */}
+                        <div className="absolute top-3 w-full text-center">
+                        <h3 className="text-slate-300 text-[9px] font-black uppercase tracking-[0.3em]">Pump Map</h3>
+                        </div>
 
-                  {/* Supervisor */}
-                  <div className="absolute top-4 left-4 z-20">
-                    <DroppableZone id="Supervisor" label="Supervisor" isSupervisor={true} className="w-16 h-16 md:w-20 md:h-20 bg-purple-50 rounded-full border-[3px] border-purple-200 flex items-center justify-center relative shadow-sm">
-                      <ShieldCheck className="absolute text-purple-200 w-6 h-6 md:w-8 md:h-8 z-0" />
-                      {/* size="map" forces fill */}
-                      {assignments['Supervisor'] && <DraggableStaff id={assignments['Supervisor'].id} staffMember={assignments['Supervisor']} size="map" />}
-                    </DroppableZone>
-                  </div>
+                        {/* Supervisor */}
+                        <div className="absolute top-4 left-4 z-20">
+                        <DroppableZone id="Supervisor" label="Supervisor" isSupervisor={true} className="w-16 h-16 md:w-20 md:h-20 bg-purple-50 rounded-full border-[3px] border-purple-200 flex items-center justify-center relative shadow-sm">
+                            <ShieldCheck className="absolute text-purple-200 w-6 h-6 md:w-8 md:h-8 z-0" />
+                            {assignments['Supervisor'] && <DraggableStaff id={assignments['Supervisor'].id} staffMember={assignments['Supervisor']} size="map" />}
+                        </DroppableZone>
+                        </div>
 
-                  {/* Layout Container */}
-                  <div className="mt-10 md:mt-8 flex gap-4 md:gap-8 items-center">
-                    {/* LEFT SIDE */}
-                    <div className="relative p-2 md:p-4">
-                      <div className="absolute inset-0 border-2 border-dashed border-slate-200 rounded-[2rem] -z-10"></div>
-                      <div className="grid grid-cols-2 gap-x-12 gap-y-12 md:gap-x-24 md:gap-y-24 relative z-10 p-2">
-                        <DroppableZone id="N2" label="Nozzle 2" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
-                          {assignments['N2'] && <DraggableStaff id={assignments['N2'].id} staffMember={assignments['N2']} size="map" />}
-                        </DroppableZone>
-                        <DroppableZone id="N1" label="Nozzle 1" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
-                          {assignments['N1'] && <DraggableStaff id={assignments['N1'].id} staffMember={assignments['N1']} size="map" />}
-                        </DroppableZone>
-                        <DroppableZone id="N3" label="Nozzle 3" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
-                          {assignments['N3'] && <DraggableStaff id={assignments['N3'].id} staffMember={assignments['N3']} size="map" />}
-                        </DroppableZone>
-                        <DroppableZone id="N4" label="Nozzle 4" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
-                          {assignments['N4'] && <DraggableStaff id={assignments['N4'].id} staffMember={assignments['N4']} size="map" />}
-                        </DroppableZone>
-                      </div>
-                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 md:w-28 md:h-28 bg-slate-800 rounded-xl md:rounded-2xl shadow-2xl flex flex-col items-center justify-center border-2 md:border-4 border-slate-600 z-0">
-                        <span className="text-lg md:text-2xl font-black text-white tracking-widest">MPD</span>
-                      </div>
+                        {/* Layout Container */}
+                        <div className="mt-10 md:mt-8 flex gap-4 md:gap-8 items-center">
+                            {/* LEFT SIDE */}
+                            <div className="relative p-2 md:p-4">
+                                <div className="absolute inset-0 border-2 border-dashed border-slate-200 rounded-[2rem] -z-10"></div>
+                                <div className="grid grid-cols-2 gap-x-12 gap-y-12 md:gap-x-24 md:gap-y-24 relative z-10 p-2">
+                                <DroppableZone id="N2" label="Nozzle 2" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
+                                    {assignments['N2'] && <DraggableStaff id={assignments['N2'].id} staffMember={assignments['N2']} size="map" />}
+                                </DroppableZone>
+                                <DroppableZone id="N1" label="Nozzle 1" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
+                                    {assignments['N1'] && <DraggableStaff id={assignments['N1'].id} staffMember={assignments['N1']} size="map" />}
+                                </DroppableZone>
+                                <DroppableZone id="N3" label="Nozzle 3" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
+                                    {assignments['N3'] && <DraggableStaff id={assignments['N3'].id} staffMember={assignments['N3']} size="map" />}
+                                </DroppableZone>
+                                <DroppableZone id="N4" label="Nozzle 4" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
+                                    {assignments['N4'] && <DraggableStaff id={assignments['N4'].id} staffMember={assignments['N4']} size="map" />}
+                                </DroppableZone>
+                                </div>
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 md:w-28 md:h-28 bg-slate-800 rounded-xl md:rounded-2xl shadow-2xl flex flex-col items-center justify-center border-2 md:border-4 border-slate-600 z-0">
+                                <span className="text-lg md:text-2xl font-black text-white tracking-widest">MPD</span>
+                                </div>
+                            </div>
+
+                            {/* RIGHT SIDE */}
+                            <div className="flex flex-col gap-4 md:gap-5 border-l-2 border-dashed border-slate-200 pl-4 md:pl-8 py-2">
+                                <DroppableZone id="N5" label="H-5" className="w-16 h-16 md:w-20 md:h-20 bg-indigo-50 rounded-full border-[3px] border-indigo-200 flex items-center justify-center shadow-sm">
+                                {assignments['N5'] && <DraggableStaff id={assignments['N5'].id} staffMember={assignments['N5']} size="map" />}
+                                </DroppableZone>
+                                <DroppableZone id="N6" label="H-6" className="w-16 h-16 md:w-20 md:h-20 bg-indigo-50 rounded-full border-[3px] border-indigo-200 flex items-center justify-center shadow-sm">
+                                {assignments['N6'] && <DraggableStaff id={assignments['N6'].id} staffMember={assignments['N6']} size="map" />}
+                                </DroppableZone>
+                                <div className="mt-1">
+                                <DroppableZone id="Extra" label="Extra" isExtra={true} className="w-16 h-16 md:w-20 md:h-20 bg-orange-50 rounded-full border-[3px] border-orange-200 flex items-center justify-center relative shadow-sm">
+                                    <UserPlus className="absolute text-orange-200 w-6 h-6 md:w-8 md:h-8 z-0" />
+                                    {assignments['Extra'] && <DraggableStaff id={assignments['Extra'].id} staffMember={assignments['Extra']} size="map" />}
+                                </DroppableZone>
+                                </div>
+                                <div className="mt-1">
+                                <DroppableZone id="Air" label="Air Boy" isAir={true} className="w-16 h-16 md:w-20 md:h-20 bg-cyan-50 rounded-full border-[3px] border-cyan-200 flex items-center justify-center relative shadow-sm">
+                                    <Wind className="absolute text-cyan-200 w-6 h-6 md:w-8 md:h-8 z-0" />
+                                    {assignments['Air'] && <DraggableStaff id={assignments['Air'].id} staffMember={assignments['Air']} size="map" />}
+                                </DroppableZone>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {/* Caption Input */}
+                        <div className="mt-6 mb-2 w-full border-t-2 border-dashed border-slate-100 pt-3 flex items-center gap-2">
+                            <Edit3 size={16} className="text-slate-400 shrink-0" />
+                            <input
+                                id="caption-input" 
+                                type="text"
+                                value={caption}
+                                onChange={(e) => setCaption(e.target.value)}
+                                placeholder="Write a note/caption here..."
+                                className="w-full bg-slate-50 px-3 py-2 rounded-lg outline-none font-bold text-slate-600 text-xs md:text-sm placeholder-slate-300 text-center border border-slate-100 focus:border-blue-200 focus:ring-2 focus:ring-blue-50 transition-all"
+                            />
+                        </div>
+
                     </div>
 
-                    {/* RIGHT SIDE */}
-                    <div className="flex flex-col gap-4 md:gap-5 border-l-2 border-dashed border-slate-200 pl-4 md:pl-8 py-2">
-                      <DroppableZone id="N5" label="H-5" className="w-16 h-16 md:w-20 md:h-20 bg-indigo-50 rounded-full border-[3px] border-indigo-200 flex items-center justify-center shadow-sm">
-                        {assignments['N5'] && <DraggableStaff id={assignments['N5'].id} staffMember={assignments['N5']} size="map" />}
-                      </DroppableZone>
-                      <DroppableZone id="N6" label="H-6" className="w-16 h-16 md:w-20 md:h-20 bg-indigo-50 rounded-full border-[3px] border-indigo-200 flex items-center justify-center shadow-sm">
-                        {assignments['N6'] && <DraggableStaff id={assignments['N6'].id} staffMember={assignments['N6']} size="map" />}
-                      </DroppableZone>
-                      <div className="mt-1">
-                        <DroppableZone id="Extra" label="Extra" isExtra={true} className="w-16 h-16 md:w-20 md:h-20 bg-orange-50 rounded-full border-[3px] border-orange-200 flex items-center justify-center relative shadow-sm">
-                          <UserPlus className="absolute text-orange-200 w-6 h-6 md:w-8 md:h-8 z-0" />
-                          {assignments['Extra'] && <DraggableStaff id={assignments['Extra'].id} staffMember={assignments['Extra']} size="map" />}
+                    {/* Mobile Absent Zone */}
+                    <div className="md:hidden w-full max-w-[360px] mt-6">
+                        <div className="flex items-center gap-1 mb-1 ml-1 text-xs font-black text-red-400 uppercase"><AlertCircle size={12} /> Absent Zone</div>
+                        <DroppableZone id="absent-mobile" isAbsent={true} className="w-full bg-red-50 border-4 border-dashed border-red-200 rounded-2xl p-2 min-h-[70px] flex items-center gap-2 overflow-x-auto px-4">
+                        {absentStaff.length === 0 && <span className="text-red-300 w-full text-center font-bold uppercase text-[10px]">Drag Absent Staff Here</span>}
+                        {absentStaff.map((s) => <div key={s.id} className="shrink-0"><DraggableStaff id={`mob-${s.id}`} staffMember={s} size="small" hideName={true} /></div>)}
                         </DroppableZone>
-                      </div>
-                      <div className="mt-1">
-                        <DroppableZone id="Air" label="Air Boy" isAir={true} className="w-16 h-16 md:w-20 md:h-20 bg-cyan-50 rounded-full border-[3px] border-cyan-200 flex items-center justify-center relative shadow-sm">
-                          <Wind className="absolute text-cyan-200 w-6 h-6 md:w-8 md:h-8 z-0" />
-                          {assignments['Air'] && <DraggableStaff id={assignments['Air'].id} staffMember={assignments['Air']} size="map" />}
-                        </DroppableZone>
-                      </div>
                     </div>
-                  </div>
 
-                  {/* Caption Input - Added ID for html2canvas */}
-                  <div className="mt-6 mb-2 w-full border-t-2 border-dashed border-slate-100 pt-3 flex items-center gap-2">
-                    <Edit3 size={16} className="text-slate-400 shrink-0" />
-                    <input
-                      id="caption-input"
-                      type="text"
-                      value={caption}
-                      onChange={(e) => setCaption(e.target.value)}
-                      placeholder="Write a note/caption here..."
-                      className="w-full bg-slate-50 px-3 py-2 rounded-lg outline-none font-bold text-slate-600 text-xs md:text-sm placeholder-slate-300 text-center border border-slate-100 focus:border-blue-200 focus:ring-2 focus:ring-blue-50 transition-all"
-                    />
-                  </div>
+                    {/* Mobile Save Button */}
+                    <button onClick={handleSaveImage} className="md:hidden flex items-center gap-2 text-blue-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-blue-100 hover:bg-blue-50 text-sm mt-4 w-full max-w-[360px] justify-center">
+                        <Download size={18} /> Save Map Image
+                    </button>
 
+                    {/* Mobile VIEW Saved Button */}
+                    {savedMapImage && (
+                        <button onClick={() => setViewMode(true)} className="md:hidden flex items-center gap-2 text-green-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-green-100 hover:bg-green-50 text-sm mt-2 w-full max-w-[360px] justify-center">
+                            <FileText size={18}/> View Saved Map
+                        </button>
+                    )}
                 </div>
-
-                {/* Mobile Absent Zone */}
-                <div className="md:hidden w-full max-w-[360px] mt-6">
-                  <div className="flex items-center gap-1 mb-1 ml-1 text-xs font-black text-red-400 uppercase"><AlertCircle size={12} /> Absent Zone</div>
-                  <DroppableZone id="absent-mobile" isAbsent={true} className="w-full bg-red-50 border-4 border-dashed border-red-200 rounded-2xl p-2 min-h-[70px] flex items-center gap-2 overflow-x-auto px-4">
-                    {absentStaff.length === 0 && <span className="text-red-300 w-full text-center font-bold uppercase text-[10px]">Drag Absent Staff Here</span>}
-                    {absentStaff.map((s) => <div key={s.id} className="shrink-0"><DraggableStaff id={`mob-${s.id}`} staffMember={s} size="small" hideName={true} /></div>)}
-                  </DroppableZone>
-                </div>
-
-                {/* Mobile Save Button */}
-                <button onClick={handleSaveImage} className="md:hidden flex items-center gap-2 text-blue-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-blue-100 hover:bg-blue-50 text-sm mt-4 w-full max-w-[360px] justify-center">
-                  <Download size={18} /> Save Map Image
-                </button>
-
-                {/* Mobile VIEW Saved Button */}
-                {savedMapImage && (
-                  <button onClick={() => setViewMode(true)} className="md:hidden flex items-center gap-2 text-green-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-green-100 hover:bg-green-50 text-sm mt-2 w-full max-w-[360px] justify-center">
-                    <FileText size={18} /> View Saved Map
-                  </button>
-                )}
-              </div>
             </div>
           </div>
 
@@ -610,7 +593,7 @@ const ShiftManagementSystem = () => {
               {/* Desktop View Saved Button */}
               {savedMapImage && (
                 <button onClick={() => setViewMode(true)} className="w-full flex items-center justify-center gap-2 text-green-600 font-bold bg-green-50 hover:bg-green-100 py-3 rounded-xl border border-green-200 transition-colors text-sm">
-                  <FileText size={16} /> View Saved Map
+                    <FileText size={16}/> View Saved Map
                 </button>
               )}
             </div>
@@ -654,13 +637,13 @@ const ShiftManagementSystem = () => {
       {/* VIEW IMAGE MODAL */}
       {viewMode && savedMapImage && (
         <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/90 p-4" onClick={() => setViewMode(false)}>
-          <div className="relative max-w-4xl w-full max-h-screen overflow-auto bg-white rounded-xl p-2" onClick={e => e.stopPropagation()}>
-            <button onClick={() => setViewMode(false)} className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full z-10 shadow-lg hover:bg-red-600"><X size={20} /></button>
-            <img src={savedMapImage} alt="Saved Map" className="w-full h-auto object-contain" />
-            <div className="text-center p-2 font-bold uppercase text-gray-600 text-sm">
-              Saved Map: {date} ({shift})
+            <div className="relative max-w-4xl w-full max-h-screen overflow-auto bg-white rounded-xl p-2" onClick={e => e.stopPropagation()}>
+                <button onClick={() => setViewMode(false)} className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full z-10 shadow-lg hover:bg-red-600"><X size={20}/></button>
+                <img src={savedMapImage} alt="Saved Map" className="w-full h-auto object-contain" />
+                <div className="text-center p-2 font-bold uppercase text-gray-600 text-sm">
+                    Saved Map: {date} ({shift})
+                </div>
             </div>
-          </div>
         </div>
       )}
 
