@@ -747,7 +747,6 @@ const ShiftManagementSystem = () => {
         <tbody className="divide-y text-sm">
           {members.map((m) => (
             <tr key={m.id} className="hover:bg-blue-50">
-              // Staff List Modal ke andar <td> replace karein:
 
 <td className="p-2 font-medium flex items-center gap-2">
   <img
