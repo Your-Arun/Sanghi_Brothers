@@ -87,7 +87,7 @@ const upload = require("./multer");
 router.get('/shifting', controller.listMembers);
 
 // Add new member
-router.post("/", upload.single("avatar"), controller.addMember);
+router.post("/shifting", upload.single("avatar"), controller.addMember);
 
 // Delete member
 router.delete('/shifting/:id', controller.deleteMember);
