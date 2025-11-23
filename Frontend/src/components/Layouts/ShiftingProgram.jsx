@@ -314,19 +314,19 @@ const ShiftManagementSystem = () => {
             <aside className="hidden md:flex flex-col w-64 bg-slate-900 text-white shadow-2xl z-40">
                 <div className="p-6 border-b border-slate-700 flex items-center gap-3">
                     <LayoutDashboard size={28} className="text-blue-400"/>
-                    <h1 className="text-xl font-black tracking-wider uppercase">Pump OS</h1>
+                    <h1 className="text-xl font-black tracking-wider uppercase">Pump System</h1>
                 </div>
                 
                 <nav className="flex-1 p-4 flex flex-col gap-2">
-                    <button onClick={() => setShowAddModal(true)} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition text-gray-300 hover:text-white font-bold">
+                    <div onClick={() => setShowAddModal(true)} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition text-gray-300 hover:text-white font-bold">
                         <Plus size={20} /> Add Staff
-                    </button>
-                    <button onClick={() => setShowMemberListModal(true)} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition text-gray-300 hover:text-white font-bold">
+                    </div>
+                    <div onClick={() => setShowMemberListModal(true)} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition text-gray-300 hover:text-white font-bold">
                         <Users size={20} /> Staff List
-                    </button>
-                    <button onClick={() => navigate('/allshifting')} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition text-gray-300 hover:text-white font-bold">
+                    </div>
+                    <div onClick={() => navigate('/allshifting')} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition text-gray-300 hover:text-white font-bold">
                         <Calendar size={20} /> Reports
-                    </button>
+                    </div>
                 </nav>
             </aside>
 
@@ -338,7 +338,7 @@ const ShiftManagementSystem = () => {
                     <div className="flex items-center gap-3">
                         <div className="flex bg-gray-100 rounded-lg p-1 scale-90">
                              {['Morning', 'Evening'].map((s) => (
-                                <button key={s} onClick={() => setShift(s)} className={`px-3 py-1 rounded-md text-xs font-bold uppercase transition-all ${shift === s ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-400'}`}>{s}</button>
+                                <div key={s} onClick={() => setShift(s)} className={`px-3 py-1 rounded-md text-xs font-bold uppercase transition-all ${shift === s ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-400'}`}>{s}</div>
                             ))}
                         </div>
                         <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="bg-gray-100 border-none rounded-lg px-2 py-1 font-bold text-gray-700 text-xs" />
@@ -424,8 +424,8 @@ const ShiftManagementSystem = () => {
             {/* RIGHT SIDEBAR (DESKTOP) */}
             <aside className="hidden md:flex flex-col w-[300px] bg-white border-l border-gray-200 shadow-xl z-30">
                 <div className="p-4 border-b border-gray-100 bg-gray-50">
-                    <h3 className="text-sm font-black text-gray-800 uppercase tracking-wide">Staff Roster</h3>
-                    <p className="text-[10px] text-gray-500">Drag to map to assign</p>
+                    <h3 className="text-sm font-black text-gray-800 uppercase tracking-wide">Staffs</h3>
+                    <p className="text-[10px] text-gray-500">Idhar Udhar kr skte hai</p>
                 </div>
                 
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
