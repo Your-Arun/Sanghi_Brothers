@@ -279,11 +279,11 @@ const ShiftManagementSystem = () => {
           <div className="bg-white w-72 h-full shadow-2xl p-6 flex flex-col gap-6 animate-in slide-in-from-left">
             <div className="flex justify-between items-center border-b-4 border-slate-800 pb-2">
                 <h2 className="text-2xl font-black text-slate-800">MENU</h2>
-                <button onClick={() => setIsSidebarOpen(false)}><X className="text-red-600" /></button>
+                <div onClick={() => setIsSidebarOpen(false)}><X className="text-red-600" /></div>
             </div>
-            <button onClick={() => { setShowAddModal(true); setIsSidebarOpen(false); }} className="flex items-center gap-4 text-lg font-bold text-gray-700"><Users /> Add Member</button>
-            <button onClick={() => { setShowMemberListModal(true); setIsSidebarOpen(false); }} className="flex items-center gap-4 text-lg font-bold text-gray-700"><FileText /> Member List</button>
-            <button onClick={() => navigate('/allshifting')} className="flex items-center gap-4 text-lg font-bold text-gray-700"><Calendar /> All Reports</button>
+            <div onClick={() => { setShowAddModal(true); setIsSidebarOpen(false); }} className="flex items-center gap-4 text-lg font-bold text-gray-700"><Users /> Add Member</div>
+            <div onClick={() => { setShowMemberListModal(true); setIsSidebarOpen(false); }} className="flex items-center gap-4 text-lg font-bold text-gray-700"><FileText /> Member List</div>
+            <div onClick={() => navigate('/allshifting')} className="flex items-center gap-4 text-lg font-bold text-gray-700"><Calendar /> All Reports</div>
           </div>
           <div className="flex-1 bg-black/60 backdrop-blur-sm" onClick={() => setIsSidebarOpen(false)}></div>
         </div>
@@ -331,7 +331,7 @@ const ShiftManagementSystem = () => {
                 <div className="md:hidden p-4 flex flex-col gap-4">
                     <div className="flex gap-4 bg-white rounded-2xl p-2 shadow-sm w-full">
                         {['Morning', 'Evening'].map((s) => (
-                            <button key={s} onClick={() => setShift(s)} className={`flex-1 py-3 rounded-xl text-lg font-black uppercase tracking-wider transition-all ${shift === s ? 'bg-blue-700 text-white shadow-lg' : 'text-gray-400'}`}>{s}</button>
+                            <div key={s} onClick={() => setShift(s)} className={`flex-1 py-3 rounded-xl text-lg font-black uppercase tracking-wider transition-all ${shift === s ? 'bg-blue-700 text-white shadow-lg' : 'text-gray-400'}`}>{s}</div>
                         ))}
                     </div>
                     <div className="flex gap-3">
@@ -350,7 +350,7 @@ const ShiftManagementSystem = () => {
                         
                         {/* Title inside Card */}
                         <div className="absolute top-3 w-full text-center">
-                            <h3 className="text-slate-300 text-[9px] font-black uppercase tracking-[0.3em]">Pump Layout</h3>
+                            <h3 className="text-slate-300 text-[9px] font-black uppercase tracking-[0.3em]">Pump Map</h3>
                         </div>
 
                         {/* Supervisor - Top Left Absolute */}
@@ -435,7 +435,6 @@ const ShiftManagementSystem = () => {
             <aside className="hidden md:flex flex-col w-[300px] bg-white border-l border-gray-200 shadow-xl z-30">
                 <div className="p-4 border-b border-gray-100 bg-gray-50">
                     <h3 className="text-sm font-black text-gray-800 uppercase tracking-wide">Staffs</h3>
-                    <p className="text-[10px] text-gray-500">Drag & Drop assignments</p>
                 </div>
                 
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -478,7 +477,6 @@ const ShiftManagementSystem = () => {
                 <div className="px-6 pt-4 pb-2">
                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-2 flex justify-between">
                         <span>Available Staff</span>
-                        <span className="text-blue-500">Drag back to reset</span>
                     </p>
                     <DroppableZone id="available-pool-mobile" isPool={true} className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide min-h-[70px] items-center px-2 border-2 border-dashed border-gray-100 rounded-xl bg-gray-50">
                         {availableStaff.map((staff) => (
