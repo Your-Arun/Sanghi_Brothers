@@ -207,62 +207,73 @@ const ShiftManagementSystem = () => {
     });
   };
 
-  // --- ROBUST SAVE IMAGE FUNCTION ---
+  // --- ROBUST SAVE IMAGE FUNCTION (FIXED: Blank Caption + Cutoff + PNG) ---
   const handleSaveImage = async () => {
     if (pumpMapRef.current) {
       try {
-        // Using html2canvas with specific onClone to fix input and cutoff issues
         const canvas = await html2canvas(pumpMapRef.current, {
           backgroundColor: '#ffffff',
-          scale: 2,
-          useCORS: true, 
-          scrollY: -window.scrollY, // Helps with scrolling issues
+          scale: 3, // Higher scale for clearer PNG
+          useCORS: true,
+          // Fixes scroll clipping
+          scrollY: -window.scrollY,
+          
           onClone: (clonedDoc) => {
-            // 1. FIX CAPTION: Convert Input to Div
+            // 1. FIX BLANK CAPTION: Manually construct a div with state value
             const input = clonedDoc.getElementById('caption-input');
             if (input) {
               const div = clonedDoc.createElement('div');
-              div.innerText = input.value; // Ensure text is copied
+              // IMPORTANT: Use the state variable 'caption' directly, not input.value
+              div.innerText = caption || ""; 
               
-              // Copy all styles from input to div to match appearance
-              const computedStyle = window.getComputedStyle(pumpMapRef.current.querySelector('#caption-input'));
-              Array.from(computedStyle).forEach(key => {
-                  div.style.setProperty(key, computedStyle.getPropertyValue(key), computedStyle.getPropertyPriority(key));
-              });
-              
+              // Apply styles to look like the input
+              div.style.width = '100%';
+              div.style.textAlign = 'center';
+              div.style.fontWeight = 'bold';
+              div.style.color = '#475569'; // slate-600
+              div.style.fontSize = '14px';
+              div.style.backgroundColor = '#f8fafc'; // slate-50
+              div.style.padding = '8px';
+              div.style.borderRadius = '8px';
+              div.style.border = '1px solid #f1f5f9';
+              div.style.minHeight = '40px'; // Ensure height
               div.style.display = 'flex';
               div.style.alignItems = 'center';
               div.style.justifyContent = 'center';
-              div.style.height = 'auto'; // Allow height to fit
-              div.style.minHeight = '40px';
               
+              // Swap input for div in the clone
               input.parentNode.replaceChild(div, input);
             }
 
-            // 2. FIX CUTOFF: Force container to show everything
+            // 2. FIX CUTOFF: Force container expansion
             const clonedMap = clonedDoc.getElementById('pump-map-container');
             if (clonedMap) {
                 clonedMap.style.height = 'auto';
                 clonedMap.style.overflow = 'visible';
-                clonedMap.style.paddingBottom = '50px'; // Add Extra Padding at bottom
+                clonedMap.style.paddingBottom = '60px'; // Generous padding to prevent crop
             }
           }
         });
 
-        const base64Image = canvas.toDataURL('image/jpeg', 0.8);
+        // Generate PNG instead of JPEG
+        const base64Image = canvas.toDataURL('image/png');
 
+        // Download locally
         const link = document.createElement('a');
-        link.download = `Pump_Shift_${shift}_${date}.jpg`;
+        link.download = `Pump_Shift_${shift}_${date}.png`; // Changed extension to .png
         link.href = base64Image;
         link.click();
 
-        await axiosInstance.post('/save-map', {
+        // Save to DB
+        await axiosInstance.post('/shifting/save-map', {
           date: date,
           shift: shift,
           image: base64Image
         });
+        
         setSavedMapImage(base64Image);
-        toast.success("Map Saved to Database!");
+        toast.success("Map Saved (PNG)!");
+
       } catch (error) {
         console.error(error);
         toast.error("Failed to save image");
@@ -421,7 +432,7 @@ const ShiftManagementSystem = () => {
                 <div className="min-h-full flex flex-col items-center justify-center py-10 pb-40 md:pb-10">
 
                     {/* THE MAP CARD - Added ID for cloning & increased bottom padding */}
-                    <div id="pump-map-container" ref={pumpMapRef} className="bg-white rounded-[2rem] shadow-xl border-[4px] border-slate-200 p-4 md:p-8 pb-16 relative flex flex-col items-center justify-center w-full max-w-[360px] md:max-w-none md:w-auto">
+                    <div id="pump-map-container" ref={pumpMapRef} className="bg-white rounded-[2rem] shadow-xl border-[4px] border-slate-200 p-4 md:p-8 pb-12 relative flex flex-col items-center justify-center w-full max-w-[360px] md:max-w-none md:w-auto">
 
                         {/* Title inside Card */}
                         <div className="absolute top-3 w-full text-center">
