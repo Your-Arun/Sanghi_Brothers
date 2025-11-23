@@ -707,59 +707,59 @@ const ShiftManagementSystem = () => {
           </div>
         </div>
       )}
-      {showMemberListModal && (
-  <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-    <div className="bg-white w-full max-w-lg rounded-2xl p-6 shadow-2xl animate-in fade-in duration-200">
+     {showMemberListModal && (
+  <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+    <div className="bg-white w-full max-w-sm rounded-xl p-4 shadow-xl animate-in fade-in duration-150">
 
       {/* Header */}
-      <div className="flex justify-between items-center mb-4 border-b pb-3">
-        <h2 className="text-xl font-black text-gray-800">
-          STAFF LIST ({members.length})
+      <div className="flex justify-between items-center mb-2 border-b pb-2">
+        <h2 className="text-lg font-bold text-gray-800">
+          STAFF ({members.length})
         </h2>
 
         <button
           onClick={() => setShowMemberListModal(false)}
-          className="text-red-500 font-bold px-3 py-1 bg-red-50 rounded-lg hover:bg-red-100"
+          className="text-red-500 font-semibold px-2 py-1 bg-red-50 rounded-md hover:bg-red-100 text-sm"
         >
           Close
         </button>
       </div>
 
-      {/* Table - NO SCROLL */}
-      <table className="w-full text-sm">
-        <thead className="bg-gray-100 text-gray-500 uppercase text-xs">
+      {/* Table - mini compact */}
+      <table className="w-full text-xs">
+        <thead className="bg-gray-100 text-gray-500 uppercase text-[10px]">
           <tr>
-            <th className="p-3 rounded-l-lg">Name</th>
-            <th className="p-3">Role</th>
-            <th className="p-3 rounded-r-lg text-right">Action</th>
+            <th className="p-2 rounded-l-lg">Name</th>
+            <th className="p-2">Role</th>
+            <th className="p-2 rounded-r-lg text-right">Action</th>
           </tr>
         </thead>
 
-        <tbody className="divide-y">
+        <tbody className="divide-y text-sm">
           {members.map((m) => (
             <tr key={m.id} className="hover:bg-blue-50">
-              <td className="p-3 font-semibold flex items-center gap-3">
+              <td className="p-2 font-medium flex items-center gap-2">
                 <img
                   src={
                     m.avatar ||
-                    `https://ui-avatars.com/api/?background=random&name=${m.name}`
+                    `https://ui-avatars.com/api/?name=${m.name}`
                   }
-                  className="w-9 h-9 rounded-full"
+                  className="w-7 h-7 rounded-full"
                   alt=""
                 />
                 {m.name}
               </td>
 
-              <td className="p-3 text-gray-600 capitalize">
+              <td className="p-2 text-gray-600 capitalize">
                 {m.role}
               </td>
 
-              <td className="p-3 text-right">
+              <td className="p-2 text-right">
                 <button
                   onClick={() => handleDeleteMember(m.id)}
-                  className="text-red-600 bg-red-100 p-2 rounded-full hover:bg-red-600 hover:text-white transition"
+                  className="text-red-600 bg-red-100 p-1.5 rounded-full hover:bg-red-600 hover:text-white transition"
                 >
-                  <Trash2 size={16} />
+                  <Trash2 size={14} />
                 </button>
               </td>
             </tr>
@@ -770,6 +770,7 @@ const ShiftManagementSystem = () => {
     </div>
   </div>
 )}
+
 
     </div>
   );
