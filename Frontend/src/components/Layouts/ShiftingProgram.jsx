@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import axiosInstance from '../Dashboard/axiosInstance';
 
-/* --- DraggableStaff --- */
+/* --- DraggableStaff (Updated for Zero Gap) --- */
 const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", hideName = false }) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: String(id),
@@ -31,9 +31,16 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
     zIndex: isDragging || isOverlay ? 9999 : 10,
   };
 
-  const isSmall = size === "small";
-  const imgSize = isSmall ? "w-10 h-10 md:w-12 md:h-12" : "w-14 h-14 md:w-16 md:h-16";
-  const textSize = isSmall ? "text-[8px] md:text-[9px]" : "text-[9px] md:text-[10px]";
+  // Logic to handle Map Size (Fill Parent) vs Sidebar Size (Fixed Small)
+  const isMap = size === "map"; 
+  const isSmall = size === "small"; // Sidebar
+
+  // If 'map', fill 100%. If 'small', use fixed pixels.
+  const containerClasses = isMap 
+    ? "w-full h-full" 
+    : (isSmall ? "w-10 h-10 md:w-12 md:h-12" : "w-14 h-14 md:w-16 md:h-16");
+
+  const textSize = isMap || isSmall ? "text-[8px] md:text-[9px]" : "text-[10px]";
 
   return (
     <div
@@ -41,18 +48,20 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
       style={style}
       {...listeners}
       {...attributes}
-      className={`flex flex-col items-center justify-center touch-none transition-transform ${isOverlay ? 'scale-110 opacity-95 cursor-grabbing' : 'cursor-grab hover:scale-105 active:cursor-grabbing'
-        }`}
+      className={`flex flex-col items-center justify-center touch-none transition-transform ${
+        isOverlay ? 'scale-110 opacity-95 cursor-grabbing' : 'cursor-grab hover:scale-105 active:cursor-grabbing'
+      } ${isMap ? 'w-full h-full' : ''}`} // Force full size in map mode
     >
-      <div className={`${imgSize} rounded-full overflow-hidden border-[3px] border-white shadow-md bg-gray-200 transition-all`}>
+      <div className={`${containerClasses} rounded-full overflow-hidden border-[2px] border-white shadow-sm bg-gray-200 transition-all relative`}>
         <img
           src={staffMember.avatar || `https://ui-avatars.com/api/?name=${staffMember.name}&background=random`}
           alt={staffMember.name}
           className="w-full h-full object-cover pointer-events-none select-none"
         />
       </div>
+      
       {!hideName && (
-        <span className={`${textSize} font-black text-gray-900 mt-[-6px] bg-white px-2 py-0.5 rounded-full shadow-md border border-gray-200 z-10 uppercase tracking-wider whitespace-nowrap`}>
+        <span className={`${textSize} font-black text-gray-900 absolute -bottom-2 bg-white px-2 py-0.5 rounded-full shadow-md border border-gray-200 z-10 uppercase tracking-wider whitespace-nowrap`}>
           {staffMember.name}
         </span>
       )}
@@ -77,7 +86,7 @@ const DroppableZone = ({ id, children, className, label, isAbsent = false, isAir
   return (
     <div
       ref={setNodeRef}
-      className={`relative transition-all duration-200 ${className} ${activeClass}`}
+      className={`relative transition-all duration-200 flex items-center justify-center ${className} ${activeClass}`}
     >
       {label && (
         <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-sm z-20 whitespace-nowrap border border-slate-600">
@@ -207,64 +216,57 @@ const ShiftManagementSystem = () => {
     });
   };
 
-  // --- ROBUST SAVE IMAGE FUNCTION (FIXED: Blank Caption + Cutoff + PNG) ---
+  // --- HIGH QUALITY SAVE IMAGE FUNCTION ---
   const handleSaveImage = async () => {
     if (pumpMapRef.current) {
       try {
         const canvas = await html2canvas(pumpMapRef.current, {
           backgroundColor: '#ffffff',
-          scale: 3, // Higher scale for clearer PNG
+          scale: 4, // High Quality Scale
           useCORS: true,
-          // Fixes scroll clipping
           scrollY: -window.scrollY,
           
           onClone: (clonedDoc) => {
-            // 1. FIX BLANK CAPTION: Manually construct a div with state value
+            // Fix Caption Input
             const input = clonedDoc.getElementById('caption-input');
             if (input) {
               const div = clonedDoc.createElement('div');
-              // IMPORTANT: Use the state variable 'caption' directly, not input.value
               div.innerText = caption || ""; 
               
-              // Apply styles to look like the input
               div.style.width = '100%';
               div.style.textAlign = 'center';
               div.style.fontWeight = 'bold';
-              div.style.color = '#475569'; // slate-600
+              div.style.color = '#475569';
               div.style.fontSize = '14px';
-              div.style.backgroundColor = '#f8fafc'; // slate-50
+              div.style.backgroundColor = '#f8fafc';
               div.style.padding = '8px';
               div.style.borderRadius = '8px';
               div.style.border = '1px solid #f1f5f9';
-              div.style.minHeight = '40px'; // Ensure height
+              div.style.minHeight = '40px';
               div.style.display = 'flex';
               div.style.alignItems = 'center';
               div.style.justifyContent = 'center';
               
-              // Swap input for div in the clone
               input.parentNode.replaceChild(div, input);
             }
 
-            // 2. FIX CUTOFF: Force container expansion
+            // Fix Cut-off
             const clonedMap = clonedDoc.getElementById('pump-map-container');
             if (clonedMap) {
                 clonedMap.style.height = 'auto';
                 clonedMap.style.overflow = 'visible';
-                clonedMap.style.paddingBottom = '60px'; // Generous padding to prevent crop
+                clonedMap.style.paddingBottom = '60px';
             }
           }
         });
 
-        // Generate PNG instead of JPEG
-        const base64Image = canvas.toDataURL('image/png');
+        const base64Image = canvas.toDataURL('image/png'); // PNG Format
 
-        // Download locally
         const link = document.createElement('a');
-        link.download = `Pump_Shift_${shift}_${date}.png`; // Changed extension to .png
+        link.download = `Pump_Shift_${shift}_${date}.png`;
         link.href = base64Image;
         link.click();
 
-        // Save to DB
         await axiosInstance.post('/shifting/save-map', {
           date: date,
           shift: shift,
@@ -443,7 +445,8 @@ const ShiftManagementSystem = () => {
                         <div className="absolute top-4 left-4 z-20">
                         <DroppableZone id="Supervisor" label="Supervisor" isSupervisor={true} className="w-16 h-16 md:w-20 md:h-20 bg-purple-50 rounded-full border-[3px] border-purple-200 flex items-center justify-center relative shadow-sm">
                             <ShieldCheck className="absolute text-purple-200 w-6 h-6 md:w-8 md:h-8 z-0" />
-                            {assignments['Supervisor'] && <DraggableStaff id={assignments['Supervisor'].id} staffMember={assignments['Supervisor']} size="small" />}
+                            {/* size="map" forces fill */}
+                            {assignments['Supervisor'] && <DraggableStaff id={assignments['Supervisor'].id} staffMember={assignments['Supervisor']} size="map" />}
                         </DroppableZone>
                         </div>
 
@@ -454,16 +457,16 @@ const ShiftManagementSystem = () => {
                                 <div className="absolute inset-0 border-2 border-dashed border-slate-200 rounded-[2rem] -z-10"></div>
                                 <div className="grid grid-cols-2 gap-x-12 gap-y-12 md:gap-x-24 md:gap-y-24 relative z-10 p-2">
                                 <DroppableZone id="N2" label="Nozzle 2" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
-                                    {assignments['N2'] && <DraggableStaff id={assignments['N2'].id} staffMember={assignments['N2']} size="small" />}
+                                    {assignments['N2'] && <DraggableStaff id={assignments['N2'].id} staffMember={assignments['N2']} size="map" />}
                                 </DroppableZone>
                                 <DroppableZone id="N1" label="Nozzle 1" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
-                                    {assignments['N1'] && <DraggableStaff id={assignments['N1'].id} staffMember={assignments['N1']} size="small" />}
+                                    {assignments['N1'] && <DraggableStaff id={assignments['N1'].id} staffMember={assignments['N1']} size="map" />}
                                 </DroppableZone>
                                 <DroppableZone id="N3" label="Nozzle 3" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
-                                    {assignments['N3'] && <DraggableStaff id={assignments['N3'].id} staffMember={assignments['N3']} size="small" />}
+                                    {assignments['N3'] && <DraggableStaff id={assignments['N3'].id} staffMember={assignments['N3']} size="map" />}
                                 </DroppableZone>
                                 <DroppableZone id="N4" label="Nozzle 4" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
-                                    {assignments['N4'] && <DraggableStaff id={assignments['N4'].id} staffMember={assignments['N4']} size="small" />}
+                                    {assignments['N4'] && <DraggableStaff id={assignments['N4'].id} staffMember={assignments['N4']} size="map" />}
                                 </DroppableZone>
                                 </div>
                                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 md:w-28 md:h-28 bg-slate-800 rounded-xl md:rounded-2xl shadow-2xl flex flex-col items-center justify-center border-2 md:border-4 border-slate-600 z-0">
@@ -474,21 +477,21 @@ const ShiftManagementSystem = () => {
                             {/* RIGHT SIDE */}
                             <div className="flex flex-col gap-4 md:gap-5 border-l-2 border-dashed border-slate-200 pl-4 md:pl-8 py-2">
                                 <DroppableZone id="N5" label="H-5" className="w-16 h-16 md:w-20 md:h-20 bg-indigo-50 rounded-full border-[3px] border-indigo-200 flex items-center justify-center shadow-sm">
-                                {assignments['N5'] && <DraggableStaff id={assignments['N5'].id} staffMember={assignments['N5']} size="small" />}
+                                {assignments['N5'] && <DraggableStaff id={assignments['N5'].id} staffMember={assignments['N5']} size="map" />}
                                 </DroppableZone>
                                 <DroppableZone id="N6" label="H-6" className="w-16 h-16 md:w-20 md:h-20 bg-indigo-50 rounded-full border-[3px] border-indigo-200 flex items-center justify-center shadow-sm">
-                                {assignments['N6'] && <DraggableStaff id={assignments['N6'].id} staffMember={assignments['N6']} size="small" />}
+                                {assignments['N6'] && <DraggableStaff id={assignments['N6'].id} staffMember={assignments['N6']} size="map" />}
                                 </DroppableZone>
                                 <div className="mt-1">
                                 <DroppableZone id="Extra" label="Extra" isExtra={true} className="w-16 h-16 md:w-20 md:h-20 bg-orange-50 rounded-full border-[3px] border-orange-200 flex items-center justify-center relative shadow-sm">
                                     <UserPlus className="absolute text-orange-200 w-6 h-6 md:w-8 md:h-8 z-0" />
-                                    {assignments['Extra'] && <DraggableStaff id={assignments['Extra'].id} staffMember={assignments['Extra']} size="small" />}
+                                    {assignments['Extra'] && <DraggableStaff id={assignments['Extra'].id} staffMember={assignments['Extra']} size="map" />}
                                 </DroppableZone>
                                 </div>
                                 <div className="mt-1">
                                 <DroppableZone id="Air" label="Air Boy" isAir={true} className="w-16 h-16 md:w-20 md:h-20 bg-cyan-50 rounded-full border-[3px] border-cyan-200 flex items-center justify-center relative shadow-sm">
                                     <Wind className="absolute text-cyan-200 w-6 h-6 md:w-8 md:h-8 z-0" />
-                                    {assignments['Air'] && <DraggableStaff id={assignments['Air'].id} staffMember={assignments['Air']} size="small" />}
+                                    {assignments['Air'] && <DraggableStaff id={assignments['Air'].id} staffMember={assignments['Air']} size="map" />}
                                 </DroppableZone>
                                 </div>
                             </div>
