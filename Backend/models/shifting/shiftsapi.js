@@ -81,12 +81,13 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('./shifts');
+const upload = require("./multer");
 
 // List all members
 router.get('/shifting', controller.listMembers);
 
 // Add new member
-router.post('/shifting', controller.addMember);
+router.post("/", upload.single("avatar"), controller.addMember);
 
 // Delete member
 router.delete('/shifting/:id', controller.deleteMember);

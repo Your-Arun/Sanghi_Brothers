@@ -52,24 +52,27 @@ exports.listMembers = async (req, res) => {
 
 exports.addMember = async (req, res) => {
   try {
-    const { name, role, shift, available, image } = req.body;
-    if (!name) return res.status(400).json({ message: 'Name is required' });
+    const { name, role, shift, available } = req.body;
+
+    const avatarUrl = req.file ? req.file.path : null;
 
     const member = new Member({
       name,
-      role: role || 'operator',
-      shift: shift || 'morning',
-      available: available || 'present',
-      avatar: image || null
+      role: role || "operator",
+      shift: shift || "morning",
+      available: available || "present",
+      avatar: avatarUrl,
     });
 
     const saved = await member.save();
-    return res.status(201).json(saved);
+    return res.json(saved);
+
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ message: 'Failed to add member' });
+    return res.status(500).json({ message: "Failed to add member" });
   }
 };
+
 
 exports.deleteMember = async (req, res) => {
   try {
