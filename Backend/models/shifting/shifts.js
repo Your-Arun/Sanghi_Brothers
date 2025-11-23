@@ -34,8 +34,6 @@
 
 
 
-
-// controllers/shifts.js
 // Assuming this file is in a 'controllers' folder and models are in 'models' folder
 const Member = require('./Members'); 
 const MapSnapshot = require('./MapSnapshot');

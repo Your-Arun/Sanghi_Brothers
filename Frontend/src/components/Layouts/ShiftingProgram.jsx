@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import axiosInstance from '../Dashboard/axiosInstance';
 
-/* --- DraggableStaff (Cloudinary Version) --- */
+/* --- DraggableStaff (Fixed Cloudinary View) --- */
 const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", hideName = false }) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: String(id),
@@ -37,8 +37,18 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
   const textSize = isMap || isSmall ? "text-[8px] md:text-[9px]" : "text-[10px]";
   const borderClasses = isMap ? "" : "border-[2px] border-white shadow-sm";
 
-  // Fallback (Agar image na ho to Initials dikhaye)
+  // --- IMAGE URL HELPER (Fixes HTTP vs HTTPS) ---
+  const getImageUrl = (url) => {
+    if (!url) return null;
+    // Cloudinary kabhi-kabhi 'http' bhejta hai, usko 'https' karein
+    if (url.startsWith('http:')) {
+      return url.replace('http:', 'https:');
+    }
+    return url;
+  };
+
   const fallbackImage = `https://ui-avatars.com/api/?name=${staffMember.name}&background=random&color=fff&bold=true`;
+  const finalImage = getImageUrl(staffMember.avatar) || fallbackImage;
 
   return (
     <div
@@ -51,11 +61,14 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
     >
       <div className={`${containerClasses} ${borderClasses} rounded-full overflow-hidden bg-gray-200 transition-all relative`}>
         <img
-          // Cloudinary ka link direct use karein
-          src={staffMember.avatar || fallbackImage}
+          src={finalImage}
           alt={staffMember.name}
-          // Agar link broken ho, to turant fallback image lag jaye
-          onError={(e) => { e.target.onerror = null; e.target.src = fallbackImage; }}
+          onError={(e) => { 
+            // Agar image load fail hui to fallback lagaye
+            console.log("Image Load Failed for:", staffMember.name, staffMember.avatar);
+            e.target.onerror = null; 
+            e.target.src = fallbackImage; 
+          }}
           className="w-full h-full object-cover pointer-events-none select-none bg-white"
         />
       </div>
@@ -68,7 +81,6 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
     </div>
   );
 };
-
 /* --- DroppableZone --- */
 const DroppableZone = ({ id, children, className, label, isAbsent = false, isAir = false, isSupervisor = false, isExtra = false, isPool = false }) => {
   const { setNodeRef, isOver } = useDroppable({ id });
@@ -735,17 +747,24 @@ const ShiftManagementSystem = () => {
         <tbody className="divide-y text-sm">
           {members.map((m) => (
             <tr key={m.id} className="hover:bg-blue-50">
-              <td className="p-2 font-medium flex items-center gap-2">
-                <img
-                  src={
-                    m.avatar ||
-                    `https://ui-avatars.com/api/?name=${m.name}`
-                  }
-                  className="w-7 h-7 rounded-full"
-                  alt=""
-                />
-                {m.name}
-              </td>
+              // Staff List Modal ke andar <td> replace karein:
+
+<td className="p-2 font-medium flex items-center gap-2">
+  <img
+    src={
+      // Yahan bhi same logic: HTTP -> HTTPS fix
+      (m.avatar && m.avatar.startsWith('http')) 
+        ? m.avatar.replace('http:', 'https:') 
+        : `https://ui-avatars.com/api/?name=${m.name}`
+    }
+    onError={(e) => {
+       e.target.src = `https://ui-avatars.com/api/?name=${m.name}`;
+    }}
+    className="w-7 h-7 rounded-full object-cover"
+    alt=""
+  />
+  {m.name}
+</td>
 
               <td className="p-2 text-gray-600 capitalize">
                 {m.role}
