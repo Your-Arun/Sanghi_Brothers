@@ -708,29 +708,69 @@ const ShiftManagementSystem = () => {
         </div>
       )}
       {showMemberListModal && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-2">
-          <div className="bg-white w-full max-w-lg rounded-2xl p-4 shadow-2xl h-[80vh] flex flex-col animate-in slide-in-from-bottom-10">
-            <div className="flex justify-between items-center border-b pb-3 mb-2">
-              <h2 className="text-xl font-black text-gray-800">STAFF LIST ({members.length})</h2>
-              <button onClick={() => setShowMemberListModal(false)} className="text-red-500 font-bold px-3 bg-red-50 rounded-lg">Close</button>
-            </div>
-            <div className="overflow-y-auto flex-1 pr-1">
-              <table className="w-full text-sm text-left">
-                <thead className="bg-gray-100 text-gray-500 uppercase text-xs"><tr><th className="p-3 rounded-l-lg">Name</th><th className="p-3">Role</th><th className="p-3 rounded-r-lg text-right">Action</th></tr></thead>
-                <tbody className="divide-y">
-                  {members.map((m) => (
-                    <tr key={m.id} className="hover:bg-blue-50">
-                      <td className="p-3 font-bold flex items-center gap-2"><img src={m.avatar || `https://ui-avatars.com/api/?name=${m.name}`} className="w-8 h-8 rounded-full" alt="" />{m.name}</td>
-                      <td className="p-3 text-gray-600 capitalize">{m.role}</td>
-                      <td className="p-3 text-right"><button onClick={() => handleDeleteMember(m.id)} className="text-red-500 bg-red-100 p-2 rounded-full hover:bg-red-600 hover:text-white transition"><Trash2 size={16} /></button></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      )}
+  <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+    <div className="bg-white w-full max-w-lg rounded-2xl p-6 shadow-2xl animate-in fade-in duration-200">
+
+      {/* Header */}
+      <div className="flex justify-between items-center mb-4 border-b pb-3">
+        <h2 className="text-xl font-black text-gray-800">
+          STAFF LIST ({members.length})
+        </h2>
+
+        <button
+          onClick={() => setShowMemberListModal(false)}
+          className="text-red-500 font-bold px-3 py-1 bg-red-50 rounded-lg hover:bg-red-100"
+        >
+          Close
+        </button>
+      </div>
+
+      {/* Table - NO SCROLL */}
+      <table className="w-full text-sm">
+        <thead className="bg-gray-100 text-gray-500 uppercase text-xs">
+          <tr>
+            <th className="p-3 rounded-l-lg">Name</th>
+            <th className="p-3">Role</th>
+            <th className="p-3 rounded-r-lg text-right">Action</th>
+          </tr>
+        </thead>
+
+        <tbody className="divide-y">
+          {members.map((m) => (
+            <tr key={m.id} className="hover:bg-blue-50">
+              <td className="p-3 font-semibold flex items-center gap-3">
+                <img
+                  src={
+                    m.avatar ||
+                    `https://ui-avatars.com/api/?background=random&name=${m.name}`
+                  }
+                  className="w-9 h-9 rounded-full"
+                  alt=""
+                />
+                {m.name}
+              </td>
+
+              <td className="p-3 text-gray-600 capitalize">
+                {m.role}
+              </td>
+
+              <td className="p-3 text-right">
+                <button
+                  onClick={() => handleDeleteMember(m.id)}
+                  className="text-red-600 bg-red-100 p-2 rounded-full hover:bg-red-600 hover:text-white transition"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
