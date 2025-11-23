@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Menu, Users, FileText, Share2, Calendar, Plus, RefreshCw, X, Download, Wind, AlertCircle, LayoutDashboard, 
-  Trash2
+  Trash2, ShieldCheck // Added ShieldCheck for Supervisor
 } from 'lucide-react';
 import {
   DndContext,
@@ -22,7 +22,7 @@ import axiosInstance from '../Dashboard/axiosInstance';
 /* --- DraggableStaff --- */
 const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", hideName = false }) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-    id: String(id), // ID might be "desk-123" or "mob-123" or just "123"
+    id: String(id),
     data: { staffMember },
   });
 
@@ -31,9 +31,10 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
     zIndex: isDragging || isOverlay ? 9999 : 10,
   };
 
+  // Adjusted sizes for the smaller/circular layout
   const isSmall = size === "small";
-  const imgSize = isSmall ? "w-14 h-14" : "w-20 h-20 md:w-20 md:h-20";
-  const textSize = isSmall ? "text-[10px]" : "text-xs";
+  const imgSize = isSmall ? "w-12 h-12" : "w-16 h-16"; // Slightly smaller standard size
+  const textSize = isSmall ? "text-[9px]" : "text-[10px]";
 
   return (
     <div
@@ -45,7 +46,7 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
         isOverlay ? 'scale-110 opacity-95 cursor-grabbing' : 'cursor-grab hover:scale-105 active:cursor-grabbing'
       }`}
     >
-      <div className={`${imgSize} rounded-full overflow-hidden border-4 border-white shadow-md bg-gray-200 transition-all`}>
+      <div className={`${imgSize} rounded-full overflow-hidden border-[3px] border-white shadow-md bg-gray-200 transition-all`}>
         <img
           src={staffMember.avatar || `https://ui-avatars.com/api/?name=${staffMember.name}&background=random`}
           alt={staffMember.name}
@@ -53,7 +54,7 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
         />
       </div>
       {!hideName && (
-        <span className={`${textSize} font-black text-gray-900 mt-[-8px] bg-white px-3 py-0.5 rounded-full shadow-md border border-gray-200 z-10 uppercase tracking-wider whitespace-nowrap`}>
+        <span className={`${textSize} font-black text-gray-900 mt-[-6px] bg-white px-2 py-0.5 rounded-full shadow-md border border-gray-200 z-10 uppercase tracking-wider whitespace-nowrap`}>
           {staffMember.name}
         </span>
       )}
@@ -62,13 +63,14 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
 };
 
 /* --- DroppableZone --- */
-const DroppableZone = ({ id, children, className, label, isAbsent = false, isAir = false, isPool = false }) => {
+const DroppableZone = ({ id, children, className, label, isAbsent = false, isAir = false, isSupervisor = false, isPool = false }) => {
   const { setNodeRef, isOver } = useDroppable({ id });
 
   let activeClass = '';
   if (isOver) {
     if (isAbsent) activeClass = 'bg-red-100 border-red-500 ring-4 ring-red-200 scale-105';
-    else if (isAir) activeClass = 'bg-cyan-100 border-cyan-500 scale-105 shadow-xl';
+    else if (isAir) activeClass = 'bg-cyan-100 border-cyan-500 scale-110 shadow-xl';
+    else if (isSupervisor) activeClass = 'bg-purple-100 border-purple-500 scale-110 shadow-xl'; // Supervisor Hover
     else if (isPool) activeClass = 'bg-blue-100 border-blue-500 ring-4 ring-blue-200';
     else activeClass = 'bg-green-100 border-green-600 scale-105 shadow-xl';
   }
@@ -79,7 +81,7 @@ const DroppableZone = ({ id, children, className, label, isAbsent = false, isAir
       className={`relative transition-all duration-200 ${className} ${activeClass}`}
     >
       {label && (
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] md:text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-20 whitespace-nowrap">
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-sm z-20 whitespace-nowrap border border-slate-600">
           {label}
         </div>
       )}
@@ -93,14 +95,13 @@ const ShiftManagementSystem = () => {
   const navigate = useNavigate();
   const pumpMapRef = useRef(null); 
   
-  // UI State
+  // UI & Data State
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showMemberListModal, setShowMemberListModal] = useState(false);
   const [activeId, setActiveId] = useState(null);
   const [activeStaff, setActiveStaff] = useState(null);
 
-  // Data State
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [shift, setShift] = useState('Morning');
   const [members, setMembers] = useState([]);
@@ -110,7 +111,6 @@ const ShiftManagementSystem = () => {
     name: "", role: "operator", shift: 'morning', available: 'present', image: null
   });
 
-  // SENSORS
   const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
     useSensor(TouchSensor, { activationConstraint: { delay: 100, tolerance: 10 } })
@@ -137,69 +137,50 @@ const ShiftManagementSystem = () => {
   const availableStaff = members.filter((s) => s.available === 'present' && !assignedIds.includes(s.id));
   const absentStaff = assignments['absent'] || [];
 
-  // --- LOGIC FIX: Helper to clean ID ---
-  const getCleanId = (id) => {
-    // Removes 'desk-' or 'mob-' prefix to get the real MongoDB ID
-    return String(id).replace(/^(desk-|mob-)/, '');
-  };
+  const getCleanId = (id) => String(id).replace(/^(desk-|mob-)/, '');
+  const normalizeZone = (zoneId) => zoneId ? String(zoneId).replace(/-mobile$/, '') : null;
 
-  const normalizeZone = (zoneId) => {
-    if (!zoneId) return null;
-    const z = String(zoneId);
-    return z.replace(/-mobile$/, '');
-  };
-
-  // Drag start
   const handleDragStart = (event) => {
     const { active } = event;
     setActiveId(active.id);
-    const cleanId = getCleanId(active.id); // Fix: Use clean ID
+    const cleanId = getCleanId(active.id);
     let staff = members.find((s) => String(s.id) === cleanId);
     setActiveStaff(staff);
   };
 
-  // Drag end
   const handleDragEnd = (event) => {
     const { active, over } = event;
     setActiveId(null);
     setActiveStaff(null);
     if (!over) return;
 
-    const rawStaffId = String(active.id);
-    const staffId = getCleanId(rawStaffId); // Fix: Use clean ID
-    const rawTarget = String(over.id);
-    const targetZone = normalizeZone(rawTarget);
-    
+    const staffId = getCleanId(String(active.id));
+    const targetZone = normalizeZone(String(over.id));
     const draggedStaff = members.find((s) => String(s.id) === staffId);
+    
     if (!draggedStaff) return;
 
     setAssignments((prev) => {
       const newAssignments = { ...prev };
-
-      // Remove from absent list if present
+      // Remove from old lists
       if (Array.isArray(newAssignments['absent'])) {
         newAssignments['absent'] = newAssignments['absent'].filter((s) => String(s.id) !== staffId);
       }
-
-      // Remove from any single-slot assignment
       Object.keys(newAssignments).forEach((key) => {
         if (key !== 'absent' && newAssignments[key]?.id && String(newAssignments[key].id) === staffId) {
           newAssignments[key] = null;
         }
       });
 
-      // Add to target
+      // Assign to new zone
       if (targetZone === 'absent') {
         const currentAbsent = Array.isArray(newAssignments['absent']) ? newAssignments['absent'] : [];
         if (!currentAbsent.find(s => String(s.id) === staffId)) {
             newAssignments['absent'] = [...currentAbsent, draggedStaff];
         }
-      } else if (targetZone === 'available-pool') {
-        // Dropping to pool implicitly removes them from assignments (handled above)
-      } else if (targetZone) {
+      } else if (targetZone !== 'available-pool' && targetZone) {
         newAssignments[targetZone] = draggedStaff;
       }
-
       return newAssignments;
     });
   };
@@ -220,6 +201,7 @@ const ShiftManagementSystem = () => {
   const handleAutoAssign = () => {
     const assignedIds = Object.values(assignments).flat().map((s) => s?.id).filter(Boolean);
     const availableForShift = members.filter((m) => m.available === "present" && !assignedIds.includes(m.id));
+    
     const shuffleArray = (array) => {
         let shuffled = [...array];
         for (let i = shuffled.length - 1; i > 0; i--) {
@@ -228,8 +210,10 @@ const ShiftManagementSystem = () => {
         }
         return shuffled;
     };
+
     let operators = availableForShift.filter(m => m.shift.toLowerCase() === shift.toLowerCase() && m.role === 'operator');
     operators = shuffleArray(operators);
+    
     const newAssigns = { ...assignments };
     ['N1', 'N2', 'N3', 'N4', 'N5', 'N6'].forEach((nid, index) => {
         if (operators[index] && !newAssigns[nid]) newAssigns[nid] = operators[index];
@@ -269,7 +253,12 @@ const ShiftManagementSystem = () => {
 
   const handleSubmitReport = () => {
     let message = `*⛽ Petrol Pump Shift Report*\n📅 Date: ${date}\n🕒 Shift: ${shift}\n\n*Assignments:*\n`;
-    const mapLabels = { 'N1': 'Nozzle 1', 'N2': 'Nozzle 2', 'N3': 'Nozzle 3', 'N4': 'Nozzle 4', 'N5': 'Hanging 5', 'N6': 'Hanging 6', 'Air': 'Air Boy' };
+    // Added Supervisor to mapLabels
+    const mapLabels = { 
+        'Supervisor': '👮 Supervisor', 
+        'N1': '⛽ Nozzle 1', 'N2': '⛽ Nozzle 2', 'N3': '⛽ Nozzle 3', 'N4': '⛽ Nozzle 4', 
+        'N5': '🪝 Hanging 5', 'N6': '🪝 Hanging 6', 'Air': '💨 Air Boy' 
+    };
     Object.entries(mapLabels).forEach(([key, label]) => {
       const staff = assignments[key];
       message += `${label}: ${staff ? staff.name : '❌ Empty'}\n`;
@@ -306,25 +295,23 @@ const ShiftManagementSystem = () => {
         </div>
       )}
 
-      {/* MAIN APP WRAPPER */}
       <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
 
-            {/* DESKTOP SIDEBAR (LEFT) */}
+            {/* DESKTOP SIDEBAR */}
             <aside className="hidden md:flex flex-col w-64 bg-slate-900 text-white shadow-2xl z-40">
                 <div className="p-6 border-b border-slate-700 flex items-center gap-3">
                     <LayoutDashboard size={28} className="text-blue-400"/>
                     <h1 className="text-xl font-black tracking-wider uppercase">Pump System</h1>
                 </div>
-                
                 <nav className="flex-1 p-4 flex flex-col gap-2">
-                    <div onClick={() => setShowAddModal(true)} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition text-gray-300 hover:text-white font-bold">
+                    <div onClick={() => setShowAddModal(true)} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition text-gray-300 hover:text-white font-bold cursor-pointer">
                         <Plus size={20} /> Add Staff
                     </div>
-                    <div onClick={() => setShowMemberListModal(true)} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition text-gray-300 hover:text-white font-bold">
+                    <div onClick={() => setShowMemberListModal(true)} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition text-gray-300 hover:text-white font-bold cursor-pointer">
                         <Users size={20} /> Staff List
                     </div>
-                    <div onClick={() => navigate('/allshifting')} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition text-gray-300 hover:text-white font-bold">
+                    <div onClick={() => navigate('/allshifting')} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition text-gray-300 hover:text-white font-bold cursor-pointer">
                         <Calendar size={20} /> Reports
                     </div>
                 </nav>
@@ -338,7 +325,7 @@ const ShiftManagementSystem = () => {
                     <div className="flex items-center gap-3">
                         <div className="flex bg-gray-100 rounded-lg p-1 scale-90">
                              {['Morning', 'Evening'].map((s) => (
-                                <div key={s} onClick={() => setShift(s)} className={`px-3 py-1 rounded-md text-xs font-bold uppercase transition-all ${shift === s ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-400'}`}>{s}</div>
+                                <div key={s} onClick={() => setShift(s)} className={`px-3 py-1 rounded-md text-xs font-bold uppercase transition-all cursor-pointer ${shift === s ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-400'}`}>{s}</div>
                             ))}
                         </div>
                         <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="bg-gray-100 border-none rounded-lg px-2 py-1 font-bold text-gray-700 text-xs" />
@@ -360,62 +347,91 @@ const ShiftManagementSystem = () => {
                 </div>
 
                 {/* MAP AREA */}
-                <div className="flex-1 overflow-y-auto md:overflow-hidden p-4 pb-48 md:pb-0 flex flex-col items-center justify-start md:justify-center">
+                <div className="flex-1 overflow-y-auto md:overflow-hidden p-2 pb-48 md:pb-0 flex flex-col items-center justify-start md:justify-center">
                     
                     {/* Mobile Absent Zone */}
-                    <div className="md:hidden w-full max-w-md mb-4">
+                    <div className="md:hidden w-full max-w-[350px] mb-4">
                        <div className="flex items-center gap-1 mb-1 ml-1 text-xs font-black text-red-400 uppercase"><AlertCircle size={12}/> Absent Zone</div>
-                       <DroppableZone id="absent-mobile" isAbsent={true} className="w-full bg-red-50 border-4 border-dashed border-red-200 rounded-2xl p-2 min-h-[90px] flex items-center gap-2 overflow-x-auto">
+                       <DroppableZone id="absent-mobile" isAbsent={true} className="w-full bg-red-50 border-4 border-dashed border-red-200 rounded-full p-2 min-h-[70px] flex items-center gap-2 overflow-x-auto px-4">
                         {absentStaff.length === 0 && <span className="text-red-300 w-full text-center font-bold uppercase text-[10px]">Drag Absent Staff Here</span>}
-                        {/* PREFIX ADDED: mob- */}
                         {absentStaff.map((s) => <div key={s.id} className="shrink-0"><DraggableStaff id={`mob-${s.id}`} staffMember={s} size="small" hideName={true} /></div>)}
                       </DroppableZone>
                     </div>
 
-                    {/* Mobile Save Button */}
-                    <button onClick={handleSaveImage} className="md:hidden flex items-center gap-2 text-blue-600 font-bold bg-white px-3 py-1.5 rounded-full shadow hover:bg-blue-50 text-xs mb-2 self-end"><Download size={16}/> Save Image</button>
+                    <button onClick={handleSaveImage} className="md:hidden flex items-center gap-2 text-blue-600 font-bold bg-white px-3 py-1.5 rounded-full shadow hover:bg-blue-50 text-xs mb-2 self-end mr-4"><Download size={16}/> Save Image</button>
 
-                    {/* THE MAP CARD */}
-                    <div ref={pumpMapRef} className="w-full max-w-md md:max-w-3xl bg-white rounded-[2rem] shadow-xl border-4 border-slate-200 p-6 md:p-10 relative transform md:scale-90 lg:scale-100 origin-center transition-transform">
-                        <h3 className="text-center text-slate-300 text-xs md:text-xs font-black uppercase tracking-[0.4em] mb-8 md:mb-12">Pump Station Layout</h3>
+                    {/* ======================================================= */}
+                    {/*                     THE MAP CARD                        */}
+                    {/* ======================================================= */}
+                    <div ref={pumpMapRef} className="bg-white rounded-[2.5rem] shadow-xl border-[6px] border-slate-200 p-8 relative flex flex-col items-center justify-center transform scale-95 md:scale-100">
                         
-                        <div className="flex w-full justify-center">
-                            {/* Nozzles Grid */}
-                            <div className="flex-1 grid grid-cols-2 gap-x-4 gap-y-16 md:gap-y-12 relative pr-6 border-r-4 border-dashed border-slate-300 max-w-lg">
-                                <DroppableZone id="N2" label="Nozzle 2" className="bg-blue-50 h-28 md:h-32 rounded-2xl border-4 border-blue-200 flex items-center justify-center">
-                                    {assignments['N2'] && <DraggableStaff id={assignments['N2'].id} staffMember={assignments['N2']} />}
-                                </DroppableZone>
-                                <DroppableZone id="N1" label="Nozzle 1" className="bg-blue-50 h-28 md:h-32 rounded-2xl border-4 border-blue-200 flex items-center justify-center">
-                                    {assignments['N1'] && <DraggableStaff id={assignments['N1'].id} staffMember={assignments['N1']} />}
-                                </DroppableZone>
+                        {/* Title inside Card */}
+                        <div className="absolute top-4 w-full text-center">
+                            <h3 className="text-slate-300 text-[10px] font-black uppercase tracking-[0.3em]">Pump Layout</h3>
+                        </div>
 
-                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-16 md:w-64 md:h-20 bg-slate-900 rounded-xl shadow-2xl flex flex-row items-center justify-around border-4 border-slate-700 z-10 px-2">
-                                    <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">MPD</span>
+                        {/* Supervisor - Top Left Absolute */}
+                        <div className="absolute top-6 left-6 z-20">
+                             <DroppableZone id="Supervisor" label="Supervisor" isSupervisor={true} className="w-20 h-20 bg-purple-50 rounded-full border-[3px] border-purple-200 flex items-center justify-center relative shadow-sm">
+                                <ShieldCheck className="absolute text-purple-200 w-8 h-8 z-0" />
+                                {assignments['Supervisor'] && <DraggableStaff id={assignments['Supervisor'].id} staffMember={assignments['Supervisor']} size="small" />}
+                            </DroppableZone>
+                        </div>
+
+                        {/* Layout Container */}
+                        <div className="mt-8 flex gap-8 items-center">
+                            
+                            {/* LEFT SIDE: The 4 Nozzles + MPD */}
+                            <div className="relative p-4">
+                                {/* Dotted Border for the island */}
+                                <div className="absolute inset-0 border-2 border-dashed border-slate-200 rounded-[3rem] -z-10"></div>
+
+                                {/* The Grid for Nozzles */}
+                                <div className="grid grid-cols-2 gap-x-24 gap-y-24 relative z-10 p-2">
+                                    {/* Top Row: N2, N1 */}
+                                    <DroppableZone id="N2" label="Nozzle 2" className="w-24 h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
+                                        {assignments['N2'] && <DraggableStaff id={assignments['N2'].id} staffMember={assignments['N2']} size="small" />}
+                                    </DroppableZone>
+                                    <DroppableZone id="N1" label="Nozzle 1" className="w-24 h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
+                                        {assignments['N1'] && <DraggableStaff id={assignments['N1'].id} staffMember={assignments['N1']} size="small" />}
+                                    </DroppableZone>
+
+                                    {/* Bottom Row: N3, N4 */}
+                                    <DroppableZone id="N3" label="Nozzle 3" className="w-24 h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
+                                        {assignments['N3'] && <DraggableStaff id={assignments['N3'].id} staffMember={assignments['N3']} size="small" />}
+                                    </DroppableZone>
+                                    <DroppableZone id="N4" label="Nozzle 4" className="w-24 h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
+                                        {assignments['N4'] && <DraggableStaff id={assignments['N4'].id} staffMember={assignments['N4']} size="small" />}
+                                    </DroppableZone>
                                 </div>
 
-                                <DroppableZone id="N3" label="Nozzle 3" className="bg-blue-50 h-28 md:h-32 rounded-2xl border-4 border-blue-200 flex items-center justify-center">
-                                    {assignments['N3'] && <DraggableStaff id={assignments['N3'].id} staffMember={assignments['N3']} />}
-                                </DroppableZone>
-                                <DroppableZone id="N4" label="Nozzle 4" className="bg-blue-50 h-28 md:h-32 rounded-2xl border-4 border-blue-200 flex items-center justify-center">
-                                    {assignments['N4'] && <DraggableStaff id={assignments['N4'].id} staffMember={assignments['N4']} />}
-                                </DroppableZone>
+                                {/* CENTER MPD DIV */}
+                                {/* Positioned absolutely in the exact center of the grid */}
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 bg-slate-800 rounded-2xl shadow-2xl flex flex-col items-center justify-center border-4 border-slate-600 z-0">
+                                    <div className="w-full h-1 bg-slate-600 absolute top-1/2 left-0 -translate-y-1/2 -z-10 scale-150"></div> {/* Horizontal pipe */}
+                                    <div className="w-1 h-full bg-slate-600 absolute left-1/2 top-0 -translate-x-1/2 -z-10 scale-150"></div> {/* Vertical pipe */}
+                                    <span className="text-2xl font-black text-white tracking-widest">MPD</span>
+                                    <span className="text-[8px] text-slate-400 uppercase font-bold mt-1">Central Unit</span>
+                                </div>
                             </div>
 
-                            {/* Hanging + Air */}
-                            <div className="w-24 md:w-32 pl-6 flex flex-col gap-6 justify-start pt-2">
-                                <DroppableZone id="N5" label="H-5" className="h-28 md:h-32 bg-indigo-50 rounded-2xl border-4 border-indigo-200 flex items-center justify-center">
-                                    {assignments['N5'] && <DraggableStaff id={assignments['N5'].id} staffMember={assignments['N5']} />}
+                            {/* RIGHT SIDE: Hanging + Air */}
+                            <div className="flex flex-col gap-5 border-l-2 border-dashed border-slate-200 pl-8 py-2">
+                                <DroppableZone id="N5" label="H-5" className="w-20 h-20 bg-indigo-50 rounded-full border-[3px] border-indigo-200 flex items-center justify-center shadow-sm">
+                                    {assignments['N5'] && <DraggableStaff id={assignments['N5'].id} staffMember={assignments['N5']} size="small" />}
                                 </DroppableZone>
-                                <DroppableZone id="N6" label="H-6" className="h-28 md:h-32 bg-indigo-50 rounded-2xl border-4 border-indigo-200 flex items-center justify-center">
-                                    {assignments['N6'] && <DraggableStaff id={assignments['N6'].id} staffMember={assignments['N6']} />}
+                                <DroppableZone id="N6" label="H-6" className="w-20 h-20 bg-indigo-50 rounded-full border-[3px] border-indigo-200 flex items-center justify-center shadow-sm">
+                                    {assignments['N6'] && <DraggableStaff id={assignments['N6'].id} staffMember={assignments['N6']} size="small" />}
                                 </DroppableZone>
-                                <div className="mt-4 md:mt-6">
-                                    <DroppableZone id="Air" label="Air Boy" isAir={true} className="h-24 md:h-24 bg-cyan-50 rounded-full border-4 border-cyan-200 flex items-center justify-center relative">
-                                        <Wind className="absolute text-cyan-200 w-10 h-10 z-0" />
+                                
+                                <div className="mt-4">
+                                    <DroppableZone id="Air" label="Air Boy" isAir={true} className="w-20 h-20 bg-cyan-50 rounded-full border-[3px] border-cyan-200 flex items-center justify-center relative shadow-sm">
+                                        <Wind className="absolute text-cyan-200 w-8 h-8 z-0" />
                                         {assignments['Air'] && <DraggableStaff id={assignments['Air'].id} staffMember={assignments['Air']} size="small" />}
                                     </DroppableZone>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -425,7 +441,7 @@ const ShiftManagementSystem = () => {
             <aside className="hidden md:flex flex-col w-[300px] bg-white border-l border-gray-200 shadow-xl z-30">
                 <div className="p-4 border-b border-gray-100 bg-gray-50">
                     <h3 className="text-sm font-black text-gray-800 uppercase tracking-wide">Staffs</h3>
-                    <p className="text-[10px] text-gray-500">Idhar Udhar kr skte hai</p>
+                    <p className="text-[10px] text-gray-500">Drag & Drop assignments</p>
                 </div>
                 
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -433,27 +449,24 @@ const ShiftManagementSystem = () => {
                     <div>
                         <h4 className="text-[10px] font-bold text-green-600 uppercase mb-2 flex items-center gap-2"><Users size={12}/> Available ({availableStaff.length})</h4>
                         <DroppableZone id="available-pool" isPool={true} className="bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl p-2 min-h-[120px]">
-                            <div className="grid grid-cols-3 gap-2">
+                            <div className="grid grid-cols-4 gap-2">
                                 {availableStaff.map((staff) => (
-                                    // PREFIX ADDED: desk-
                                     <DraggableStaff key={staff.id} id={`desk-${staff.id}`} staffMember={staff} size="small" hideName={true} />
                                 ))}
-                                {availableStaff.length === 0 && <div className="col-span-3 text-gray-400 italic text-xs text-center mt-4">All Assigned</div>}
+                                {availableStaff.length === 0 && <div className="col-span-4 text-gray-400 italic text-xs text-center mt-4">All Assigned</div>}
                             </div>
                         </DroppableZone>
                     </div>
 
-                    {/* Absent List (desktop) */}
+                    {/* Absent List */}
                     <div>
                          <h4 className="text-[10px] font-bold text-red-500 uppercase mb-2 flex items-center gap-2"><AlertCircle size={12}/> Absent / Leave</h4>
-                        <DroppableZone id="absent" isAbsent={true} className="bg-red-50 border-2 border-dashed border-red-200 rounded-xl p-2 min-h-[120px] flex flex-wrap gap-2 content-start">
-                             {absentStaff.length === 0 && <span className="text-red-300 w-full text-center mt-8 font-bold text-[10px]">Drop Absent Staff Here</span>}
-                             {/* PREFIX ADDED: desk- */}
-                             {absentStaff.map((s) => <DraggableStaff key={s.id} id={`desk-${s.id}`} staffMember={s} size="small" />)}
+                        <DroppableZone id="absent" isAbsent={true} className="bg-red-50 border-2 border-dashed border-red-200 rounded-xl p-2 min-h-[100px] flex flex-wrap gap-2 content-start">
+                             {absentStaff.length === 0 && <span className="text-red-300 w-full text-center mt-6 font-bold text-[10px]">Drop Absent Staff Here</span>}
+                             {absentStaff.map((s) => <DraggableStaff key={s.id} id={`desk-${s.id}`} staffMember={s} size="small" hideName={true} />)}
                         </DroppableZone>
                     </div>
                     
-                    {/* Save Button */}
                     <button onClick={handleSaveImage} className="w-full flex items-center justify-center gap-2 text-blue-600 font-bold bg-blue-50 hover:bg-blue-100 py-3 rounded-xl border border-blue-200 transition-colors text-sm">
                         <Download size={16}/> Save Map Image
                     </button>
@@ -473,10 +486,9 @@ const ShiftManagementSystem = () => {
                         <span>Available Staff</span>
                         <span className="text-blue-500">Drag back to reset</span>
                     </p>
-                    <DroppableZone id="available-pool-mobile" isPool={true} className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide min-h-[80px] items-center px-2 border-2 border-dashed border-gray-100 rounded-xl bg-gray-50">
+                    <DroppableZone id="available-pool-mobile" isPool={true} className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide min-h-[70px] items-center px-2 border-2 border-dashed border-gray-100 rounded-xl bg-gray-50">
                         {availableStaff.map((staff) => (
                             <div key={staff.id} className="shrink-0">
-                                {/* PREFIX ADDED: mob- */}
                                 <DraggableStaff id={`mob-${staff.id}`} staffMember={staff} size="small" hideName={true} />
                             </div>
                         ))}
@@ -492,13 +504,12 @@ const ShiftManagementSystem = () => {
 
         </div>
 
-        {/* DRAG OVERLAY */}
         <DragOverlay>
             {activeStaff ? <DraggableStaff id={activeStaff.id} staffMember={activeStaff} isOverlay /> : null}
         </DragOverlay>
       </DndContext>
 
-      {/* MODALS */}
+      {/* MODALS (Add/List) remain the same as previous code... */}
       {showAddModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
             <div className="bg-white w-full max-w-sm rounded-2xl p-6 shadow-2xl animate-in zoom-in-95">
