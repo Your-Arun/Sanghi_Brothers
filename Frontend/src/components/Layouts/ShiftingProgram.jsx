@@ -152,7 +152,7 @@ const ShiftManagementSystem = () => {
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const response = await axiosInstance.get("/shifting/members");
+        const response = await axiosInstance.get("/shifting");
         const formattedMembers = response.data.map(m => ({
           ...m, id: m._id, avatar: m.avatar || null
         }));

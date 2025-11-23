@@ -83,7 +83,7 @@ const router = express.Router();
 const controller = require('./shifts');
 
 // List all members
-router.get('/shifting/members', controller.listMembers);
+router.get('/shifting', controller.listMembers);
 
 // Add new member
 router.post('/shifting', controller.addMember);
