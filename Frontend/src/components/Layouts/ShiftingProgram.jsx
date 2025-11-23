@@ -256,7 +256,7 @@ const ShiftManagementSystem = () => {
         link.href = base64Image;
         link.click();
 
-        await axiosInstance.post('/shifting/save-map', {
+        await axiosInstance.post('/save-map', {
           date: date,
           shift: shift,
           image: base64Image
