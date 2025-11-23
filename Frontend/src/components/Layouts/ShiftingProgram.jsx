@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Menu, Users, FileText, Share2, Calendar, Plus, RefreshCw, X, Download, Wind, AlertCircle, LayoutDashboard,
-  Trash2, ShieldCheck,
-  Edit3
+  Trash2, ShieldCheck, Edit3, UserPlus
 } from 'lucide-react';
 import {
   DndContext,
@@ -62,7 +61,7 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
 };
 
 /* --- DroppableZone --- */
-const DroppableZone = ({ id, children, className, label, isAbsent = false, isAir = false, isSupervisor = false, isPool = false }) => {
+const DroppableZone = ({ id, children, className, label, isAbsent = false, isAir = false, isSupervisor = false, isExtra = false, isPool = false }) => {
   const { setNodeRef, isOver } = useDroppable({ id });
 
   let activeClass = '';
@@ -70,6 +69,7 @@ const DroppableZone = ({ id, children, className, label, isAbsent = false, isAir
     if (isAbsent) activeClass = 'bg-red-100 border-red-500 ring-4 ring-red-200 scale-105';
     else if (isAir) activeClass = 'bg-cyan-100 border-cyan-500 scale-110 shadow-xl';
     else if (isSupervisor) activeClass = 'bg-purple-100 border-purple-500 scale-110 shadow-xl';
+    else if (isExtra) activeClass = 'bg-orange-100 border-orange-500 scale-110 shadow-xl'; // Orange for Extra
     else if (isPool) activeClass = 'bg-blue-100 border-blue-500 ring-4 ring-blue-200';
     else activeClass = 'bg-green-100 border-green-600 scale-105 shadow-xl';
   }
@@ -133,7 +133,6 @@ const ShiftManagementSystem = () => {
           setSavedMapImage(res.data.image);
         }
       } catch (error) {
-        // Silent fail if no image exists (normal behavior for new shifts)
         console.log("No saved map for this slot");
       }
     };
@@ -209,33 +208,28 @@ const ShiftManagementSystem = () => {
     });
   };
 
-  // --- Updated Save Image Function ---
+  // --- Save Image Function ---
   const handleSaveImage = async () => {
     if (pumpMapRef.current) {
       try {
-        // Generate Canvas
         const canvas = await html2canvas(pumpMapRef.current, {
           backgroundColor: '#ffffff',
           scale: 2
         });
 
-        // Convert to compressed Image (JPEG 0.7)
         const base64Image = canvas.toDataURL('image/jpeg', 0.7);
 
-        // 1. Download Locally
         const link = document.createElement('a');
         link.download = `Pump_Shift_${shift}_${date}.jpg`;
         link.href = base64Image;
         link.click();
 
-        // 2. Save to Database
         await axiosInstance.post('/shifting/save-map', {
           date: date,
           shift: shift,
           image: base64Image
         });
 
-        // 3. Update State
         setSavedMapImage(base64Image);
         toast.success("Map Saved to Database!");
 
@@ -301,7 +295,8 @@ const ShiftManagementSystem = () => {
     const mapLabels = {
       'Supervisor': '👮 Supervisor',
       'N1': '⛽ Nozzle 1', 'N2': '⛽ Nozzle 2', 'N3': '⛽ Nozzle 3', 'N4': '⛽ Nozzle 4',
-      'N5': '🪝 Hanging 5', 'N6': '🪝 Hanging 6', 'Air': '💨 Air Boy'
+      'N5': '🪝 Hanging 5', 'N6': '🪝 Hanging 6', 
+      'Extra': '👷 Extra', 'Air': '💨 Air Boy'
     };
     Object.entries(mapLabels).forEach(([key, label]) => {
       const staff = assignments[key];
@@ -447,7 +442,7 @@ const ShiftManagementSystem = () => {
                     </div>
                   </div>
 
-                  {/* RIGHT SIDE: Hanging + Air */}
+                  {/* RIGHT SIDE: Hanging + Extra + Air */}
                   <div className="flex flex-col gap-4 md:gap-5 border-l-2 border-dashed border-slate-200 pl-4 md:pl-8 py-2">
                     <DroppableZone id="N5" label="H-5" className="w-16 h-16 md:w-20 md:h-20 bg-indigo-50 rounded-full border-[3px] border-indigo-200 flex items-center justify-center shadow-sm">
                       {assignments['N5'] && <DraggableStaff id={assignments['N5'].id} staffMember={assignments['N5']} size="small" />}
@@ -456,7 +451,15 @@ const ShiftManagementSystem = () => {
                       {assignments['N6'] && <DraggableStaff id={assignments['N6'].id} staffMember={assignments['N6']} size="small" />}
                     </DroppableZone>
 
-                    <div className="mt-2 md:mt-4">
+                    {/* EXTRA MEMBER ZONE (New) */}
+                    <div className="mt-1">
+                      <DroppableZone id="Extra" label="Extra" isExtra={true} className="w-16 h-16 md:w-20 md:h-20 bg-orange-50 rounded-full border-[3px] border-orange-200 flex items-center justify-center relative shadow-sm">
+                        <UserPlus className="absolute text-orange-200 w-6 h-6 md:w-8 md:h-8 z-0" />
+                        {assignments['Extra'] && <DraggableStaff id={assignments['Extra'].id} staffMember={assignments['Extra']} size="small" />}
+                      </DroppableZone>
+                    </div>
+
+                    <div className="mt-1">
                       <DroppableZone id="Air" label="Air Boy" isAir={true} className="w-16 h-16 md:w-20 md:h-20 bg-cyan-50 rounded-full border-[3px] border-cyan-200 flex items-center justify-center relative shadow-sm">
                         <Wind className="absolute text-cyan-200 w-6 h-6 md:w-8 md:h-8 z-0" />
                         {assignments['Air'] && <DraggableStaff id={assignments['Air'].id} staffMember={assignments['Air']} size="small" />}
@@ -465,15 +468,15 @@ const ShiftManagementSystem = () => {
                   </div>
                 </div>
                 
-                {/* Caption Input */}
-                <div className="mt-6 w-full border-t-2 border-dashed border-slate-100 pt-2 flex items-center gap-2">
-                  <Edit3 size={14} className="text-slate-300" />
+                {/* Caption Input (Fixed Layout) */}
+                <div className="mt-4 mb-2 w-full border-t-2 border-dashed border-slate-100 pt-3 flex items-center gap-2">
+                  <Edit3 size={16} className="text-slate-400 shrink-0" />
                   <input
                     type="text"
                     value={caption}
                     onChange={(e) => setCaption(e.target.value)}
                     placeholder="Write a note/caption here..."
-                    className="w-full bg-transparent outline-none font-bold text-slate-500 text-xs md:text-sm placeholder-slate-300 text-center"
+                    className="w-full bg-slate-50 px-3 py-2 rounded-lg outline-none font-bold text-slate-600 text-xs md:text-sm placeholder-slate-300 text-center border border-slate-100 focus:border-blue-200 focus:ring-2 focus:ring-blue-50 transition-all"
                   />
                 </div>
 
