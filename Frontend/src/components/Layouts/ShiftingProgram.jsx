@@ -489,7 +489,7 @@ const ShiftManagementSystem = () => {
                     </div>
 
                     {/* Mobile Save Button */}
-                    <button onClick={handleSaveImage} className="md:hidden flex items-center gap-2 text-blue-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-blue-100 hover:bg-blue-50 text-sm mt-4 w-full max-w-[360px] justify-center">
+                    <button onClick={handleSaveImage} className="md:hidden flex items-center gap-2 text-blue-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-blue-100 hover:bg-blue-50 text-sm mt-4 mb-10 w-full max-w-[360px] justify-center">
                         <Download size={18} /> Save Map Image
                     </button>
 
