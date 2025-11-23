@@ -86,10 +86,10 @@ const controller = require('./shifts');
 router.get('/', controller.listMembers);
 
 // Add new member
-router.post('/', controller.addMember);
+router.post('/shifting', controller.addMember);
 
 // Delete member
-router.delete('/:id', controller.deleteMember);
+router.delete('/shifting/:id', controller.deleteMember);
 
 // Get map snapshot (by date & shift)
 router.get('/get-map', controller.getMap);
