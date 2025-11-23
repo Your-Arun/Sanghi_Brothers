@@ -52,25 +52,34 @@ exports.listMembers = async (req, res) => {
 
 exports.addMember = async (req, res) => {
   try {
-    // Agar file upload hui hai, to Cloudinary ka path lelo
-    // req.file.path me pura link hota hai (https://res.cloudinary...)
+    // 👇 DEBUGGING KE LIYE LOGS LAGAYE HAIN
+    console.log("File received:", req.file); 
+
+    // Agar req.file undefined hai, matlab image upload hi nahi hui
+    if (!req.file) {
+        console.log("No file uploaded!");
+    }
+
     const avatarUrl = req.file ? req.file.path : null; 
+    console.log("Saving Avatar URL:", avatarUrl); // <--- YE URL CONSOLE ME DIKHNA CHAHIYE
 
     const newMember = new Member({
       name: req.body.name,
       role: req.body.role,
       shift: req.body.shift,
       available: req.body.available,
-      avatar: avatarUrl, // <--- YAHAN 'req.file.path' SAVE KARNA HAI
+      avatar: avatarUrl, 
     });
 
     const savedMember = await newMember.save();
+    console.log("Saved Member in DB:", savedMember); // <--- Check karein DB me kya save hua
+
     res.status(201).json(savedMember);
   } catch (error) {
+    console.error("Error adding member:", error);
     res.status(500).json({ error: error.message });
   }
 };
-
 exports.deleteMember = async (req, res) => {
   try {
     const { id } = req.params;
