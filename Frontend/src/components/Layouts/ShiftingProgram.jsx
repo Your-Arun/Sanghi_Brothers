@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import axiosInstance from '../Dashboard/axiosInstance';
 
-/* --- DraggableStaff (Universal Image Fix) --- */
+/* --- DraggableStaff (Debug & Fix Version) --- */
 const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", hideName = false }) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: String(id),
@@ -39,29 +39,30 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
     : (isSmall ? "w-10 h-10 md:w-12 md:h-12" : "w-14 h-14 md:w-16 md:h-16");
 
   const textSize = isMap || isSmall ? "text-[8px] md:text-[9px]" : "text-[10px]";
+  const borderClasses = isMap ? "" : "border-[2px] border-white shadow-sm";
 
-  // Border logic: Map me border nahi, Available staff me border chahiye
-  const borderClasses = isMap
-    ? ""
-    : "border-[2px] border-white shadow-sm";
-
-  // --- IMAGE LOGIC START ---
+  // --- 1. FALLBACK IMAGE (Initials) ---
   const fallbackImage = `https://ui-avatars.com/api/?name=${staffMember.name}&background=random&color=fff&bold=true`;
 
-  const getProfileImage = (avatar) => {
-    if (!avatar) return fallbackImage;
+  // --- 2. IMAGE URL CLEANER ---
+  const getImageUrl = (url) => {
+    if (!url) return fallbackImage;
+    
+    // Console me URL check karein (F12 daba kar Console dekhein)
+    // console.log("Member:", staffMember.name, "URL:", url);
 
-    // Agar Cloudinary URL hai
-    if (avatar.startsWith("http")) {
-      // HTTP ko HTTPS karna behtar hota hai safe loading ke liye
-      return avatar.replace("http:", "https:");
+    // Agar URL me 'http' hai lekin 'https' nahi, to usko fix karein
+    if (url.startsWith("http:")) {
+      return url.replace("http:", "https:");
+    }
+    
+    // Agar ye purana local path hai (uploads/...), to fallback dikhao
+    if (!url.startsWith("http")) {
+       return fallbackImage; 
     }
 
-    // Agar purana local path hai (uploads/...), to fallback dikhao
-    // Kyunki ab hum Cloudinary use kar rahe hain
-    return fallbackImage;
+    return url;
   };
-  // --- IMAGE LOGIC END ---
 
   return (
     <div
@@ -74,9 +75,9 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
     >
       <div className={`${containerClasses} ${borderClasses} rounded-full overflow-hidden bg-gray-200 transition-all relative`}>
         <img
-          src={getProfileImage(staffMember.avatar)}
+          src={getImageUrl(staffMember.avatar)}
           alt={staffMember.name}
-          // Agar Image load fail ho (e.g. Purana link), to Initials dikhaye
+          // Agar loading me error aaye, to turant fallback lagaye
           onError={(e) => {
             e.target.onerror = null;
             e.target.src = fallbackImage;
