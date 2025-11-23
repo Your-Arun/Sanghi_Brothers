@@ -221,75 +221,83 @@ const ShiftManagementSystem = () => {
     if (pumpMapRef.current) {
       try {
         const canvas = await html2canvas(pumpMapRef.current, {
-          backgroundColor: '#ffffff',
+          backgroundColor: "#ffffff",
           scale: 4,
           useCORS: true,
           scrollY: -window.scrollY,
+  
           onClone: (clonedDoc) => {
-            const input = clonedDoc.getElementById('caption-input');
-        
+            const input = clonedDoc.getElementById("caption-input");
+  
             if (input) {
-                const div = clonedDoc.createElement('div');
-        
-                div.innerText = caption || "";
-        
-                div.style.width = "100%";
-                div.style.textAlign = "center";
-                div.style.fontWeight = "bold";
-                div.style.color = "#475569";
-                div.style.fontSize = "16px";
-                div.style.background = "#f8fafc";
-                div.style.padding = "12px 10px";
-                div.style.borderRadius = "10px";
-                div.style.border = "1px solid #e2e8f0";
-                div.style.boxSizing = "border-box";
-        
-                // ❗ Most important — perfect center alignment fix
-                div.style.display = "flex";
-                div.style.justifyContent = "center";
-                div.style.alignItems = "center";
-        
-                // Wrapper width lock
-                const wrapper = clonedDoc.getElementById("caption-wrapper");
-                if (wrapper) {
-                    wrapper.style.width = "100%";
-                    wrapper.style.display = "flex";
-                    wrapper.style.justifyContent = "center";
-                }
-        
-                input.parentNode.replaceChild(div, input);
+              const div = clonedDoc.createElement("div");
+              div.innerText = caption || "";
+  
+              // FINAL PERFECT STYLES
+              div.style.width = "100%";
+              div.style.textAlign = "center";
+              div.style.fontWeight = "bold";
+              div.style.color = "#475569";
+              div.style.fontSize = "16px";
+              div.style.background = "#f8fafc";
+              div.style.padding = "12px 10px";
+              div.style.borderRadius = "10px";
+              div.style.border = "1px solid #e2e8f0";
+              div.style.boxSizing = "border-box";
+  
+              // ⭐ CENTER FIX
+              div.style.display = "flex";
+              div.style.justifyContent = "center";
+              div.style.alignItems = "center";
+  
+              // ⭐ WRAPPER FIX
+              const wrapper = clonedDoc.getElementById("caption-wrapper");
+              if (wrapper) {
+                wrapper.style.width = "100%";
+                wrapper.style.display = "flex";
+                wrapper.style.justifyContent = "center";
+                wrapper.style.alignItems = "center";
+              }
+  
+              input.parentNode.replaceChild(div, input);
             }
-        
-            const clonedMap = clonedDoc.getElementById('pump-map-container');
+  
+            // Pump map container adjustments
+            const clonedMap = clonedDoc.getElementById("pump-map-container");
             if (clonedMap) {
-                clonedMap.style.height = 'auto';
-                clonedMap.style.overflow = 'visible';
-                clonedMap.style.paddingBottom = '60px';
+              clonedMap.style.height = "auto";
+              clonedMap.style.overflow = "visible";
+              clonedMap.style.paddingBottom = "60px";
             }
-        }
-        
+          },
         });
-
-        const base64Image = canvas.toDataURL('image/png');
-        const link = document.createElement('a');
+  
+        // Convert to PNG
+        const base64Image = canvas.toDataURL("image/png");
+  
+        // Download PNG
+        const link = document.createElement("a");
         link.download = `Pump_Shift_${shift}_${date}.png`;
         link.href = base64Image;
         link.click();
-
-        await axiosInstance.post('/shifting/save-map', {
+  
+        // Save to backend
+        await axiosInstance.post("/shifting/save-map", {
           date: date,
           shift: shift,
-          image: base64Image
+          image: base64Image,
+          caption: caption,
         });
-
+  
         setSavedMapImage(base64Image);
-        toast.success("Map Saved (PNG)!");
+        toast.success("Map Saved Successfully!");
       } catch (error) {
         console.error(error);
         toast.error("Failed to save image");
       }
     }
   };
+  
 
   const handleAutoAssign = () => {
     const assignedIds = Object.values(assignments).flat().map((s) => s?.id).filter(Boolean);
@@ -534,25 +542,21 @@ const ShiftManagementSystem = () => {
                   </div>
 
                   {/* Caption Input */}
-                  <div
-                    id="caption-wrapper"
-                    className="mt-6 mb-2 w-full flex justify-center px-4"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      width: "100%"
-                    }}
-                  >
-                    <Edit3 size={16} className="text-slate-400 shrink-0" />
-                    <input
-                      id="caption-input"
-                      type="text"
-                      value={caption}
-                      onChange={(e) => setCaption(e.target.value)}
-                      placeholder="Write a note/caption here..."
-                      className="w-full bg-slate-50 px-3 py-2 rounded-lg outline-none font-bold text-slate-600 text-xs md:text-sm placeholder-slate-300 text-center border border-slate-100 focus:border-blue-200 focus:ring-2 focus:ring-blue-50 transition-all"
-                    />
-                  </div>
+                  <div 
+  id="caption-wrapper"
+  className="mt-6 mb-2 w-full flex justify-center px-4"
+>
+    <Edit3 size={16} className="text-slate-400 shrink-0" />
+    <input
+        id="caption-input"
+        type="text"
+        value={caption}
+        onChange={(e) => setCaption(e.target.value)}
+        placeholder="Write a note/caption here..."
+        className="w-full bg-slate-50 px-3 py-2 rounded-lg outline-none font-bold text-slate-600 text-xs md:text-sm text-center border border-slate-100"
+    />
+</div>
+
 
 
                 </div>
