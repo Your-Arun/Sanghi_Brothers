@@ -228,38 +228,39 @@ const ShiftManagementSystem = () => {
         scrollY: -window.scrollY,
   
         onClone: (clonedDoc) => {
+
+          // Remove original input
           const input = clonedDoc.getElementById("caption-input");
           if (input) input.remove();
         
-          const mapContainer = clonedDoc.getElementById("pump-map-container");
+          // MAIN WRAPPER — the screenshot root
+          const root = clonedDoc.body;
         
-          if (mapContainer) {
+          // Create caption overlay
+          const captionDiv = clonedDoc.createElement("div");
+          captionDiv.innerText = caption || "";
         
-            // Ensure container becomes relative
-            mapContainer.style.position = "relative";
+          // FINAL PERFECT POSITIONING
+          captionDiv.style.position = "absolute";
+          captionDiv.style.top = "20px";
+          captionDiv.style.left = "50%";
+          captionDiv.style.transform = "translateX(-50%)";
         
-            // Create overlay caption
-            const overlay = clonedDoc.createElement("div");
-            overlay.innerText = caption || "";
-            
-            overlay.style.position = "absolute";
-            overlay.style.top = "-40px";              // 🔥 move UP
-            overlay.style.left = "50%";
-            overlay.style.transform = "translateX(-50%)";
+          captionDiv.style.fontWeight = "bold";
+          captionDiv.style.fontSize = "20px";
+          captionDiv.style.color = "#1e293b";
+          captionDiv.style.padding = "12px 20px";
+          captionDiv.style.background = "rgba(255,255,255,0.95)";
+          captionDiv.style.border = "1px solid #e2e8f0";
+          captionDiv.style.borderRadius = "10px";
+          captionDiv.style.boxShadow = "0 3px 8px rgba(0,0,0,0.12)";
+          captionDiv.style.zIndex = "999999";
         
-            overlay.style.fontWeight = "bold";
-            overlay.style.fontSize = "22px";
-            overlay.style.color = "#1e293b";          // slate-800
-            overlay.style.zIndex = "999999";          // 🔥 always top
+          // Add that caption to cloned DOM
+          root.appendChild(captionDiv);
         
-            overlay.style.background = "rgba(255,255,255,0.9)";
-            overlay.style.padding = "10px 18px";
-            overlay.style.borderRadius = "8px";
-            overlay.style.border = "1px solid #e2e8f0";
-            overlay.style.boxShadow = "0 2px 6px rgba(0,0,0,0.08)";
-        
-            mapContainer.appendChild(overlay);
-          }
+          // Ensure root is relative
+          root.style.position = "relative";
         }
         
       });
