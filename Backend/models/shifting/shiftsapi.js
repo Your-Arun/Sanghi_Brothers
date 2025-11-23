@@ -75,24 +75,28 @@
 
 
 
-
-
 // routes/shifting.js
 const express = require('express');
 const router = express.Router();
-const controller = require('./shifts');
-const upload = require("./multer");
+
+// Adjust path to where your controller file actually is
+const controller = require('./shifts'); 
+
+// Adjust path to where your multer config is
+const upload = require("./multer"); 
+
+// --- ROUTES ---
 
 // List all members
 router.get('/shifting', controller.listMembers);
 
-// Add new member
+// Add new member (with image upload)
 router.post("/shifting", upload.single("avatar"), controller.addMember);
 
 // Delete member
 router.delete('/shifting/:id', controller.deleteMember);
 
-// Get map snapshot (by date & shift)
+// Get map snapshot
 router.get('/get-map', controller.getMap);
 
 // Save map snapshot
