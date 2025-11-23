@@ -32,9 +32,7 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
     zIndex: isDragging || isOverlay ? 9999 : 10,
   };
 
-
   const isSmall = size === "small";
-  // Responsive sizes: slightly smaller on mobile
   const imgSize = isSmall ? "w-10 h-10 md:w-12 md:h-12" : "w-14 h-14 md:w-16 md:h-16";
   const textSize = isSmall ? "text-[8px] md:text-[9px]" : "text-[9px] md:text-[10px]";
 
@@ -100,14 +98,21 @@ const ShiftManagementSystem = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showMemberListModal, setShowMemberListModal] = useState(false);
+  
+  // Drag State
   const [activeId, setActiveId] = useState(null);
   const [activeStaff, setActiveStaff] = useState(null);
-  const [caption, setCaption] = useState("");
-
+  
+  // Data State
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [shift, setShift] = useState('Morning');
+  const [caption, setCaption] = useState("");
   const [members, setMembers] = useState([]);
   const [assignments, setAssignments] = useState({});
+
+  // Image View/Save State
+  const [savedMapImage, setSavedMapImage] = useState(null);
+  const [viewMode, setViewMode] = useState(false);
 
   const [newMember, setNewMember] = useState({
     name: "", role: "operator", shift: 'morning', available: 'present', image: null
@@ -118,6 +123,24 @@ const ShiftManagementSystem = () => {
     useSensor(TouchSensor, { activationConstraint: { delay: 100, tolerance: 10 } })
   );
 
+  // 1. Check for existing map image when Date or Shift changes
+  useEffect(() => {
+    const checkSavedMap = async () => {
+      try {
+        setSavedMapImage(null); // Reset first
+        const res = await axiosInstance.get(`/shifting/get-map?date=${date}&shift=${shift}`);
+        if (res.data.image) {
+          setSavedMapImage(res.data.image);
+        }
+      } catch (error) {
+        // Silent fail if no image exists (normal behavior for new shifts)
+        console.log("No saved map for this slot");
+      }
+    };
+    checkSavedMap();
+  }, [date, shift]);
+
+  // 2. Fetch Members
   useEffect(() => {
     const fetchMembers = async () => {
       try {
@@ -142,6 +165,7 @@ const ShiftManagementSystem = () => {
   const getCleanId = (id) => String(id).replace(/^(desk-|mob-)/, '');
   const normalizeZone = (zoneId) => zoneId ? String(zoneId).replace(/-mobile$/, '') : null;
 
+  // --- Drag Handlers ---
   const handleDragStart = (event) => {
     const { active } = event;
     setActiveId(active.id);
@@ -185,16 +209,40 @@ const ShiftManagementSystem = () => {
     });
   };
 
+  // --- Updated Save Image Function ---
   const handleSaveImage = async () => {
     if (pumpMapRef.current) {
       try {
-        const canvas = await html2canvas(pumpMapRef.current, { backgroundColor: '#ffffff', scale: 2 });
+        // Generate Canvas
+        const canvas = await html2canvas(pumpMapRef.current, {
+          backgroundColor: '#ffffff',
+          scale: 2
+        });
+
+        // Convert to compressed Image (JPEG 0.7)
+        const base64Image = canvas.toDataURL('image/jpeg', 0.7);
+
+        // 1. Download Locally
         const link = document.createElement('a');
-        link.download = `Pump_Shift_${shift}_${date}.png`;
-        link.href = canvas.toDataURL();
+        link.download = `Pump_Shift_${shift}_${date}.jpg`;
+        link.href = base64Image;
         link.click();
-        toast.success("Map Saved!");
-      } catch (error) { toast.error("Failed to save image"); }
+
+        // 2. Save to Database
+        await axiosInstance.post('/shifting/save-map', {
+          date: date,
+          shift: shift,
+          image: base64Image
+        });
+
+        // 3. Update State
+        setSavedMapImage(base64Image);
+        toast.success("Map Saved to Database!");
+
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to save image");
+      }
     }
   };
 
@@ -262,7 +310,6 @@ const ShiftManagementSystem = () => {
     const absentNames = assignments['absent']?.map((s) => s.name).join(', ');
     if (absentNames) message += `\n⚠️ *Absent:* ${absentNames}`;
 
-    // --- NEW: Add Caption to Report ---
     if (caption) message += `\n📝 *Note:* ${caption}`;
 
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
@@ -274,7 +321,7 @@ const ShiftManagementSystem = () => {
       {/* HEADER (mobile) */}
       <header className="md:hidden bg-slate-900 text-white p-4 flex justify-between items-center shadow-lg shrink-0 z-30">
         <div className="flex items-center gap-4">
-          <button onClick={() => setIsSidebarOpen(true)}><Menu size={28} /></button>
+          <div onClick={() => setIsSidebarOpen(true)}><Menu size={28} /></div>
           <h1 className="text-xl font-black tracking-wider uppercase">Pump Manager</h1>
         </div>
       </header>
@@ -337,7 +384,7 @@ const ShiftManagementSystem = () => {
             <div className="md:hidden p-4 flex flex-col gap-4">
               <div className="flex gap-4 bg-white rounded-2xl p-2 shadow-sm w-full">
                 {['Morning', 'Evening'].map((s) => (
-                  <div key={s} onClick={() => setShift(s)} className={`flex-1 py-3 rounded-xl text-lg font-black uppercase tracking-wider transition-all ${shift === s ? 'bg-blue-700 text-white shadow-lg' : 'text-gray-400'}`}>{s}</div>
+                  <div key={s} onClick={() => setShift(s)} className={`flex-1 py-3 rounded-xl text-center text-lg font-black uppercase tracking-wider transition-all ${shift === s ? 'bg-blue-700 text-white shadow-lg' : 'text-gray-400'}`}>{s}</div>
                 ))}
               </div>
               <div className="flex gap-3">
@@ -395,7 +442,6 @@ const ShiftManagementSystem = () => {
                     </div>
 
                     {/* CENTER MPD DIV */}
-                    {/* Smaller size, no internal lines */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 md:w-28 md:h-28 bg-slate-800 rounded-xl md:rounded-2xl shadow-2xl flex flex-col items-center justify-center border-2 md:border-4 border-slate-600 z-0">
                       <span className="text-lg md:text-2xl font-black text-white tracking-widest">MPD</span>
                     </div>
@@ -418,6 +464,8 @@ const ShiftManagementSystem = () => {
                     </div>
                   </div>
                 </div>
+                
+                {/* Caption Input */}
                 <div className="mt-6 w-full border-t-2 border-dashed border-slate-100 pt-2 flex items-center gap-2">
                   <Edit3 size={14} className="text-slate-300" />
                   <input
@@ -431,7 +479,7 @@ const ShiftManagementSystem = () => {
 
               </div>
 
-              {/* Mobile Absent Zone - NOW BELOW THE MAP */}
+              {/* Mobile Absent Zone */}
               <div className="md:hidden w-full max-w-[360px] mt-6">
                 <div className="flex items-center gap-1 mb-1 ml-1 text-xs font-black text-red-400 uppercase"><AlertCircle size={12} /> Absent Zone</div>
                 <DroppableZone id="absent-mobile" isAbsent={true} className="w-full bg-red-50 border-4 border-dashed border-red-200 rounded-2xl p-2 min-h-[70px] flex items-center gap-2 overflow-x-auto px-4">
@@ -440,10 +488,17 @@ const ShiftManagementSystem = () => {
                 </DroppableZone>
               </div>
 
-              {/* Mobile Save Button - NOW BELOW THE ABSENT ZONE */}
+              {/* Mobile Save Button */}
               <button onClick={handleSaveImage} className="md:hidden flex items-center gap-2 text-blue-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-blue-100 hover:bg-blue-50 text-sm mt-4 w-full max-w-[360px] justify-center">
                 <Download size={18} /> Save Map Image
               </button>
+
+               {/* Mobile VIEW Saved Button (Only if image exists) */}
+               {savedMapImage && (
+                <button onClick={() => setViewMode(true)} className="md:hidden flex items-center gap-2 text-green-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-green-100 hover:bg-green-50 text-sm mt-2 w-full max-w-[360px] justify-center">
+                    <FileText size={18}/> View Saved Map
+                </button>
+              )}
 
             </div>
           </div>
@@ -480,6 +535,13 @@ const ShiftManagementSystem = () => {
               <button onClick={handleSaveImage} className="w-full flex items-center justify-center gap-2 text-blue-600 font-bold bg-blue-50 hover:bg-blue-100 py-3 rounded-xl border border-blue-200 transition-colors text-sm">
                 <Download size={16} /> Save Map Image
               </button>
+
+              {/* Desktop View Saved Button */}
+              {savedMapImage && (
+                <button onClick={() => setViewMode(true)} className="w-full flex items-center justify-center gap-2 text-green-600 font-bold bg-green-50 hover:bg-green-100 py-3 rounded-xl border border-green-200 transition-colors text-sm">
+                    <FileText size={16}/> View Saved Map
+                </button>
+              )}
             </div>
 
             <div className="p-4 border-t border-gray-200 bg-gray-50">
@@ -518,7 +580,20 @@ const ShiftManagementSystem = () => {
         </DragOverlay>
       </DndContext>
 
-      {/* MODALS (Add/List) remain the same as previous code... */}
+      {/* VIEW IMAGE MODAL */}
+      {viewMode && savedMapImage && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/90 p-4" onClick={() => setViewMode(false)}>
+            <div className="relative max-w-4xl w-full max-h-screen overflow-auto bg-white rounded-xl p-2" onClick={e => e.stopPropagation()}>
+                <button onClick={() => setViewMode(false)} className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full z-10 shadow-lg hover:bg-red-600"><X size={20}/></button>
+                <img src={savedMapImage} alt="Saved Map" className="w-full h-auto object-contain" />
+                <div className="text-center p-2 font-bold uppercase text-gray-600 text-sm">
+                    Saved Map: {date} ({shift})
+                </div>
+            </div>
+        </div>
+      )}
+
+      {/* MODALS (Add/List) */}
       {showAddModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
           <div className="bg-white w-full max-w-sm rounded-2xl p-6 shadow-2xl animate-in zoom-in-95">
