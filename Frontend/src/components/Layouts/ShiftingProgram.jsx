@@ -228,33 +228,40 @@ const ShiftManagementSystem = () => {
         scrollY: -window.scrollY,
   
         onClone: (clonedDoc) => {
-          // Remove original input completely
           const input = clonedDoc.getElementById("caption-input");
           if (input) input.remove();
-  
-          // Find main pump container
+        
           const mapContainer = clonedDoc.getElementById("pump-map-container");
-  
+        
           if (mapContainer) {
-            // Create clean caption div at bottom
-            const captionDiv = clonedDoc.createElement("div");
-            captionDiv.innerText = caption || "";
-            captionDiv.style.width = "100%";
-            captionDiv.style.textAlign = "center";
-            captionDiv.style.fontWeight = "bold";
-            captionDiv.style.color = "#475569";
-            captionDiv.style.fontSize = "18px";
-            captionDiv.style.background = "#f8fafc";
-            captionDiv.style.padding = "14px";
-            captionDiv.style.marginTop = "30px";
-            captionDiv.style.border = "1px solid #e2e8f0";
-            captionDiv.style.borderRadius = "10px";
-            captionDiv.style.boxSizing = "border-box";
-  
-            // Add caption at end
-            mapContainer.appendChild(captionDiv);
+        
+            // Ensure container becomes relative
+            mapContainer.style.position = "relative";
+        
+            // Create overlay caption
+            const overlay = clonedDoc.createElement("div");
+            overlay.innerText = caption || "";
+            
+            overlay.style.position = "absolute";
+            overlay.style.top = "-40px";              // 🔥 move UP
+            overlay.style.left = "50%";
+            overlay.style.transform = "translateX(-50%)";
+        
+            overlay.style.fontWeight = "bold";
+            overlay.style.fontSize = "22px";
+            overlay.style.color = "#1e293b";          // slate-800
+            overlay.style.zIndex = "999999";          // 🔥 always top
+        
+            overlay.style.background = "rgba(255,255,255,0.9)";
+            overlay.style.padding = "10px 18px";
+            overlay.style.borderRadius = "8px";
+            overlay.style.border = "1px solid #e2e8f0";
+            overlay.style.boxShadow = "0 2px 6px rgba(0,0,0,0.08)";
+        
+            mapContainer.appendChild(overlay);
           }
         }
+        
       });
   
       const base64Image = canvas.toDataURL("image/png");
