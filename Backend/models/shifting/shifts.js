@@ -136,3 +136,29 @@ exports.saveMap = async (req, res) => {
     return res.status(500).json({ message: 'Failed to save map' });
   }
 };
+
+
+
+exports.updateMember = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, role, shift, available } = req.body;
+    let updateData = {
+      name,
+      role,
+      shift,
+      available
+    };
+    if (req.file) {
+      updateData.avatar = req.file.path; 
+    } const updatedMember = await Member.findByIdAndUpdate(id, updateData, { new: true });
+
+    if (!updatedMember) {
+      return res.status(404).json({ message: "Member not found" });
+    }
+    return res.json(updatedMember);
+  } catch (error) {
+    console.error("Update Error:", error);
+    return res.status(500).json({ error: error.message });
+  }
+};

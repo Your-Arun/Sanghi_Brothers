@@ -102,4 +102,6 @@ router.get('/get-map', controller.getMap);
 // Save map snapshot
 router.post('/save-map', controller.saveMap);
 
+router.put("/shifting/:id", upload.single("avatar"), controller.updateMember);
+
 module.exports = router;
