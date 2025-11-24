@@ -231,42 +231,56 @@ const handleEditClick = (member) => {
 
     const staffId = getCleanId(String(active.id));
     
-    // Mobile absent zone ka ID fix karein
+    // Target Zone normalize karein (Mobile IDs fix karein)
     let targetZone = normalizeZone(String(over.id));
     if (String(over.id) === 'absent-mobile') targetZone = 'absent';
+    if (String(over.id) === 'available-pool-mobile') targetZone = 'available-pool';
 
     const draggedStaff = members.find((s) => String(s.id) === staffId);
 
     if (!draggedStaff) return;
 
-    // --- 🛡️ ROLE BASED VALIDATION LOGIC START 🛡️ ---
-    
-    // Agar Pool ya Absent me daal rahe hain to allow karein (koi restriction nahi)
+    // --- 🔒 ABSENT LOCK LOGIC (New Feature) 🔒 ---
+    // Check karein ki kya ye banda abhi 'Absent List' me hai?
+    const isCurrentlyAbsent = assignments['absent']?.some(s => String(s.id) === staffId);
+
+    if (isCurrentlyAbsent) {
+      // Rule: Agar banda Absent hai, to wo sirf 'available-pool' me ja sakta hai (ya wapas absent me)
+      // Agar wo 'available-pool' nahi ja raha, aur 'absent' nahi ja raha -> TO ROK DO
+      if (targetZone !== 'available-pool' && targetZone !== 'absent') {
+        toast.error("⚠️ Pehle Staff ko 'Available Pool' mein wapas laayein!");
+        return; // Drag cancel
+      }
+    }
+    // ------------------------------------------------
+
+
+    // --- 🛡️ ROLE BASED VALIDATION (Previous Feature) ---
+    // Agar banda Pool ya Absent me nahi ja raha (matlab duty par ja raha hai)
     if (targetZone !== 'available-pool' && targetZone !== 'absent') {
       
-      const role = draggedStaff.role.toLowerCase(); // Role check karein
+      const role = draggedStaff.role.toLowerCase(); 
 
-      // 1. Supervisor Rule: Sirf Supervisor Desk par jayega
+      // 1. Supervisor Rule
       if (role === 'supervisor' && targetZone !== 'Supervisor') {
         toast.warning("🚫 Supervisor can only be assigned to Supervisor Desk!");
-        return; // Drag cancel
+        return; 
       }
 
-      // 2. Air Boy Rule: Sirf Air Zone par jayega
+      // 2. Air Boy Rule
       if (role === 'air boy' && targetZone !== 'Air') {
         toast.warning("🚫 Air Boy can only be assigned to Air Zone!");
-        return; // Drag cancel
+        return; 
       }
-
-      // 3. Operator Rule: Operator kahin bhi ja sakta hai (No Restriction)
     }
-    // --- VALIDATION LOGIC END ---
+    // ------------------------------------------------
 
 
+    // --- ASSIGNMENT LOGIC (State Update) ---
     setAssignments((prev) => {
       const newAssignments = { ...prev };
       
-      // Purani jagah se remove karein
+      // 1. Purani jagah se remove karein
       if (Array.isArray(newAssignments['absent'])) {
         newAssignments['absent'] = newAssignments['absent'].filter((s) => String(s.id) !== staffId);
       }
@@ -276,10 +290,9 @@ const handleEditClick = (member) => {
         }
       });
 
-      // Nayi jagah assign karein
+      // 2. Nayi jagah assign karein
       if (targetZone === 'absent') {
         const currentAbsent = Array.isArray(newAssignments['absent']) ? newAssignments['absent'] : [];
-        // Duplicate check
         if (!currentAbsent.find(s => String(s.id) === staffId)) {
           newAssignments['absent'] = [...currentAbsent, draggedStaff];
         }
@@ -425,15 +438,45 @@ const handleEditClick = (member) => {
     }));
   };
 
-  const handleDeleteMember = async (id) => {
-    if (window.confirm("Delete?")) {
-      try {
-        await axiosInstance.delete(`/shifting/${id}`);
-        setMembers(members.filter(m => m.id !== id));
-        toast.success("Deleted");
-      } catch (err) { toast.error("Failed"); }
-    }
+  const handleDeleteMember = (id) => {
+    toast(
+      ({ closeToast }) => (
+        <div className="flex flex-col gap-2">
+          <p className="font-semibold text-gray-800">Delete this member?</p>
+  
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={async () => {
+                try {
+                  await axiosInstance.delete(`/shifting/${id}`);
+                  setMembers(prev => prev.filter(m => m.id !== id));
+                  toast.success("Member Deleted");
+                } catch {
+                  toast.error("Failed to delete");
+                }
+                closeToast();
+              }}
+              className="px-3 py-1 bg-red-600 text-white rounded-md text-sm"
+            >
+              Yes
+            </button>
+  
+            <button
+              onClick={closeToast}
+              className="px-3 py-1 bg-gray-200 rounded-md text-sm"
+            >
+              No
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        autoClose: false,
+        closeOnClick: false,
+      }
+    );
   };
+  
 
   const handleSubmitReport = () => {
     let message = `*⛽ Petrol Pump Shift Report*\n📅 Date: ${date}\n🕒 Shift: ${shift}\n\n*Assignments:*\n`;
