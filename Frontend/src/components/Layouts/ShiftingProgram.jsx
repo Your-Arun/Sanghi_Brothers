@@ -193,14 +193,25 @@ const handleEditClick = (member) => {
     const fetchMembers = async () => {
       try {
         const response = await axiosInstance.get("/shifting");
+        
+        // Members ko format karein
         const formattedMembers = response.data.map(m => ({
           ...m, id: m._id, avatar: m.avatar || null
         }));
+        
         setMembers(formattedMembers);
-        const absents = formattedMembers.filter(m => m.available === 'absent');
-        setAssignments(prev => ({ ...prev, absent: absents }));
+
+        // ✅ LOGIC: Database me jo 'absent' hain, unhe turant Absent Zone me daal do
+        const dbAbsents = formattedMembers.filter(m => m.available === 'absent');
+        
+        setAssignments(prev => ({
+          ...prev,
+          absent: dbAbsents // Absent list pre-fill ho jayegi
+        }));
+
       } catch (error) {
         console.error(error);
+        toast.error("Failed to load members");
       }
     };
     fetchMembers();
@@ -221,66 +232,53 @@ const handleEditClick = (member) => {
     setActiveStaff(staff);
   };
 
-  const handleDragEnd = (event) => {
+  const handleDragEnd = async (event) => {
     const { active, over } = event;
     setActiveId(null);
     setActiveStaff(null);
 
-    // Agar drop target nahi hai to return
     if (!over) return;
 
     const staffId = getCleanId(String(active.id));
     
-    // Target Zone normalize karein (Mobile IDs fix karein)
+    // Target normalize logic
     let targetZone = normalizeZone(String(over.id));
     if (String(over.id) === 'absent-mobile') targetZone = 'absent';
     if (String(over.id) === 'available-pool-mobile') targetZone = 'available-pool';
 
     const draggedStaff = members.find((s) => String(s.id) === staffId);
-
     if (!draggedStaff) return;
 
-    // --- 🔒 ABSENT LOCK LOGIC (New Feature) 🔒 ---
-    // Check karein ki kya ye banda abhi 'Absent List' me hai?
+    // --- 🔒 CHECK: Current Status ---
     const isCurrentlyAbsent = assignments['absent']?.some(s => String(s.id) === staffId);
 
+
+    // --- 1. ABSENT LOCK LOGIC (Agar Absent hai to sirf Pool me jayega) ---
     if (isCurrentlyAbsent) {
-      // Rule: Agar banda Absent hai, to wo sirf 'available-pool' me ja sakta hai (ya wapas absent me)
-      // Agar wo 'available-pool' nahi ja raha, aur 'absent' nahi ja raha -> TO ROK DO
       if (targetZone !== 'available-pool' && targetZone !== 'absent') {
         toast.error("⚠️ Pehle Staff ko 'Available Pool' mein wapas laayein!");
-        return; // Drag cancel
+        return;
       }
     }
-    // ------------------------------------------------
 
-
-    // --- 🛡️ ROLE BASED VALIDATION (Previous Feature) ---
-    // Agar banda Pool ya Absent me nahi ja raha (matlab duty par ja raha hai)
+    // --- 2. ROLE VALIDATION (Supervisor/AirBoy Logic) ---
     if (targetZone !== 'available-pool' && targetZone !== 'absent') {
-      
       const role = draggedStaff.role.toLowerCase(); 
-
-      // 1. Supervisor Rule
       if (role === 'supervisor' && targetZone !== 'Supervisor') {
         toast.warning("🚫 Supervisor can only be assigned to Supervisor Desk!");
         return; 
       }
-
-      // 2. Air Boy Rule
       if (role === 'air boy' && targetZone !== 'Air') {
         toast.warning("🚫 Air Boy can only be assigned to Air Zone!");
         return; 
       }
     }
-    // ------------------------------------------------
 
-
-    // --- ASSIGNMENT LOGIC (State Update) ---
+    // --- 3. UI STATE UPDATE (Turant dikhane ke liye) ---
     setAssignments((prev) => {
       const newAssignments = { ...prev };
       
-      // 1. Purani jagah se remove karein
+      // Remove from old
       if (Array.isArray(newAssignments['absent'])) {
         newAssignments['absent'] = newAssignments['absent'].filter((s) => String(s.id) !== staffId);
       }
@@ -290,7 +288,7 @@ const handleEditClick = (member) => {
         }
       });
 
-      // 2. Nayi jagah assign karein
+      // Add to new
       if (targetZone === 'absent') {
         const currentAbsent = Array.isArray(newAssignments['absent']) ? newAssignments['absent'] : [];
         if (!currentAbsent.find(s => String(s.id) === staffId)) {
@@ -302,8 +300,33 @@ const handleEditClick = (member) => {
       
       return newAssignments;
     });
-  };
 
+    // --- 4. 💾 DATABASE UPDATE LOGIC (Persistence) ---
+    
+    try {
+      // Case A: Agar ABSENT me daala hai -> DB me 'absent' mark karo
+      if (targetZone === 'absent' && !isCurrentlyAbsent) {
+        await axiosInstance.put(`/shifting/${staffId}`, { available: 'absent' });
+        
+        // Local Members state bhi update karein taaki Available pool se gayab ho jaye
+        setMembers(prev => prev.map(m => m.id === staffId ? { ...m, available: 'absent' } : m));
+        toast.info(`${draggedStaff.name} marked as Absent`);
+      } 
+      
+      // Case B: Agar ABSENT se wapas POOL me laye -> DB me 'present' mark karo
+      else if (targetZone === 'available-pool' && isCurrentlyAbsent) {
+        await axiosInstance.put(`/shifting/${staffId}`, { available: 'present' });
+        
+        // Local Members state update
+        setMembers(prev => prev.map(m => m.id === staffId ? { ...m, available: 'present' } : m));
+        toast.success(`${draggedStaff.name} marked as Present`);
+      }
+
+    } catch (error) {
+      console.error("Status Update Failed", error);
+      toast.error("Failed to update status in Database");
+    }
+  };
   const handleSaveImage = async () => {
     if (!pumpMapRef.current) return;
     try {
