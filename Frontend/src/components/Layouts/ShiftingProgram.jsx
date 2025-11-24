@@ -138,6 +138,7 @@ const ShiftManagementSystem = () => {
   // Image View/Save State
   const [savedMapImage, setSavedMapImage] = useState(null);
   const [viewMode, setViewMode] = useState(false);
+  const [editingId, setEditingId] = useState(null);
 
   const [newMember, setNewMember] = useState({
     name: "", role: "operator", shift: 'morning', available: 'present', file: null, preview: null
@@ -147,6 +148,23 @@ const ShiftManagementSystem = () => {
     useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
     useSensor(TouchSensor, { activationConstraint: { delay: 100, tolerance: 10 } })
   );
+// Edit Button dabane par ye chalega
+const handleEditClick = (member) => {
+  setEditingId(member.id); // Batao ki hum is ID ko edit kar rahe hain
+  setNewMember({
+    name: member.name,
+    role: member.role,
+    shift: member.shift,
+    available: member.available || 'present',
+    file: null, 
+    preview: getImageUrl(member.avatar) // Purani photo preview me dikhao
+  });
+  
+  setShowMemberListModal(false); // List band karo
+  setShowAddModal(true); // Form kholo
+};
+
+
 
   const getImageUrl = (url) => {
     if (!url) return null;
@@ -312,28 +330,56 @@ const ShiftManagementSystem = () => {
   const handleAddMemberSubmit = async (e) => {
     e.preventDefault();
     if (!newMember.name) return;
+  
     try {
       const formData = new FormData();
       formData.append("name", newMember.name);
       formData.append("role", newMember.role);
       formData.append("shift", newMember.shift);
       formData.append("available", newMember.available || 'present');
+  
+      // Agar nayi file select ki hai tabhi bhejo
       if (newMember.file) {
         formData.append("avatar", newMember.file);
       }
+  
       const config = { headers: { "Content-Type": "multipart/form-data" } };
-      const response = await axiosInstance.post("/shifting", formData, config);
-      const saved = { ...response.data, id: response.data._id, avatar: response.data.avatar };
-      setMembers([...members, saved]);
+  
+      if (editingId) {
+        // --- UPDATE LOGIC (PUT) ---
+        // Backend route: router.put("/shifting/:id", ...) hona chahiye
+        const response = await axiosInstance.put(`/shifting/${editingId}`, formData, config);
+        
+        // Local state update karo (Page refresh ki zarurat nahi)
+        setMembers(members.map(m => 
+          m.id === editingId 
+            ? { ...response.data, id: response.data._id, avatar: response.data.avatar } 
+            : m
+        ));
+        toast.success("Member Updated Successfully!");
+      } else {
+        // --- ADD LOGIC (POST) ---
+        const response = await axiosInstance.post("/shifting", formData, config);
+        
+        const saved = { 
+          ...response.data, 
+          id: response.data._id, 
+          avatar: response.data.avatar 
+        };
+        setMembers([...members, saved]);
+        toast.success("Member Added Successfully!");
+      }
+  
+      // Form & State Reset
       setNewMember({ name: "", role: "operator", shift: "morning", available: "present", file: null, preview: null });
+      setEditingId(null); // Edit mode band karo
       setShowAddModal(false);
-      toast.success("Member Added");
+      
     } catch (error) {
       console.error(error);
-      toast.error("Failed to add member");
+      toast.error(editingId ? "Failed to Update" : "Failed to Add");
     }
   };
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -699,15 +745,15 @@ const ShiftManagementSystem = () => {
         </div>
       )}
 
-     {/* --- REDESIGNED STAFF LIST MODAL --- */}
-     {showMemberListModal && (
+   {/* --- STAFF LIST MODAL (With Edit Option) --- */}
+   {showMemberListModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all">
           <div 
             className="bg-white w-full max-w-md rounded-3xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden animate-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
             
-            {/* 1. Modal Header with Gradient */}
+            {/* Header */}
             <div className="relative bg-slate-50 px-6 py-5 border-b border-slate-100 flex justify-between items-center shrink-0">
               <div>
                 <h2 className="text-xl font-black text-slate-800 tracking-tight flex items-center gap-2">
@@ -727,7 +773,7 @@ const ShiftManagementSystem = () => {
               </button>
             </div>
 
-            {/* 2. Scrollable List Area */}
+            {/* Scrollable List Area */}
             <div className="overflow-y-auto flex-1 p-4 space-y-3 bg-[#FAFAFA]">
               
               {members.length === 0 ? (
@@ -745,7 +791,7 @@ const ShiftManagementSystem = () => {
                   >
                     {/* Left: Avatar & Info */}
                     <div className="flex items-center gap-4 overflow-hidden">
-                      {/* Avatar with Ring */}
+                      {/* Avatar */}
                       <div className="relative shrink-0">
                         <div className="w-12 h-12 rounded-full p-[2px] bg-gradient-to-tr from-blue-100 to-white shadow-sm">
                           <img
@@ -758,7 +804,7 @@ const ShiftManagementSystem = () => {
                             alt={m.name}
                           />
                         </div>
-                        {/* Status Dot */}
+                        {/* Green Dot */}
                         <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
                       </div>
 
@@ -773,31 +819,38 @@ const ShiftManagementSystem = () => {
                           }`}>
                             {m.role}
                           </span>
-                          <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
-                             m.shift === 'morning' ? 'bg-purple-100 text-purple-600' : 
-                             m.shift === 'evening' ? 'bg-cyan-100 text-cyan-600' :
-                             'bg-blue-100 text-blue-600'
-                          }`}>
-                            {m.shift}
-                          </span>
                         </div>
                       </div>
                     </div>
 
-                    {/* Right: Delete Action */}
-                    <button
-                      onClick={() => handleDeleteMember(m.id)}
-                      className="p-2.5 rounded-xl text-slate-300 hover:text-red-600 hover:bg-red-50 transition-all duration-200"
-                      title="Delete Member"
-                    >
-                      <Trash2 size={18} />
-                    </button>
+                    {/* Right: Actions (Edit & Delete) */}
+                    <div className="flex items-center gap-2">
+                      
+                      {/* EDIT BUTTON */}
+                      <button
+                        onClick={() => handleEditClick(m)}
+                        className="p-2.5 rounded-xl text-slate-400 bg-slate-50 hover:text-blue-600 hover:bg-blue-100 border border-transparent hover:border-blue-200 transition-all duration-200"
+                        title="Edit Member"
+                      >
+                        <Edit3 size={18} />
+                      </button>
+
+                      {/* DELETE BUTTON */}
+                      <button
+                        onClick={() => handleDeleteMember(m.id)}
+                        className="p-2.5 rounded-xl text-slate-400 bg-slate-50 hover:text-red-600 hover:bg-red-100 border border-transparent hover:border-red-200 transition-all duration-200"
+                        title="Delete Member"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+
                   </div>
                 ))
               )}
             </div>
 
-            {/* 3. Footer (Optional Hint) */}
+            {/* Footer Hint */}
             <div className="p-3 bg-white border-t border-slate-100 text-center">
               <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">
                 Scroll to see more
