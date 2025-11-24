@@ -524,37 +524,37 @@ const ShiftManagementSystem = () => {
 
                 </div>
 
-              {/* Mobile Absent Zone & Buttons Container */}
-<div className="md:hidden w-full max-w-[360px] mt-6 mb-32"> {/* <--- Added mb-32 here */}
-  
-  {/* Absent Zone Header */}
-  <div className="flex items-center gap-1 mb-1 ml-1 text-xs font-black text-red-400 uppercase">
-    <AlertCircle size={12} /> Absent Zone
-  </div>
+                {/* Mobile Absent Zone & Buttons Container */}
+                <div className="md:hidden w-full max-w-[360px] mt-6 mb-32"> {/* <--- Added mb-32 here */}
 
-  {/* Absent Zone Box */}
-  <DroppableZone id="absent-mobile" isAbsent={true} className="w-full bg-red-50 border-4 border-dashed border-red-200 rounded-2xl p-2 min-h-[70px] flex items-center gap-2 overflow-x-auto px-4">
-    {absentStaff.length === 0 && <span className="text-red-300 w-full text-center font-bold uppercase text-[10px]">Drag Absent Staff Here</span>}
-    {absentStaff.map((s) => (
-      <div key={s.id} className="shrink-0">
-        <DraggableStaff id={`mob-${s.id}`} staffMember={s} size="small" hideName={true} />
-      </div>
-    ))}
-  </DroppableZone>
+                  {/* Absent Zone Header */}
+                  <div className="flex items-center gap-1 mb-1 ml-1 text-xs font-black text-red-400 uppercase">
+                    <AlertCircle size={12} /> Absent Zone
+                  </div>
 
-  {/* Mobile Save Button */}
-  <button onClick={handleSaveImage} className="md:hidden flex items-center gap-2 text-blue-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-blue-100 hover:bg-blue-50 text-sm mt-4 w-full max-w-[360px] justify-center">
-    <Download size={18} /> Save Map Image
-  </button>
+                  {/* Absent Zone Box */}
+                  <DroppableZone id="absent-mobile" isAbsent={true} className="w-full bg-red-50 border-4 border-dashed border-red-200 rounded-2xl p-2 min-h-[70px] flex items-center gap-2 overflow-x-auto px-4">
+                    {absentStaff.length === 0 && <span className="text-red-300 w-full text-center font-bold uppercase text-[10px]">Drag Absent Staff Here</span>}
+                    {absentStaff.map((s) => (
+                      <div key={s.id} className="shrink-0">
+                        <DraggableStaff id={`mob-${s.id}`} staffMember={s} size="small" hideName={true} />
+                      </div>
+                    ))}
+                  </DroppableZone>
 
-  {/* Mobile VIEW Saved Button */}
-  {savedMapImage && (
-    <button onClick={() => setViewMode(true)} className="md:hidden flex items-center gap-2 text-green-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-green-100 hover:bg-green-50 text-sm mt-2 w-full max-w-[360px] justify-center">
-      <FileText size={18} /> View Saved Map
-    </button>
-  )}
-  
-</div>
+                  {/* Mobile Save Button */}
+                  <button onClick={handleSaveImage} className="md:hidden flex items-center gap-2 text-blue-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-blue-100 hover:bg-blue-50 text-sm mt-4 w-full max-w-[360px] justify-center">
+                    <Download size={18} /> Save Map Image
+                  </button>
+
+                  {/* Mobile VIEW Saved Button */}
+                  {savedMapImage && (
+                    <button onClick={() => setViewMode(true)} className="md:hidden flex items-center gap-2 text-green-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-green-100 hover:bg-green-50 text-sm mt-2 w-full max-w-[360px] justify-center">
+                      <FileText size={18} /> View Saved Map
+                    </button>
+                  )}
+
+                </div>
 
 
               </div>
@@ -691,68 +691,104 @@ const ShiftManagementSystem = () => {
         </div>
       )}
 
-      {/* --- FIXED STAFF LIST MODAL (Responsive Width) --- */}
-      {showMemberListModal && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-white w-[95%] md:w-[60%] max-w-lg rounded-xl p-4 shadow-xl animate-in fade-in duration-150 max-h-[85vh] flex flex-col">
-
-            {/* Header */}
-            <div className="flex justify-between items-center mb-2 border-b pb-2 shrink-0">
-              <h2 className="text-lg font-bold text-gray-800">
-                STAFF ({members.length})
-              </h2>
-
+     {/* --- REDESIGNED STAFF LIST MODAL --- */}
+     {showMemberListModal && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all">
+          <div 
+            className="bg-white w-full max-w-md rounded-3xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden animate-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            
+            {/* 1. Modal Header with Gradient */}
+            <div className="relative bg-slate-50 px-6 py-5 border-b border-slate-100 flex justify-between items-center shrink-0">
+              <div>
+                <h2 className="text-xl font-black text-slate-800 tracking-tight flex items-center gap-2">
+                  <Users className="text-blue-600" size={22} /> 
+                  TEAM MEMBERS
+                </h2>
+                <p className="text-xs text-slate-500 font-medium mt-1">
+                  Manage your shift staff ({members.length})
+                </p>
+              </div>
+              
               <button
                 onClick={() => setShowMemberListModal(false)}
-                className="text-red-500 font-semibold px-2 py-1 bg-red-50 rounded-md hover:bg-red-100 text-sm"
+                className="bg-white p-2 rounded-full text-slate-400 hover:text-red-500 hover:bg-red-50 border border-transparent hover:border-red-100 shadow-sm transition-all duration-200"
               >
-                Close
+                <X size={20} />
               </button>
             </div>
 
-            {/* Table Area (Scrollable) */}
-            <div className="overflow-y-auto flex-1">
-              <table className="w-full text-xs">
-                <thead className="bg-gray-100 text-gray-500 uppercase text-[10px] sticky top-0">
-                  <tr>
-                    <th className="p-2 rounded-l-lg text-left">Name</th>
-                    <th className="p-2 text-left">Role</th>
-                    <th className="p-2 rounded-r-lg text-right">Action</th>
-                  </tr>
-                </thead>
+            {/* 2. Scrollable List Area */}
+            <div className="overflow-y-auto flex-1 p-4 space-y-3 bg-[#FAFAFA]">
+              
+              {members.length === 0 ? (
+                /* Empty State */
+                <div className="flex flex-col items-center justify-center h-48 text-center opacity-60">
+                  <Users size={48} className="text-slate-300 mb-2" />
+                  <p className="text-sm font-bold text-slate-400">No staff added yet.</p>
+                </div>
+              ) : (
+                /* Member Cards */
+                members.map((m) => (
+                  <div 
+                    key={m.id} 
+                    className="group relative flex items-center justify-between p-3 bg-white rounded-2xl border border-slate-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-lg hover:border-blue-200 transition-all duration-300"
+                  >
+                    {/* Left: Avatar & Info */}
+                    <div className="flex items-center gap-4 overflow-hidden">
+                      {/* Avatar with Ring */}
+                      <div className="relative shrink-0">
+                        <div className="w-12 h-12 rounded-full p-[2px] bg-gradient-to-tr from-blue-100 to-white shadow-sm">
+                          <img
+                            src={getImageUrl(m.avatar)}
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = `https://ui-avatars.com/api/?name=${m.name}&background=random`;
+                            }}
+                            className="w-full h-full rounded-full object-cover bg-slate-100"
+                            alt={m.name}
+                          />
+                        </div>
+                        {/* Status Dot */}
+                        <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+                      </div>
 
-                <tbody className="divide-y text-sm">
-                  {members.map((m) => (
-                    <tr key={m.id} className="hover:bg-blue-50">
-                      <td className="p-2 font-medium flex items-center gap-2">
-                        <img
-                          src={getImageUrl(m.avatar)}
-                          onError={(e) => {
-                            e.target.src = `https://ui-avatars.com/api/?name=${m.name}`;
-                          }}
-                          className="w-7 h-7 rounded-full object-cover shrink-0 bg-gray-200"
-                          alt=""
-                        />
-                        <span className="truncate">{m.name}</span>
-                      </td>
+                      {/* Text Info */}
+                      <div className="flex flex-col min-w-0">
+                        <h3 className="font-bold text-slate-700 text-sm truncate">{m.name}</h3>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                             m.role === 'supervisor' ? 'bg-purple-100 text-purple-600' : 
+                             m.role === 'air boy' ? 'bg-cyan-100 text-cyan-600' :
+                             'bg-blue-100 text-blue-600'
+                          }`}>
+                            {m.role}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
 
-                      <td className="p-2 text-gray-600 capitalize">
-                        {m.role}
-                      </td>
-
-                      <td className="p-2 text-right">
-                        <button
-                          onClick={() => handleDeleteMember(m.id)}
-                          className="text-red-600 bg-red-100 p-1.5 rounded-full hover:bg-red-600 hover:text-white transition"
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                    {/* Right: Delete Action */}
+                    <button
+                      onClick={() => handleDeleteMember(m.id)}
+                      className="p-2.5 rounded-xl text-slate-300 hover:text-red-600 hover:bg-red-50 transition-all duration-200"
+                      title="Delete Member"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
+                ))
+              )}
             </div>
+
+            {/* 3. Footer (Optional Hint) */}
+            <div className="p-3 bg-white border-t border-slate-100 text-center">
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">
+                Scroll to see more
+              </p>
+            </div>
+
           </div>
         </div>
       )}
