@@ -8,10 +8,7 @@ require('dotenv').config();
 // 2. Debugging: Check karein ki Keys aa rahi hain ya nahi
 // (Terminal me server start hone par ye print hoga)
 if (!process.env.CLOUD_NAME || !process.env.CLOUD_API_KEY || !process.env.CLOUD_API_SECRET) {
-  console.error("❌ CLOUDINARY CONFIG ERROR: .env file se keys nahi mil rahi hain!");
-  console.error("Check karein ki aapne .env file banayi hai aur usme spelling sahi hai.");
 } else {
-  console.log("✅ Cloudinary Config Loaded for:", process.env.CLOUD_NAME);
 }
 
 // 3. Configure Cloudinary

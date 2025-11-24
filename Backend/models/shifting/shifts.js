@@ -52,13 +52,7 @@ exports.listMembers = async (req, res) => {
 
 exports.addMember = async (req, res) => {
   try {
-    console.log("Uploaded File Info:", req.file); // <--- Ye log dekhein
-
-    // Agar Cloudinary config galat hai, to req.file undefined aayega
-    if (!req.file) {
-      console.log("⚠️ Warning: Image upload nahi hui (req.file is undefined)");
-    }
-
+   
     const avatarUrl = req.file ? req.file.path : null;
 
     const newMember = new Member({
@@ -72,7 +66,6 @@ exports.addMember = async (req, res) => {
     const savedMember = await newMember.save();
     res.status(201).json(savedMember);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 };

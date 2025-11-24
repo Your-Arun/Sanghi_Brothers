@@ -524,26 +524,37 @@ const ShiftManagementSystem = () => {
 
                 </div>
 
-                {/* Mobile Absent Zone */}
-                <div className="md:hidden w-full max-w-[360px] mt-6">
-                  <div className="flex items-center gap-1 mb-1 ml-1 text-xs font-black text-red-400 uppercase"><AlertCircle size={12} /> Absent Zone</div>
-                  <DroppableZone id="absent-mobile" isAbsent={true} className="w-full bg-red-50 border-4 border-dashed border-red-200 rounded-2xl p-2 min-h-[70px] flex items-center gap-2 overflow-x-auto px-4">
-                    {absentStaff.length === 0 && <span className="text-red-300 w-full text-center font-bold uppercase text-[10px]">Drag Absent Staff Here</span>}
-                    {absentStaff.map((s) => <div key={s.id} className="shrink-0"><DraggableStaff id={`mob-${s.id}`} staffMember={s} size="small" hideName={true} /></div>)}
-                  </DroppableZone>
+              {/* Mobile Absent Zone & Buttons Container */}
+<div className="md:hidden w-full max-w-[360px] mt-6 mb-32"> {/* <--- Added mb-32 here */}
+  
+  {/* Absent Zone Header */}
+  <div className="flex items-center gap-1 mb-1 ml-1 text-xs font-black text-red-400 uppercase">
+    <AlertCircle size={12} /> Absent Zone
+  </div>
 
-                  {/* Mobile Save Button */}
-                  <button onClick={handleSaveImage} className="md:hidden flex items-center gap-2 text-blue-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-blue-100 hover:bg-blue-50 text-sm mt-4 w-full max-w-[360px] justify-center">
-                    <Download size={18} /> Save Map Image
-                  </button>
+  {/* Absent Zone Box */}
+  <DroppableZone id="absent-mobile" isAbsent={true} className="w-full bg-red-50 border-4 border-dashed border-red-200 rounded-2xl p-2 min-h-[70px] flex items-center gap-2 overflow-x-auto px-4">
+    {absentStaff.length === 0 && <span className="text-red-300 w-full text-center font-bold uppercase text-[10px]">Drag Absent Staff Here</span>}
+    {absentStaff.map((s) => (
+      <div key={s.id} className="shrink-0">
+        <DraggableStaff id={`mob-${s.id}`} staffMember={s} size="small" hideName={true} />
+      </div>
+    ))}
+  </DroppableZone>
 
-                  {/* Mobile VIEW Saved Button */}
-                  {savedMapImage && (
-                    <button onClick={() => setViewMode(true)} className="md:hidden flex items-center gap-2 text-green-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-green-100 hover:bg-green-50 text-sm mt-2 w-full max-w-[360px] justify-center">
-                      <FileText size={18} /> View Saved Map
-                    </button>
-                  )}
-                </div>
+  {/* Mobile Save Button */}
+  <button onClick={handleSaveImage} className="md:hidden flex items-center gap-2 text-blue-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-blue-100 hover:bg-blue-50 text-sm mt-4 w-full max-w-[360px] justify-center">
+    <Download size={18} /> Save Map Image
+  </button>
+
+  {/* Mobile VIEW Saved Button */}
+  {savedMapImage && (
+    <button onClick={() => setViewMode(true)} className="md:hidden flex items-center gap-2 text-green-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-green-100 hover:bg-green-50 text-sm mt-2 w-full max-w-[360px] justify-center">
+      <FileText size={18} /> View Saved Map
+    </button>
+  )}
+  
+</div>
 
 
               </div>
