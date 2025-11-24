@@ -50,7 +50,7 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
       return url.replace("http:", "https:");
     }
     if (!url.startsWith("http")) {
-       return fallbackImage; 
+      return fallbackImage;
     }
     return url;
   };
@@ -531,19 +531,21 @@ const ShiftManagementSystem = () => {
                     {absentStaff.length === 0 && <span className="text-red-300 w-full text-center font-bold uppercase text-[10px]">Drag Absent Staff Here</span>}
                     {absentStaff.map((s) => <div key={s.id} className="shrink-0"><DraggableStaff id={`mob-${s.id}`} staffMember={s} size="small" hideName={true} /></div>)}
                   </DroppableZone>
+
+                  {/* Mobile Save Button */}
+                  <button onClick={handleSaveImage} className="md:hidden flex items-center gap-2 text-blue-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-blue-100 hover:bg-blue-50 text-sm mt-4 w-full max-w-[360px] justify-center">
+                    <Download size={18} /> Save Map Image
+                  </button>
+
+                  {/* Mobile VIEW Saved Button */}
+                  {savedMapImage && (
+                    <button onClick={() => setViewMode(true)} className="md:hidden flex items-center gap-2 text-green-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-green-100 hover:bg-green-50 text-sm mt-2 w-full max-w-[360px] justify-center">
+                      <FileText size={18} /> View Saved Map
+                    </button>
+                  )}
                 </div>
 
-                {/* Mobile Save Button */}
-                <button onClick={handleSaveImage} className="md:hidden flex items-center gap-2 text-blue-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-blue-100 hover:bg-blue-50 text-sm mt-4 w-full max-w-[360px] justify-center">
-                  <Download size={18} /> Save Map Image
-                </button>
 
-                {/* Mobile VIEW Saved Button */}
-                {savedMapImage && (
-                  <button onClick={() => setViewMode(true)} className="md:hidden flex items-center gap-2 text-green-600 font-bold bg-white px-6 py-3 rounded-xl shadow border border-green-100 hover:bg-green-50 text-sm mt-2 w-full max-w-[360px] justify-center">
-                    <FileText size={18} /> View Saved Map
-                  </button>
-                )}
               </div>
             </div>
           </div>
