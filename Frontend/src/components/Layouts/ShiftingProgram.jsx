@@ -773,6 +773,13 @@ const ShiftManagementSystem = () => {
                           }`}>
                             {m.role}
                           </span>
+                          <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                             m.shift === 'morning' ? 'bg-purple-100 text-purple-600' : 
+                             m.shift === 'evening' ? 'bg-cyan-100 text-cyan-600' :
+                             'bg-blue-100 text-blue-600'
+                          }`}>
+                            {m.shift}
+                          </span>
                         </div>
                       </div>
                     </div>
