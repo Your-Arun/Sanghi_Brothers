@@ -225,16 +225,48 @@ const handleEditClick = (member) => {
     const { active, over } = event;
     setActiveId(null);
     setActiveStaff(null);
+
+    // Agar drop target nahi hai to return
     if (!over) return;
 
     const staffId = getCleanId(String(active.id));
-    const targetZone = normalizeZone(String(over.id));
+    
+    // Mobile absent zone ka ID fix karein
+    let targetZone = normalizeZone(String(over.id));
+    if (String(over.id) === 'absent-mobile') targetZone = 'absent';
+
     const draggedStaff = members.find((s) => String(s.id) === staffId);
 
     if (!draggedStaff) return;
 
+    // --- 🛡️ ROLE BASED VALIDATION LOGIC START 🛡️ ---
+    
+    // Agar Pool ya Absent me daal rahe hain to allow karein (koi restriction nahi)
+    if (targetZone !== 'available-pool' && targetZone !== 'absent') {
+      
+      const role = draggedStaff.role.toLowerCase(); // Role check karein
+
+      // 1. Supervisor Rule: Sirf Supervisor Desk par jayega
+      if (role === 'supervisor' && targetZone !== 'Supervisor') {
+        toast.warning("🚫 Supervisor can only be assigned to Supervisor Desk!");
+        return; // Drag cancel
+      }
+
+      // 2. Air Boy Rule: Sirf Air Zone par jayega
+      if (role === 'air boy' && targetZone !== 'Air') {
+        toast.warning("🚫 Air Boy can only be assigned to Air Zone!");
+        return; // Drag cancel
+      }
+
+      // 3. Operator Rule: Operator kahin bhi ja sakta hai (No Restriction)
+    }
+    // --- VALIDATION LOGIC END ---
+
+
     setAssignments((prev) => {
       const newAssignments = { ...prev };
+      
+      // Purani jagah se remove karein
       if (Array.isArray(newAssignments['absent'])) {
         newAssignments['absent'] = newAssignments['absent'].filter((s) => String(s.id) !== staffId);
       }
@@ -244,14 +276,17 @@ const handleEditClick = (member) => {
         }
       });
 
+      // Nayi jagah assign karein
       if (targetZone === 'absent') {
         const currentAbsent = Array.isArray(newAssignments['absent']) ? newAssignments['absent'] : [];
+        // Duplicate check
         if (!currentAbsent.find(s => String(s.id) === staffId)) {
           newAssignments['absent'] = [...currentAbsent, draggedStaff];
         }
       } else if (targetZone !== 'available-pool' && targetZone) {
         newAssignments[targetZone] = draggedStaff;
       }
+      
       return newAssignments;
     });
   };
