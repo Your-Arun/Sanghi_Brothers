@@ -332,36 +332,45 @@ const ShiftManagementSystem = () => {
     toast.success(`Auto-assigned ${shift}!`);
   };
 
-  // --- FIXED ADD MEMBER SUBMIT ---
   const handleAddMemberSubmit = async (e) => {
     e.preventDefault();
     if (!newMember.name) return;
-
+  
     try {
       const formData = new FormData();
       formData.append("name", newMember.name);
       formData.append("role", newMember.role);
       formData.append("shift", newMember.shift);
       formData.append("available", newMember.available || 'present');
-
+  
+      // 👇 DEBUGGING: Check karein file select hui hai ya nahi
       if (newMember.file) {
-        formData.append("avatar", newMember.file);
+        console.log("📂 Appending File to FormData:", newMember.file.name);
+        formData.append("avatar", newMember.file); // <--- Key name "avatar" hona chahiye
+      } else {
+        console.error("❌ No File Selected in State!");
       }
-
-      // Axios automatically sets Content-Type for FormData
-      const response = await axiosInstance.post("/shifting", formData);
-
+  
+      // 👇 Header explicitly set karein (Waise axios khud kar leta hai, par safe side ke liye)
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+  
+      const response = await axiosInstance.post("/shifting", formData, config);
+  
       const saved = {
         ...response.data,
         id: response.data._id,
         avatar: response.data.avatar,
       };
-
+  
       setMembers([...members, saved]);
       setNewMember({
         name: "", role: "operator", shift: "morning", available: "present", file: null, preview: null,
       });
-
+  
       setShowAddModal(false);
       toast.success("Member Added");
     } catch (error) {
@@ -369,7 +378,6 @@ const ShiftManagementSystem = () => {
       toast.error("Failed to add member");
     }
   };
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
