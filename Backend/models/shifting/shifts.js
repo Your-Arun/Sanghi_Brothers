@@ -52,31 +52,27 @@ exports.listMembers = async (req, res) => {
 
 exports.addMember = async (req, res) => {
   try {
-    // 👇 DEBUGGING KE LIYE LOGS LAGAYE HAIN
-    console.log("File received:", req.file); 
+    console.log("Uploaded File Info:", req.file); // <--- Ye log dekhein
 
-    // Agar req.file undefined hai, matlab image upload hi nahi hui
+    // Agar Cloudinary config galat hai, to req.file undefined aayega
     if (!req.file) {
-        console.log("No file uploaded!");
+      console.log("⚠️ Warning: Image upload nahi hui (req.file is undefined)");
     }
 
-    const avatarUrl = req.file ? req.file.path : null; 
-    console.log("Saving Avatar URL:", avatarUrl); // <--- YE URL CONSOLE ME DIKHNA CHAHIYE
+    const avatarUrl = req.file ? req.file.path : null;
 
     const newMember = new Member({
       name: req.body.name,
       role: req.body.role,
       shift: req.body.shift,
       available: req.body.available,
-      avatar: avatarUrl, 
+      avatar: avatarUrl, // <--- Cloudinary URL
     });
 
     const savedMember = await newMember.save();
-    console.log("Saved Member in DB:", savedMember); // <--- Check karein DB me kya save hua
-
     res.status(201).json(savedMember);
   } catch (error) {
-    console.error("Error adding member:", error);
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 };

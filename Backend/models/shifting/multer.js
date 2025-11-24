@@ -1,9 +1,20 @@
-// middleware/multer.js
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const cloudinary = require("cloudinary").v2;
 
-// Configure Cloudinary (Add your .env variables)
+// 1. Dotenv ko yahan load karein taaki keys mil sakein
+require('dotenv').config(); 
+
+// 2. Debugging: Check karein ki Keys aa rahi hain ya nahi
+// (Terminal me server start hone par ye print hoga)
+if (!process.env.CLOUD_NAME || !process.env.CLOUD_API_KEY || !process.env.CLOUD_API_SECRET) {
+  console.error("❌ CLOUDINARY CONFIG ERROR: .env file se keys nahi mil rahi hain!");
+  console.error("Check karein ki aapne .env file banayi hai aur usme spelling sahi hai.");
+} else {
+  console.log("✅ Cloudinary Config Loaded for:", process.env.CLOUD_NAME);
+}
+
+// 3. Configure Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.CLOUD_API_KEY,
@@ -13,7 +24,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: "pump_staff_avatars", // Folder name in Cloudinary
+    folder: "pump_staff_avatars", 
     allowed_formats: ["jpg", "png", "jpeg"],
   },
 });
