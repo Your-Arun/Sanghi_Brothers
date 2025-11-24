@@ -148,6 +148,14 @@ const ShiftManagementSystem = () => {
     useSensor(TouchSensor, { activationConstraint: { delay: 100, tolerance: 10 } })
   );
 
+  const getImageUrl = (url) => {
+    if (!url) return null;
+    // Cloudinary HTTP fix
+    if (url.startsWith("http:")) {
+      return url.replace("http:", "https:");
+    }
+    return url;
+  };
   useEffect(() => {
     const checkSavedMap = async () => {
       try {
