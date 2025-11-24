@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import axiosInstance from '../Dashboard/axiosInstance';
 
-/* --- DraggableStaff (Debug & Fix Version) --- */
+/* --- DraggableStaff (Fixed Image & Sizes) --- */
 const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", hideName = false }) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: String(id),
@@ -41,26 +41,17 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
   const textSize = isMap || isSmall ? "text-[8px] md:text-[9px]" : "text-[10px]";
   const borderClasses = isMap ? "" : "border-[2px] border-white shadow-sm";
 
-  // --- 1. FALLBACK IMAGE (Initials) ---
+  // --- IMAGE URL HELPER ---
   const fallbackImage = `https://ui-avatars.com/api/?name=${staffMember.name}&background=random&color=fff&bold=true`;
 
-  // --- 2. IMAGE URL CLEANER ---
   const getImageUrl = (url) => {
     if (!url) return fallbackImage;
-    
-    // Console me URL check karein (F12 daba kar Console dekhein)
-    // console.log("Member:", staffMember.name, "URL:", url);
-
-    // Agar URL me 'http' hai lekin 'https' nahi, to usko fix karein
     if (url.startsWith("http:")) {
       return url.replace("http:", "https:");
     }
-    
-    // Agar ye purana local path hai (uploads/...), to fallback dikhao
     if (!url.startsWith("http")) {
        return fallbackImage; 
     }
-
     return url;
   };
 
@@ -77,7 +68,6 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
         <img
           src={getImageUrl(staffMember.avatar)}
           alt={staffMember.name}
-          // Agar loading me error aaye, to turant fallback lagaye
           onError={(e) => {
             e.target.onerror = null;
             e.target.src = fallbackImage;
@@ -94,6 +84,7 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
     </div>
   );
 };
+
 /* --- DroppableZone --- */
 const DroppableZone = ({ id, children, className, label, isAbsent = false, isAir = false, isSupervisor = false, isExtra = false, isPool = false }) => {
   const { setNodeRef, isOver } = useDroppable({ id });
@@ -241,33 +232,22 @@ const ShiftManagementSystem = () => {
 
   const handleSaveImage = async () => {
     if (!pumpMapRef.current) return;
-
     try {
       const canvas = await html2canvas(pumpMapRef.current, {
         backgroundColor: "#ffffff",
         scale: 4,
         useCORS: true,
         scrollY: -window.scrollY,
-
         onClone: (clonedDoc) => {
-
-          // Remove original input
           const input = clonedDoc.getElementById("caption-input");
           if (input) input.remove();
-
-          // MAIN WRAPPER — the screenshot root
           const root = clonedDoc.body;
-
-          // Create caption overlay
           const captionDiv = clonedDoc.createElement("div");
           captionDiv.innerText = caption || "";
-
-          // FINAL PERFECT POSITIONING
           captionDiv.style.position = "absolute";
           captionDiv.style.top = "20px";
           captionDiv.style.left = "50%";
           captionDiv.style.transform = "translateX(-50%)";
-
           captionDiv.style.fontWeight = "bold";
           captionDiv.style.fontSize = "20px";
           captionDiv.style.color = "#1e293b";
@@ -277,30 +257,21 @@ const ShiftManagementSystem = () => {
           captionDiv.style.borderRadius = "10px";
           captionDiv.style.boxShadow = "0 3px 8px rgba(0,0,0,0.12)";
           captionDiv.style.zIndex = "999999";
-
-          // Add that caption to cloned DOM
           root.appendChild(captionDiv);
-
-          // Ensure root is relative
           root.style.position = "relative";
         }
-
       });
-
       const base64Image = canvas.toDataURL("image/png");
-
       const link = document.createElement("a");
       link.download = `Pump_Shift_${shift}_${date}.png`;
       link.href = base64Image;
       link.click();
-
       await axiosInstance.post("/shifting/save-map", {
         date,
         shift,
         image: base64Image,
         caption
       });
-
       setSavedMapImage(base64Image);
       toast.success("Map Saved with Caption!");
     } catch (err) {
@@ -308,8 +279,6 @@ const ShiftManagementSystem = () => {
       toast.error("Failed to Save");
     }
   };
-
-
 
   const handleAutoAssign = () => {
     const assignedIds = Object.values(assignments).flat().map((s) => s?.id).filter(Boolean);
@@ -335,42 +304,20 @@ const ShiftManagementSystem = () => {
   const handleAddMemberSubmit = async (e) => {
     e.preventDefault();
     if (!newMember.name) return;
-  
     try {
       const formData = new FormData();
       formData.append("name", newMember.name);
       formData.append("role", newMember.role);
       formData.append("shift", newMember.shift);
       formData.append("available", newMember.available || 'present');
-  
-      // 👇 DEBUGGING: Check karein file select hui hai ya nahi
       if (newMember.file) {
-        console.log("📂 Appending File to FormData:", newMember.file.name);
-        formData.append("avatar", newMember.file); // <--- Key name "avatar" hona chahiye
-      } else {
-        console.error("❌ No File Selected in State!");
+        formData.append("avatar", newMember.file);
       }
-  
-      // 👇 Header explicitly set karein (Waise axios khud kar leta hai, par safe side ke liye)
-      const config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      };
-  
+      const config = { headers: { "Content-Type": "multipart/form-data" } };
       const response = await axiosInstance.post("/shifting", formData, config);
-  
-      const saved = {
-        ...response.data,
-        id: response.data._id,
-        avatar: response.data.avatar,
-      };
-  
+      const saved = { ...response.data, id: response.data._id, avatar: response.data.avatar };
       setMembers([...members, saved]);
-      setNewMember({
-        name: "", role: "operator", shift: "morning", available: "present", file: null, preview: null,
-      });
-  
+      setNewMember({ name: "", role: "operator", shift: "morning", available: "present", file: null, preview: null });
       setShowAddModal(false);
       toast.success("Member Added");
     } catch (error) {
@@ -378,6 +325,7 @@ const ShiftManagementSystem = () => {
       toast.error("Failed to add member");
     }
   };
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -499,7 +447,7 @@ const ShiftManagementSystem = () => {
               <div className="min-h-full flex flex-col items-center justify-center py-10 pb-40 md:pb-10">
 
                 {/* THE MAP CARD */}
-                <div id="pump-map-container" ref={pumpMapRef} className="bg-white rounded-[2rem] shadow-xl border-[4px] border-slate-200 p-4 md:p-8 pb-12 relative flex flex-col items-center justify-center w-full max-w-[360px] md:max-w-none md:w-auto">
+                <div id="pump-map-container" ref={pumpMapRef} className="bg-white rounded-[2rem] shadow-xl border-[4px] border-slate-200 p-4 md:p-8 pb-12 relative flex flex-col items-center justify-center w-full max-w-[360px] md:max-w-none md:w-auto scale-95 md:scale-100">
 
                   {/* Title inside Card */}
                   <div className="absolute top-3 w-full text-center">
@@ -515,21 +463,21 @@ const ShiftManagementSystem = () => {
                   </div>
 
                   {/* Layout Container */}
-                  <div className="mt-10 md:mt-8 flex gap-4 md:gap-8 items-center">
+                  <div className="mt-10 md:mt-8 flex gap-3 md:gap-8 items-center">
                     {/* LEFT SIDE */}
                     <div className="relative p-2 md:p-4">
                       <div className="absolute inset-0 border-2 border-dashed border-slate-200 rounded-[2rem] -z-10"></div>
-                      <div className="grid grid-cols-2 gap-x-12 gap-y-12 md:gap-x-24 md:gap-y-24 relative z-10 p-2">
-                        <DroppableZone id="N2" label="Nozzle 2" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
+                      <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:gap-x-24 md:gap-y-24 relative z-10 p-2">
+                        <DroppableZone id="N2" label="Nozzle 2" className="w-16 h-16 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
                           {assignments['N2'] && <DraggableStaff id={assignments['N2'].id} staffMember={assignments['N2']} size="map" />}
                         </DroppableZone>
-                        <DroppableZone id="N1" label="Nozzle 1" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
+                        <DroppableZone id="N1" label="Nozzle 1" className="w-16 h-16 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
                           {assignments['N1'] && <DraggableStaff id={assignments['N1'].id} staffMember={assignments['N1']} size="map" />}
                         </DroppableZone>
-                        <DroppableZone id="N3" label="Nozzle 3" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
+                        <DroppableZone id="N3" label="Nozzle 3" className="w-16 h-16 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
                           {assignments['N3'] && <DraggableStaff id={assignments['N3'].id} staffMember={assignments['N3']} size="map" />}
                         </DroppableZone>
-                        <DroppableZone id="N4" label="Nozzle 4" className="w-18 h-18 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
+                        <DroppableZone id="N4" label="Nozzle 4" className="w-16 h-16 md:w-24 md:h-24 bg-blue-50 rounded-full border-[3px] border-blue-200 flex items-center justify-center shadow-md">
                           {assignments['N4'] && <DraggableStaff id={assignments['N4'].id} staffMember={assignments['N4']} size="map" />}
                         </DroppableZone>
                       </div>
@@ -539,7 +487,7 @@ const ShiftManagementSystem = () => {
                     </div>
 
                     {/* RIGHT SIDE */}
-                    <div className="flex flex-col gap-4 md:gap-5 border-l-2 border-dashed border-slate-200 pl-4 md:pl-8 py-2">
+                    <div className="flex flex-col gap-3 md:gap-5 border-l-2 border-dashed border-slate-200 pl-3 md:pl-8 py-2">
                       <DroppableZone id="N5" label="H-5" className="w-16 h-16 md:w-20 md:h-20 bg-indigo-50 rounded-full border-[3px] border-indigo-200 flex items-center justify-center shadow-sm">
                         {assignments['N5'] && <DraggableStaff id={assignments['N5'].id} staffMember={assignments['N5']} size="map" />}
                       </DroppableZone>
@@ -562,10 +510,7 @@ const ShiftManagementSystem = () => {
                   </div>
 
                   {/* Caption Input */}
-                  <div
-                    id="caption-wrapper"
-                    className="mt-6 mb-2 w-full flex justify-center px-4"
-                  >
+                  <div id="caption-wrapper" className="mt-6 mb-2 w-full flex justify-center px-4">
                     <Edit3 size={16} className="text-slate-400 shrink-0" />
                     <input
                       id="caption-input"
@@ -576,8 +521,6 @@ const ShiftManagementSystem = () => {
                       className="w-full bg-slate-50 px-3 py-2 rounded-lg outline-none font-bold text-slate-600 text-xs md:text-sm text-center border border-slate-100"
                     />
                   </div>
-
-
 
                 </div>
 
@@ -615,20 +558,12 @@ const ShiftManagementSystem = () => {
               {/* Available Pool */}
               <div>
                 <h4 className="text-[10px] font-bold text-green-600 uppercase mb-2 flex items-center gap-2"><Users size={12} /> Available ({availableStaff.length})</h4>
-                {/* Available Pool Code Block */}
-                <DroppableZone id="available-pool" isPool={true} className="...">
+                <DroppableZone id="available-pool" isPool={true} className="bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl p-2 min-h-[120px]">
                   <div className="grid grid-cols-4 gap-2">
                     {availableStaff.map((staff) => (
-                      // Ye component hi image handle karta hai 👇
-                      <DraggableStaff
-                        key={staff.id}
-                        id={`desk-${staff.id}`}
-                        staffMember={staff}
-                        size="small"
-                        hideName={true}
-                      />
+                      <DraggableStaff key={staff.id} id={`desk-${staff.id}`} staffMember={staff} size="small" hideName={true} />
                     ))}
-                    {availableStaff.length === 0 && <div className="...">All Assigned</div>}
+                    {availableStaff.length === 0 && <div className="col-span-4 text-gray-400 italic text-xs text-center mt-4">All Assigned</div>}
                   </div>
                 </DroppableZone>
               </div>
@@ -646,7 +581,6 @@ const ShiftManagementSystem = () => {
                 <Download size={16} /> Save Map Image
               </button>
 
-              {/* Desktop View Saved Button */}
               {savedMapImage && (
                 <button onClick={() => setViewMode(true)} className="w-full flex items-center justify-center gap-2 text-green-600 font-bold bg-green-50 hover:bg-green-100 py-3 rounded-xl border border-green-200 transition-colors text-sm">
                   <FileText size={16} /> View Saved Map
@@ -722,7 +656,6 @@ const ShiftManagementSystem = () => {
                       Tap to<br />Upload
                     </span>
                   )}
-
                   <input
                     type="file"
                     accept="image/*"
@@ -730,7 +663,6 @@ const ShiftManagementSystem = () => {
                     onChange={handleImageChange}
                   />
                 </label>
-
               </div>
               <input type="text" placeholder="Name" className="bg-gray-100 p-3 rounded-xl font-bold outline-none focus:ring-2 ring-blue-500" value={newMember.name} onChange={e => setNewMember({ ...newMember, name: e.target.value })} />
               <div className="flex gap-2">
@@ -745,12 +677,14 @@ const ShiftManagementSystem = () => {
           </div>
         </div>
       )}
+
+      {/* --- FIXED STAFF LIST MODAL (Responsive Width) --- */}
       {showMemberListModal && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm w-[60%] h-[70%]">
-          <div className="bg-white w-full max-w-sm rounded-xl p-4 shadow-xl animate-in fade-in duration-150">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-white w-[95%] md:w-[60%] max-w-lg rounded-xl p-4 shadow-xl animate-in fade-in duration-150 max-h-[85vh] flex flex-col">
 
             {/* Header */}
-            <div className="flex justify-between items-center mb-2 border-b pb-2">
+            <div className="flex justify-between items-center mb-2 border-b pb-2 shrink-0">
               <h2 className="text-lg font-bold text-gray-800">
                 STAFF ({members.length})
               </h2>
@@ -763,59 +697,52 @@ const ShiftManagementSystem = () => {
               </button>
             </div>
 
-            {/* Table - mini compact */}
-            <table className="w-full text-xs">
-              <thead className="bg-gray-100 text-gray-500 uppercase text-[10px]">
-                <tr>
-                  <th className="p-2 rounded-l-lg">Name</th>
-                  <th className="p-2">Role</th>
-                  <th className="p-2 rounded-r-lg text-right">Action</th>
-                </tr>
-              </thead>
-
-              <tbody className="divide-y text-sm">
-                {members.map((m) => (
-                  <tr key={m.id} className="hover:bg-blue-50">
-
-                    <td className="p-2 font-medium flex items-center gap-2">
-                      <img
-                        src={
-                          // Yahan bhi same logic: HTTP -> HTTPS fix
-                          (m.avatar && m.avatar.startsWith('http'))
-                            ? m.avatar.replace('http:', 'https:')
-                            : `https://ui-avatars.com/api/?name=${m.name}`
-                        }
-                        onError={(e) => {
-                          e.target.src = `https://ui-avatars.com/api/?name=${m.name}`;
-                        }}
-                        className="w-7 h-7 rounded-full object-cover"
-                        alt=""
-                      />
-                      {m.name}
-                    </td>
-
-                    <td className="p-2 text-gray-600 capitalize">
-                      {m.role}
-                    </td>
-
-                    <td className="p-2 text-right">
-                      <button
-                        onClick={() => handleDeleteMember(m.id)}
-                        className="text-red-600 bg-red-100 p-1.5 rounded-full hover:bg-red-600 hover:text-white transition"
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </td>
+            {/* Table Area (Scrollable) */}
+            <div className="overflow-y-auto flex-1">
+              <table className="w-full text-xs">
+                <thead className="bg-gray-100 text-gray-500 uppercase text-[10px] sticky top-0">
+                  <tr>
+                    <th className="p-2 rounded-l-lg text-left">Name</th>
+                    <th className="p-2 text-left">Role</th>
+                    <th className="p-2 rounded-r-lg text-right">Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
 
+                <tbody className="divide-y text-sm">
+                  {members.map((m) => (
+                    <tr key={m.id} className="hover:bg-blue-50">
+                      <td className="p-2 font-medium flex items-center gap-2">
+                        <img
+                          src={getImageUrl(m.avatar)}
+                          onError={(e) => {
+                            e.target.src = `https://ui-avatars.com/api/?name=${m.name}`;
+                          }}
+                          className="w-7 h-7 rounded-full object-cover shrink-0 bg-gray-200"
+                          alt=""
+                        />
+                        <span className="truncate">{m.name}</span>
+                      </td>
+
+                      <td className="p-2 text-gray-600 capitalize">
+                        {m.role}
+                      </td>
+
+                      <td className="p-2 text-right">
+                        <button
+                          onClick={() => handleDeleteMember(m.id)}
+                          className="text-red-600 bg-red-100 p-1.5 rounded-full hover:bg-red-600 hover:text-white transition"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
-
-
     </div>
   );
 };
