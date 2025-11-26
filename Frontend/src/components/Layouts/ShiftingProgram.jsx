@@ -333,53 +333,133 @@ const sensors = useSensors(
       toast.error("Failed to update status in Database");
     }
   };
-  const handleSaveImage = async () => {
+
+ const handleSaveImage = async () => {
     if (!pumpMapRef.current) return;
+  
+    // Loading Toast
+    const toastId = toast.loading("Generating Map Image...");
+  
     try {
-      const canvas = await html2canvas(pumpMapRef.current, {
-        backgroundColor: "#ffffff",
-        scale: 4,
-        useCORS: true,
-        scrollY: -window.scrollY,
-        onClone: (clonedDoc) => {
-          const input = clonedDoc.getElementById("caption-input");
-          if (input) input.remove();
-          const root = clonedDoc.body;
-          const captionDiv = clonedDoc.createElement("div");
-          captionDiv.innerText = caption || "";
-          captionDiv.style.position = "absolute";
-          captionDiv.style.top = "20px";
-          captionDiv.style.left = "50%";
-          captionDiv.style.transform = "translateX(-50%)";
-          captionDiv.style.fontWeight = "bold";
-          captionDiv.style.fontSize = "20px";
-          captionDiv.style.color = "#1e293b";
-          captionDiv.style.padding = "12px 20px";
-          captionDiv.style.background = "rgba(255,255,255,0.95)";
-          captionDiv.style.border = "1px solid #e2e8f0";
-          captionDiv.style.borderRadius = "10px";
-          captionDiv.style.boxShadow = "0 3px 8px rgba(0,0,0,0.12)";
-          captionDiv.style.zIndex = "999999";
-          root.appendChild(captionDiv);
-          root.style.position = "relative";
-        }
+      // 1. Create a Sandbox (Invisible Container)
+      // Hum ek fixed width container banayenge taaki mobile me bhi desktop jaisi image aaye
+      const sandbox = document.createElement("div");
+      sandbox.style.position = "absolute";
+      sandbox.style.top = "-10000px";
+      sandbox.style.left = "-10000px";
+      sandbox.style.width = "1000px"; // Fixed Width for High Quality
+      sandbox.style.backgroundColor = "#ffffff";
+      sandbox.style.fontFamily = "sans-serif";
+      sandbox.style.display = "flex";
+      sandbox.style.flexDirection = "column";
+      sandbox.style.alignItems = "center";
+      document.body.appendChild(sandbox);
+  
+      // 2. Clone the Map Node
+      const originalNode = pumpMapRef.current;
+      const clonedNode = originalNode.cloneNode(true);
+  
+      // Cleanup Clone Styles
+      clonedNode.style.transform = "scale(1)";
+      clonedNode.style.width = "100%";
+      clonedNode.style.height = "auto";
+      clonedNode.style.boxShadow = "none";
+      clonedNode.style.border = "none";
+      clonedNode.style.margin = "0";
+      clonedNode.style.padding = "20px";
+  
+      // Remove Input Elements from Clone
+      const inputWrapper = clonedNode.querySelector("#caption-wrapper");
+      if (inputWrapper) inputWrapper.remove();
+  
+      // --- A. HEADER SECTION (Date & Shift) ---
+      const headerDiv = document.createElement("div");
+      Object.assign(headerDiv.style, {
+        width: "100%",
+        backgroundColor: "#1e293b", // Slate-900
+        color: "white",
+        padding: "20px 40px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: "20px",
+        boxSizing: "border-box"
       });
+  
+      headerDiv.innerHTML = `
+        <div>
+          <h1 style="margin:0; font-size: 28px; font-weight: 800; letter-spacing: 2px;">PUMP MAP</h1>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 18px; font-weight: 600; color: #94a3b8;">SHIFT: <span style="color: white; text-transform: uppercase;">${shift}</span></div>
+          <div style="font-size: 18px; font-weight: 600; color: #94a3b8;">DATE: <span style="color: white;">${date}</span></div>
+        </div>
+      `;
+  
+      // --- B. CAPTION SECTION (Bottom) ---
+      let captionDiv = null;
+      if (caption) {
+        captionDiv = document.createElement("div");
+        captionDiv.innerText = caption;
+        Object.assign(captionDiv.style, {
+          width: "90%",
+          margin: "20px auto",
+          padding: "20px",
+          backgroundColor: "#f1f5f9", // Slate-100
+          border: "2px solid #e2e8f0",
+          borderRadius: "12px",
+          color: "#334155",
+          fontSize: "22px", // Readable font
+          fontWeight: "600",
+          textAlign: "center",
+          whiteSpace: "pre-wrap", // Long text wrap karega
+          wordBreak: "break-word"
+        });
+      }
+  
+      // --- ASSEMBLE SANDBOX ---
+      sandbox.appendChild(headerDiv); // 1. Header Top
+      sandbox.appendChild(clonedNode); // 2. Map Middle
+      if (captionDiv) sandbox.appendChild(captionDiv); // 3. Caption Bottom
+  
+      // Wait for images to render
+      await new Promise((resolve) => setTimeout(resolve, 300));
+  
+      // 3. Capture Image
+      const canvas = await html2canvas(sandbox, {
+        scale: 2, // Good balance of quality and file size
+        useCORS: true,
+        backgroundColor: "#ffffff",
+        windowWidth: 1200,
+        windowHeight: sandbox.scrollHeight + 50, // Full height capture
+        logging: false
+      });
+  
+      // Cleanup
+      document.body.removeChild(sandbox);
+  
+      // 4. Save & Download
       const base64Image = canvas.toDataURL("image/png");
+  
       const link = document.createElement("a");
-      link.download = `Pump_Shift_${shift}_${date}.png`;
+      link.download = `Pump_Report_${date}_${shift}.png`;
       link.href = base64Image;
       link.click();
+  
+      // Server Save
       await axiosInstance.post("/shifting/save-map", {
         date,
         shift,
         image: base64Image,
         caption
       });
+  
       setSavedMapImage(base64Image);
-      toast.success("Map Saved with Caption!");
+      toast.update(toastId, { render: "Map Saved Successfully!", type: "success", isLoading: false, autoClose: 3000 });
+  
     } catch (err) {
       console.error(err);
-      toast.error("Failed to Save");
+      toast.update(toastId, { render: "Failed to Save Image", type: "error", isLoading: false, autoClose: 3000 });
     }
   };
 
