@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import axiosInstance from '../Dashboard/axiosInstance';
 
-/* --- DraggableStaff (Fixed Image & Sizes) --- */
+/* --- DraggableStaff (With Overtime & Cloudinary Fix) --- */
 const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", hideName = false }) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: String(id),
@@ -41,19 +41,18 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
   const textSize = isMap || isSmall ? "text-[8px] md:text-[9px]" : "text-[10px]";
   const borderClasses = isMap ? "" : "border-[2px] border-white shadow-sm";
 
-  // --- IMAGE URL HELPER ---
+  // --- IMAGE HELPER INSIDE COMPONENT (Safe Fallback) ---
   const fallbackImage = `https://ui-avatars.com/api/?name=${staffMember.name}&background=random&color=fff&bold=true`;
-
-  const getImageUrl = (url) => {
+  
+  const getSafeImage = (url) => {
     if (!url) return fallbackImage;
-    if (url.startsWith("http:")) {
-      return url.replace("http:", "https:");
-    }
-    if (!url.startsWith("http")) {
-      return fallbackImage;
-    }
+    if (url.startsWith("http:")) return url.replace("http:", "https:");
+    if (!url.startsWith("http")) return fallbackImage;
     return url;
   };
+
+  // Check if member is Overtime (OT)
+  const isOT = staffMember.isOvertime || staffMember.name.includes("(OT)");
 
   return (
     <div
@@ -66,18 +65,18 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
     >
       <div className={`${containerClasses} ${borderClasses} rounded-full overflow-hidden bg-gray-200 transition-all relative`}>
         <img
-          src={getImageUrl(staffMember.avatar)}
+          src={getSafeImage(staffMember.avatar)}
           alt={staffMember.name}
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = fallbackImage;
-          }}
+          onError={(e) => { e.target.onerror = null; e.target.src = fallbackImage; }}
           className="w-full h-full object-cover pointer-events-none select-none bg-white"
         />
       </div>
 
       {!hideName && (
-        <span className={`${textSize} font-black text-gray-900 absolute -bottom-2 bg-white px-2 py-0.5 rounded-full shadow-md border border-gray-200 z-10 uppercase tracking-wider whitespace-nowrap`}>
+        <span className={`
+          ${textSize} font-black absolute -bottom-2 px-2 py-0.5 rounded-full shadow-md border z-10 uppercase tracking-wider whitespace-nowrap
+          ${isOT ? "bg-red-50 text-red-600 border-red-200" : "bg-white text-gray-900 border-gray-200"}
+        `}>
           {staffMember.name}
         </span>
       )}
@@ -377,25 +376,75 @@ const handleEditClick = (member) => {
     }
   };
 
+  // --- INTELLIGENT AUTO ASSIGN (Role + Shift + Overtime) ---
   const handleAutoAssign = () => {
-    const assignedIds = Object.values(assignments).flat().map((s) => s?.id).filter(Boolean);
-    const availableForShift = members.filter((m) => m.available === "present" && !assignedIds.includes(m.id));
-    const shuffleArray = (array) => {
-      let shuffled = [...array];
-      for (let i = shuffled.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-      }
-      return shuffled;
+    // 1. Identify Absent IDs to exclude them from assignment
+    const absentIds = (assignments['absent'] || []).map(m => m.id);
+
+    // 2. Filter Available Staff (Present & Not in Absent Zone)
+    const availablePool = members.filter(m => m.available === 'present' && !absentIds.includes(m.id));
+
+    if (availablePool.length === 0) {
+      toast.warning("No staff available to assign!");
+      return;
+    }
+
+    // 3. Helper: Shuffle Array (Randomize)
+    const shuffle = (arr) => arr.sort(() => Math.random() - 0.5);
+
+    // 4. Helper: Priority Queue (Current Shift First, Then Other Shift as OT)
+    const getRoleQueue = (roleName) => {
+      // Filter by Role
+      const roleMembers = availablePool.filter(m => m.role.toLowerCase() === roleName.toLowerCase());
+
+      // Split into Same Shift vs Other Shift
+      const sameShift = roleMembers.filter(m => m.shift.toLowerCase() === shift.toLowerCase());
+      const otherShift = roleMembers.filter(m => m.shift.toLowerCase() !== shift.toLowerCase());
+
+      // Mark Other Shift members as Overtime (OT)
+      const otherShiftOT = otherShift.map(m => ({
+        ...m,
+        name: `${m.name} (OT)`, // Add Visual Text
+        isOvertime: true        // Add Logic Flag
+      }));
+
+      // Queue: Pehle Same Shift (Randomized), Phir OT (Randomized)
+      return [...shuffle(sameShift), ...shuffle(otherShiftOT)];
     };
-    let operators = availableForShift.filter(m => m.shift.toLowerCase() === shift.toLowerCase() && m.role === 'operator');
-    operators = shuffleArray(operators);
-    const newAssigns = { ...assignments };
-    ['N1', 'N2', 'N3', 'N4', 'N5', 'N6'].forEach((nid, index) => {
-      if (operators[index] && !newAssigns[nid]) newAssigns[nid] = operators[index];
+
+    // 5. Generate Queues for each Role
+    const supervisorQueue = getRoleQueue('supervisor');
+    const airQueue = getRoleQueue('air boy');
+    const operatorQueue = getRoleQueue('operator');
+
+    // 6. Create New Assignments Map
+    const newAssigns = { ...assignments }; // Keep absent list intact
+    
+    // Clear active slots before re-assigning
+    const slots = ['Supervisor', 'Air', 'N1', 'N2', 'N3', 'N4', 'N5', 'N6', 'Extra'];
+    slots.forEach(slot => newAssigns[slot] = null);
+
+    // 7. Assign Supervisor
+    if (supervisorQueue.length > 0) newAssigns['Supervisor'] = supervisorQueue.shift();
+
+    // 8. Assign Air Boy
+    if (airQueue.length > 0) newAssigns['Air'] = airQueue.shift();
+
+    // 9. Assign Operators (Nozzles + Extra)
+    // Priority: Nozzles 1-6 first, then Extra
+    const operatorSlots = ['N1', 'N2', 'N3', 'N4', 'N5', 'N6', 'Extra'];
+    
+    operatorSlots.forEach(slot => {
+      if (operatorQueue.length > 0) {
+        newAssigns[slot] = operatorQueue.shift();
+      } else {
+        // Fallback: Agar Operators khatam ho gaye, to bache hue Supervisor/AirBoy use kar sakte hain?
+        // Usually nahi karte, but agar chahiye to yahan logic add kar sakte hain.
+      }
     });
+
     setAssignments(newAssigns);
-    toast.success(`Auto-assigned ${shift}!`);
+    toast.success(`Auto-assigned for ${shift} (OT marked if needed)!`);
   };
 
   const handleAddMemberSubmit = async (e) => {
