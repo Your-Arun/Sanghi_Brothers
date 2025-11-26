@@ -87,21 +87,18 @@ const upload = require("./multer");
 
 // --- ROUTES ---
 
-// List all members
+// 1. Member Routes
 router.get('/shifting', controller.listMembers);
-
-// Add new member (with image upload)
 router.post("/shifting", upload.single("avatar"), controller.addMember);
-
-// Delete member
+router.put("/shifting/:id", upload.single("avatar"), controller.updateMember);
 router.delete('/shifting/:id', controller.deleteMember);
 
-// Get map snapshot
+
+
+router.post('/save-map', controller.saveMap); 
 router.get('/get-map', controller.getMap);
+router.get('/all-maps', controller.getAllMaps);
+router.delete('/delete-map/:id', controller.deleteMap);
 
-// Save map snapshot
-router.post('/save-map', controller.saveMap);
-
-router.put("/shifting/:id", upload.single("avatar"), controller.updateMember);
 
 module.exports = router;

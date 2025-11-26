@@ -326,14 +326,13 @@ const sensors = useSensors(
     const toastId = toast.loading("Generating Map...");
   
     try {
-      // 1. Create Sandbox (Fixed Desktop Width)
-      // Width 1000px rakhne se layout mobile jaisa nahi, desktop jaisa aayega
+      // 1. Create Sandbox
       const sandbox = document.createElement("div");
       sandbox.style.position = "absolute";
       sandbox.style.top = "-10000px";
       sandbox.style.left = "-10000px";
       sandbox.style.width = "1000px"; // Fixed Desktop Width
-      sandbox.style.backgroundColor = "#f8fafc"; // Light BG
+      sandbox.style.backgroundColor = "#f8fafc"; 
       sandbox.style.fontFamily = "sans-serif";
       sandbox.style.display = "flex";
       sandbox.style.flexDirection = "column";
@@ -342,7 +341,7 @@ const sensors = useSensors(
       sandbox.style.boxSizing = "border-box";
       document.body.appendChild(sandbox);
   
-      // --- 2. HEADER (Shift & Date) ---
+      // --- 2. HEADER ---
       const headerDiv = document.createElement("div");
       Object.assign(headerDiv.style, {
         width: "100%",
@@ -370,38 +369,43 @@ const sensors = useSensors(
       `;
       sandbox.appendChild(headerDiv);
   
-      // --- 3. CLONE THE MAP (Exact Layout) ---
+      // --- 3. CLONE THE MAP ---
       const originalNode = pumpMapRef.current;
       const clonedNode = originalNode.cloneNode(true);
   
-      // Reset Styles for Clone to ensure Desktop Look
+      // Clone Styles
       Object.assign(clonedNode.style, {
-        transform: "scale(1)", // No scaling needed because container is wide
+        transform: "scale(1)",
         width: "100%",
         height: "auto",
         boxShadow: "none",
         border: "none",
         margin: "0",
-        padding: "40px 20px", // Extra padding for Supervisor
-        overflow: "visible",  // Supervisor won't cut
+        padding: "40px 20px",
+        overflow: "visible",
         background: "white",
         borderRadius: "30px",
         border: "2px solid #e2e8f0"
       });
   
-      // Remove Input Box
       const inputWrapper = clonedNode.querySelector("#caption-wrapper");
       if (inputWrapper) inputWrapper.remove();
   
+      // FIX MAP IMAGES FOR CORS (Use Proxy Logic if needed, but 'useCORS: true' usually handles internal cloudinary)
+      const mapImages = clonedNode.querySelectorAll("img");
+      mapImages.forEach(img => {
+          img.crossOrigin = "anonymous"; // Try to fix map avatars
+      });
+
       sandbox.appendChild(clonedNode);
   
-      // --- 4. ABSENT SECTION (New Row Below Map) ---
+      // --- 4. ABSENT SECTION (CSS AVATAR FIX) ---
       const absentDiv = document.createElement("div");
       Object.assign(absentDiv.style, {
         width: "100%",
         marginTop: "30px",
         padding: "20px",
-        backgroundColor: "#fff1f2", // Red Tint
+        backgroundColor: "#fff1f2",
         border: "2px dashed #fda4af",
         borderRadius: "20px",
         boxSizing: "border-box"
@@ -418,14 +422,27 @@ const sensors = useSensors(
   
       if (absentMembers.length > 0) {
         absentMembers.forEach(m => {
-          // Image Logic
-          let avatarUrl = m.avatar;
-          if (!avatarUrl) avatarUrl = `https://ui-avatars.com/api/?name=${m.name}&background=ef4444&color=fff`;
-          else if (avatarUrl.startsWith("http:")) avatarUrl = avatarUrl.replace("http:", "https:");
+          // 👇 LOGIC CHANGE: Agar Cloudinary image nahi hai, to HTML Circle banao (No ui-avatars request)
+          // Isse CORS error 100% khatam ho jayega
+          let avatarElement = "";
+          
+          if (m.avatar && m.avatar.startsWith("http")) {
+             // Agar asli photo hai to use karo (Crossorigin ke sath)
+             const safeUrl = m.avatar.replace("http:", "https:");
+             avatarElement = `<img src="${safeUrl}" crossorigin="anonymous" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" />`;
+          } else {
+             // Agar photo nahi hai to CSS se Circle banao (No Network Request)
+             const initials = m.name.substring(0, 2).toUpperCase();
+             avatarElement = `
+               <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #ef4444; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">
+                 ${initials}
+               </div>
+             `;
+          }
   
           absentHTML += `
             <div style="display: flex; align-items: center; gap: 10px; background: white; padding: 8px 15px; border-radius: 50px; border: 1px solid #fecdd3;">
-              <img src="${avatarUrl}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;" />
+              ${avatarElement}
               <span style="font-weight: 700; color: #9f1239; font-size: 14px; text-transform: uppercase;">${m.name}</span>
             </div>
           `;
@@ -458,32 +475,34 @@ const sensors = useSensors(
       }
   
       // --- 6. CAPTURE ---
-      // Wait for avatars to load
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Thoda time badhaya loading ke liye
   
       const canvas = await html2canvas(sandbox, {
-        scale: 2, // High Quality
-        useCORS: true,
+        scale: 2,
+        useCORS: true, // Ye zaroori hai
+        allowTaint: true, // Try adding this
         backgroundColor: "#f8fafc",
-        windowWidth: 1200, // Trick browser into thinking it's desktop
+        windowWidth: 1200,
         logging: false
       });
   
       document.body.removeChild(sandbox);
   
-      // Save
-      const base64Image = canvas.toDataURL("image/jpeg", 0.7);
+      // Compress Image
+      const base64Image = canvas.toDataURL("image/jpeg", 0.8);
+      
       const link = document.createElement("a");
-      link.download = `Pump_Map_${date}_${shift}.png`;
+      link.download = `Pump_Map_${date}_${shift}.jpg`;
       link.href = base64Image;
       link.click();
   
+      // Server Save
       await axiosInstance.post("/shifting/save-map", { date, shift, image: base64Image, caption });
       setSavedMapImage(base64Image);
       toast.update(toastId, { render: "Map Saved!", type: "success", isLoading: false, autoClose: 3000 });
   
     } catch (err) {
-      console.error(err);
+      console.error("Save Error:", err);
       toast.update(toastId, { render: "Failed to Save", type: "error", isLoading: false, autoClose: 3000 });
     }
   };
