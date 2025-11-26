@@ -1,4 +1,173 @@
+import React, { useState, useEffect } from "react";
+import axiosInstance from '../Dashboard/axiosInstance';
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Trash2, Calendar, Clock } from "lucide-react";
 
+const AllShifts = () => {
+  const [maps, setMaps] = useState([]);
+  const [filteredMaps, setFilteredMaps] = useState([]);
+  const [selectedDate, setSelectedDate] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchAllMaps();
+  }, []);
+
+  // --- FETCH ALL SAVED MAPS ---
+  const fetchAllMaps = async () => {
+    try {
+      setLoading(true);
+      // Note: Route name wahi hona chahiye jo backend me set kiya hai (/shifting/all-maps)
+      const response = await axiosInstance.get("/shifting/all-maps");
+      
+      if (response.data.success) {
+        setMaps(response.data.maps);
+        setFilteredMaps(response.data.maps);
+      }
+    } catch (error) {
+      console.error("Error fetching maps:", error);
+      toast.error("Failed to load reports");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // --- FILTER BY DATE ---
+  const handleFilterChange = (event) => {
+    const date = event.target.value;
+    setSelectedDate(date);
+
+    if (date === "") {
+      setFilteredMaps(maps);
+    } else {
+      // Database me date string format me hai (YYYY-MM-DD)
+      setFilteredMaps(maps.filter((map) => map.date === date));
+    }
+  };
+
+  // --- DELETE LOGIC ---
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this report?")) return;
+
+    try {
+      const response = await axiosInstance.delete(`/shifting/delete-map/${id}`);
+      if (response.data.success) {
+        toast.success("Report Deleted");
+        setMaps((prev) => prev.filter((map) => map._id !== id));
+        setFilteredMaps((prev) => prev.filter((map) => map._id !== id));
+      }
+    } catch (error) {
+      console.error("Error deleting map:", error);
+      toast.error("Failed to delete");
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+      
+      {/* Header Section */}
+      <div className="max-w-6xl mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+          <button
+            className="self-start bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-xl hover:bg-gray-100 transition font-bold shadow-sm"
+            onClick={() => navigate(-1)}
+          >
+            ← Back
+          </button>
+
+          <h2 className="text-2xl font-black text-gray-800 uppercase tracking-wide">
+            Shift Reports Gallery
+          </h2>
+
+          {/* Date Filter */}
+          <input
+            type="date"
+            className="p-3 border border-gray-300 rounded-xl shadow-sm outline-none focus:ring-2 ring-blue-500 font-semibold text-gray-600"
+            value={selectedDate}
+            onChange={handleFilterChange}
+          />
+        </div>
+
+        {/* Content Area */}
+        {loading ? (
+          <div className="text-center py-20 text-gray-400 font-bold animate-pulse">Loading Reports...</div>
+        ) : filteredMaps.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-gray-400 text-lg font-bold">No reports found for this date.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredMaps.map((map) => (
+              <div key={map._id} className="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col">
+                
+                {/* Image Container */}
+                <div className="relative group bg-gray-100 aspect-square border-b border-gray-100">
+                  <img 
+                    src={map.image} 
+                    alt={`Report ${map.date}`} 
+                    className="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-105"
+                  />
+                  
+                  {/* Download Overlay (Optional) */}
+                  <a 
+                    href={map.image} 
+                    download={`Report_${map.date}.jpg`}
+                    className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                  >
+                    <span className="bg-white text-black px-4 py-2 rounded-full font-bold text-sm">Download / View</span>
+                  </a>
+                </div>
+
+                {/* Details Section */}
+                <div className="p-5 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex justify-between items-start mb-3">
+                      <div>
+                        <div className="flex items-center gap-2 text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">
+                          <Calendar size={14} /> {map.date}
+                        </div>
+                        <div className="flex items-center gap-2 text-blue-600 text-sm font-black uppercase tracking-wider">
+                          <Clock size={14} /> {map.shift} Shift
+                        </div>
+                      </div>
+                      
+                      <button
+                        onClick={() => handleDelete(map._id)}
+                        className="text-red-400 hover:text-red-600 p-2 hover:bg-red-50 rounded-full transition"
+                        title="Delete Report"
+                      >
+                        <Trash2 size={20} />
+                      </button>
+                    </div>
+
+                    {/* Caption if exists */}
+                    {map.caption && (
+                      <div className="bg-gray-50 p-3 rounded-xl border border-gray-200">
+                        <p className="text-gray-600 text-sm italic font-medium">
+                          "{map.caption}"
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="mt-4 text-[10px] text-center text-gray-300 font-bold uppercase">
+                    Pump Manager Report
+                  </div>
+                </div>
+
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default AllShifts;
 
 
 
