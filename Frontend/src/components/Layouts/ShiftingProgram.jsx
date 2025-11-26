@@ -338,12 +338,11 @@ const sensors = useSensors(
     if (!pumpMapRef.current) return;
   
     // Loading Toast
-    const toastId = toast.loading("Generating Square Map...");
+    const toastId = toast.loading("Generating Report...");
   
     try {
-      // 1. Create a Sandbox (Invisible Container)
+      // 1. Create Sandbox
       const sandbox = document.createElement("div");
-      // Initial width set karte hain (Standard High Quality Square)
       const BASE_SIZE = 1200; 
       
       sandbox.style.position = "absolute";
@@ -354,15 +353,14 @@ const sensors = useSensors(
       sandbox.style.fontFamily = "sans-serif";
       sandbox.style.display = "flex";
       sandbox.style.flexDirection = "column";
-      // Content ko center me rakhne ke liye
       sandbox.style.justifyContent = "space-between"; 
       document.body.appendChild(sandbox);
   
-      // --- A. HEADER SECTION (Top Bar) ---
+      // --- A. HEADER SECTION ---
       const headerDiv = document.createElement("div");
       Object.assign(headerDiv.style, {
         width: "100%",
-        backgroundColor: "#1e293b", // Slate-900 Theme
+        backgroundColor: "#1e293b", 
         color: "white",
         padding: "30px 50px",
         display: "flex",
@@ -391,14 +389,14 @@ const sensors = useSensors(
       `;
       sandbox.appendChild(headerDiv);
   
-      // --- B. MAP SECTION (Cloned) ---
+      // --- B. MAP SECTION ---
       const mapWrapper = document.createElement("div");
       Object.assign(mapWrapper.style, {
-        flex: "1", // Ye bachi hui jagah lega (Vertically Center karne ke liye)
+        flex: "1",
         display: "flex",
-        alignItems: "center", // Center Vertically
-        justifyContent: "center", // Center Horizontally
-        padding: "40px",
+        alignItems: "center", 
+        justifyContent: "center",
+        padding: "20px 40px",
         width: "100%",
         boxSizing: "border-box"
       });
@@ -406,42 +404,92 @@ const sensors = useSensors(
       const originalNode = pumpMapRef.current;
       const clonedNode = originalNode.cloneNode(true);
   
-      // Clean up styles for image
-      clonedNode.style.transform = "scale(1.2)"; // Thoda bada dikhayein square me
+      // Style Clone
+      clonedNode.style.transform = "scale(1.3)"; 
       clonedNode.style.transformOrigin = "center";
       clonedNode.style.width = "100%";
       clonedNode.style.height = "auto";
       clonedNode.style.boxShadow = "none";
       clonedNode.style.border = "none";
       
-      // Input hatayein
       const inputWrapper = clonedNode.querySelector("#caption-wrapper");
       if (inputWrapper) inputWrapper.remove();
       
       mapWrapper.appendChild(clonedNode);
       sandbox.appendChild(mapWrapper);
+
+      // --- C. ABSENT SECTION (NEW ROW) ---
+      const absentDiv = document.createElement("div");
+      Object.assign(absentDiv.style, {
+        width: "90%",
+        margin: "0 auto 20px auto",
+        padding: "20px",
+        backgroundColor: "#fef2f2", // Light Red Background
+        border: "2px dashed #fca5a5", // Red Dashed Border
+        borderRadius: "16px",
+        boxSizing: "border-box"
+      });
+
+      const absentMembers = assignments['absent'] || [];
+
+      // Header for Absent Section
+      let absentHTML = `
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid #fecaca; padding-bottom: 10px;">
+          <span style="font-size: 24px;">🚫</span>
+          <h3 style="margin:0; color: #dc2626; font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">ABSENT STAFF</h3>
+        </div>
+        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+      `;
+
+      if (absentMembers.length > 0) {
+        // Loop through absent members and create visual cards
+        absentMembers.forEach(m => {
+          const avatarUrl = m.avatar && m.avatar.startsWith('http') 
+            ? m.avatar.replace("http:", "https:") 
+            : `https://ui-avatars.com/api/?name=${m.name}&background=ef4444&color=fff`;
+
+          absentHTML += `
+            <div style="display: flex; flex-direction: column; align-items: center; width: 80px;">
+              <div style="width: 60px; height: 60px; border-radius: 50%; overflow: hidden; border: 3px solid #ef4444; margin-bottom: 5px; background: white;">
+                <img src="${avatarUrl}" style="width: 100%; height: 100%; object-fit: cover;" />
+              </div>
+              <span style="font-size: 12px; font-weight: 700; color: #991b1b; text-align: center; text-transform: uppercase;">${m.name}</span>
+            </div>
+          `;
+        });
+      } else {
+        // Empty State
+        absentHTML += `
+          <div style="width: 100%; text-align: center; padding: 10px;">
+            <span style="font-size: 16px; font-weight: 600; color: #16a34a;">✅ All Staff Present / No Absentees Recorded</span>
+          </div>
+        `;
+      }
+
+      absentHTML += `</div>`; // Close container
+      absentDiv.innerHTML = absentHTML;
+      sandbox.appendChild(absentDiv);
   
-      // --- C. CAPTION SECTION (Bottom) ---
+      // --- D. CAPTION SECTION ---
       if (caption) {
         const captionDiv = document.createElement("div");
         captionDiv.innerText = caption;
         Object.assign(captionDiv.style, {
           width: "90%",
-          margin: "0 auto 40px auto", // Bottom margin
-          padding: "25px",
+          margin: "0 auto 40px auto",
+          padding: "20px",
           backgroundColor: "#f8fafc",
-          borderLeft: "10px solid #3b82f6", // Blue accent bar
-          boxShadow: "0 4px 15px rgba(0,0,0,0.05)",
+          borderLeft: "8px solid #3b82f6",
+          boxShadow: "0 4px 6px rgba(0,0,0,0.05)",
           color: "#334155",
-          fontSize: "24px",
+          fontSize: "22px",
           fontWeight: "600",
           textAlign: "left",
-          whiteSpace: "pre-wrap",
-          wordBreak: "break-word"
+          whiteSpace: "pre-wrap"
         });
         sandbox.appendChild(captionDiv);
       } else {
-        // Agar caption nahi hai to footer branding lagado taaki khali na lage
+        // Footer if no caption
         const footerDiv = document.createElement("div");
         footerDiv.innerHTML = "Generated by Pump Manager";
         Object.assign(footerDiv.style, {
@@ -456,24 +504,19 @@ const sensors = useSensors(
         sandbox.appendChild(footerDiv);
       }
   
-      // --- SQUARE LOGIC START ---
-      // Ab hum check karenge ki content ki height kitni hai
-      // Agar height < 1200 hai, to hum container ki height ko force 1200 kar denge.
-      // Agar height > 1200 hai, to hum width ko badha kar height ke barabar kar denge.
-      
+      // --- SQUARE LOGIC ---
       const currentHeight = sandbox.scrollHeight;
       const squareSize = Math.max(BASE_SIZE, currentHeight);
 
-      // Final Square Dimensions Apply karein
       sandbox.style.width = `${squareSize}px`;
       sandbox.style.height = `${squareSize}px`;
       
-      // Wait for rendering (Images/Avatars)
+      // Wait for images to render
       await new Promise((resolve) => setTimeout(resolve, 500));
   
       // 3. Capture
       const canvas = await html2canvas(sandbox, {
-        scale: 1.5, // High Quality
+        scale: 1.5,
         useCORS: true,
         backgroundColor: "#ffffff",
         width: squareSize,
@@ -493,7 +536,6 @@ const sensors = useSensors(
       link.href = base64Image;
       link.click();
   
-      // Server Upload
       await axiosInstance.post("/shifting/save-map", {
         date,
         shift,
@@ -502,7 +544,7 @@ const sensors = useSensors(
       });
   
       setSavedMapImage(base64Image);
-      toast.update(toastId, { render: "Square Map Saved!", type: "success", isLoading: false, autoClose: 3000 });
+      toast.update(toastId, { render: "Image Generated!", type: "success", isLoading: false, autoClose: 3000 });
   
     } catch (err) {
       console.error(err);
