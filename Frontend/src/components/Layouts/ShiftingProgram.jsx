@@ -364,12 +364,13 @@ const handleEditClick = (member) => {
       toast.error("Failed to Save");
     }
   };
-  // --- ADVANCED AUTO ASSIGN (Shift Logic + Overtime) ---
+
+  
   const handleAutoAssign = () => {
-    // 1. Get Absent IDs to exclude
+    // 1. Absent IDs nikalein
     const absentIds = (assignments['absent'] || []).map(m => m.id);
 
-    // 2. Filter Available Staff (Present & Not Absent)
+    // 2. Available Staff Filter karein
     const allAvailable = members.filter(m => m.available === 'present' && !absentIds.includes(m.id));
 
     if (allAvailable.length === 0) {
@@ -377,78 +378,82 @@ const handleEditClick = (member) => {
       return;
     }
 
-    // 3. Helper: Shuffle Array (Randomize)
+    // 3. Shuffle Helper
     const shuffle = (arr) => arr.sort(() => Math.random() - 0.5);
 
-    // 4. Helper: Categorize Staff by Role & Shift
+    // 4. Queue Banayein
     const getShiftQueue = (role) => {
       const roleMembers = allAvailable.filter(m => m.role.toLowerCase() === role);
       
-      // Bucket 1: Same Shift (Priority)
+      // Same Shift (Priority)
       const sameShift = roleMembers.filter(m => m.shift.toLowerCase() === shift.toLowerCase());
       
-      // Bucket 2: Other Shift (Overtime Fallback)
+      // Other Shift (Overtime)
       const otherShift = roleMembers.filter(m => m.shift.toLowerCase() !== shift.toLowerCase()).map(m => ({
         ...m,
-        name: `${m.name} (OT)`, // Add Visual Text
-        isOvertime: true        // Flag for Red Color
+        name: `${m.name} (OT)`, 
+        isOvertime: true        
       }));
 
       return {
-        primary: shuffle(sameShift),
-        backup: shuffle(otherShift)
+        primary: shuffle(sameShift), // Current Shift
+        backup: shuffle(otherShift)  // OT Shift
       };
     };
 
-    // 5. Prepare Queues
+    // 5. Role Queues Taiyar karein
     const supervisors = getShiftQueue('supervisor');
     const airBoys = getShiftQueue('air boy');
     const operators = getShiftQueue('operator');
 
-    // 6. Reset Assignments (Keep Absent Intact)
+    // 6. Reset Assignments
     const newAssigns = { ...assignments };
     const slotsToFill = ['Supervisor', 'Air', 'N1', 'N2', 'N3', 'N4', 'N5', 'N6', 'Extra'];
     slotsToFill.forEach(key => newAssigns[key] = null);
 
     // --- ASSIGNMENT PROCESS ---
 
-    // A. Assign Supervisor (1 Slot)
-    if (supervisors.primary.length > 0) {
-      newAssigns['Supervisor'] = supervisors.primary.shift();
-    } else if (supervisors.backup.length > 0) {
-      newAssigns['Supervisor'] = supervisors.backup.shift(); // Assign OT Supervisor
-    }
+    // A. Assign Supervisor
+    if (supervisors.primary.length > 0) newAssigns['Supervisor'] = supervisors.primary.shift();
+    else if (supervisors.backup.length > 0) newAssigns['Supervisor'] = supervisors.backup.shift();
 
-    // B. Assign Air Boy (1 Slot)
-    if (airBoys.primary.length > 0) {
-      newAssigns['Air'] = airBoys.primary.shift();
-    } else if (airBoys.backup.length > 0) {
-      newAssigns['Air'] = airBoys.backup.shift(); // Assign OT Air Boy
-    }
+    // B. Assign Air Boy
+    if (airBoys.primary.length > 0) newAssigns['Air'] = airBoys.primary.shift();
+    else if (airBoys.backup.length > 0) newAssigns['Air'] = airBoys.backup.shift();
 
-    // C. Assign Operators (6 Slots: N1 to N6)
-    const nozzleSlots = ['N1', 'N2', 'N3', 'N4', 'N5', 'N6'];
+    // --- C. OPERATOR LOGIC (Special Hanging Rule) ---
     
-    nozzleSlots.forEach(slot => {
-      // 1. Try Same Shift Operator
+    // Rule: Hanging (N5) par Current Shift ka banda zaroori hai agar available hai.
+    // Isliye sabse pehle N5 ko fill karenge Primary queue se.
+    
+    if (operators.primary.length > 0) {
+      newAssigns['N5'] = operators.primary.shift(); // Hanging 1 (Reserved for Current Shift)
+    } else if (operators.backup.length > 0) {
+      newAssigns['N5'] = operators.backup.shift(); // Agar Primary hai hi nahi to majboori me OT
+    }
+
+    // Ab baaki slots fill karenge (N1, N2, N3, N4, N6)
+    // N5 already fill ho chuka hai upar
+    const remainingSlots = ['N1', 'N2', 'N3', 'N4', 'N6'];
+    
+    remainingSlots.forEach(slot => {
+      // Step 1: Try Current Shift
       if (operators.primary.length > 0) {
         newAssigns[slot] = operators.primary.shift();
       } 
-      // 2. If Same Shift Empty, Try Other Shift (Overtime)
+      // Step 2: Use Overtime (Backup)
       else if (operators.backup.length > 0) {
         newAssigns[slot] = operators.backup.shift();
       }
     });
 
-    // D. Assign Extra (Only if Same Shift Operators are left)
-    // "Extra" is strictly for surplus staff of the CURRENT shift.
-    // We usually don't call OT just to fill the "Extra" slot unless necessary.
+    // D. Assign Extra (STRICT RULE: NO OVERTIME)
     if (operators.primary.length > 0) {
       newAssigns['Extra'] = operators.primary.shift();
     }
 
     setAssignments(newAssigns);
-    toast.success(`Auto-assigned ${shift} Shift (OT applied if shortage)`);
+    toast.success(`Auto-assigned for ${shift}!`);
   };
 
   const handleAddMemberSubmit = async (e) => {
