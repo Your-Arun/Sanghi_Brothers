@@ -334,119 +334,166 @@ const sensors = useSensors(
     }
   };
 
- const handleSaveImage = async () => {
+  const handleSaveImage = async () => {
     if (!pumpMapRef.current) return;
   
     // Loading Toast
-    const toastId = toast.loading("Generating Map Image...");
+    const toastId = toast.loading("Generating Square Map...");
   
     try {
       // 1. Create a Sandbox (Invisible Container)
-      // Hum ek fixed width container banayenge taaki mobile me bhi desktop jaisi image aaye
       const sandbox = document.createElement("div");
+      // Initial width set karte hain (Standard High Quality Square)
+      const BASE_SIZE = 1200; 
+      
       sandbox.style.position = "absolute";
       sandbox.style.top = "-10000px";
       sandbox.style.left = "-10000px";
-      sandbox.style.width = "1000px"; // Fixed Width for High Quality
+      sandbox.style.width = `${BASE_SIZE}px`;
       sandbox.style.backgroundColor = "#ffffff";
       sandbox.style.fontFamily = "sans-serif";
       sandbox.style.display = "flex";
       sandbox.style.flexDirection = "column";
-      sandbox.style.alignItems = "center";
+      // Content ko center me rakhne ke liye
+      sandbox.style.justifyContent = "space-between"; 
       document.body.appendChild(sandbox);
   
-      // 2. Clone the Map Node
+      // --- A. HEADER SECTION (Top Bar) ---
+      const headerDiv = document.createElement("div");
+      Object.assign(headerDiv.style, {
+        width: "100%",
+        backgroundColor: "#1e293b", // Slate-900 Theme
+        color: "white",
+        padding: "30px 50px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        boxSizing: "border-box",
+        borderBottom: "8px solid #e2e8f0"
+      });
+  
+      headerDiv.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 15px;">
+          <div style="font-size: 40px;">⛽</div>
+          <div>
+            <h1 style="margin:0; font-size: 32px; font-weight: 900; letter-spacing: 2px; line-height: 1;">PUMP MAP</h1>
+            <span style="font-size: 14px; opacity: 0.8; letter-spacing: 1px;">SHIFT REPORT</span>
+          </div>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 20px; font-weight: 700; color: #fff; background: #3b82f6; padding: 5px 15px; border-radius: 8px; display: inline-block; margin-bottom: 5px; text-transform: uppercase;">
+            ${shift}
+          </div>
+          <div style="font-size: 18px; font-weight: 600; color: #cbd5e1;">
+            📅 ${date}
+          </div>
+        </div>
+      `;
+      sandbox.appendChild(headerDiv);
+  
+      // --- B. MAP SECTION (Cloned) ---
+      const mapWrapper = document.createElement("div");
+      Object.assign(mapWrapper.style, {
+        flex: "1", // Ye bachi hui jagah lega (Vertically Center karne ke liye)
+        display: "flex",
+        alignItems: "center", // Center Vertically
+        justifyContent: "center", // Center Horizontally
+        padding: "40px",
+        width: "100%",
+        boxSizing: "border-box"
+      });
+
       const originalNode = pumpMapRef.current;
       const clonedNode = originalNode.cloneNode(true);
   
-      // Cleanup Clone Styles
-      clonedNode.style.transform = "scale(1)";
+      // Clean up styles for image
+      clonedNode.style.transform = "scale(1.2)"; // Thoda bada dikhayein square me
+      clonedNode.style.transformOrigin = "center";
       clonedNode.style.width = "100%";
       clonedNode.style.height = "auto";
       clonedNode.style.boxShadow = "none";
       clonedNode.style.border = "none";
-      clonedNode.style.margin = "0";
-      clonedNode.style.padding = "20px";
-  
-      // Remove Input Elements from Clone
+      
+      // Input hatayein
       const inputWrapper = clonedNode.querySelector("#caption-wrapper");
       if (inputWrapper) inputWrapper.remove();
+      
+      mapWrapper.appendChild(clonedNode);
+      sandbox.appendChild(mapWrapper);
   
-      // --- A. HEADER SECTION (Date & Shift) ---
-      const headerDiv = document.createElement("div");
-      Object.assign(headerDiv.style, {
-        width: "100%",
-        backgroundColor: "#1e293b", // Slate-900
-        color: "white",
-        padding: "20px 40px",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: "20px",
-        boxSizing: "border-box"
-      });
-  
-      headerDiv.innerHTML = `
-        <div>
-          <h1 style="margin:0; font-size: 28px; font-weight: 800; letter-spacing: 2px;">PUMP MAP</h1>
-        </div>
-        <div style="text-align: right;">
-          <div style="font-size: 18px; font-weight: 600; color: #94a3b8;">SHIFT: <span style="color: white; text-transform: uppercase;">${shift}</span></div>
-          <div style="font-size: 18px; font-weight: 600; color: #94a3b8;">DATE: <span style="color: white;">${date}</span></div>
-        </div>
-      `;
-  
-      // --- B. CAPTION SECTION (Bottom) ---
-      let captionDiv = null;
+      // --- C. CAPTION SECTION (Bottom) ---
       if (caption) {
-        captionDiv = document.createElement("div");
+        const captionDiv = document.createElement("div");
         captionDiv.innerText = caption;
         Object.assign(captionDiv.style, {
           width: "90%",
-          margin: "20px auto",
-          padding: "20px",
-          backgroundColor: "#f1f5f9", // Slate-100
-          border: "2px solid #e2e8f0",
-          borderRadius: "12px",
+          margin: "0 auto 40px auto", // Bottom margin
+          padding: "25px",
+          backgroundColor: "#f8fafc",
+          borderLeft: "10px solid #3b82f6", // Blue accent bar
+          boxShadow: "0 4px 15px rgba(0,0,0,0.05)",
           color: "#334155",
-          fontSize: "22px", // Readable font
+          fontSize: "24px",
           fontWeight: "600",
-          textAlign: "center",
-          whiteSpace: "pre-wrap", // Long text wrap karega
+          textAlign: "left",
+          whiteSpace: "pre-wrap",
           wordBreak: "break-word"
         });
+        sandbox.appendChild(captionDiv);
+      } else {
+        // Agar caption nahi hai to footer branding lagado taaki khali na lage
+        const footerDiv = document.createElement("div");
+        footerDiv.innerHTML = "Generated by Pump Manager";
+        Object.assign(footerDiv.style, {
+            width: "100%",
+            textAlign: "center",
+            color: "#cbd5e1",
+            paddingBottom: "20px",
+            fontWeight: "bold",
+            textTransform: "uppercase",
+            letterSpacing: "2px"
+        });
+        sandbox.appendChild(footerDiv);
       }
   
-      // --- ASSEMBLE SANDBOX ---
-      sandbox.appendChild(headerDiv); // 1. Header Top
-      sandbox.appendChild(clonedNode); // 2. Map Middle
-      if (captionDiv) sandbox.appendChild(captionDiv); // 3. Caption Bottom
+      // --- SQUARE LOGIC START ---
+      // Ab hum check karenge ki content ki height kitni hai
+      // Agar height < 1200 hai, to hum container ki height ko force 1200 kar denge.
+      // Agar height > 1200 hai, to hum width ko badha kar height ke barabar kar denge.
+      
+      const currentHeight = sandbox.scrollHeight;
+      const squareSize = Math.max(BASE_SIZE, currentHeight);
+
+      // Final Square Dimensions Apply karein
+      sandbox.style.width = `${squareSize}px`;
+      sandbox.style.height = `${squareSize}px`;
+      
+      // Wait for rendering (Images/Avatars)
+      await new Promise((resolve) => setTimeout(resolve, 500));
   
-      // Wait for images to render
-      await new Promise((resolve) => setTimeout(resolve, 300));
-  
-      // 3. Capture Image
+      // 3. Capture
       const canvas = await html2canvas(sandbox, {
-        scale: 2, // Good balance of quality and file size
+        scale: 1.5, // High Quality
         useCORS: true,
         backgroundColor: "#ffffff",
-        windowWidth: 1200,
-        windowHeight: sandbox.scrollHeight + 50, // Full height capture
+        width: squareSize,
+        height: squareSize,
+        windowWidth: squareSize,
+        windowHeight: squareSize,
         logging: false
       });
   
       // Cleanup
       document.body.removeChild(sandbox);
   
-      // 4. Save & Download
+      // 4. Save
       const base64Image = canvas.toDataURL("image/png");
-  
       const link = document.createElement("a");
-      link.download = `Pump_Report_${date}_${shift}.png`;
+      link.download = `Pump_Square_${date}_${shift}.png`;
       link.href = base64Image;
       link.click();
   
-      // Server Save
+      // Server Upload
       await axiosInstance.post("/shifting/save-map", {
         date,
         shift,
@@ -455,14 +502,13 @@ const sensors = useSensors(
       });
   
       setSavedMapImage(base64Image);
-      toast.update(toastId, { render: "Map Saved Successfully!", type: "success", isLoading: false, autoClose: 3000 });
+      toast.update(toastId, { render: "Square Map Saved!", type: "success", isLoading: false, autoClose: 3000 });
   
     } catch (err) {
       console.error(err);
-      toast.update(toastId, { render: "Failed to Save Image", type: "error", isLoading: false, autoClose: 3000 });
+      toast.update(toastId, { render: "Failed to Save", type: "error", isLoading: false, autoClose: 3000 });
     }
   };
-
 
   const handleAutoAssign = () => {
     // 1. Absent IDs nikalein
