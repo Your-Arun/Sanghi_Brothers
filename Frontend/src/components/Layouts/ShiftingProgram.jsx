@@ -180,20 +180,6 @@ const sensors = useSensors(
     }
     return url;
   };
-  useEffect(() => {
-    const checkSavedMap = async () => {
-      try {
-        setSavedMapImage(null);
-        const res = await axiosInstance.get(`/shifting/get-map?date=${date}&shift=${shift}`);
-        if (res.data.image) {
-          setSavedMapImage(res.data.image);
-        }
-      } catch (error) {
-        console.log("No saved map for this slot");
-      }
-    };
-    checkSavedMap();
-  }, [date, shift]);
 
   useEffect(() => {
     const fetchMembers = async () => {
