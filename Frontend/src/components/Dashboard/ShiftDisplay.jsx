@@ -21,7 +21,7 @@ const AllShifts = () => {
     try {
       setLoading(true);
       // Note: Route name wahi hona chahiye jo backend me set kiya hai (/shifting/all-maps)
-      const response = await axiosInstance.get("/shifting/all-maps");
+      const response = await axiosInstance.get("/all-maps");
       
       if (response.data.success) {
         setMaps(response.data.maps);
