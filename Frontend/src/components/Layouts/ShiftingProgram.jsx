@@ -365,7 +365,7 @@ const handleEditClick = (member) => {
     }
   };
 
-  
+
   const handleAutoAssign = () => {
     // 1. Absent IDs nikalein
     const absentIds = (assignments['absent'] || []).map(m => m.id);
@@ -827,7 +827,7 @@ const handleEditClick = (member) => {
               <p className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-2 flex justify-between">
                 <span>Available Staff</span>
               </p>
-              <DroppableZone id="available-pool-mobile" isPool={true} className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide min-h-[70px] items-center px-2 border-2 border-dashed border-gray-100 rounded-xl bg-gray-50">
+              <DroppableZone id="available-pool-mobile" isPool={true} className="flex gap-3 overflow-x-auto pb-4 min-h-[70px] items-center px-2 border-2 border-dashed border-gray-100 rounded-xl bg-gray-50">
                 {availableStaff.map((staff) => (
                   <div key={staff.id} className="shrink-0">
                     <DraggableStaff id={`mob-${staff.id}`} staffMember={staff} size="small" hideName={true} />
