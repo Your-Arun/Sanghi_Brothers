@@ -78,14 +78,10 @@
 // routes/shifting.js
 const express = require('express');
 const router = express.Router();
-
-// Adjust path to where your controller file actually is
 const controller = require('./shifts'); 
-
 // Adjust path to where your multer config is
 const upload = require("./multer"); 
 
-// --- ROUTES ---
 
 // 1. Member Routes
 router.get('/shifting', controller.listMembers);
@@ -100,5 +96,6 @@ router.get('/get-map', controller.getMap);
 router.get('/all-maps', controller.getAllMaps);
 router.delete('/delete-map/:id', controller.deleteMap);
 
-
+router.get('/all-maps', controller.getAllMaps); 
+router.delete('/delete-map/:id', controller.deleteMap);
 module.exports = router;

@@ -176,3 +176,25 @@ exports.getMap = async (req, res) => {
     return res.status(500).json({ message: 'Failed to fetch map' });
   }
 };
+
+exports.getAllMaps = async (req, res) => {
+  try {
+    const maps = await MapSnapshot.find().sort({ createdAt: -1 });
+    return res.json({ success: true, maps });
+  } catch (err) {
+    console.error("Get All Maps Error:", err);
+    return res.status(500).json({ message: 'Failed to fetch maps' });
+  }
+};
+
+// Delete Map (For History Page)
+exports.deleteMap = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await MapSnapshot.findByIdAndDelete(id);
+    return res.json({ success: true, message: 'Map deleted successfully' });
+  } catch (err) {
+    console.error("Delete Map Error:", err);
+    return res.status(500).json({ message: 'Failed to delete map' });
+  }
+};
