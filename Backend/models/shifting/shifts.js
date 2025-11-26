@@ -37,9 +37,15 @@
 // Assuming this file is in a 'controllers' folder and models are in 'models' folder
 const Member = require('./Members'); 
 const MapSnapshot = require('./MapSnapshot');
+const cloudinary = require('cloudinary').v2;
+require('dotenv').config(); 
 
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+});
 // --- MEMBER CONTROLLERS ---
-
 exports.listMembers = async (req, res) => {
   try {
     const members = await Member.find().sort({ name: 1 });
@@ -80,65 +86,6 @@ exports.deleteMember = async (req, res) => {
   }
 };
 
-// --- MAP SNAPSHOT CONTROLLERS ---
-
-exports.getMap = async (req, res) => {
-  try {
-    const { date, shift } = req.query;
-    
-    if (!date || !shift) {
-        return res.status(400).json({ message: 'Date and shift are required' });
-    }
-
-    const snap = await MapSnapshot.findOne({ date, shift });
-    
-    if (!snap) {
-        return res.json({ message: 'No map found', image: null });
-    }
-
-    return res.json({ 
-        image: snap.image, 
-        caption: snap.caption, 
-        date: snap.date, 
-        shift: snap.shift, 
-        createdAt: snap.createdAt 
-    });
-
-  } catch (err) {
-    console.error("Get Map Error:", err);
-    return res.status(500).json({ message: 'Failed to fetch map' });
-  }
-};
-
-exports.saveMap = async (req, res) => {
-  try {
-    const { date, shift, image, caption } = req.body;
-
-    if (!date || !shift || !image) {
-        return res.status(400).json({ message: 'Date, shift, and image are required' });
-    }
-
-    // Upsert: Find existing map for this date/shift and update it, or create new
-    const updated = await MapSnapshot.findOneAndUpdate(
-      { date, shift },
-      { 
-        image, 
-        caption: caption || '', 
-        // Don't override createdAt on update, Mongoose handles updatedAt
-      },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
-    );
-
-    return res.json({ message: 'Map saved successfully', snapshot: updated });
-
-  } catch (err) {
-    console.error("Save Map Error:", err);
-    return res.status(500).json({ message: 'Failed to save map' });
-  }
-};
-
-
-
 exports.updateMember = async (req, res) => {
   try {
     const { id } = req.params;
@@ -160,5 +107,72 @@ exports.updateMember = async (req, res) => {
   } catch (error) {
     console.error("Update Error:", error);
     return res.status(500).json({ error: error.message });
+  }
+};
+
+
+// --- SAVE MAP CONTROLLER ---
+exports.saveMap = async (req, res) => {
+  try {
+    const { date, shift, image, caption } = req.body;
+
+    // Validation
+    if (!date || !shift || !image) {
+        return res.status(400).json({ message: 'Date, shift, and image are required' });
+    }
+
+    console.log("⏳ Uploading Map to Cloudinary...");
+
+    // 2. Cloudinary Upload (Base64 JPEG handle kar lega)
+    const uploadResponse = await cloudinary.uploader.upload(image, {
+      folder: "pump_shift_maps", // Cloudinary folder name
+      resource_type: "image"
+    });
+
+    console.log("✅ Uploaded to Cloudinary:", uploadResponse.secure_url);
+
+    // 3. Database Update (Sirf URL save karenge)
+    // findOneAndUpdate ka matlab: Agar date+shift ka map pehle se hai to update karo, nahi to naya banao (upsert).
+    const updated = await MapSnapshot.findOneAndUpdate(
+      { date, shift },
+      { 
+        image: uploadResponse.secure_url, // URL saved
+        caption: caption || ''
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+
+    return res.json({ message: 'Map saved successfully', snapshot: updated });
+
+  } catch (err) {
+    console.error("❌ Save Map Error:", err);
+    return res.status(500).json({ message: 'Failed to save map', error: err.message });
+  }
+};
+
+// --- GET MAP CONTROLLER (Ye URL return karega) ---
+exports.getMap = async (req, res) => {
+  try {
+    const { date, shift } = req.query;
+    if (!date || !shift) {
+        return res.status(400).json({ message: 'Date and shift required' });
+    }
+
+    const snap = await MapSnapshot.findOne({ date, shift });
+    
+    if (!snap) {
+        return res.json({ message: 'No map found', image: null });
+    }
+
+    return res.json({ 
+        image: snap.image, // Cloudinary URL
+        caption: snap.caption, 
+        date: snap.date, 
+        shift: snap.shift
+    });
+
+  } catch (err) {
+    console.error("Get Map Error:", err);
+    return res.status(500).json({ message: 'Failed to fetch map' });
   }
 };

@@ -486,7 +486,7 @@ const sensors = useSensors(
       document.body.removeChild(sandbox);
   
       // Save
-      const base64Image = canvas.toDataURL("image/png");
+      const base64Image = canvas.toDataURL("image/jpeg", 0.7);
       const link = document.createElement("a");
       link.download = `Pump_Map_${date}_${shift}.png`;
       link.href = base64Image;
