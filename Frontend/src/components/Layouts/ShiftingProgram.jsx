@@ -337,223 +337,170 @@ const sensors = useSensors(
   const handleSaveImage = async () => {
     if (!pumpMapRef.current) return;
   
-    // Loading Toast
-    const toastId = toast.loading("Generating Report...");
+    const toastId = toast.loading("Generating Map...");
   
     try {
-      // 1. Create Sandbox
+      // 1. Create Sandbox (Fixed Desktop Width)
+      // Width 1000px rakhne se layout mobile jaisa nahi, desktop jaisa aayega
       const sandbox = document.createElement("div");
-      const BASE_SIZE = 1200; 
-      
       sandbox.style.position = "absolute";
       sandbox.style.top = "-10000px";
       sandbox.style.left = "-10000px";
-      sandbox.style.width = `${BASE_SIZE}px`;
-      sandbox.style.backgroundColor = "#ffffff";
+      sandbox.style.width = "1000px"; // Fixed Desktop Width
+      sandbox.style.backgroundColor = "#f8fafc"; // Light BG
       sandbox.style.fontFamily = "sans-serif";
       sandbox.style.display = "flex";
       sandbox.style.flexDirection = "column";
-      sandbox.style.justifyContent = "space-between"; 
+      sandbox.style.alignItems = "center";
+      sandbox.style.padding = "40px";
+      sandbox.style.boxSizing = "border-box";
       document.body.appendChild(sandbox);
   
-      // --- A. HEADER SECTION ---
+      // --- 2. HEADER (Shift & Date) ---
       const headerDiv = document.createElement("div");
       Object.assign(headerDiv.style, {
         width: "100%",
-        backgroundColor: "#1e293b", 
-        color: "white",
-        padding: "30px 50px",
+        marginBottom: "40px",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        boxSizing: "border-box",
-        borderBottom: "8px solid #e2e8f0",
-        zIndex: "10" // Ensure Header is on top
+        borderBottom: "4px solid #e2e8f0",
+        paddingBottom: "20px"
       });
   
       headerDiv.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 15px;">
-          <div style="font-size: 40px;">⛽</div>
-          <div>
-            <h1 style="margin:0; font-size: 32px; font-weight: 900; letter-spacing: 2px; line-height: 1;">PUMP MAP</h1>
-            <span style="font-size: 14px; opacity: 0.8; letter-spacing: 1px;">SHIFT REPORT</span>
-          </div>
+        <div>
+          <h1 style="margin:0; font-size: 36px; font-weight: 900; color: #1e293b; letter-spacing: 1px;">PUMP MANAGER</h1>
+          <span style="font-size: 16px; color: #64748b; font-weight: 600;">SHIFT REPORT</span>
         </div>
         <div style="text-align: right;">
-          <div style="font-size: 20px; font-weight: 700; color: #fff; background: #3b82f6; padding: 5px 15px; border-radius: 8px; display: inline-block; margin-bottom: 5px; text-transform: uppercase;">
+          <div style="background: #3b82f6; color: white; padding: 5px 15px; border-radius: 8px; font-weight: bold; display: inline-block; margin-bottom: 5px; text-transform: uppercase;">
             ${shift}
           </div>
-          <div style="font-size: 18px; font-weight: 600; color: #cbd5e1;">
+          <div style="font-size: 20px; font-weight: 700; color: #334155;">
             📅 ${date}
           </div>
         </div>
       `;
       sandbox.appendChild(headerDiv);
   
-      // --- B. MAP SECTION (FIXED FOR SUPERVISOR) ---
-      const mapWrapper = document.createElement("div");
-      Object.assign(mapWrapper.style, {
-        flex: "1",
-        display: "flex",
-        alignItems: "center", 
-        justifyContent: "center",
-        padding: "50px", // 👇 More Padding added (Supervisor won't cut)
-        width: "100%",
-        boxSizing: "border-box",
-        overflow: "visible" // 👇 Important: Don't clip overlapping elements
-      });
-
+      // --- 3. CLONE THE MAP (Exact Layout) ---
       const originalNode = pumpMapRef.current;
       const clonedNode = originalNode.cloneNode(true);
   
-      // Style Clone
-      // 👇 Scale reduced slightly (1.3 -> 1.1) to fit Supervisor
-      clonedNode.style.transform = "scale(1.1)"; 
-      clonedNode.style.transformOrigin = "center";
-      clonedNode.style.width = "100%";
-      clonedNode.style.height = "auto";
-      clonedNode.style.boxShadow = "none";
-      clonedNode.style.border = "none";
-      clonedNode.style.overflow = "visible"; // 👇 Ensure internal overflow is visible
-      
+      // Reset Styles for Clone to ensure Desktop Look
+      Object.assign(clonedNode.style, {
+        transform: "scale(1)", // No scaling needed because container is wide
+        width: "100%",
+        height: "auto",
+        boxShadow: "none",
+        border: "none",
+        margin: "0",
+        padding: "40px 20px", // Extra padding for Supervisor
+        overflow: "visible",  // Supervisor won't cut
+        background: "white",
+        borderRadius: "30px",
+        border: "2px solid #e2e8f0"
+      });
+  
+      // Remove Input Box
       const inputWrapper = clonedNode.querySelector("#caption-wrapper");
       if (inputWrapper) inputWrapper.remove();
-      
-      mapWrapper.appendChild(clonedNode);
-      sandbox.appendChild(mapWrapper);
-
-      // --- C. ABSENT SECTION ---
+  
+      sandbox.appendChild(clonedNode);
+  
+      // --- 4. ABSENT SECTION (New Row Below Map) ---
       const absentDiv = document.createElement("div");
       Object.assign(absentDiv.style, {
-        width: "90%",
-        margin: "0 auto 20px auto",
+        width: "100%",
+        marginTop: "30px",
         padding: "20px",
-        backgroundColor: "#fef2f2", 
-        border: "2px dashed #fca5a5", 
-        borderRadius: "16px",
-        boxSizing: "border-box",
-        position: "relative", // Z-index fix
-        zIndex: "5"
+        backgroundColor: "#fff1f2", // Red Tint
+        border: "2px dashed #fda4af",
+        borderRadius: "20px",
+        boxSizing: "border-box"
       });
-
+  
       const absentMembers = assignments['absent'] || [];
-
+      
       let absentHTML = `
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid #fecaca; padding-bottom: 10px;">
-          <span style="font-size: 24px;">🚫</span>
-          <h3 style="margin:0; color: #dc2626; font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">ABSENT STAFF</h3>
-        </div>
-        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+        <h3 style="margin: 0 0 15px 0; color: #be123c; font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 10px;">
+          <span>🚫</span> ABSENT STAFF (${absentMembers.length})
+        </h3>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
       `;
-
+  
       if (absentMembers.length > 0) {
         absentMembers.forEach(m => {
-          const avatarUrl = m.avatar && m.avatar.startsWith('http') 
-            ? m.avatar.replace("http:", "https:") 
-            : `https://ui-avatars.com/api/?name=${m.name}&background=ef4444&color=fff`;
-
+          // Image Logic
+          let avatarUrl = m.avatar;
+          if (!avatarUrl) avatarUrl = `https://ui-avatars.com/api/?name=${m.name}&background=ef4444&color=fff`;
+          else if (avatarUrl.startsWith("http:")) avatarUrl = avatarUrl.replace("http:", "https:");
+  
           absentHTML += `
-            <div style="display: flex; flex-direction: column; align-items: center; width: 80px;">
-              <div style="width: 60px; height: 60px; border-radius: 50%; overflow: hidden; border: 3px solid #ef4444; margin-bottom: 5px; background: white;">
-                <img src="${avatarUrl}" style="width: 100%; height: 100%; object-fit: cover;" />
-              </div>
-              <span style="font-size: 12px; font-weight: 700; color: #991b1b; text-align: center; text-transform: uppercase;">${m.name}</span>
+            <div style="display: flex; align-items: center; gap: 10px; background: white; padding: 8px 15px; border-radius: 50px; border: 1px solid #fecdd3;">
+              <img src="${avatarUrl}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;" />
+              <span style="font-weight: 700; color: #9f1239; font-size: 14px; text-transform: uppercase;">${m.name}</span>
             </div>
           `;
         });
       } else {
-        absentHTML += `
-          <div style="width: 100%; text-align: center; padding: 10px;">
-            <span style="font-size: 16px; font-weight: 600; color: #16a34a;">✅ All Staff Present / No Absentees Recorded</span>
-          </div>
-        `;
+        absentHTML += `<span style="color: #059669; font-weight: 700; font-size: 16px;">✅ Everyone is Present!</span>`;
       }
-
+      
       absentHTML += `</div>`;
       absentDiv.innerHTML = absentHTML;
       sandbox.appendChild(absentDiv);
   
-      // --- D. CAPTION SECTION ---
+      // --- 5. CAPTION SECTION ---
       if (caption) {
         const captionDiv = document.createElement("div");
         captionDiv.innerText = caption;
         Object.assign(captionDiv.style, {
-          width: "90%",
-          margin: "0 auto 40px auto",
+          width: "100%",
+          marginTop: "20px",
           padding: "20px",
-          backgroundColor: "#f8fafc",
-          borderLeft: "8px solid #3b82f6",
-          boxShadow: "0 4px 6px rgba(0,0,0,0.05)",
-          color: "#334155",
-          fontSize: "22px",
+          backgroundColor: "#f1f5f9",
+          borderRadius: "15px",
+          color: "#475569",
+          fontSize: "20px",
           fontWeight: "600",
-          textAlign: "left",
-          whiteSpace: "pre-wrap"
+          textAlign: "center",
+          border: "1px solid #cbd5e1"
         });
         sandbox.appendChild(captionDiv);
-      } else {
-        const footerDiv = document.createElement("div");
-        footerDiv.innerHTML = "Generated by Pump Manager";
-        Object.assign(footerDiv.style, {
-            width: "100%",
-            textAlign: "center",
-            color: "#cbd5e1",
-            paddingBottom: "20px",
-            fontWeight: "bold",
-            textTransform: "uppercase",
-            letterSpacing: "2px"
-        });
-        sandbox.appendChild(footerDiv);
       }
   
-      // --- SQUARE LOGIC ---
-      const currentHeight = sandbox.scrollHeight;
-      const squareSize = Math.max(BASE_SIZE, currentHeight);
-
-      sandbox.style.width = `${squareSize}px`;
-      sandbox.style.height = `${squareSize}px`;
-      
-      // Wait for rendering
+      // --- 6. CAPTURE ---
+      // Wait for avatars to load
       await new Promise((resolve) => setTimeout(resolve, 500));
   
-      // 3. Capture
       const canvas = await html2canvas(sandbox, {
-        scale: 1.5,
+        scale: 2, // High Quality
         useCORS: true,
-        backgroundColor: "#ffffff",
-        width: squareSize,
-        height: squareSize,
-        windowWidth: squareSize,
-        windowHeight: squareSize,
+        backgroundColor: "#f8fafc",
+        windowWidth: 1200, // Trick browser into thinking it's desktop
         logging: false
       });
   
-      // Cleanup
       document.body.removeChild(sandbox);
   
-      // 4. Save
+      // Save
       const base64Image = canvas.toDataURL("image/png");
       const link = document.createElement("a");
-      link.download = `Pump_Square_${date}_${shift}.png`;
+      link.download = `Pump_Map_${date}_${shift}.png`;
       link.href = base64Image;
       link.click();
   
-      await axiosInstance.post("/shifting/save-map", {
-        date,
-        shift,
-        image: base64Image,
-        caption
-      });
-  
+      await axiosInstance.post("/shifting/save-map", { date, shift, image: base64Image, caption });
       setSavedMapImage(base64Image);
-      toast.update(toastId, { render: "Image Generated!", type: "success", isLoading: false, autoClose: 3000 });
+      toast.update(toastId, { render: "Map Saved!", type: "success", isLoading: false, autoClose: 3000 });
   
     } catch (err) {
       console.error(err);
       toast.update(toastId, { render: "Failed to Save", type: "error", isLoading: false, autoClose: 3000 });
     }
   };
-
   const handleAutoAssign = () => {
     // 1. Absent IDs nikalein
     const absentIds = (assignments['absent'] || []).map(m => m.id);
