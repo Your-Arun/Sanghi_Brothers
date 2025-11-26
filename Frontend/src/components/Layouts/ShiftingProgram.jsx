@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import axiosInstance from '../Dashboard/axiosInstance';
 
-/* --- DraggableStaff (With Red Overtime Support) --- */
+/* --- DraggableStaff (Mobile Scroll Fix) --- */
 const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", hideName = false }) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: String(id),
@@ -33,7 +33,11 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
 
   const isMap = size === "map";
   const isSmall = size === "small";
-  const containerClasses = isMap ? "w-full h-full" : (isSmall ? "w-10 h-10 md:w-12 md:h-12" : "w-14 h-14 md:w-16 md:h-16");
+
+  const containerClasses = isMap
+    ? "w-full h-full"
+    : (isSmall ? "w-10 h-10 md:w-12 md:h-12" : "w-14 h-14 md:w-16 md:h-16");
+
   const textSize = isMap || isSmall ? "text-[8px] md:text-[9px]" : "text-[10px]";
   const borderClasses = isMap ? "" : "border-[2px] border-white shadow-sm";
 
@@ -45,12 +49,18 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
     return url.startsWith("http") ? url : fallbackImage;
   };
 
-  // CHECK OVERTIME STATUS
   const isOT = staffMember.isOvertime || staffMember.name.includes("(OT)");
 
   return (
-    <div ref={setNodeRef} style={style} {...listeners} {...attributes}
-      className={`flex flex-col items-center justify-center touch-none transition-transform ${isOverlay ? 'scale-110 opacity-95 cursor-grabbing' : 'cursor-grab hover:scale-105 active:cursor-grabbing'} ${isMap ? 'w-full h-full p-[1px]' : ''}`}
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      // 👇 MAJOR CHANGE: 'touch-none' hataya, 'touch-manipulation' lagaya
+      className={`flex flex-col items-center justify-center transition-transform touch-manipulation ${
+        isOverlay ? 'scale-110 opacity-95 cursor-grabbing' : 'cursor-grab hover:scale-105 active:cursor-grabbing'
+      } ${isMap ? 'w-full h-full p-[1px]' : ''}`}
     >
       <div className={`${containerClasses} ${borderClasses} rounded-full overflow-hidden bg-gray-200 transition-all relative`}>
         <img
@@ -132,10 +142,6 @@ const ShiftManagementSystem = () => {
     name: "", role: "operator", shift: 'morning', available: 'present', file: null, preview: null
   });
 
-  const sensors = useSensors(
-    useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 100, tolerance: 10 } })
-  );
 // Edit Button dabane par ye chalega
 const handleEditClick = (member) => {
   setEditingId(member.id); // Batao ki hum is ID ko edit kar rahe hain
@@ -152,7 +158,19 @@ const handleEditClick = (member) => {
   setShowAddModal(true); // Form kholo
 };
 
-
+// --- SENSORS CONFIGURATION (Scroll vs Drag Logic) ---
+const sensors = useSensors(
+  useSensor(MouseSensor, { 
+    activationConstraint: { distance: 10 } 
+  }),
+  useSensor(TouchSensor, { 
+    // 👇 ISKO DHYAN SE DEKHEIN
+    activationConstraint: { 
+      delay: 250,   // 250ms tak daba ke rakhne par hi Drag hoga
+      tolerance: 5  // Agar bina hold kiye 5px hil gaya, to Drag cancel (Scroll shuru)
+    } 
+  })
+);
 
   const getImageUrl = (url) => {
     if (!url) return null;
