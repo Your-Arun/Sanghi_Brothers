@@ -92,7 +92,7 @@ const AllShifts = () => {
       <div className="max-w-7xl mx-auto mb-6">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
           <div
-            className="flex items-center gap-2 text-slate-600 hover:text-slate-900 font-bold transition"
+            className="flex items-center gap-2 cursor-pointer text-slate-600 hover:text-slate-900 font-bold transition"
             onClick={() => navigate(-1)}
           >
             ← Back
