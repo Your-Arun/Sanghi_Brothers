@@ -536,7 +536,7 @@ const sensors = useSensors(
       link.click();
   
       // Backend Save
-      await axiosInstance.post("/shifting/save-map", { date, shift, image: base64Image, caption });
+      await axiosInstance.post("/save-map", { date, shift, image: base64Image, caption });
       setSavedMapImage(base64Image);
       toast.update(toastId, { render: "Map Saved Successfully!", type: "success", isLoading: false, autoClose: 3000 });
   
