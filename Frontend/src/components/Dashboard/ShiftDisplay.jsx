@@ -22,7 +22,7 @@ const AllShifts = () => {
   const fetchAllMaps = async () => {
     try {
       setLoading(true);
-      const response = await axiosInstance.get("/shifting/all-maps");
+      const response = await axiosInstance.get("/all-maps");
       if (response.data.success) {
         setMaps(response.data.maps);
         setFilteredMaps(response.data.maps);
@@ -91,12 +91,12 @@ const AllShifts = () => {
       {/* Header Section */}
       <div className="max-w-7xl mx-auto mb-6">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
-          <button
+          <div
             className="flex items-center gap-2 text-slate-600 hover:text-slate-900 font-bold transition"
             onClick={() => navigate(-1)}
           >
             ← Back
-          </button>
+          </div>
 
           <h2 className="text-xl md:text-2xl font-black text-slate-800 uppercase tracking-wide flex items-center gap-2">
             <Calendar className="text-blue-600" /> Shift Gallery
