@@ -323,15 +323,17 @@ const sensors = useSensors(
   const handleSaveImage = async () => {
     if (!pumpMapRef.current) return;
   
-    const toastId = toast.loading("Generating Map...");
+    const toastId = toast.loading("Generating High-Quality Map...");
   
     try {
-      // 1. Create Sandbox
+      // 1. Create Sandbox (Canvas Container)
       const sandbox = document.createElement("div");
+      const BASE_SIZE = 1200; 
+      
       sandbox.style.position = "absolute";
       sandbox.style.top = "-10000px";
       sandbox.style.left = "-10000px";
-      sandbox.style.width = "1000px"; // Fixed Desktop Width
+      sandbox.style.width = `${BASE_SIZE}px`;
       sandbox.style.backgroundColor = "#f8fafc"; 
       sandbox.style.fontFamily = "sans-serif";
       sandbox.style.display = "flex";
@@ -369,11 +371,11 @@ const sensors = useSensors(
       `;
       sandbox.appendChild(headerDiv);
   
-      // --- 3. CLONE THE MAP ---
+      // --- 3. CLONE THE MAP & FIX IMAGES ---
       const originalNode = pumpMapRef.current;
       const clonedNode = originalNode.cloneNode(true);
   
-      // Clone Styles
+      // Reset Clone Styles
       Object.assign(clonedNode.style, {
         transform: "scale(1)",
         width: "100%",
@@ -391,15 +393,52 @@ const sensors = useSensors(
       const inputWrapper = clonedNode.querySelector("#caption-wrapper");
       if (inputWrapper) inputWrapper.remove();
   
-      // FIX MAP IMAGES FOR CORS (Use Proxy Logic if needed, but 'useCORS: true' usually handles internal cloudinary)
-      const mapImages = clonedNode.querySelectorAll("img");
-      mapImages.forEach(img => {
-          img.crossOrigin = "anonymous"; // Try to fix map avatars
+      // 🔥🔥 CRITICAL CORS FIX 🔥🔥
+      // Find all images inside the map (Supervisor, Nozzles, etc.)
+      const allImages = clonedNode.querySelectorAll("img");
+      
+      allImages.forEach(img => {
+        const src = img.src || "";
+        
+        // Agar image ui-avatars se hai (jo CORS error deti hai)
+        if (src.includes("ui-avatars.com")) {
+          // Image ka parent dhoondo
+          const parent = img.parentElement;
+          // Naam nikalo (alt text se ya src se)
+          const nameMatch = src.match(/name=([^&]+)/);
+          const name = nameMatch ? decodeURIComponent(nameMatch[1]) : "??";
+          const initials = name.substring(0, 2).toUpperCase();
+  
+          // Image hatao
+          img.remove();
+  
+          // HTML DIV banao (CSS Circle)
+          const avatarDiv = document.createElement("div");
+          Object.assign(avatarDiv.style, {
+            width: "100%",
+            height: "100%",
+            backgroundColor: "#3b82f6", // Blue background
+            color: "white",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "20px",
+            fontWeight: "bold",
+            textTransform: "uppercase"
+          });
+          avatarDiv.innerText = initials;
+          
+          // Parent me daal do
+          parent.appendChild(avatarDiv);
+        } else {
+          // Agar Cloudinary image hai, to crossOrigin allow karo
+          img.crossOrigin = "anonymous";
+        }
       });
-
+  
       sandbox.appendChild(clonedNode);
   
-      // --- 4. ABSENT SECTION (CSS AVATAR FIX) ---
+      // --- 4. ABSENT SECTION (PURE CSS - NO IMAGES) ---
       const absentDiv = document.createElement("div");
       Object.assign(absentDiv.style, {
         width: "100%",
@@ -422,19 +461,19 @@ const sensors = useSensors(
   
       if (absentMembers.length > 0) {
         absentMembers.forEach(m => {
-          // 👇 LOGIC CHANGE: Agar Cloudinary image nahi hai, to HTML Circle banao (No ui-avatars request)
-          // Isse CORS error 100% khatam ho jayega
-          let avatarElement = "";
+          // Absent walo ke liye bhi hum CSS Circle use karenge
+          // Taaki 'ui-avatars' fetch hi na karna pade
+          let avatarHTML = "";
           
-          if (m.avatar && m.avatar.startsWith("http")) {
-             // Agar asli photo hai to use karo (Crossorigin ke sath)
+          if (m.avatar && m.avatar.startsWith("http") && !m.avatar.includes("ui-avatars")) {
+             // Real photo (Cloudinary)
              const safeUrl = m.avatar.replace("http:", "https:");
-             avatarElement = `<img src="${safeUrl}" crossorigin="anonymous" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" />`;
+             avatarHTML = `<img src="${safeUrl}" crossorigin="anonymous" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;" />`;
           } else {
-             // Agar photo nahi hai to CSS se Circle banao (No Network Request)
+             // CSS Circle (Initials)
              const initials = m.name.substring(0, 2).toUpperCase();
-             avatarElement = `
-               <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #ef4444; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">
+             avatarHTML = `
+               <div style="width: 30px; height: 30px; border-radius: 50%; background-color: #ef4444; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 10px;">
                  ${initials}
                </div>
              `;
@@ -442,7 +481,7 @@ const sensors = useSensors(
   
           absentHTML += `
             <div style="display: flex; align-items: center; gap: 10px; background: white; padding: 8px 15px; border-radius: 50px; border: 1px solid #fecdd3;">
-              ${avatarElement}
+              ${avatarHTML}
               <span style="font-weight: 700; color: #9f1239; font-size: 14px; text-transform: uppercase;">${m.name}</span>
             </div>
           `;
@@ -455,7 +494,7 @@ const sensors = useSensors(
       absentDiv.innerHTML = absentHTML;
       sandbox.appendChild(absentDiv);
   
-      // --- 5. CAPTION SECTION ---
+      // --- 5. CAPTION ---
       if (caption) {
         const captionDiv = document.createElement("div");
         captionDiv.innerText = caption;
@@ -475,12 +514,12 @@ const sensors = useSensors(
       }
   
       // --- 6. CAPTURE ---
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Thoda time badhaya loading ke liye
+      await new Promise((resolve) => setTimeout(resolve, 500));
   
       const canvas = await html2canvas(sandbox, {
         scale: 2,
-        useCORS: true, // Ye zaroori hai
-        allowTaint: true, // Try adding this
+        useCORS: true,
+        allowTaint: true, 
         backgroundColor: "#f8fafc",
         windowWidth: 1200,
         logging: false
@@ -488,22 +527,22 @@ const sensors = useSensors(
   
       document.body.removeChild(sandbox);
   
-      // Compress Image
-      const base64Image = canvas.toDataURL("image/jpeg", 0.8);
+      // Save JPEG (Compressed)
+      const base64Image = canvas.toDataURL("image/jpeg", 0.7);
       
       const link = document.createElement("a");
       link.download = `Pump_Map_${date}_${shift}.jpg`;
       link.href = base64Image;
       link.click();
   
-      // Server Save
+      // Backend Save
       await axiosInstance.post("/shifting/save-map", { date, shift, image: base64Image, caption });
       setSavedMapImage(base64Image);
-      toast.update(toastId, { render: "Map Saved!", type: "success", isLoading: false, autoClose: 3000 });
+      toast.update(toastId, { render: "Map Saved Successfully!", type: "success", isLoading: false, autoClose: 3000 });
   
     } catch (err) {
       console.error("Save Error:", err);
-      toast.update(toastId, { render: "Failed to Save", type: "error", isLoading: false, autoClose: 3000 });
+      toast.update(toastId, { render: "Failed to Save (Check Console)", type: "error", isLoading: false, autoClose: 3000 });
     }
   };
   const handleAutoAssign = () => {
