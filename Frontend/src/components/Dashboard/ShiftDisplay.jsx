@@ -134,13 +134,13 @@ const AllShifts = () => {
                         </div>
                       </div>
                       
-                      <button
+                      <div
                         onClick={() => handleDelete(map._id)}
                         className="text-red-400 hover:text-red-600 p-2 hover:bg-red-50 rounded-full transition"
                         title="Delete Report"
                       >
                         <Trash2 size={20} />
-                      </button>
+                      </div>
                     </div>
 
                     {/* Caption if exists */}
