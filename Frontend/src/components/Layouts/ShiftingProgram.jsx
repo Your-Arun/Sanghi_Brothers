@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Menu, Users, FileText, Share2, Calendar, Plus, RefreshCw, X, Download, Wind, AlertCircle, LayoutDashboard,
-  Trash2, ShieldCheck, Edit3, UserPlus,Settings as SettingsIcon 
+  Trash2, ShieldCheck, Edit3, UserPlus, Settings as SettingsIcon
 } from 'lucide-react';
 import {
   DndContext,
@@ -758,35 +758,35 @@ const ShiftManagementSystem = () => {
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
   };
 
-// Open Modal & Fetch Current Time
-const handleOpenSettings = async () => {
-  try {
-    const res = await axiosInstance.get("/shifting/settings");
-    if (res.data) {
-      setSmsTime({ 
-          morning: res.data.morningTime, 
-          evening: res.data.eveningTime 
-      });
+  // Open Modal & Fetch Current Time
+  const handleOpenSettings = async () => {
+    try {
+      const res = await axiosInstance.get("/shifting/settings");
+      if (res.data) {
+        setSmsTime({
+          morning: res.data.morningTime,
+          evening: res.data.eveningTime
+        });
+      }
+      setShowSettingsModal(true);
+    } catch (err) {
+      toast.error("Failed to load settings");
     }
-    setShowSettingsModal(true);
-  } catch (err) {
-    toast.error("Failed to load settings");
-  }
-};
+  };
 
-// Save New Time
-const handleSaveSettings = async () => {
-  try {
-    await axiosInstance.post("/shifting/settings", {
-      morningTime: smsTime.morning,
-      eveningTime: smsTime.evening
-    });
-    toast.success("SMS Schedule Updated!");
-    setShowSettingsModal(false);
-  } catch (err) {
-    toast.error("Update Failed");
-  }
-};
+  // Save New Time
+  const handleSaveSettings = async () => {
+    try {
+      await axiosInstance.post("/shifting/settings", {
+        morningTime: smsTime.morning,
+        eveningTime: smsTime.evening
+      });
+      toast.success("SMS Schedule Updated!");
+      setShowSettingsModal(false);
+    } catch (err) {
+      toast.error("Update Failed");
+    }
+  };
 
   return (
     <div className="h-screen bg-slate-100 flex flex-col font-sans overflow-hidden text-gray-900">
@@ -811,8 +811,8 @@ const handleSaveSettings = async () => {
             <div onClick={() => { setShowMemberListModal(true); setIsSidebarOpen(false); }} className="flex items-center gap-4 text-lg font-bold text-gray-700"><FileText /> Member List</div>
             <div onClick={() => navigate('/allshifting')} className="flex items-center gap-4 text-lg font-bold text-gray-700"><Calendar /> All Reports</div>
             <div onClick={handleOpenSettings} className="flex items-center gap-4 text-lg font-bold text-gray-700 cursor-pointer">
-    <SettingsIcon /> SMS Settings
-</div>
+              <SettingsIcon /> SMS Settings
+            </div>
           </div>
           <div className="flex-1 bg-black/60 backdrop-blur-sm" onClick={() => setIsSidebarOpen(false)}></div>
         </div>
@@ -836,9 +836,9 @@ const handleSaveSettings = async () => {
               </div>
               <div onClick={() => navigate('/allshifting')} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition text-gray-300 hover:text-white font-bold cursor-pointer">
                 <Calendar size={20} /> Reports
-                <div onClick={handleOpenSettings} className="p-2 bg-gray-200 rounded-full hover:bg-gray-300 transition">
-      <SettingsIcon size={20} className="text-gray-700" />
-   </div>
+              </div>
+              <div onClick={handleOpenSettings} className="p-2 bg-gray-200 rounded-full hover:bg-gray-300 transition">
+                <SettingsIcon size={20} className="text-gray-700" />
               </div>
             </nav>
           </aside>
@@ -1127,27 +1127,27 @@ const handleSaveSettings = async () => {
           </div>
         </div>
       )}
-      
-      
-            {showMemberListModal && (
+
+
+      {showMemberListModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all">
-          <div 
+          <div
             className="bg-white w-full max-w-md rounded-3xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden animate-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
-            
+
             {/* Header */}
             <div className="relative bg-slate-50 px-6 py-5 border-b border-slate-100 flex justify-between items-center shrink-0">
               <div>
                 <h2 className="text-xl font-black text-slate-800 tracking-tight flex items-center gap-2">
-                  <Users className="text-blue-600" size={22} /> 
+                  <Users className="text-blue-600" size={22} />
                   TEAM MEMBERS
                 </h2>
                 <p className="text-xs text-slate-500 font-medium mt-1">
                   Manage your shift staff ({members.length})
                 </p>
               </div>
-              
+
               <button
                 onClick={() => setShowMemberListModal(false)}
                 className="bg-white p-2 rounded-full text-slate-400 hover:text-red-500 hover:bg-red-50 border border-transparent hover:border-red-100 shadow-sm transition-all duration-200"
@@ -1158,7 +1158,7 @@ const handleSaveSettings = async () => {
 
             {/* Scrollable List Area */}
             <div className="overflow-y-auto flex-1 p-4 space-y-3 bg-[#FAFAFA]">
-              
+
               {members.length === 0 ? (
                 /* Empty State */
                 <div className="flex flex-col items-center justify-center h-48 text-center opacity-60">
@@ -1168,8 +1168,8 @@ const handleSaveSettings = async () => {
               ) : (
                 /* Member Cards */
                 members.map((m) => (
-                  <div 
-                    key={m.id} 
+                  <div
+                    key={m.id}
                     className="group relative flex items-center justify-between p-3 bg-white rounded-2xl border border-slate-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-lg hover:border-blue-200 transition-all duration-300"
                   >
                     {/* Left: Avatar & Info */}
@@ -1194,7 +1194,7 @@ const handleSaveSettings = async () => {
                       {/* Text Info */}
                       <div className="flex flex-col min-w-0 gap-0.5">
                         <h3 className="font-bold text-slate-800 text-sm truncate">{m.name}</h3>
-                        
+
                         {/* 👇 PHONE NUMBER DISPLAY 👇 */}
                         <div className="flex items-center gap-1 text-xs text-slate-500 font-medium">
                           <Phone size={12} className="text-slate-400" />
@@ -1203,11 +1203,10 @@ const handleSaveSettings = async () => {
 
                         {/* Role Badge */}
                         <div className="flex items-center mt-1">
-                          <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
-                             m.role === 'supervisor' ? 'bg-purple-100 text-purple-600' : 
-                             m.role === 'air boy' ? 'bg-cyan-100 text-cyan-600' :
-                             'bg-blue-100 text-blue-600'
-                          }`}>
+                          <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${m.role === 'supervisor' ? 'bg-purple-100 text-purple-600' :
+                              m.role === 'air boy' ? 'bg-cyan-100 text-cyan-600' :
+                                'bg-blue-100 text-blue-600'
+                            }`}>
                             {m.role}
                           </span>
                         </div>
@@ -1216,7 +1215,7 @@ const handleSaveSettings = async () => {
 
                     {/* Right: Actions (Edit & Delete) */}
                     <div className="flex items-center gap-2">
-                      
+
                       {/* EDIT BUTTON */}
                       <button
                         onClick={() => handleEditClick(m)}
@@ -1266,25 +1265,25 @@ const handleSaveSettings = async () => {
             <div className="space-y-4">
               <div>
                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Morning SMS Time</label>
-                <input 
-                  type="time" 
-                  value={smsTime.morning} 
-                  onChange={(e) => setSmsTime({...smsTime, morning: e.target.value})}
+                <input
+                  type="time"
+                  value={smsTime.morning}
+                  onChange={(e) => setSmsTime({ ...smsTime, morning: e.target.value })}
                   className="w-full bg-slate-50 border border-slate-200 p-3 rounded-xl font-bold text-slate-700 outline-none focus:ring-2 ring-blue-500"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Evening SMS Time</label>
-                <input 
-                  type="time" 
-                  value={smsTime.evening} 
-                  onChange={(e) => setSmsTime({...smsTime, evening: e.target.value})}
+                <input
+                  type="time"
+                  value={smsTime.evening}
+                  onChange={(e) => setSmsTime({ ...smsTime, evening: e.target.value })}
                   className="w-full bg-slate-50 border border-slate-200 p-3 rounded-xl font-bold text-slate-700 outline-none focus:ring-2 ring-blue-500"
                 />
               </div>
 
-              <button 
+              <button
                 onClick={handleSaveSettings}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg mt-2 transition-transform active:scale-95"
               >
