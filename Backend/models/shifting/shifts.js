@@ -66,6 +66,7 @@ exports.addMember = async (req, res) => {
       role: req.body.role,
       shift: req.body.shift,
       available: req.body.available,
+      phoneNumber:req.body.phoneNumber,
       avatar: avatarUrl, // <--- Cloudinary URL
     });
 
@@ -93,6 +94,7 @@ exports.updateMember = async (req, res) => {
     let updateData = {
       name,
       role,
+      phoneNumber,
       shift,
       available
     };

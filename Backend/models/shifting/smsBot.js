@@ -85,7 +85,7 @@ function startCronJobs() {
     cron.schedule('0 5 * * *', () => sendShiftReport('Morning'), { timezone: "Asia/Kolkata" });
 
     // Evening Shift: 2:00 PM
-    cron.schedule('0 14 * * *', () => sendShiftReport('Evening'), { timezone: "Asia/Kolkata" });
+    cron.schedule('0 12 * 20 * *', () => sendShiftReport('Evening'), { timezone: "Asia/Kolkata" });
 }
 
 module.exports = startCronJobs;

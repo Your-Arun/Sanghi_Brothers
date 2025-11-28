@@ -1091,26 +1091,26 @@ const ShiftManagementSystem = () => {
         </div>
       )}
 
-      {/* --- STAFF LIST MODAL (With Edit Option) --- */}
+      {/* --- STAFF LIST MODAL (With Phone Number) --- */}
       {showMemberListModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all">
-          <div
+          <div 
             className="bg-white w-full max-w-md rounded-3xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden animate-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
-
+            
             {/* Header */}
             <div className="relative bg-slate-50 px-6 py-5 border-b border-slate-100 flex justify-between items-center shrink-0">
               <div>
                 <h2 className="text-xl font-black text-slate-800 tracking-tight flex items-center gap-2">
-                  <Users className="text-blue-600" size={22} />
+                  <Users className="text-blue-600" size={22} /> 
                   TEAM MEMBERS
                 </h2>
                 <p className="text-xs text-slate-500 font-medium mt-1">
                   Manage your shift staff ({members.length})
                 </p>
               </div>
-
+              
               <button
                 onClick={() => setShowMemberListModal(false)}
                 className="bg-white p-2 rounded-full text-slate-400 hover:text-red-500 hover:bg-red-50 border border-transparent hover:border-red-100 shadow-sm transition-all duration-200"
@@ -1121,7 +1121,7 @@ const ShiftManagementSystem = () => {
 
             {/* Scrollable List Area */}
             <div className="overflow-y-auto flex-1 p-4 space-y-3 bg-[#FAFAFA]">
-
+              
               {members.length === 0 ? (
                 /* Empty State */
                 <div className="flex flex-col items-center justify-center h-48 text-center opacity-60">
@@ -1131,8 +1131,8 @@ const ShiftManagementSystem = () => {
               ) : (
                 /* Member Cards */
                 members.map((m) => (
-                  <div
-                    key={m.id}
+                  <div 
+                    key={m.id} 
                     className="group relative flex items-center justify-between p-3 bg-white rounded-2xl border border-slate-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-lg hover:border-blue-200 transition-all duration-300"
                   >
                     {/* Left: Avatar & Info */}
@@ -1155,13 +1155,22 @@ const ShiftManagementSystem = () => {
                       </div>
 
                       {/* Text Info */}
-                      <div className="flex flex-col min-w-0">
-                        <h3 className="font-bold text-slate-700 text-sm truncate">{m.name}</h3>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${m.role === 'supervisor' ? 'bg-purple-100 text-purple-600' :
-                              m.role === 'air boy' ? 'bg-cyan-100 text-cyan-600' :
-                                'bg-blue-100 text-blue-600'
-                            }`}>
+                      <div className="flex flex-col min-w-0 gap-0.5">
+                        <h3 className="font-bold text-slate-800 text-sm truncate">{m.name}</h3>
+                        
+                        {/* 👇 PHONE NUMBER DISPLAY 👇 */}
+                        <div className="flex items-center gap-1 text-xs text-slate-500 font-medium">
+                          <Phone size={12} className="text-slate-400" />
+                          <span>{m.phoneNumber || "No Phone"}</span>
+                        </div>
+
+                        {/* Role Badge */}
+                        <div className="flex items-center mt-1">
+                          <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                             m.role === 'supervisor' ? 'bg-purple-100 text-purple-600' : 
+                             m.role === 'air boy' ? 'bg-cyan-100 text-cyan-600' :
+                             'bg-blue-100 text-blue-600'
+                          }`}>
                             {m.role}
                           </span>
                         </div>
@@ -1170,7 +1179,7 @@ const ShiftManagementSystem = () => {
 
                     {/* Right: Actions (Edit & Delete) */}
                     <div className="flex items-center gap-2">
-
+                      
                       {/* EDIT BUTTON */}
                       <button
                         onClick={() => handleEditClick(m)}
