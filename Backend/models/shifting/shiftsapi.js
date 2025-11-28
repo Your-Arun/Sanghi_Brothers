@@ -98,4 +98,8 @@ router.delete('/delete-map/:id', controller.deleteMap);
 
 router.get('/all-maps', controller.getAllMaps); 
 router.delete('/delete-map/:id', controller.deleteMap);
+
+router.get('/settings', controller.getSettings);
+router.post('/settings', controller.updateSettings);
+
 module.exports = router;

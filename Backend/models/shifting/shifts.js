@@ -38,6 +38,8 @@
 const Member = require('./Members'); 
 const MapSnapshot = require('./MapSnapshot');
 const cloudinary = require('cloudinary').v2;
+const Settings = require('./Settings');
+const restartScheduler = require('./smsBot');
 require('dotenv').config(); 
 
 cloudinary.config({
@@ -200,5 +202,31 @@ exports.deleteMap = async (req, res) => {
   } catch (err) {
     console.error("Delete Map Error:", err);
     return res.status(500).json({ message: 'Failed to delete map' });
+  }
+};
+
+// Get Current Settings
+exports.getSettings = async (req, res) => {
+  let settings = await Settings.findOne();
+  if (!settings) settings = await Settings.create({});
+  res.json(settings);
+};
+// Update Settings
+exports.updateSettings = async (req, res) => {
+  try {
+      const { morningTime, eveningTime } = req.body;
+      
+      // Update DB
+      const settings = await Settings.findOneAndUpdate({}, 
+          { morningTime, eveningTime }, 
+          { new: true, upsert: true }
+      );
+
+      // 👇 CRITICAL: Cron Job Restart karo naye time ke sath
+      await restartScheduler(); 
+
+      res.json({ success: true, settings });
+  } catch (error) {
+      res.status(500).json({ message: error.message });
   }
 };

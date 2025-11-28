@@ -3,9 +3,11 @@ const twilio = require('twilio');
 const MapSnapshot = require('./MapSnapshot');
 const Member = require('./Members');
 require('dotenv').config(); 
+const Settings = require('./Settings');
 
 const client = new twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
-
+let morningTask = null;
+let eveningTask = null;
 // --- MESSAGE FORMATTER FUNCTION ---
 function formatAssignmentMessage(date, shift, assignments, caption) {
     let msg = `⛽ *PUMP DUTY LIST*\n📅 ${date} (${shift})\n\n`;
@@ -87,5 +89,40 @@ function startCronJobs() {
     // Evening Shift: 2:00 PM
     cron.schedule('0 12 * 20 * *', () => sendShiftReport('Evening'), { timezone: "Asia/Kolkata" });
 }
+
+async function restartScheduler() {
+    console.log("🔄 Updating SMS Schedule...");
+
+    // 1. Purane tasks roko
+    if (morningTask) morningTask.stop();
+    if (eveningTask) eveningTask.stop();
+
+    // 2. Database se time fetch karo
+    let settings = await Settings.findOne();
+    
+    // Agar settings nahi hai to default banao
+    if (!settings) {
+        settings = await Settings.create({ morningTime: "05:00", eveningTime: "14:00" });
+    }
+
+    const { morningTime, eveningTime } = settings;
+
+    // 3. Time convert (HH:mm -> Cron Format: Minute Hour * * *)
+    const [mHour, mMin] = morningTime.split(':');
+    const [eHour, eMin] = eveningTime.split(':');
+
+    // 4. New Schedule Start
+    morningTask = cron.schedule(`${mMin} ${mHour} * * *`, () => {
+        sendShiftReport('Morning');
+    }, { timezone: "Asia/Kolkata" });
+
+    eveningTask = cron.schedule(`${eMin} ${eHour} * * *`, () => {
+        sendShiftReport('Evening');
+    }, { timezone: "Asia/Kolkata" });
+
+    console.log(`✅ SMS Scheduled: Morning @ ${morningTime}, Evening @ ${eveningTime}`);
+}
+
+module.exports = restartScheduler;
 
 module.exports = startCronJobs;

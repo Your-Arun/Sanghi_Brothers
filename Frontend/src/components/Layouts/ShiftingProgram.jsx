@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Menu, Users, FileText, Share2, Calendar, Plus, RefreshCw, X, Download, Wind, AlertCircle, LayoutDashboard,
-  Trash2, ShieldCheck, Edit3, UserPlus
+  Trash2, ShieldCheck, Edit3, UserPlus,Settings as SettingsIcon 
 } from 'lucide-react';
 import {
   DndContext,
@@ -115,6 +115,8 @@ const DroppableZone = ({ id, children, className, label, isAbsent = false, isAir
 const ShiftManagementSystem = () => {
   const navigate = useNavigate();
   const pumpMapRef = useRef(null);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [smsTime, setSmsTime] = useState({ morning: "05:00", evening: "14:00" });
 
   // UI & Data State
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -738,7 +740,6 @@ const ShiftManagementSystem = () => {
     );
   };
 
-
   const handleSubmitReport = () => {
     let message = `*⛽ Petrol Pump Shift Report*\n📅 Date: ${date}\n🕒 Shift: ${shift}\n\n*Assignments:*\n`;
     const mapLabels = {
@@ -756,6 +757,36 @@ const ShiftManagementSystem = () => {
     if (caption) message += `\n📝 *Note:* ${caption}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
   };
+
+// Open Modal & Fetch Current Time
+const handleOpenSettings = async () => {
+  try {
+    const res = await axiosInstance.get("/shifting/settings");
+    if (res.data) {
+      setSmsTime({ 
+          morning: res.data.morningTime, 
+          evening: res.data.eveningTime 
+      });
+    }
+    setShowSettingsModal(true);
+  } catch (err) {
+    toast.error("Failed to load settings");
+  }
+};
+
+// Save New Time
+const handleSaveSettings = async () => {
+  try {
+    await axiosInstance.post("/shifting/settings", {
+      morningTime: smsTime.morning,
+      eveningTime: smsTime.evening
+    });
+    toast.success("SMS Schedule Updated!");
+    setShowSettingsModal(false);
+  } catch (err) {
+    toast.error("Update Failed");
+  }
+};
 
   return (
     <div className="h-screen bg-slate-100 flex flex-col font-sans overflow-hidden text-gray-900">
@@ -779,6 +810,9 @@ const ShiftManagementSystem = () => {
             <div onClick={() => { setShowAddModal(true); setIsSidebarOpen(false); }} className="flex items-center gap-4 text-lg font-bold text-gray-700"><Users /> Add Member</div>
             <div onClick={() => { setShowMemberListModal(true); setIsSidebarOpen(false); }} className="flex items-center gap-4 text-lg font-bold text-gray-700"><FileText /> Member List</div>
             <div onClick={() => navigate('/allshifting')} className="flex items-center gap-4 text-lg font-bold text-gray-700"><Calendar /> All Reports</div>
+            <div onClick={handleOpenSettings} className="flex items-center gap-4 text-lg font-bold text-gray-700 cursor-pointer">
+    <SettingsIcon /> SMS Settings
+</div>
           </div>
           <div className="flex-1 bg-black/60 backdrop-blur-sm" onClick={() => setIsSidebarOpen(false)}></div>
         </div>
@@ -802,6 +836,9 @@ const ShiftManagementSystem = () => {
               </div>
               <div onClick={() => navigate('/allshifting')} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition text-gray-300 hover:text-white font-bold cursor-pointer">
                 <Calendar size={20} /> Reports
+                <div onClick={handleOpenSettings} className="p-2 bg-gray-200 rounded-full hover:bg-gray-300 transition">
+      <SettingsIcon size={20} className="text-gray-700" />
+   </div>
               </div>
             </nav>
           </aside>
@@ -1090,9 +1127,9 @@ const ShiftManagementSystem = () => {
           </div>
         </div>
       )}
-
-      {/* --- STAFF LIST MODAL (With Phone Number) --- */}
-      {showMemberListModal && (
+      
+      
+            {showMemberListModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all">
           <div 
             className="bg-white w-full max-w-md rounded-3xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden animate-in zoom-in-95 duration-200"
@@ -1211,6 +1248,49 @@ const ShiftManagementSystem = () => {
               </p>
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* --- SETTINGS MODAL --- */}
+      {showSettingsModal && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in zoom-in-95">
+          <div className="bg-white w-full max-w-sm rounded-2xl p-6 shadow-2xl">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-black text-slate-800 flex items-center gap-2">
+                <SettingsIcon className="text-blue-600" /> SMS TIMING
+              </h2>
+              <button onClick={() => setShowSettingsModal(false)} className="bg-slate-100 p-2 rounded-full text-slate-500 hover:text-red-500"><X size={20} /></button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Morning SMS Time</label>
+                <input 
+                  type="time" 
+                  value={smsTime.morning} 
+                  onChange={(e) => setSmsTime({...smsTime, morning: e.target.value})}
+                  className="w-full bg-slate-50 border border-slate-200 p-3 rounded-xl font-bold text-slate-700 outline-none focus:ring-2 ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Evening SMS Time</label>
+                <input 
+                  type="time" 
+                  value={smsTime.evening} 
+                  onChange={(e) => setSmsTime({...smsTime, evening: e.target.value})}
+                  className="w-full bg-slate-50 border border-slate-200 p-3 rounded-xl font-bold text-slate-700 outline-none focus:ring-2 ring-blue-500"
+                />
+              </div>
+
+              <button 
+                onClick={handleSaveSettings}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg mt-2 transition-transform active:scale-95"
+              >
+                Update Schedule
+              </button>
+            </div>
           </div>
         </div>
       )}
