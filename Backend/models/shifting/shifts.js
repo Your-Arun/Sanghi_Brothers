@@ -114,7 +114,8 @@ exports.updateMember = async (req, res) => {
 // --- SAVE MAP CONTROLLER ---
 exports.saveMap = async (req, res) => {
   try {
-    const { date, shift, image, caption } = req.body;
+
+    const { date, shift, image, caption ,assignments} = req.body;
 
     // Validation
     if (!date || !shift || !image) {
@@ -137,7 +138,8 @@ exports.saveMap = async (req, res) => {
       { date, shift },
       { 
         image: uploadResponse.secure_url, // URL saved
-        caption: caption || ''
+        caption: caption || '',
+        assignments: assignments || {} // 👈 DATA SAVE KIYA
       },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     );

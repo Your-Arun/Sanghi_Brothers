@@ -6,6 +6,8 @@ const MapSnapshotSchema = new mongoose.Schema({
   shift: { type: String, required: true }, // Morning/Evening
   image: { type: String, required: true }, // Base64 string or URL
   caption: { type: String, default: "" },
+  // 👇 YE NAYA FIELD ADD KAREIN 👇
+  assignments: { type: Object, default: {} } 
 }, {
   timestamps: true
 });

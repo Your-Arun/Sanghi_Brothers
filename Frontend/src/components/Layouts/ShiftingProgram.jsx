@@ -58,9 +58,8 @@ const DraggableStaff = ({ id, staffMember, isOverlay = false, size = "normal", h
       {...listeners}
       {...attributes}
       // 👇 MAJOR CHANGE: 'touch-none' hataya, 'touch-manipulation' lagaya
-      className={`flex flex-col items-center justify-center transition-transform touch-manipulation ${
-        isOverlay ? 'scale-110 opacity-95 cursor-grabbing' : 'cursor-grab hover:scale-105 active:cursor-grabbing'
-      } ${isMap ? 'w-full h-full p-[1px]' : ''}`}
+      className={`flex flex-col items-center justify-center transition-transform touch-manipulation ${isOverlay ? 'scale-110 opacity-95 cursor-grabbing' : 'cursor-grab hover:scale-105 active:cursor-grabbing'
+        } ${isMap ? 'w-full h-full p-[1px]' : ''}`}
     >
       <div className={`${containerClasses} ${borderClasses} rounded-full overflow-hidden bg-gray-200 transition-all relative`}>
         <img
@@ -139,38 +138,39 @@ const ShiftManagementSystem = () => {
   const [editingId, setEditingId] = useState(null);
 
   const [newMember, setNewMember] = useState({
-    name: "", role: "operator", shift: 'morning', available: 'present', file: null, preview: null
+    name: "", role: "operator", shift: 'morning', phoneNumber: "", available: 'present', file: null, preview: null
   });
 
-// Edit Button dabane par ye chalega
-const handleEditClick = (member) => {
-  setEditingId(member.id); // Batao ki hum is ID ko edit kar rahe hain
-  setNewMember({
-    name: member.name,
-    role: member.role,
-    shift: member.shift,
-    available: member.available || 'present',
-    file: null, 
-    preview: getImageUrl(member.avatar) // Purani photo preview me dikhao
-  });
-  
-  setShowMemberListModal(false); // List band karo
-  setShowAddModal(true); // Form kholo
-};
+  // Edit Button dabane par ye chalega
+  const handleEditClick = (member) => {
+    setEditingId(member.id); // Batao ki hum is ID ko edit kar rahe hain
+    setNewMember({
+      name: member.name,
+      role: member.role,
+      shift: member.shift,
+      phoneNumber: member.phoneNumber || "",
+      available: member.available || 'present',
+      file: null,
+      preview: getImageUrl(member.avatar) // Purani photo preview me dikhao
+    });
 
-// --- SENSORS CONFIGURATION (Scroll vs Drag Logic) ---
-const sensors = useSensors(
-  useSensor(MouseSensor, { 
-    activationConstraint: { distance: 10 } 
-  }),
-  useSensor(TouchSensor, { 
-    // 👇 ISKO DHYAN SE DEKHEIN
-    activationConstraint: { 
-      delay: 250,   // 250ms tak daba ke rakhne par hi Drag hoga
-      tolerance: 5  // Agar bina hold kiye 5px hil gaya, to Drag cancel (Scroll shuru)
-    } 
-  })
-);
+    setShowMemberListModal(false); // List band karo
+    setShowAddModal(true); // Form kholo
+  };
+
+  // --- SENSORS CONFIGURATION (Scroll vs Drag Logic) ---
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: { distance: 10 }
+    }),
+    useSensor(TouchSensor, {
+      // 👇 ISKO DHYAN SE DEKHEIN
+      activationConstraint: {
+        delay: 250,   // 250ms tak daba ke rakhne par hi Drag hoga
+        tolerance: 5  // Agar bina hold kiye 5px hil gaya, to Drag cancel (Scroll shuru)
+      }
+    })
+  );
 
   const getImageUrl = (url) => {
     if (!url) return null;
@@ -185,17 +185,17 @@ const sensors = useSensors(
     const fetchMembers = async () => {
       try {
         const response = await axiosInstance.get("/shifting");
-        
+
         // Members ko format karein
         const formattedMembers = response.data.map(m => ({
           ...m, id: m._id, avatar: m.avatar || null
         }));
-        
+
         setMembers(formattedMembers);
 
         // ✅ LOGIC: Database me jo 'absent' hain, unhe turant Absent Zone me daal do
         const dbAbsents = formattedMembers.filter(m => m.available === 'absent');
-        
+
         setAssignments(prev => ({
           ...prev,
           absent: dbAbsents // Absent list pre-fill ho jayegi
@@ -232,7 +232,7 @@ const sensors = useSensors(
     if (!over) return;
 
     const staffId = getCleanId(String(active.id));
-    
+
     // Target normalize logic
     let targetZone = normalizeZone(String(over.id));
     if (String(over.id) === 'absent-mobile') targetZone = 'absent';
@@ -255,21 +255,21 @@ const sensors = useSensors(
 
     // --- 2. ROLE VALIDATION (Supervisor/AirBoy Logic) ---
     if (targetZone !== 'available-pool' && targetZone !== 'absent') {
-      const role = draggedStaff.role.toLowerCase(); 
+      const role = draggedStaff.role.toLowerCase();
       if (role === 'supervisor' && targetZone !== 'Supervisor') {
         toast.warning("🚫 Supervisor can only be assigned to Supervisor Desk!");
-        return; 
+        return;
       }
       if (role === 'air boy' && targetZone !== 'Air') {
         toast.warning("🚫 Air Boy can only be assigned to Air Zone!");
-        return; 
+        return;
       }
     }
 
     // --- 3. UI STATE UPDATE (Turant dikhane ke liye) ---
     setAssignments((prev) => {
       const newAssignments = { ...prev };
-      
+
       // Remove from old
       if (Array.isArray(newAssignments['absent'])) {
         newAssignments['absent'] = newAssignments['absent'].filter((s) => String(s.id) !== staffId);
@@ -289,26 +289,26 @@ const sensors = useSensors(
       } else if (targetZone !== 'available-pool' && targetZone) {
         newAssignments[targetZone] = draggedStaff;
       }
-      
+
       return newAssignments;
     });
 
     // --- 4. 💾 DATABASE UPDATE LOGIC (Persistence) ---
-    
+
     try {
       // Case A: Agar ABSENT me daala hai -> DB me 'absent' mark karo
       if (targetZone === 'absent' && !isCurrentlyAbsent) {
         await axiosInstance.put(`/shifting/${staffId}`, { available: 'absent' });
-        
+
         // Local Members state bhi update karein taaki Available pool se gayab ho jaye
         setMembers(prev => prev.map(m => m.id === staffId ? { ...m, available: 'absent' } : m));
         toast.info(`${draggedStaff.name} marked as Absent`);
-      } 
-      
+      }
+
       // Case B: Agar ABSENT se wapas POOL me laye -> DB me 'present' mark karo
       else if (targetZone === 'available-pool' && isCurrentlyAbsent) {
         await axiosInstance.put(`/shifting/${staffId}`, { available: 'present' });
-        
+
         // Local Members state update
         setMembers(prev => prev.map(m => m.id === staffId ? { ...m, available: 'present' } : m));
         toast.success(`${draggedStaff.name} marked as Present`);
@@ -322,19 +322,19 @@ const sensors = useSensors(
 
   const handleSaveImage = async () => {
     if (!pumpMapRef.current) return;
-  
+
     const toastId = toast.loading("Generating High-Quality Map...");
-  
+
     try {
       // 1. Create Sandbox (Canvas Container)
       const sandbox = document.createElement("div");
-      const BASE_SIZE = 1200; 
-      
+      const BASE_SIZE = 1200;
+
       sandbox.style.position = "absolute";
       sandbox.style.top = "-10000px";
       sandbox.style.left = "-10000px";
       sandbox.style.width = `${BASE_SIZE}px`;
-      sandbox.style.backgroundColor = "#f8fafc"; 
+      sandbox.style.backgroundColor = "#f8fafc";
       sandbox.style.fontFamily = "sans-serif";
       sandbox.style.display = "flex";
       sandbox.style.flexDirection = "column";
@@ -342,7 +342,7 @@ const sensors = useSensors(
       sandbox.style.padding = "40px";
       sandbox.style.boxSizing = "border-box";
       document.body.appendChild(sandbox);
-  
+
       // --- 2. HEADER ---
       const headerDiv = document.createElement("div");
       Object.assign(headerDiv.style, {
@@ -354,7 +354,7 @@ const sensors = useSensors(
         borderBottom: "4px solid #e2e8f0",
         paddingBottom: "20px"
       });
-  
+
       headerDiv.innerHTML = `
         <div>
           <h1 style="margin:0; font-size: 36px; font-weight: 900; color: #1e293b; letter-spacing: 1px;">PUMP MANAGER</h1>
@@ -370,11 +370,11 @@ const sensors = useSensors(
         </div>
       `;
       sandbox.appendChild(headerDiv);
-  
+
       // --- 3. CLONE THE MAP & FIX IMAGES ---
       const originalNode = pumpMapRef.current;
       const clonedNode = originalNode.cloneNode(true);
-  
+
       // Reset Clone Styles
       Object.assign(clonedNode.style, {
         transform: "scale(1)",
@@ -389,17 +389,17 @@ const sensors = useSensors(
         borderRadius: "30px",
         border: "2px solid #e2e8f0"
       });
-  
+
       const inputWrapper = clonedNode.querySelector("#caption-wrapper");
       if (inputWrapper) inputWrapper.remove();
-  
+
       // 🔥🔥 CRITICAL CORS FIX 🔥🔥
       // Find all images inside the map (Supervisor, Nozzles, etc.)
       const allImages = clonedNode.querySelectorAll("img");
-      
+
       allImages.forEach(img => {
         const src = img.src || "";
-        
+
         // Agar image ui-avatars se hai (jo CORS error deti hai)
         if (src.includes("ui-avatars.com")) {
           // Image ka parent dhoondo
@@ -408,10 +408,10 @@ const sensors = useSensors(
           const nameMatch = src.match(/name=([^&]+)/);
           const name = nameMatch ? decodeURIComponent(nameMatch[1]) : "??";
           const initials = name.substring(0, 2).toUpperCase();
-  
+
           // Image hatao
           img.remove();
-  
+
           // HTML DIV banao (CSS Circle)
           const avatarDiv = document.createElement("div");
           Object.assign(avatarDiv.style, {
@@ -427,7 +427,7 @@ const sensors = useSensors(
             textTransform: "uppercase"
           });
           avatarDiv.innerText = initials;
-          
+
           // Parent me daal do
           parent.appendChild(avatarDiv);
         } else {
@@ -435,9 +435,9 @@ const sensors = useSensors(
           img.crossOrigin = "anonymous";
         }
       });
-  
+
       sandbox.appendChild(clonedNode);
-  
+
       // --- 4. ABSENT SECTION (PURE CSS - NO IMAGES) ---
       const absentDiv = document.createElement("div");
       Object.assign(absentDiv.style, {
@@ -449,36 +449,36 @@ const sensors = useSensors(
         borderRadius: "20px",
         boxSizing: "border-box"
       });
-  
+
       const absentMembers = assignments['absent'] || [];
-      
+
       let absentHTML = `
         <h3 style="margin: 0 0 15px 0; color: #be123c; font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 10px;">
           <span>🚫</span> ABSENT STAFF (${absentMembers.length})
         </h3>
         <div style="display: flex; gap: 20px; flex-wrap: wrap;">
       `;
-  
+
       if (absentMembers.length > 0) {
         absentMembers.forEach(m => {
           // Absent walo ke liye bhi hum CSS Circle use karenge
           // Taaki 'ui-avatars' fetch hi na karna pade
           let avatarHTML = "";
-          
+
           if (m.avatar && m.avatar.startsWith("http") && !m.avatar.includes("ui-avatars")) {
-             // Real photo (Cloudinary)
-             const safeUrl = m.avatar.replace("http:", "https:");
-             avatarHTML = `<img src="${safeUrl}" crossorigin="anonymous" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;" />`;
+            // Real photo (Cloudinary)
+            const safeUrl = m.avatar.replace("http:", "https:");
+            avatarHTML = `<img src="${safeUrl}" crossorigin="anonymous" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;" />`;
           } else {
-             // CSS Circle (Initials)
-             const initials = m.name.substring(0, 2).toUpperCase();
-             avatarHTML = `
+            // CSS Circle (Initials)
+            const initials = m.name.substring(0, 2).toUpperCase();
+            avatarHTML = `
                <div style="width: 30px; height: 30px; border-radius: 50%; background-color: #ef4444; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 10px;">
                  ${initials}
                </div>
              `;
           }
-  
+
           absentHTML += `
             <div style="display: flex; align-items: center; gap: 10px; background: white; padding: 8px 15px; border-radius: 50px; border: 1px solid #fecdd3;">
               ${avatarHTML}
@@ -489,11 +489,11 @@ const sensors = useSensors(
       } else {
         absentHTML += `<span style="color: #059669; font-weight: 700; font-size: 16px;">✅ Everyone is Present!</span>`;
       }
-      
+
       absentHTML += `</div>`;
       absentDiv.innerHTML = absentHTML;
       sandbox.appendChild(absentDiv);
-  
+
       // --- 5. CAPTION ---
       if (caption) {
         const captionDiv = document.createElement("div");
@@ -512,34 +512,34 @@ const sensors = useSensors(
         });
         sandbox.appendChild(captionDiv);
       }
-  
+
       // --- 6. CAPTURE ---
       await new Promise((resolve) => setTimeout(resolve, 500));
-  
+
       const canvas = await html2canvas(sandbox, {
         scale: 2,
         useCORS: true,
-        allowTaint: true, 
+        allowTaint: true,
         backgroundColor: "#f8fafc",
         windowWidth: 1200,
         logging: false
       });
-  
+
       document.body.removeChild(sandbox);
-  
+
       // Save JPEG (Compressed)
       const base64Image = canvas.toDataURL("image/jpeg", 0.7);
-      
+
       const link = document.createElement("a");
       link.download = `Pump_Map_${date}_${shift}.jpg`;
       link.href = base64Image;
       link.click();
-  
+
       // Backend Save
-      await axiosInstance.post("/save-map", { date, shift, image: base64Image, caption });
+      await axiosInstance.post("/save-map", { date, shift, image: base64Image, caption, assignments: assignments });
       setSavedMapImage(base64Image);
       toast.update(toastId, { render: "Map Saved Successfully!", type: "success", isLoading: false, autoClose: 3000 });
-  
+
     } catch (err) {
       console.error("Save Error:", err);
       toast.update(toastId, { render: "Failed to Save (Check Console)", type: "error", isLoading: false, autoClose: 3000 });
@@ -563,15 +563,15 @@ const sensors = useSensors(
     // 4. Queue Banayein
     const getShiftQueue = (role) => {
       const roleMembers = allAvailable.filter(m => m.role.toLowerCase() === role);
-      
+
       // Same Shift (Priority)
       const sameShift = roleMembers.filter(m => m.shift.toLowerCase() === shift.toLowerCase());
-      
+
       // Other Shift (Overtime)
       const otherShift = roleMembers.filter(m => m.shift.toLowerCase() !== shift.toLowerCase()).map(m => ({
         ...m,
-        name: `${m.name} (OT)`, 
-        isOvertime: true        
+        name: `${m.name} (OT)`,
+        isOvertime: true
       }));
 
       return {
@@ -601,10 +601,10 @@ const sensors = useSensors(
     else if (airBoys.backup.length > 0) newAssigns['Air'] = airBoys.backup.shift();
 
     // --- C. OPERATOR LOGIC (Special Hanging Rule) ---
-    
+
     // Rule: Hanging (N5) par Current Shift ka banda zaroori hai agar available hai.
     // Isliye sabse pehle N5 ko fill karenge Primary queue se.
-    
+
     if (operators.primary.length > 0) {
       newAssigns['N5'] = operators.primary.shift(); // Hanging 1 (Reserved for Current Shift)
     } else if (operators.backup.length > 0) {
@@ -614,12 +614,12 @@ const sensors = useSensors(
     // Ab baaki slots fill karenge (N1, N2, N3, N4, N6)
     // N5 already fill ho chuka hai upar
     const remainingSlots = ['N1', 'N2', 'N3', 'N4', 'N6'];
-    
+
     remainingSlots.forEach(slot => {
       // Step 1: Try Current Shift
       if (operators.primary.length > 0) {
         newAssigns[slot] = operators.primary.shift();
-      } 
+      }
       // Step 2: Use Overtime (Backup)
       else if (operators.backup.length > 0) {
         newAssigns[slot] = operators.backup.shift();
@@ -638,51 +638,52 @@ const sensors = useSensors(
   const handleAddMemberSubmit = async (e) => {
     e.preventDefault();
     if (!newMember.name) return;
-  
+
     try {
       const formData = new FormData();
       formData.append("name", newMember.name);
       formData.append("role", newMember.role);
       formData.append("shift", newMember.shift);
+      formData.append("phoneNumber", newMember.phoneNumber);
       formData.append("available", newMember.available || 'present');
-  
+
       // Agar nayi file select ki hai tabhi bhejo
       if (newMember.file) {
         formData.append("avatar", newMember.file);
       }
-  
+
       const config = { headers: { "Content-Type": "multipart/form-data" } };
-  
+
       if (editingId) {
         // --- UPDATE LOGIC (PUT) ---
         // Backend route: router.put("/shifting/:id", ...) hona chahiye
         const response = await axiosInstance.put(`/shifting/${editingId}`, formData, config);
-        
+
         // Local state update karo (Page refresh ki zarurat nahi)
-        setMembers(members.map(m => 
-          m.id === editingId 
-            ? { ...response.data, id: response.data._id, avatar: response.data.avatar } 
+        setMembers(members.map(m =>
+          m.id === editingId
+            ? { ...response.data, id: response.data._id, avatar: response.data.avatar }
             : m
         ));
         toast.success("Member Updated Successfully!");
       } else {
         // --- ADD LOGIC (POST) ---
         const response = await axiosInstance.post("/shifting", formData, config);
-        
-        const saved = { 
-          ...response.data, 
-          id: response.data._id, 
-          avatar: response.data.avatar 
+
+        const saved = {
+          ...response.data,
+          id: response.data._id,
+          avatar: response.data.avatar
         };
         setMembers([...members, saved]);
         toast.success("Member Added Successfully!");
       }
-  
+
       // Form & State Reset
-      setNewMember({ name: "", role: "operator", shift: "morning", available: "present", file: null, preview: null });
+      setNewMember({ name: "", phoneNumber: "", role: "operator", shift: "morning", available: "present", file: null, preview: null });
       setEditingId(null); // Edit mode band karo
       setShowAddModal(false);
-      
+
     } catch (error) {
       console.error(error);
       toast.error(editingId ? "Failed to Update" : "Failed to Add");
@@ -703,7 +704,7 @@ const sensors = useSensors(
       ({ closeToast }) => (
         <div className="flex flex-col gap-2">
           <p className="font-semibold text-gray-800">Delete this member?</p>
-  
+
           <div className="flex justify-end gap-2">
             <button
               onClick={async () => {
@@ -720,7 +721,7 @@ const sensors = useSensors(
             >
               Yes
             </button>
-  
+
             <button
               onClick={closeToast}
               className="px-3 py-1 bg-gray-200 rounded-md text-sm"
@@ -736,7 +737,7 @@ const sensors = useSensors(
       }
     );
   };
-  
+
 
   const handleSubmitReport = () => {
     let message = `*⛽ Petrol Pump Shift Report*\n📅 Date: ${date}\n🕒 Shift: ${shift}\n\n*Assignments:*\n`;
@@ -1070,6 +1071,13 @@ const sensors = useSensors(
                 </label>
               </div>
               <input type="text" placeholder="Name" className="bg-gray-100 p-3 rounded-xl font-bold outline-none focus:ring-2 ring-blue-500" value={newMember.name} onChange={e => setNewMember({ ...newMember, name: e.target.value })} />
+              <input
+                type="tel"
+                placeholder="Phone (+91...)"
+                className="bg-gray-100 p-3 rounded-xl font-bold outline-none focus:ring-2 ring-blue-500"
+                value={newMember.phoneNumber}
+                onChange={e => setNewMember({ ...newMember, phoneNumber: e.target.value })}
+              />
               <div className="flex gap-2">
                 <select className="bg-gray-100 p-3 rounded-xl flex-1 font-bold text-sm" value={newMember.role} onChange={e => setNewMember({ ...newMember, role: e.target.value })}><option value="operator">Operator</option><option value="supervisor">Supervisor</option><option value="air boy">Air Boy</option></select>
                 <select className="bg-gray-100 p-3 rounded-xl flex-1 font-bold text-sm" value={newMember.shift} onChange={e => setNewMember({ ...newMember, shift: e.target.value })}><option value="morning">Morning</option><option value="evening">Evening</option></select>
@@ -1083,26 +1091,26 @@ const sensors = useSensors(
         </div>
       )}
 
-   {/* --- STAFF LIST MODAL (With Edit Option) --- */}
-   {showMemberListModal && (
+      {/* --- STAFF LIST MODAL (With Edit Option) --- */}
+      {showMemberListModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all">
-          <div 
+          <div
             className="bg-white w-full max-w-md rounded-3xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden animate-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
-            
+
             {/* Header */}
             <div className="relative bg-slate-50 px-6 py-5 border-b border-slate-100 flex justify-between items-center shrink-0">
               <div>
                 <h2 className="text-xl font-black text-slate-800 tracking-tight flex items-center gap-2">
-                  <Users className="text-blue-600" size={22} /> 
+                  <Users className="text-blue-600" size={22} />
                   TEAM MEMBERS
                 </h2>
                 <p className="text-xs text-slate-500 font-medium mt-1">
                   Manage your shift staff ({members.length})
                 </p>
               </div>
-              
+
               <button
                 onClick={() => setShowMemberListModal(false)}
                 className="bg-white p-2 rounded-full text-slate-400 hover:text-red-500 hover:bg-red-50 border border-transparent hover:border-red-100 shadow-sm transition-all duration-200"
@@ -1113,7 +1121,7 @@ const sensors = useSensors(
 
             {/* Scrollable List Area */}
             <div className="overflow-y-auto flex-1 p-4 space-y-3 bg-[#FAFAFA]">
-              
+
               {members.length === 0 ? (
                 /* Empty State */
                 <div className="flex flex-col items-center justify-center h-48 text-center opacity-60">
@@ -1123,8 +1131,8 @@ const sensors = useSensors(
               ) : (
                 /* Member Cards */
                 members.map((m) => (
-                  <div 
-                    key={m.id} 
+                  <div
+                    key={m.id}
                     className="group relative flex items-center justify-between p-3 bg-white rounded-2xl border border-slate-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-lg hover:border-blue-200 transition-all duration-300"
                   >
                     {/* Left: Avatar & Info */}
@@ -1150,11 +1158,10 @@ const sensors = useSensors(
                       <div className="flex flex-col min-w-0">
                         <h3 className="font-bold text-slate-700 text-sm truncate">{m.name}</h3>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${
-                             m.role === 'supervisor' ? 'bg-purple-100 text-purple-600' : 
-                             m.role === 'air boy' ? 'bg-cyan-100 text-cyan-600' :
-                             'bg-blue-100 text-blue-600'
-                          }`}>
+                          <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${m.role === 'supervisor' ? 'bg-purple-100 text-purple-600' :
+                              m.role === 'air boy' ? 'bg-cyan-100 text-cyan-600' :
+                                'bg-blue-100 text-blue-600'
+                            }`}>
                             {m.role}
                           </span>
                         </div>
@@ -1163,7 +1170,7 @@ const sensors = useSensors(
 
                     {/* Right: Actions (Edit & Delete) */}
                     <div className="flex items-center gap-2">
-                      
+
                       {/* EDIT BUTTON */}
                       <button
                         onClick={() => handleEditClick(m)}

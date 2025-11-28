@@ -19,6 +19,7 @@ const MemberSchema = new mongoose.Schema({
   shift: { type: String, default: 'morning' },        // morning/evening
   available: { type: String, default: 'present' },    // present/absent
   avatar: { type: String, default: null },            // URL or base64 data
+  phoneNumber: { type: String, required: true } 
 }, {
   timestamps: true
 });
