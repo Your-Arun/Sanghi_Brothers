@@ -838,8 +838,8 @@ const ShiftManagementSystem = () => {
               <div onClick={() => navigate('/allshifting')} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition text-gray-300 hover:text-white font-bold cursor-pointer">
                 <Calendar size={20} /> Reports
               </div>
-              <div onClick={handleOpenSettings} className="p-2 bg-gray-200 rounded-full hover:bg-gray-300 transition">
-                <SettingsIcon size={20} className="text-gray-700" />Setting
+              <div onClick={handleOpenSettings} className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-800 transition text-gray-300 hover:text-white font-bold cursor-pointer">
+                <SettingsIcon size={20} />Setting
               </div>
             </nav>
           </aside>
