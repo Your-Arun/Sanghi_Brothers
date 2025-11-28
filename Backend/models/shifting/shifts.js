@@ -205,13 +205,19 @@ exports.deleteMap = async (req, res) => {
   }
 };
 
-// Get Current Settings
 exports.getSettings = async (req, res) => {
-  let settings = await Settings.findOne();
-  if (!settings) settings = await Settings.create({});
-  res.json(settings);
+  try {
+      let settings = await Settings.findOne();
+      if (!settings) {
+          settings = await Settings.create({});
+      }
+      res.json(settings);
+  } catch (err) {
+      console.error("Get Settings Error:", err);
+      res.status(500).json({ message: "Failed to load settings" });
+  }
 };
-// Update Settings
+
 exports.updateSettings = async (req, res) => {
   try {
       const { morningTime, eveningTime } = req.body;
@@ -222,11 +228,16 @@ exports.updateSettings = async (req, res) => {
           { new: true, upsert: true }
       );
 
-      // 👇 CRITICAL: Cron Job Restart karo naye time ke sath
-      await restartScheduler(); 
+      // Restart Scheduler
+      if (typeof restartScheduler === 'function') {
+          await restartScheduler(); 
+      } else {
+          console.warn("Scheduler restart function not found!");
+      }
 
       res.json({ success: true, settings });
   } catch (error) {
-      res.status(500).json({ message: error.message });
+      console.error("Update Settings Error:", error);
+      res.status(500).json({ message: "Failed to update settings" });
   }
 };

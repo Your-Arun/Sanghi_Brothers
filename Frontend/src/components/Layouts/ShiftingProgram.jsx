@@ -760,12 +760,13 @@ const ShiftManagementSystem = () => {
 
   // Open Modal & Fetch Current Time
   const handleOpenSettings = async () => {
+    setShowSettingsModal(true); // Modal turant kholo
     try {
-      const res = await axiosInstance.get("/shifting/settings");
+      const res = await axiosInstance.get("/settings");
       if (res.data) {
-        setSmsTime({
-          morning: res.data.morningTime,
-          evening: res.data.eveningTime
+        setSmsTime({ 
+            morning: res.data.morningTime || "05:00", 
+            evening: res.data.eveningTime || "14:00"
         });
       }
       setShowSettingsModal(true);
