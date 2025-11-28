@@ -838,7 +838,7 @@ const ShiftManagementSystem = () => {
                 <Calendar size={20} /> Reports
               </div>
               <div onClick={handleOpenSettings} className="p-2 bg-gray-200 rounded-full hover:bg-gray-300 transition">
-                <SettingsIcon size={20} className="text-gray-700" />
+                <SettingsIcon size={20} className="text-gray-700" />Setting
               </div>
             </nav>
           </aside>
