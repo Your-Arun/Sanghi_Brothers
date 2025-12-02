@@ -92,7 +92,7 @@ exports.deleteMember = async (req, res) => {
 exports.updateMember = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, role, shift, available } = req.body;
+      const { name, role, shift, available ,phoneNumber} = req.body;
     let updateData = {
       name,
       role,
