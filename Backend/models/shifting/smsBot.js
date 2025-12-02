@@ -1,18 +1,19 @@
 const cron = require('node-cron');
 const twilio = require('twilio');
-const MapSnapshot = require('./MapSnapshot');
-const Member = require('./Members');
+const MapSnapshot = require('./models/MapSnapshot'); // Path check karein
+const Member = require('./models/Members');         // Path check karein
+const Settings = require('./models/Settings');      // Path check karein
 require('dotenv').config(); 
-const Settings = require('./Settings');
 
 const client = new twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
+
 let morningTask = null;
 let eveningTask = null;
+
 // --- MESSAGE FORMATTER FUNCTION ---
 function formatAssignmentMessage(date, shift, assignments, caption) {
     let msg = `⛽ *PUMP DUTY LIST*\n📅 ${date} (${shift})\n\n`;
 
-    // Mapping for readable names
     const labels = {
         'Supervisor': '👮 Supervisor',
         'N1': '⛽ Nozzle 1', 'N2': '⛽ Nozzle 2', 'N3': '⛽ Nozzle 3', 'N4': '⛽ Nozzle 4',
@@ -20,7 +21,6 @@ function formatAssignmentMessage(date, shift, assignments, caption) {
         'Extra': '👷 Extra', 'Air': '💨 Air Boy'
     };
 
-    // Loop through keys and create list
     Object.keys(labels).forEach(key => {
         const staff = assignments[key];
         if (staff && staff.name) {
@@ -30,7 +30,6 @@ function formatAssignmentMessage(date, shift, assignments, caption) {
         }
     });
 
-    // Absent Staff Logic
     if (assignments.absent && assignments.absent.length > 0) {
         const absentNames = assignments.absent.map(m => m.name).join(', ');
         msg += `\n🚫 Absent: ${absentNames}`;
@@ -40,14 +39,12 @@ function formatAssignmentMessage(date, shift, assignments, caption) {
     
     return msg;
 }
-await client.messages.create({
-    body: messageBody,
-    from: process.env.TWILIO_PHONE_NUMBER, // 👈 Ye Render se number uthayega
-    to: Member.phoneNumber
-});
+
 // --- SEND LOGIC ---
 async function sendShiftReport(shiftName) {
     try {
+        console.log(`🚀 Starting SMS Process for ${shiftName}...`);
+        
         const today = new Date();
         const dateString = today.toISOString().split('T')[0];
         
@@ -64,8 +61,8 @@ async function sendShiftReport(shiftName) {
         // Fetch Staff Numbers
         const members = await Member.find({}); 
         
-        // Send SMS
-        members.forEach(async (member) => {
+        // Send SMS Loop
+        for (const member of members) {
             if (member.phoneNumber) {
                 try {
                     await client.messages.create({
@@ -75,39 +72,38 @@ async function sendShiftReport(shiftName) {
                     });
                     console.log(`✅ SMS Sent to ${member.name}`);
                 } catch (err) {
-                    console.error(`❌ Failed: ${member.name}`);
+                    console.error(`❌ Failed: ${member.name} - ${err.message}`);
                 }
             }
-        });
+        }
 
     } catch (error) {
         console.error("SMS Error:", error);
     }
 }
 
-
+// --- SCHEDULER LOGIC ---
 async function restartScheduler() {
     console.log("🔄 Updating SMS Schedule...");
 
-    // 1. Purane tasks roko
+    // 1. Stop old tasks
     if (morningTask) morningTask.stop();
     if (eveningTask) eveningTask.stop();
 
-    // 2. Database se time fetch karo
+    // 2. Fetch settings
     let settings = await Settings.findOne();
     
-    // Agar settings nahi hai to default banao
     if (!settings) {
         settings = await Settings.create({ morningTime: "05:00", eveningTime: "14:00" });
     }
 
     const { morningTime, eveningTime } = settings;
 
-    // 3. Time convert (HH:mm -> Cron Format: Minute Hour * * *)
+    // 3. Convert Time
     const [mHour, mMin] = morningTime.split(':');
     const [eHour, eMin] = eveningTime.split(':');
 
-    // 4. New Schedule Start
+    // 4. Start New Schedule
     morningTask = cron.schedule(`${mMin} ${mHour} * * *`, () => {
         sendShiftReport('Morning');
     }, { timezone: "Asia/Kolkata" });
@@ -119,4 +115,4 @@ async function restartScheduler() {
     console.log(`✅ SMS Scheduled: Morning @ ${morningTime}, Evening @ ${eveningTime}`);
 }
 
-module.exports = { restartScheduler, sendShiftReport }
+module.exports = { restartScheduler, sendShiftReport };
