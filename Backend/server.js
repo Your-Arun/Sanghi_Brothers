@@ -66,7 +66,7 @@ const shiftApi = require("./models/shifting/shiftsapi");
 const Attendance = require("./models/attendancewala/userRoutes");
 const User = require("./routes/user");
 const salePaytmRoutes = require('./routes/salePaytmRoutes')
-const restartScheduler = require('./models/shifting/smsBot');
+const {restartScheduler} = require('./models/shifting/smsBot');
 
 // ✅ MongoDB Connection
 mongoose
@@ -110,7 +110,6 @@ app.get("/", (req, res) => {
 
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, () =>{
   console.log(`Server running on port ${PORT} 🚀`);
 if (restartScheduler) {
