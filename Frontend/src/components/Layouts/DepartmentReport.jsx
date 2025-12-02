@@ -15,6 +15,7 @@ import {
 const DepartmentReports = () => {
   const { user } = useContext(UserContext); // Get logged-in user from context
   const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [reportFile, setReportFile] = useState([]);
   const navigate = useNavigate();
 
