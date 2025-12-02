@@ -778,7 +778,7 @@ const ShiftManagementSystem = () => {
   // Save New Time
   const handleSaveSettings = async () => {
     try {
-      await axiosInstance.post("/shifting/settings", {
+      await axiosInstance.post("/settings", {
         morningTime: smsTime.morning,
         eveningTime: smsTime.evening
       });
