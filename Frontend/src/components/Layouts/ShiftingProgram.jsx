@@ -1297,7 +1297,7 @@ const ShiftManagementSystem = () => {
               <button
                 onClick={async () => {
                   try {
-                    await axiosInstance.post("/shifting/test-sms", { shift: shift }); // Jo shift select hai uska SMS bhejega
+                    await axiosInstance.post("/test-sms", { shift: shift }); // Jo shift select hai uska SMS bhejega
                     toast.info("SMS Triggered! Check Logs.");
                   } catch (e) { toast.error("Failed to trigger"); }
                 }}
