@@ -85,14 +85,6 @@ async function sendShiftReport(shiftName) {
     }
 }
 
-// --- CRON JOBS ---
-function startCronJobs() {
-    // Morning Shift: 5:00 AM
-    cron.schedule('0 5 * * *', () => sendShiftReport('Morning'), { timezone: "Asia/Kolkata" });
-
-    // Evening Shift: 2:00 PM
-    cron.schedule('0 12 * 20 * *', () => sendShiftReport('Evening'), { timezone: "Asia/Kolkata" });
-}
 
 async function restartScheduler() {
     console.log("🔄 Updating SMS Schedule...");
