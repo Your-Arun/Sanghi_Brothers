@@ -1,8 +1,8 @@
 const cron = require('node-cron');
 const twilio = require('twilio');
-const MapSnapshot = require('./MapSnapshot'); // Path check karein
-const Member = require('./Members');         // Path check karein
-const Settings = require('./Settings');      // Path check karein
+const MapSnapshot = require('./MapSnapshot'); 
+const Member = require('./Members');        
+const Settings = require('./Settings');    
 require('dotenv').config(); 
 
 const client = new twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
