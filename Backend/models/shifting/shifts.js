@@ -41,6 +41,7 @@ const cloudinary = require('cloudinary').v2;
 const Settings = require('./Settings');
 const restartScheduler = require('./smsBot');
 require('dotenv').config(); 
+const { sendShiftReport } = require('./smsBot'); 
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -246,14 +247,20 @@ exports.updateSettings = async (req, res) => {
 // 👇 TEST SMS CONTROLLER 👇
 exports.testSms = async (req, res) => {
   try {
-      const { shift } = req.body; // 'Morning' ya 'Evening'
+      const { shift } = req.body;
       console.log(`🚀 Testing SMS for ${shift}...`);
       
-      // Function call karein
+      // 👇 Error yahan aa raha hoga agar function undefined hai
+      if (typeof sendShiftReport !== 'function') {
+          throw new Error("sendShiftReport function is not imported correctly!");
+      }
+
       await sendShiftReport(shift);
       
-      res.json({ success: true, message: "SMS Process Triggered! Check Server Logs." });
+      res.json({ success: true, message: "SMS Sent! Check Logs." });
   } catch (error) {
+      // 👇 Ye error Render logs me print hoga
+      console.error("❌ SMS Test Failed:", error);
       res.status(500).json({ error: error.message });
   }
 };
