@@ -241,3 +241,19 @@ exports.updateSettings = async (req, res) => {
       res.status(500).json({ message: "Failed to update settings" });
   }
 };
+
+
+// 👇 TEST SMS CONTROLLER 👇
+exports.testSms = async (req, res) => {
+  try {
+      const { shift } = req.body; // 'Morning' ya 'Evening'
+      console.log(`🚀 Testing SMS for ${shift}...`);
+      
+      // Function call karein
+      await sendShiftReport(shift);
+      
+      res.json({ success: true, message: "SMS Process Triggered! Check Server Logs." });
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
+};

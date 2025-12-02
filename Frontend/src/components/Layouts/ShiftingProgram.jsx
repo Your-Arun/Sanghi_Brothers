@@ -765,9 +765,9 @@ const ShiftManagementSystem = () => {
     try {
       const res = await axiosInstance.get("/settings");
       if (res.data) {
-        setSmsTime({ 
-            morning: res.data.morningTime || "05:00", 
-            evening: res.data.eveningTime || "14:00"
+        setSmsTime({
+          morning: res.data.morningTime || "05:00",
+          evening: res.data.eveningTime || "14:00"
         });
       }
       setShowSettingsModal(true);
@@ -1206,8 +1206,8 @@ const ShiftManagementSystem = () => {
                         {/* Role Badge */}
                         <div className="flex items-center mt-1">
                           <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${m.role === 'supervisor' ? 'bg-purple-100 text-purple-600' :
-                              m.role === 'air boy' ? 'bg-cyan-100 text-cyan-600' :
-                                'bg-blue-100 text-blue-600'
+                            m.role === 'air boy' ? 'bg-cyan-100 text-cyan-600' :
+                              'bg-blue-100 text-blue-600'
                             }`}>
                             {m.role}
                           </span>
@@ -1290,6 +1290,20 @@ const ShiftManagementSystem = () => {
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg mt-2 transition-transform active:scale-95"
               >
                 Update Schedule
+              </button>
+            </div>
+            <div className="mt-4 border-t pt-4">
+              <p className="text-xs font-bold text-gray-400 uppercase mb-2">Debug Actions</p>
+              <button
+                onClick={async () => {
+                  try {
+                    await axiosInstance.post("/shifting/test-sms", { shift: shift }); // Jo shift select hai uska SMS bhejega
+                    toast.info("SMS Triggered! Check Logs.");
+                  } catch (e) { toast.error("Failed to trigger"); }
+                }}
+                className="w-full bg-gray-800 hover:bg-black text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center gap-2"
+              >
+                🚀 Send Test SMS Now
               </button>
             </div>
           </div>

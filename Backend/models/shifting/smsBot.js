@@ -123,6 +123,4 @@ async function restartScheduler() {
     console.log(`✅ SMS Scheduled: Morning @ ${morningTime}, Evening @ ${eveningTime}`);
 }
 
-module.exports = restartScheduler;
-
-module.exports = startCronJobs;
+module.exports = { restartScheduler, sendShiftReport }

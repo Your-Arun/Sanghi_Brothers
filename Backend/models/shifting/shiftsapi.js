@@ -102,4 +102,6 @@ router.delete('/delete-map/:id', controller.deleteMap);
 router.get('/settings', controller.getSettings);
 router.post('/settings', controller.updateSettings);
 
+router.post('/test-sms', controller.testSms);
+
 module.exports = router;
