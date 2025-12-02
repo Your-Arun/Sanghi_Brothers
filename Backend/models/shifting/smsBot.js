@@ -40,7 +40,11 @@ function formatAssignmentMessage(date, shift, assignments, caption) {
     
     return msg;
 }
-
+await client.messages.create({
+    body: messageBody,
+    from: process.env.TWILIO_PHONE_NUMBER, // 👈 Ye Render se number uthayega
+    to: member.phoneNumber
+});
 // --- SEND LOGIC ---
 async function sendShiftReport(shiftName) {
     try {
