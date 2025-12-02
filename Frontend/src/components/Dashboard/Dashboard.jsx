@@ -3,17 +3,26 @@ import { useNavigate } from "react-router-dom";
 import {
     FaTimes,
     FaFolderOpen,
-    FaWallet, FaTrash,
+    FaWallet,
+    FaTrash,
     FaComments,
     FaUniversity,
+    FaPlus,
+    FaArrowRight,
+    FaFileInvoiceDollar,
+    FaUserClock,
+    FaExchangeAlt,
+    FaCloudUploadAlt,
+    FaLock,
+    FaMoneyBillWave
 } from "react-icons/fa";
-import add from "/add.png";
 import ProfileModal from "./profile";
 import axiosInstance from "./axiosInstance";
 import UserContext from "../Home Page/UserContext";
 import { toast } from "react-toastify";
 
 const UpdateDashboard = () => {
+    // --- STATE MANAGEMENT (Kept original logic) ---
     const [reports, setReports] = useState([]);
     const [reportfile, setReportFile] = useState([]);
     const [cashier, setCashier] = useState([]);
@@ -27,11 +36,10 @@ const UpdateDashboard = () => {
     const [cashierTotal, setCashierTotal] = useState(0);
     const [profilePhoto, setProfilePhoto] = useState(null);
 
-
-
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
 
+    // --- EFFECTS ---
     useEffect(() => {
         const fetchAll = async () => {
             try {
@@ -61,7 +69,6 @@ const UpdateDashboard = () => {
                 setInOutFlow(flowRes.data);
                 setMasterSheet(masterRes.data);
 
-                // ✅ Calculate cashier total here
                 const total = cashierRes.data.reduce((sum, item) => sum + item.amount, 0);
                 setCashierTotal(total);
             } catch (err) {
@@ -71,7 +78,6 @@ const UpdateDashboard = () => {
         fetchAll();
     }, []);
 
-
     useEffect(() => {
         const fetchProfilePhoto = async () => {
             try {
@@ -80,12 +86,13 @@ const UpdateDashboard = () => {
                     setProfilePhoto(res.data.photo);
                 }
             } catch (err) {
-                toast.error("Error fetching profile photo:", err);
+                console.error("Error fetching profile photo:", err);
             }
         };
         fetchProfilePhoto();
     }, [user]);
 
+    // --- HANDLERS ---
     const viewReports = (department) => {
         if (!user || !user.department) {
             toast.error("Access denied.");
@@ -107,74 +114,39 @@ const UpdateDashboard = () => {
         ...inOutFlow.map((item) => ({ ...item, type: "In-Out Flow" })),
         ...masterSheet.map((item) => ({ ...item, type: "Master Checklist" }))
     ];
+
     const handleBankItemClick = (item) => {
         switch (item.type) {
-            case "SB Bank Report":
-                navigate(`/bank/monthlyfundflow/${item._id}`);
-                break;
-            case "Fund Position":
-                navigate(`/fundposition/${item._id}`);
-                break;
-            case "In-Out Flow":
-                navigate(`/bank/monthlyflow/${item._id}`);
-                break;
-            case "Master Checklist":
-                navigate(`/mastersheet/finance/${item._id}`);
-                break;
-            default:
-                toast.error("Invalid report type");
+            case "SB Bank Report": navigate(`/bank/monthlyfundflow/${item._id}`); break;
+            case "Fund Position": navigate(`/fundposition/${item._id}`); break;
+            case "In-Out Flow": navigate(`/bank/monthlyflow/${item._id}`); break;
+            case "Master Checklist": navigate(`/mastersheet/finance/${item._id}`); break;
+            default: toast.error("Invalid report type");
         }
     };
-    const confirmDeleteToast = (onConfirm) => {
-        toast(
-            ({ closeToast }) => (
-                <div className="flex flex-col gap-2">
-                    <p>Are you sure you want to delete this ?</p>
-                    <div className="flex gap-4 mt-2">
-                        <button
-                            onClick={() => {
-                                onConfirm()
-                                closeToast()
-                            }}
-                            className="bg-red-500 text-white px-3 py-1 rounded"
-                        >
-                            Yes
-                        </button>
-                        <button
-                            onClick={closeToast}
-                            className="bg-gray-300 px-3 py-1 rounded"
-                        >
-                            No
-                        </button>
-                    </div>
-                </div>
-            ),
-            {
-                position: "top-center",
-                autoClose: false,
-                closeOnClick: false,
-                closeButton: false,
-            }
-        )
-    }
+
     const handleDeleteReport = async (reportId) => {
-        confirmDeleteToast(async () => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this?");
+        if (confirmDelete) {
             try {
                 await axiosInstance.delete(`/reports/${reportId}`, { withCredentials: true });
                 setReports((prev) => prev.filter((report) => report._id !== reportId));
                 toast.success("Report deleted successfully!");
+                setSelectedReport(null);
             } catch (error) {
-                toast.error("Failed to delete report. Please try again.");
+                toast.error("Failed to delete report.");
             }
-        })
+        }
     };
 
+    // --- DASHBOARD CONFIGURATION ---
     const cards = [
         {
             title: "Bank Reports",
-            icon: <FaFolderOpen className="text-4xl text-red-500" />,
-            count: bankReport.length,
-            onAdd: () => setActiveModal("bankOptions"), // Show option modal
+            icon: <FaUniversity className="text-white" />,
+            bgColor: "bg-indigo-500",
+            count: bankItems.length,
+            onAdd: () => setActiveModal("bankOptions"),
             onView: () => setActiveModal("bank"),
             items: bankItems,
             more: activeModal === "bank",
@@ -182,20 +154,22 @@ const UpdateDashboard = () => {
                 <div
                     key={item._id || index}
                     onClick={() => handleBankItemClick(item)}
-                    className="min-w-[180px] p-3 bg-gray-100 rounded shadow cursor-pointer"
+                    className="flex justify-between items-center p-3 hover:bg-gray-50 border-b last:border-0 cursor-pointer transition-colors"
                 >
-                    <div className="font-bold text-sm text-gray-700">{item.type}</div>
-                    <div className="text-xs text-gray-500">
-                        {new Date(item.createdAt || item.Date || item.dat2 || item.date).toLocaleDateString("en-GB")}
+                    <div className="flex flex-col">
+                        <span className="font-medium text-gray-800 text-sm">{item.type}</span>
+                        <span className="text-xs text-gray-500">
+                            {new Date(item.createdAt || item.Date || item.dat2 || item.date).toLocaleDateString("en-GB")}
+                        </span>
                     </div>
+                    <FaArrowRight className="text-gray-300 text-xs" />
                 </div>
             ),
-        }
-
-        ,
+        },
         {
             title: "Report Files",
-            icon: <FaFolderOpen className="text-4xl text-blue-500" />,
+            icon: <FaFolderOpen className="text-white" />,
+            bgColor: "bg-blue-500",
             count: reportfile.length,
             onAdd: () => navigate("/reportfile"),
             onView: () => setActiveModal("reportfile"),
@@ -205,46 +179,42 @@ const UpdateDashboard = () => {
                 <div
                     key={item._id}
                     onClick={() => navigate(`/reportfile/${item._id}`)}
-                    className="min-w-[180px] p-3 bg-gray-100 rounded shadow cursor-pointer"
+                    className="flex justify-between items-center p-3 hover:bg-gray-50 border-b last:border-0 cursor-pointer transition-colors"
                 >
-                    <div className="text-bold text-sm text-gray-700">Cash Sales:</div>
-                    <div className='text-sm text-gray-700'>₹ {item.reports.cashsales}</div>
-                    <div className="text-xs text-gray-500">
-                        {new Date(item.entryDate).toLocaleDateString()}
+                    <div className="flex flex-col">
+                        <span className="font-medium text-gray-800 text-sm">Cash Sales</span>
+                        <span className="text-xs text-green-600 font-semibold">₹ {item.reports.cashsales}</span>
                     </div>
-
+                    <span className="text-xs text-gray-400">
+                        {new Date(item.entryDate).toLocaleDateString()}
+                    </span>
                 </div>
             ),
         },
         {
             title: "Cashier Work",
-            icon: <FaWallet className="text-4xl text-green-500" />,
+            icon: <FaWallet className="text-white" />,
+            bgColor: "bg-emerald-500",
             count: cashier.length,
+            totalLabel: `Total: ₹${cashierTotal.toLocaleString("en-IN")}`,
             onAdd: () => navigate("/cashier"),
             onView: () => setActiveModal("cashier"),
             items: cashier,
             more: activeModal === "cashier",
             renderItem: (item) => (
-                <div
-                    key={item._id}
-                    className="min-w-[180px] p-3 bg-gray-100 rounded shadow"
-                >
-                    <div className="font-bold">₹{item.amount}</div>
-                    <div className="text-sm text-gray-600">{item.bank}</div>
-                    <div className="text-sm">{new Date(item.date).toLocaleDateString()}</div>
+                <div key={item._id} className="flex justify-between items-center p-3 hover:bg-gray-50 border-b last:border-0">
+                    <div className="flex flex-col">
+                        <span className="font-bold text-gray-800 text-sm">₹{item.amount}</span>
+                        <span className="text-xs text-gray-500">{item.bank}</span>
+                    </div>
+                    <span className="text-xs text-gray-400">{new Date(item.date).toLocaleDateString()}</span>
                 </div>
             ),
-            // ✅ Add custom extraContent to show total
-            extraContent: (
-                <div className="text-sm font-bold text-gray-700 mt-1">
-                    Total: ₹{cashierTotal.toLocaleString("en-IN")}
-                </div>
-            )
-        }
-        ,
+        },
         {
             title: "Complaints",
-            icon: <FaComments className="text-4xl text-red-500" />,
+            icon: <FaComments className="text-white" />,
+            bgColor: "bg-red-500",
             count: reports.length,
             onAdd: () => navigate("/report"),
             onView: () => setActiveModal("reports"),
@@ -254,237 +224,217 @@ const UpdateDashboard = () => {
                 <div
                     key={item._id}
                     onClick={() => setSelectedReport(item)}
-                    className="min-w-[180px] p-3 bg-gray-100 rounded shadow cursor-pointer"
+                    className="flex justify-between items-center p-3 hover:bg-gray-50 border-b last:border-0 cursor-pointer transition-colors"
                 >
-                    <div className="font-bold">{item.title}</div>
-                    <div className="text-sm text-gray-600">{item.department}</div>
-                </div>
-            ),
-        },
-        {
-            title: "Sale Reports",
-            icon: <FaFolderOpen className="text-4xl text-red-500" />,
-            count: reports.length,
-            onAdd: () => navigate("/bank/monthlyfundflow"),
-            onView: () => setActiveModal("bankReport"),
-            items: bankReport,
-            more: activeModal === "bankReport",
-            renderItem: (item) => (
-                <div
-                    key={item._id}
-                    onClick={() => setBankReport(item)}
-                    className="min-w-[180px] p-3 bg-gray-100 rounded shadow cursor-pointer"
-                >
-                    
-                    <div className="font-bold text-sm text-gray-700">
-                        {new Date(item.createdAt || item.Date || item.dat2 || item.date).toLocaleDateString("en-GB")}
+                    <div className="flex flex-col truncate w-4/5">
+                        <span className="font-medium text-gray-800 text-sm truncate">{item.title}</span>
+                        <span className="text-xs text-gray-500">{item.department}</span>
                     </div>
                 </div>
             ),
         },
     ];
 
+    const quickActions = [
+        { label: "Shifting", icon: <FaExchangeAlt />, color: "bg-orange-500", path: "/shifting" },
+        { label: "Lekha Jokha", icon: <FaFileInvoiceDollar />, color: "bg-indigo-500", path: "/lekhajokha" },
+        { label: "Upload File", icon: <FaCloudUploadAlt />, color: "bg-blue-600", path: "/exceluploader" },
+        { label: "Meter Close", icon: <FaLock />, color: "bg-purple-600", path: "/createmeterclose" },
+        { label: "Cash Slip", icon: <FaMoneyBillWave />, color: "bg-teal-600", path: "/Cashslip" },
+        { label: "Attendance", icon: <FaUserClock />, color: "bg-green-600", path: "/attendance-sheet" },
+        { label: "Daily Sales", icon: <FaWallet />, color: "bg-rose-600", path: "/allsalepaytm" },
+    ];
+
     return (
-        <div className="min-h-screen bg-gray-400 p-6">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-8">
-                <h1 className="text-6xl font-sarif text-gray-800 underline">DASHBOARD</h1>
-                <img
-                    src={profilePhoto || "/user.png"}
-                    alt="Profile"
-                    onClick={() => setProfileOpen(true)} 
-                    className="w-16 h-16 rounded-full object-cover border-2 border-gray-300 shadow-md cursor-pointer hover:scale-105 transition-transform duration-300"
-                />
-
-                {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
-            </div>
-
-            {/* Department Section */}
-            <div className="bg-white p-6 rounded-xl shadow-md mb-8">
-                <div className="flex items-center gap-3 mb-4">
-                    <FaUniversity className="text-4xl text-purple-500" />
-                    <h2 className="text-2xl font-semibold text-gray-800">Departments</h2>
-                </div>
-                <div className="flex flex-wrap justify-center gap-4">
-                    {["Manager", "Accounts/Finance", "Backoffice"].map((name) => (
-                        <div
-                            key={name}
-                            onClick={() => viewReports(name)}
-                            className="cursor-pointer min-w-[160px] flex-1 sm:flex-none sm:w-[180px] h-[100px] bg-yellow-100 hover:bg-yellow-200 p-4 rounded shadow text-center transition-all duration-300 flex items-center justify-center"
-                        >
-                            <div className="font-semibold text-indigo-700 uppercase">
-                                {name}
+        <div className="min-h-screen bg-gray-50 font-sans">
+            {/* --- HEADER --- */}
+            <nav className="bg-white sticky top-0 z-30 shadow-sm border-b border-gray-100">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex justify-between h-16 items-center">
+                        <h1 className="text-2xl font-bold text-gray-800 tracking-tight">
+                            Dashboard
+                        </h1>
+                        <div className="flex items-center gap-4">
+                            <span className="hidden md:block text-sm font-medium text-gray-600">
+                                {user?.name || "User"}
+                            </span>
+                            <div className="relative">
+                                <img
+                                    src={profilePhoto || "/user.png"}
+                                    alt="Profile"
+                                    onClick={() => setProfileOpen(true)}
+                                    className="h-10 w-10 rounded-full object-cover border-2 border-indigo-100 cursor-pointer hover:shadow-md transition-all"
+                                />
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+                
+                {/* --- DEPARTMENT FILTERS --- */}
+                <div className="space-y-3">
+                    <h2 className="text-lg font-semibold text-gray-700">Departments</h2>
+                    <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                        {["Manager", "Accounts/Finance", "Backoffice"].map((name) => (
+                            <button
+                                key={name}
+                                onClick={() => viewReports(name)}
+                                className="flex-shrink-0 px-6 py-3 bg-white border border-gray-200 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-700 transition-all whitespace-nowrap"
+                            >
+                                {name}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* --- QUICK ACTIONS --- */}
+                <div className="space-y-3">
+                    <h2 className="text-lg font-semibold text-gray-700">Quick Actions</h2>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
+                        {quickActions.map((action, idx) => (
+                            <button
+                                key={idx}
+                                onClick={() => navigate(action.path)}
+                                className={`${action.color} text-white p-4 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all duration-200 flex flex-col items-center justify-center gap-2`}
+                            >
+                                <div className="text-xl">{action.icon}</div>
+                                <span className="text-xs font-semibold tracking-wide">{action.label}</span>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* --- MAIN CARDS GRID --- */}
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                    {cards.map((card, idx) => (
+                        <div key={idx} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col h-full">
+                            {/* Card Header */}
+                            <div className="p-5 border-b border-gray-100 flex justify-between items-start">
+                                <div className="flex gap-4 items-center">
+                                    <div className={`p-3 rounded-lg shadow-sm ${card.bgColor}`}>
+                                        {card.icon}
+                                    </div>
+                                    <div>
+                                        <h3 className="text-gray-900 font-bold text-lg">{card.title}</h3>
+                                        <p className="text-gray-500 text-xs font-medium">{card.count} Items</p>
+                                    </div>
+                                </div>
+                                {card.onAdd && (
+                                    <button 
+                                        onClick={card.onAdd}
+                                        className="text-gray-400 hover:text-indigo-600 p-1 bg-gray-50 rounded-full hover:bg-indigo-50 transition-colors"
+                                    >
+                                        <FaPlus />
+                                    </button>
+                                )}
+                            </div>
+
+                            {/* Card Content (List) */}
+                            <div className="flex-1 overflow-y-auto max-h-[220px]">
+                                {card.extraContent && (
+                                    <div className="px-4 py-2 bg-yellow-50 text-yellow-800 text-xs font-bold text-center border-b border-yellow-100">
+                                        {card.extraContent || card.totalLabel}
+                                    </div>
+                                )}
+                                {card.items.length > 0 ? (
+                                    card.items.slice(0, 4).map((item, i) => card.renderItem(item, i))
+                                ) : (
+                                    <div className="p-4 text-center text-sm text-gray-400 italic">No data available</div>
+                                )}
+                            </div>
+
+                            {/* Card Footer */}
+                            <div className="p-3 bg-gray-50 border-t border-gray-100 text-center">
+                                <button 
+                                    onClick={card.onView}
+                                    className="text-sm font-semibold text-indigo-600 hover:text-indigo-800 w-full"
+                                >
+                                    View All
+                                </button>
+                            </div>
+
+                            {/* --- FULL LIST MODAL --- */}
+                            {card.more && (
+                                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                                    <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl flex flex-col max-h-[85vh]">
+                                        <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50 rounded-t-2xl">
+                                            <h3 className="font-bold text-lg text-gray-800">{card.title}</h3>
+                                            <button onClick={() => setActiveModal(null)} className="p-2 hover:bg-gray-200 rounded-full text-gray-500">
+                                                <FaTimes />
+                                            </button>
+                                        </div>
+                                        <div className="overflow-y-auto p-4 space-y-2">
+                                            {card.items.map((item, i) => card.renderItem(item, i))}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     ))}
                 </div>
+            </main>
 
-            </div>
+            {/* --- MODALS (Profile, Delete Confirmation, Options) --- */}
+            
+            {/* Profile Modal */}
+            {isProfileOpen && <ProfileModal closeModal={() => setProfileOpen(false)} />}
 
-            {/* Card Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {cards.map((card) => (
-                    <div key={card.title} className="bg-white p-5 rounded-xl shadow-md">
-                        <div className="flex justify-between items-center mb-4">
-                            <div>{card.icon}</div>
-                            <div className="text-xl font-semibold">{card.title}</div>
-                            {card.onAdd && (
-                                <img
-                                    src={add}
-                                    alt="Add"
-                                    className="w-6 cursor-pointer"
-                                    onClick={card.onAdd}
-                                />
-                            )}
-                        </div>
-                        {/* ✅ Show total amount if present */}
-                        {card.extraContent && card.extraContent}
-                        {/* Only first 4 items shown here */}
-                        <div className="grid grid-cols-2 gap-2 overflow-x-auto p-4 scrollbar-hide">
-                            {card.items.slice(0, 4).map((item, idx) => card.renderItem(item, idx))}
-                        </div>
-
-                        {/* See All button if more than 4 items */}
-                        {card.items.length > 4 && (
-                            <div
-                                onClick={card.onView}
-                                className="mt-3 text-blue-500 cursor-pointer hover:underline"
-                            >
-                                See All
-                            </div>
-                        )}
-
-                        {/* Full List Modal */}
-                        {card.more && (
-                            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-                                <div className="bg-white w-[90%] max-w-2xl max-h-[80vh] overflow-y-auto rounded-lg shadow-lg relative p-6">
-                                    <div
-                                        onClick={() => setActiveModal(null)}
-                                        className="absolute top-3 right-3 text-gray-500 hover:text-black"
-                                    >
-                                        <FaTimes />
-                                    </div>
-                                    <h2 className="text-2xl font-bold mb-4">{card.title}</h2>
-                                    <div className="grid grid-cols-1 gap-4">
-                                        {card.items.map((item, idx) => card.renderItem(item, idx))}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                ))}
-            </div>
-
-            {/* Quick Access Buttons Section */}
-            <div className="relative flex flex-col items-center mt-6">
-                <div className="bg-white p-6 rounded-xl shadow-lg grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-6xl">
-                    <button
-                        onClick={() => navigate("/shifting")}
-                        className="bg-red-500 text-white flex items-center px-6 py-3 rounded-full shadow-lg hover:bg-red-600 transform hover:scale-105 transition-all ease-in-out w-full"
-                    >
-                        👫 <span className="ml-2">SHIFTING ARRANGEMENT</span>
-                    </button>
-                    <button
-                        onClick={() => navigate("/lekhajokha")}
-                        className="bg-orange-500 text-white flex items-center px-6 py-3 rounded-full shadow-lg hover:bg-orange-600 transform hover:scale-105 transition-all ease-in-out w-full"
-                    >
-                        📄 <span className="ml-2">LEKHA JOKHA</span>
-                    </button>
-                    <button
-                        onClick={() => navigate("/exceluploader")}
-                        className="bg-blue-500 text-white flex items-center px-6 py-3 rounded-full shadow-lg hover:bg-blue-600 transform hover:scale-105 transition-all ease-in-out w-full"
-                        aria-label="Upload File"
-                    >
-                        📤 <span className="ml-2">UPLOAD FILE</span>
-                    </button>
-                    <button
-                        onClick={() => navigate("/createmeterclose")}
-                        className="bg-purple-500 text-white flex items-center px-6 py-3 rounded-full shadow-lg hover:bg-purple-600 transform hover:scale-105 transition-all ease-in-out w-full"
-                        aria-label="Meter Close"
-                    >
-                        🔒 <span className="ml-2">METER CLOSE</span>
-                    </button>
-                    <button
-                        onClick={() => navigate("/Cashslip")}
-                        className="bg-purple-500 text-white flex items-center px-6 py-3 rounded-full shadow-lg hover:bg-purple-600 transform hover:scale-105 transition-all ease-in-out w-full"
-                        aria-label="Cash Slip"
-                    >
-                        💵 <span className="ml-2">Cash Slip</span>
-                    </button>
-                    <button
-                        onClick={() => navigate("/attendance-sheet")}
-                        className="bg-green-500 text-white flex items-center px-6 py-3 rounded-full shadow-lg hover:bg-green-600 transform hover:scale-105 transition-all ease-in-out w-full"
-                        aria-label="attendance-sheet"
-                    >
-                        💵 <span className="ml-2">Attendance Sheet</span>
-                    </button>
-                    <button
-                        onClick={() => navigate("/allsalepaytm")}
-                        className="bg-red-700 text-white flex items-center px-6 py-3 rounded-full shadow-lg hover:bg-red-400 transform hover:scale-105 transition-all ease-in-out w-full"
-                        aria-label="attendance-sheet"
-                    >
-                        💵 <span className="ml-2">Today Sale&Paytm</span>
-                    </button>
-                </div>
-            </div>
-
-
-            {/* Report Modal */}
+            {/* Delete/View Report Modal */}
             {selectedReport && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white w-[90%] max-w-md p-6 rounded-lg relative">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 relative">
                         <button
-                            className="absolute top-3 right-3"
+                            className="absolute top-4 right-4 text-gray-400 hover:text-gray-800"
                             onClick={() => setSelectedReport(null)}
                         >
-                            <FaTimes />
+                            <FaTimes size={20} />
                         </button>
-                        <h2 className="text-xl font-bold mb-2">{selectedReport.title}</h2>
-                        <p className="text-gray-700">{selectedReport.content}</p>
-
+                        <h2 className="text-xl font-bold text-gray-900 mb-2 pr-8">{selectedReport.title}</h2>
+                        <span className="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded mb-4">
+                            {selectedReport.department}
+                        </span>
+                        <div className="bg-gray-50 p-4 rounded-lg text-gray-700 text-sm mb-6 max-h-60 overflow-y-auto">
+                            {selectedReport.content}
+                        </div>
                         <button
-                            className="mt-2 px-3 py-1 bg-red-500 text-white rounded-lg w-full hover:bg-red-600 flex items-center justify-center gap-2"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteReport(selectedReport._id);
-                                setSelectedReport(null);
-                            }}
+                            onClick={() => handleDeleteReport(selectedReport._id)}
+                            className="w-full flex items-center justify-center gap-2 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white font-medium py-2 rounded-lg transition-colors border border-red-200"
                         >
-                            <FaTrash /> Delete
+                            <FaTrash /> Delete Report
                         </button>
-
                     </div>
                 </div>
             )}
 
-            {/* Bank Report Option Modal */}
+            {/* Bank Options Modal */}
             {activeModal === "bankOptions" && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white w-[90%] max-w-md p-6 rounded-lg relative">
-                        <div onClick={() => setActiveModal(null)} className="absolute top-3 right-3 text-gray-600 hover:text-black">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white w-full max-w-sm rounded-2xl shadow-2xl p-6 relative">
+                        <button onClick={() => setActiveModal(null)} className="absolute top-4 right-4 text-gray-400 hover:text-black">
                             <FaTimes />
-                        </div>
-                        <h2 className="text-xl font-bold mb-4 text-center text-indigo-600">Select Bank Report Type</h2>
-                        <div className="space-y-4">
-                            <div
+                        </button>
+                        <h2 className="text-xl font-bold mb-6 text-center text-gray-800">Add Bank Report</h2>
+                        <div className="space-y-3">
+                            <button
                                 onClick={() => navigate("/sbbank")}
-                                className="p-4 bg-green-100 hover:bg-green-200 rounded shadow cursor-pointer transition"
+                                className="w-full p-4 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-xl flex items-center justify-between group transition-all"
                             >
-                                <h3 className="text-lg font-semibold text-red-700">📊 Bank Report</h3>
-                            </div>
-                            <div
+                                <span className="font-semibold text-indigo-700">Bank Report</span>
+                                <FaArrowRight className="text-indigo-400 group-hover:translate-x-1 transition-transform" />
+                            </button>
+                            <button
                                 onClick={() => navigate("/mastersheet")}
-                                className="p-4 bg-blue-100 hover:bg-blue-200 rounded shadow cursor-pointer transition"
+                                className="w-full p-4 bg-teal-50 hover:bg-teal-100 border border-teal-200 rounded-xl flex items-center justify-between group transition-all"
                             >
-                                <h3 className="text-lg font-semibold text-green-700">✅ SB Master CheckList</h3>
-                            </div>
-
+                                <span className="font-semibold text-teal-700">SB Master Checklist</span>
+                                <FaArrowRight className="text-teal-400 group-hover:translate-x-1 transition-transform" />
+                            </button>
                         </div>
                     </div>
                 </div>
             )}
-
-
         </div>
     );
 };
