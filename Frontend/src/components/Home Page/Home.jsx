@@ -23,10 +23,6 @@ const Home = () => {
         {/* Left Section: Text Content */}
         <div className="w-full lg:w-1/2 flex flex-col justify-center px-6 sm:px-12 md:px-20 py-16 lg:py-0 bg-white z-10">
           <div className="max-w-xl mx-auto lg:mx-0 text-center lg:text-left">
-            <span className="inline-block py-1 px-3 rounded-full bg-yellow-100 text-yellow-800 text-xs font-bold tracking-widest mb-4">
-              PREMIUM FUEL SERVICES
-            </span>
-            
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
               We are happily saying <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-orange-600">
@@ -35,11 +31,6 @@ const Home = () => {
             </h1>
 
             <div className="h-1 w-20 bg-yellow-500 mx-auto lg:mx-0 mb-8 rounded-full"></div>
-
-            <p className="text-gray-600 text-lg sm:text-xl mb-10 leading-relaxed font-light">
-              "This is not the year you get everything you want. This is the year you appreciate everything you have."
-            </p>
-
             {/* Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <button
