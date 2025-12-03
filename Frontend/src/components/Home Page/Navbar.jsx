@@ -11,54 +11,70 @@ const Navbar = () => {
     const closeMenu = () => setMenuOpen(false);
 
     return (
-        <nav className="bg-black shadow-md relative z-50">
-            <div className="flex items-center justify-between px-6 py-3">
-                
-                {/* Logo */}
-                <div className="flex items-center">
-                    <span className="text-white font-bold font-serif text-2xl flex items-center">
-                        <span className="mr-2 text-4xl">⛽</span> 
-                        SANGHI BROTHERS
-                    </span>
-                </div>
+        <nav className="bg-gray-900 shadow-xl sticky top-0 z-50 border-b border-gray-800">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-between h-20">
+                    
+                    {/* Logo Section */}
+                    <div className="flex-shrink-0 cursor-pointer">
+                        <NavLink to="/" className="flex items-center gap-2 group">
+                            <span className="text-4xl group-hover:scale-110 transition-transform duration-300">⛽</span>
+                            <span className="font-extrabold text-2xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 font-serif">
+                                SANGHI BROTHERS
+                            </span>
+                        </NavLink>
+                    </div>
 
-                {/* Desktop Menu */}
-                <ul className="hidden md:flex space-x-8 text-white text-sm font-medium uppercase">
-                    {menuItems.map(item => (
-                        <li key={item}>
-                            <NavLink
-                                to={`/${item === 'home' ? '' : item}`}
-                                className={({ isActive }) =>
-                                    `hover:text-yellow-500 transition duration-300 ${isActive ? 'text-yellow-500' : ''}`
-                                }
-                            >
-                                {item}
-                            </NavLink>
-                        </li>
-                    ))}
-                </ul>
+                    {/* Desktop Menu */}
+                    <div className="hidden md:block">
+                        <ul className="flex space-x-8 items-center">
+                            {menuItems.map(item => (
+                                <li key={item}>
+                                    <NavLink
+                                        to={`/${item === 'home' ? '' : item}`}
+                                        className={({ isActive }) =>
+                                            `text-sm font-bold uppercase tracking-widest px-3 py-2 rounded-md transition-all duration-300 
+                                            ${isActive 
+                                                ? 'text-yellow-400 bg-gray-800 shadow-inner' 
+                                                : 'text-gray-300 hover:text-white hover:bg-gray-800 hover:scale-105'
+                                            }`
+                                        }
+                                    >
+                                        {item}
+                                    </NavLink>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
 
-                {/* Mobile Menu Toggle */}
-                <div
-                    className="md:hidden text-2xl text-white focus:outline-none"
-                    onClick={toggleMenu}
-                    aria-label="Toggle menu"
-                >
-                    {menuOpen ? <FiX /> : <FiMenu />}
+                    {/* Mobile Menu Toggle Button */}
+                    <div className="md:hidden flex items-center">
+                        <button
+                            onClick={toggleMenu}
+                            className="text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-yellow-500 p-2 rounded-md"
+                            aria-label="Toggle menu"
+                        >
+                            {menuOpen ? <FiX size={28} /> : <FiMenu size={28} />}
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            {/* Mobile Menu */}
+            {/* Mobile Menu Dropdown */}
             {menuOpen && (
-                <div className="md:hidden bg-black px-6 pb-4">
-                    <ul className="flex flex-col space-y-4 text-white text-sm font-medium uppercase">
+                <div className="md:hidden bg-gray-900 border-t border-gray-800 absolute w-full left-0 shadow-2xl animate-fade-in-down">
+                    <ul className="px-4 pt-2 pb-6 space-y-2">
                         {menuItems.map(item => (
                             <li key={item}>
                                 <NavLink
                                     to={`/${item === 'home' ? '' : item}`}
                                     onClick={closeMenu}
                                     className={({ isActive }) =>
-                                        `block hover:text-yellow-500 transition duration-300 ${isActive ? 'text-yellow-500' : ''}`
+                                        `block text-center text-base font-semibold uppercase tracking-wide py-3 rounded-lg transition-colors duration-200
+                                        ${isActive 
+                                            ? 'bg-yellow-500 text-black shadow-lg' 
+                                            : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                                        }`
                                     }
                                 >
                                     {item}
