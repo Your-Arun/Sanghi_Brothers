@@ -18,17 +18,8 @@ const CashSlip = () => {
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
 
-    // --- STATE ---
-    const [fecthcashSlip, setFecthcashSlip] = useState([]);
-    const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split("T")[0]);
-
-    const [actualAmount, setActualAmount] = useState("");
-    const [totalAmount, setTotalAmount] = useState(0);
-    const [amountDiff, setAmountDiff] = useState(0);
-
-    const shifts = ["First Shift", "Second Shift"];
-
-    const [cashSlip, setCashSlip] = useState({
+    // --- INITIAL STATE (For Resetting) ---
+    const initialCashSlipState = {
         date: new Date().toISOString().split("T")[0],
         shift: "",
         name: user?.username || "",
@@ -45,7 +36,19 @@ const CashSlip = () => {
         paytm: "",
         expenses: "",
         total: "",
-    });
+    };
+
+    // --- STATE ---
+    const [fecthcashSlip, setFecthcashSlip] = useState([]);
+    const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split("T")[0]);
+
+    const [actualAmount, setActualAmount] = useState("");
+    const [totalAmount, setTotalAmount] = useState(0);
+    const [amountDiff, setAmountDiff] = useState(0);
+
+    const shifts = ["First Shift", "Second Shift"];
+
+    const [cashSlip, setCashSlip] = useState(initialCashSlipState);
 
     // --- FETCH DATA ---
     const fetchCashSlipByDate = async (date) => {
@@ -53,7 +56,6 @@ const CashSlip = () => {
             const response = await axiosInstance.get(`/Cashslip?date=${date}`);
             setFecthcashSlip(response.data);
         } catch (error) {
-            toast.warning("No cash slips found for selected date"); // Optional to avoid spam
             setFecthcashSlip([]);
         }
     };
@@ -127,41 +129,59 @@ const CashSlip = () => {
             await axiosInstance.post("/Cashslip", cashdata);
             toast.success("Cash Slip saved successfully!");
             fetchCashSlipByDate(selectedDate);
+            
+            // --- RESET FORM ---
             setCashSlip({
-                date: new Date().toISOString().split("T")[0],
-                shift: "",
-                name: user?.username || "",
-                nozzleNo: "",
-                openingReading: "", 
-                closingReading: "",
-                salesInLtr: "",
-                testing: "",
-                pending: "",
-                cashDetails: { 500: "", 200: "", 100: "", 50: "", 20: "", 10: "" },
-                uFill: "",
-                iciciSlip: "",
-                sbiSlip: "",
-                paytm: "",
-                expenses: "",
-                total: "",
+                ...initialCashSlipState,
+                name: user?.username || "" // Keep the username populated
             });
+            setActualAmount(""); // Reset actual amount input
+            setTotalAmount(0);
 
-            // Optional: Reset form or navigate
         } catch (error) {
             toast.warn("Error saving cash slip");
         }
     };
 
-    const handleDelete = async (id) => {
-        if(window.confirm("Are you sure you want to delete this slip?")) {
-             try {
+    // --- CUSTOM TOAST FOR DELETE ---
+    const confirmDeleteToast = (onConfirm) => {
+        toast(
+            ({ closeToast }) => (
+                <div className="flex flex-col gap-2">
+                    <p className="font-medium text-gray-800">Are you sure you want to delete this?</p>
+                    <div className="flex gap-3 mt-2">
+                        <button
+                            onClick={() => {
+                                onConfirm();
+                                closeToast();
+                            }}
+                            className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
+                        >
+                            Yes, Delete
+                        </button>
+                        <button
+                            onClick={closeToast}
+                            className="bg-gray-200 text-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-300"
+                        >
+                            No
+                        </button>
+                    </div>
+                </div>
+            ),
+            { position: "top-center", autoClose: false, closeOnClick: false, closeButton: false }
+        );
+    }
+
+    const handleDelete = (id) => {
+        confirmDeleteToast(async () => {
+            try {
                 await axiosInstance.delete(`/Cashslip/${id}`);
                 setFecthcashSlip(prev => prev.filter(item => item._id !== id));
                 toast.success("Deleted successfully");
             } catch {
                 toast.error("Failed to delete");
             }
-        }
+        });
     };
 
     return (
@@ -376,6 +396,7 @@ const CashSlip = () => {
 
                                         {(user.department === "manager") && (
                                             <button 
+                                                type="button" // Important: Prevents form submission
                                                 onClick={() => handleDelete(item._id)}
                                                 className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition p-1.5 bg-red-50 text-red-600 rounded hover:bg-red-100"
                                             >
