@@ -127,6 +127,26 @@ const CashSlip = () => {
             await axiosInstance.post("/Cashslip", cashdata);
             toast.success("Cash Slip saved successfully!");
             fetchCashSlipByDate(selectedDate);
+            setCashSlip({
+                date: new Date().toISOString().split("T")[0],
+                shift: "",
+                name: user?.username || "",
+                nozzleNo: "",
+                openingReading: "", 
+                closingReading: "",
+                salesInLtr: "",
+                testing: "",
+                pending: "",
+                cashDetails: { 500: "", 200: "", 100: "", 50: "", 20: "", 10: "" },
+                uFill: "",
+                iciciSlip: "",
+                sbiSlip: "",
+                paytm: "",
+                expenses: "",
+                total: "",
+            });
+
+            // Optional: Reset form or navigate
         } catch (error) {
             toast.warn("Error saving cash slip");
         }
