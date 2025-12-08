@@ -128,15 +128,7 @@ const CashSlip = () => {
 
             await axiosInstance.post("/Cashslip", cashdata);
             toast.success("Cash Slip saved successfully!");
-            fetchCashSlipByDate(selectedDate);
-            
-            // --- RESET FORM ---
-            setCashSlip({
-                ...initialCashSlipState,
-                name: user?.username || "" // Keep the username populated
-            });
-            setActualAmount(""); // Reset actual amount input
-            setTotalAmount(0);
+            fetchCashSlipByDate(selectedDate)
 
         } catch (error) {
             toast.warn("Error saving cash slip");
