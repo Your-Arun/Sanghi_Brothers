@@ -104,7 +104,7 @@ const AttendancePage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button 
-                onClick={() => navigate(-1)}
+                onClick={() => navigate('/dashboard')}
                 className="p-2 rounded-full hover:bg-gray-100 text-gray-500 transition"
             >
                 <FaArrowLeft />
