@@ -1,13 +1,23 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "./Dashboard/axiosInstance";
-import BackButton from "./Home Page/BackButtonn";
+import { useNavigate } from "react-router-dom";
+import { 
+  FaArrowLeft, 
+  FaCalendarAlt, 
+  FaClock, 
+  FaChartLine, 
+  FaWallet, 
+  FaEye, 
+  FaTimes 
+} from "react-icons/fa";
 
 const SalePaytm = () => {
+  const navigate = useNavigate();
   const [salepaytm, setSalePaytm] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState(null); // 🔹 details ke liye
+  const [selected, setSelected] = useState(null);
 
-  // Fetch data on mount
+  // --- FETCH DATA ---
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -23,97 +33,160 @@ const SalePaytm = () => {
   }, []);
 
   if (loading) {
-    return <p className="text-center text-gray-600">Loading...</p>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 text-gray-500 font-medium">
+        Loading records...
+      </div>
+    );
   }
 
   return (
-    <div className="p-6">
-      <h2 className="text-xl font-bold text-center mb-6">📊 Sale & Paytm Records</h2>
-
-      {salepaytm.length === 0 ? (
-        <p className="text-center text-gray-500">No records found.</p>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full border border-gray-300 rounded-lg text-sm md:text-base table-fixed">
-            <thead>
-              <tr className="bg-blue-900 text-white">
-                <th className="border p-2 w-16 text-center">SNo.</th>
-                <th className="border p-2 text-left">Date</th>
-                <th className="border p-2 text-left">Shift</th>
-                <th className="border p-2 text-right">Total Sale</th>
-                <th className="border p-2 text-right">Total Paytm</th>
-                <th className="border p-2 text-center w-20">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {salepaytm.map((entry, idx) => (
-                <tr key={entry._id || idx} className="hover:bg-gray-50 transition">
-                  <td className="border p-2 text-center">{idx + 1}</td>
-                  <td className="border p-2 text-left">
-                    {new Date(entry.date).toLocaleDateString()}
-                  </td>
-                  <td className="border p-2 text-left">{entry.shift}</td>
-                  <td className="border p-2 text-green-700 font-medium text-right">
-                    {entry.totalSale}
-                  </td>
-                  <td className="border p-2 text-yellow-700 font-medium text-right">
-                    ₹{entry.totalPaytm}
-                  </td>
-                  <td className="border p-2 text-center">
-                    <button
-                      onClick={() => setSelected(entry)}
-                      className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
-                    >
-                      View
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+    <div className="min-h-screen bg-gray-50 font-sans pb-10">
+      
+      {/* --- STICKY HEADER --- */}
+      <div className="sticky top-0 z-30 bg-white shadow-sm border-b border-gray-200 px-4 py-4 mb-6">
+        <div className="max-w-7xl mx-auto flex items-center gap-4">
+          <button 
+            onClick={() => navigate(-1)}
+            className="p-2 rounded-full hover:bg-gray-100 text-gray-600 transition"
+          >
+            <FaArrowLeft />
+          </button>
+          <div>
+            <h1 className="text-xl font-bold text-gray-800">Sale & Paytm Records</h1>
+            <p className="text-xs text-gray-500">Track daily sales and digital payments</p>
+          </div>
         </div>
-      )}
+      </div>
 
-      {/* 🔹 Modal for details */}
-      {selected && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white rounded-xl p-4 sm:p-6 w-11/12 md:w-3/4 lg:w-2/3 max-h-[90vh] shadow-2xl overflow-y-auto">
-            {/* Close button */}
-            <div
-              onClick={() => setSelected(null)}
-              className="float-right text-red-600 font-bold text-xl cursor-pointer"
-            >
-              ✕
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {salepaytm.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-dashed border-gray-300 text-center">
+            <div className="bg-gray-100 p-4 rounded-full mb-3 text-gray-400">
+               <FaChartLine size={24} />
             </div>
-
-            {/* Heading */}
-            <h3 className="text-lg sm:text-xl font-bold mb-4 text-center text-gray-800">
-              📅 {new Date(selected.date).toLocaleDateString()} ({selected.shift})
-            </h3>
-
-            {/* Compact rows view */}
-            <div className="space-y-1 max-h-64 overflow-y-auto border rounded p-3 bg-gray-50">
-              {selected.rows.map((r, idx) => (
-                <div key={idx} className="flex justify-between text-sm border-b pb-1">
-                  <span className="truncate w-24">{idx + 1}. {r.name || "—"}</span>
-                  <span className="text-green-600">{r.sale || 0}</span>
-                  <span className="text-yellow-600">₹{r.paytm || 0}</span>
+            <p className="text-gray-500 font-medium">No records found.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {salepaytm.map((entry, idx) => (
+              <div 
+                key={entry._id || idx} 
+                className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md hover:border-indigo-200 transition-all duration-200 flex flex-col"
+              >
+                {/* Card Header */}
+                <div className="flex justify-between items-start mb-4 border-b border-gray-100 pb-3">
+                  <div className="flex items-center gap-2 text-gray-700 font-semibold">
+                    <FaCalendarAlt className="text-gray-400" />
+                    {new Date(entry.date).toLocaleDateString('en-GB')}
+                  </div>
+                  <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs font-bold uppercase rounded flex items-center gap-1">
+                    <FaClock size={10} /> {entry.shift}
+                  </span>
                 </div>
-              ))}
+
+                {/* Metrics */}
+                <div className="space-y-3 mb-5 flex-1">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-500 flex items-center gap-2">
+                      <FaChartLine className="text-green-500" /> Total Sale
+                    </span>
+                    <span className="font-bold text-gray-800 text-lg">
+                      {entry.totalSale} L
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-500 flex items-center gap-2">
+                      <FaWallet className="text-blue-500" /> Total Paytm
+                    </span>
+                    <span className="font-bold text-gray-800 text-lg">
+                      ₹{entry.totalPaytm}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Footer Action */}
+                <button
+                  onClick={() => setSelected(entry)}
+                  className="w-full mt-auto flex items-center justify-center gap-2 bg-indigo-50 text-indigo-700 py-2.5 rounded-lg text-sm font-semibold hover:bg-indigo-100 transition"
+                >
+                  <FaEye /> View Details
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* --- DETAILS MODAL --- */}
+      {selected && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[85vh]">
+            
+            {/* Modal Header */}
+            <div className="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+              <div>
+                <h3 className="text-lg font-bold text-gray-800">
+                  Record Details
+                </h3>
+                <p className="text-xs text-gray-500">
+                  {new Date(selected.date).toLocaleDateString('en-GB')} • {selected.shift}
+                </p>
+              </div>
+              <button 
+                onClick={() => setSelected(null)}
+                className="p-2 bg-white rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50 shadow-sm transition"
+              >
+                <FaTimes />
+              </button>
             </div>
 
-            {/* Totals */}
-            <div className="mt-4 text-center">
-              <p className="font-semibold text-gray-900 text-sm sm:text-base md:text-lg">
-                Total Sale: <span className="text-green-700">{selected.totalSale}</span> |{" "}
-                Total Paytm: <span className="text-yellow-700">₹{selected.totalPaytm}</span>
-              </p>
+            {/* Modal Body (Scrollable Rows) */}
+            <div className="p-6 overflow-y-auto bg-gray-50/30 flex-1">
+              <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Nozzle Breakdown</h4>
+              <div className="space-y-2">
+                {selected.rows.map((r, idx) => (
+                  <div key={idx} className="flex justify-between items-center bg-white p-3 rounded-lg border border-gray-100 shadow-sm">
+                    <div className="flex items-center gap-3">
+                      <span className="w-6 h-6 rounded-full bg-gray-100 text-gray-500 text-xs flex items-center justify-center font-bold">
+                        {idx + 1}
+                      </span>
+                      <span className="text-sm font-medium text-gray-700 truncate max-w-[100px]">
+                        {r.name || "Nozzle"}
+                      </span>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xs text-green-600 font-bold bg-green-50 px-2 py-0.5 rounded mb-1 inline-block">
+                        {r.sale || 0} L
+                      </div>
+                      <div className="text-xs text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded inline-block ml-2">
+                        ₹{r.paytm || 0}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
+
+            {/* Modal Footer (Totals) */}
+            <div className="bg-white border-t border-gray-200 p-4">
+              <div className="flex justify-between items-center bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+                <div className="text-center w-1/2 border-r border-indigo-200">
+                  <p className="text-xs text-indigo-500 font-bold uppercase">Total Sale</p>
+                  <p className="text-xl font-bold text-gray-900">{selected.totalSale}</p>
+                </div>
+                <div className="text-center w-1/2">
+                  <p className="text-xs text-indigo-500 font-bold uppercase">Total Paytm</p>
+                  <p className="text-xl font-bold text-gray-900">₹{selected.totalPaytm}</p>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       )}
 
-      <BackButton label="Back Button"/>
     </div>
   );
 };
