@@ -52,99 +52,98 @@ const AttendanceTablePage = () => {
   const sortedData = sortAttendanceData(attendanceData);
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans p-6 text-slate-800">
+    <div className="min-h-screen bg-gray-50 font-sans p-4 sm:p-6 text-slate-800">
       
       {/* --- HEADER --- */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-slate-800 flex items-center gap-3">
-            <span className="p-2 bg-indigo-600 text-white rounded-lg shadow-lg shadow-indigo-200">
-                <FaUserTie size={20} />
+          <h1 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
+            <span className="p-1.5 bg-indigo-600 text-white rounded-md shadow-sm">
+                <FaUserTie size={16} />
             </span>
             Attendance Sheet
           </h1>
-          <p className="text-slate-500 mt-2 font-medium">
-            Overview for <span className="text-indigo-600">{new Date(year, month - 1).toLocaleString("default", { month: "long" })} {year}</span>
+          <p className="text-slate-500 text-sm mt-1 font-medium">
+            <span className="text-indigo-600 font-bold">{new Date(year, month - 1).toLocaleString("default", { month: "long" })} {year}</span>
           </p>
         </div>
 
         {/* CONTROLS */}
-        <div className="flex flex-wrap items-center gap-3 bg-white p-2 rounded-xl shadow-sm border border-slate-200">
+        <div className="flex flex-wrap items-center gap-2 bg-white p-1.5 rounded-lg shadow-sm border border-slate-200">
           
           {/* Date Picker */}
           <div className="relative group">
-            <FaCalendarAlt className="absolute left-3 top-3 text-slate-400 group-focus-within:text-indigo-500" />
+            <FaCalendarAlt className="absolute left-2.5 top-2.5 text-slate-400 group-focus-within:text-indigo-500 text-xs" />
             <DatePicker
               selected={selectedDate}
               onChange={(date) => setSelectedDate(date)}
-              dateFormat="MMMM yyyy"
+              dateFormat="MMM yyyy"
               showMonthYearPicker
-              className="pl-10 pr-4 py-2 w-40 bg-slate-50 border-none rounded-lg text-sm font-semibold text-slate-700 focus:ring-2 focus:ring-indigo-500 cursor-pointer outline-none transition-all hover:bg-slate-100"
+              className="pl-8 pr-2 py-1.5 w-32 bg-slate-50 border-none rounded text-xs font-bold text-slate-700 focus:ring-1 focus:ring-indigo-500 cursor-pointer outline-none transition-all hover:bg-slate-100"
             />
           </div>
 
-          <div className="h-8 w-[1px] bg-slate-200 mx-1"></div>
+          <div className="h-6 w-[1px] bg-slate-200 mx-1"></div>
 
           {/* Sort */}
           <div className="relative group">
-             <FaFilter className="absolute left-3 top-3 text-slate-400" />
              <select
                 value={sortOption}
                 onChange={(e) => setSortOption(e.target.value)}
-                className="pl-9 pr-8 py-2 bg-slate-50 border-none rounded-lg text-sm font-semibold text-slate-700 focus:ring-2 focus:ring-indigo-500 cursor-pointer outline-none appearance-none hover:bg-slate-100"
+                className="pl-2 pr-6 py-1.5 bg-slate-50 border-none rounded text-xs font-bold text-slate-700 focus:ring-1 focus:ring-indigo-500 cursor-pointer outline-none appearance-none hover:bg-slate-100"
              >
                 <option value="a-z">A - Z</option>
                 <option value="z-a">Z - A</option>
                 <option value="recent">Recent</option>
              </select>
-             <FaSortAmountDown className="absolute right-3 top-3 text-slate-400 pointer-events-none size-3" />
+             <FaSortAmountDown className="absolute right-2 top-2 text-slate-400 pointer-events-none size-2.5" />
           </div>
 
           {/* Refresh */}
           <button
             onClick={fetchMonthlyAttendance}
-            className="p-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-all shadow-md hover:shadow-lg active:scale-95"
+            className="p-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded transition-all shadow-sm active:scale-95"
             title="Refresh Data"
           >
-            <FaSyncAlt className={loading ? "animate-spin" : ""} />
+            <FaSyncAlt className={loading ? "animate-spin" : ""} size={12} />
           </button>
         </div>
       </div>
 
       {/* --- TABLE CONTAINER --- */}
-      <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col">
+      <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden flex flex-col">
         
-        <div className="overflow-x-auto custom-scrollbar pb-2">
+        <div className="overflow-x-auto custom-scrollbar">
             {loading ? (
-                <div className="flex flex-col items-center justify-center py-24 text-slate-400">
-                    <FaSyncAlt className="animate-spin text-4xl mb-4 text-indigo-500" />
-                    <span className="font-medium">Loading records...</span>
+                <div className="flex flex-col items-center justify-center py-20 text-slate-400">
+                    <FaSyncAlt className="animate-spin text-2xl mb-2 text-indigo-500" />
+                    <span className="text-sm font-medium">Loading records...</span>
                 </div>
             ) : attendanceData.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-24 text-slate-400 bg-slate-50/50">
-                    <p className="text-lg font-medium">No records found.</p>
+                <div className="flex flex-col items-center justify-center py-20 text-slate-400 bg-slate-50/50">
+                    <p className="text-sm font-medium">No records found.</p>
                 </div>
             ) : (
                 /* 'min-w-max' ensures table takes full width required, enabling scroll */
                 <table className="w-full min-w-max border-collapse">
                     <thead>
-                        <tr className="bg-slate-50 text-slate-500 uppercase text-[11px] font-bold tracking-wider border-b border-slate-200">
+                        <tr className="bg-slate-50 text-slate-500 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200">
                             
                             {/* STICKY COLUMN: Employee Name */}
-                            <th className="px-6 py-4 text-left sticky left-0 z-20 bg-slate-50 border-r border-slate-200 shadow-[4px_0_12px_-4px_rgba(0,0,0,0.05)] min-w-[220px]">
-                                Employee Details
+                            <th className="px-3 py-2 text-left sticky left-0 z-20 bg-slate-50 border-r border-slate-200 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)] min-w-[180px]">
+                                Employee
                             </th>
                             
-                            {/* DATE COLUMNS */}
+                            {/* DATE COLUMNS - Compact Width */}
                             {Array.from({ length: daysInMonth }, (_, i) => (
-                                <th key={i} className="px-2 py-4 text-center w-[45px] border-r border-slate-100 last:border-none">
+                                <th key={i} className="py-2 text-center min-w-[28px] border-r border-slate-100 last:border-none">
                                     {i + 1}
                                 </th>
                             ))}
                             
                             {/* TOTAL COLUMN */}
-                            <th className="px-6 py-4 text-center bg-indigo-50 text-indigo-700 border-l border-indigo-100 min-w-[100px]">
-                                Presents
+                            <th className="px-2 py-2 text-center bg-indigo-50 text-indigo-700 border-l border-indigo-100 min-w-[60px]">
+                                Total
                             </th>
                         </tr>
                     </thead>
@@ -154,26 +153,26 @@ const AttendanceTablePage = () => {
                             let totalPresent = 0;
 
                             return (
-                                <tr key={idx} className="group hover:bg-slate-50/80 transition-colors duration-150">
+                                <tr key={idx} className="group hover:bg-slate-50/80 transition-colors duration-100 text-xs">
                                     
                                     {/* STICKY NAME CELL */}
-                                    <td className="px-6 py-3 sticky left-0 z-10 bg-white group-hover:bg-slate-50 transition-colors border-r border-slate-200 shadow-[4px_0_12px_-4px_rgba(0,0,0,0.05)]">
-                                        <div className="flex items-center gap-3">
+                                    <td className="px-3 py-1.5 sticky left-0 z-10 bg-white group-hover:bg-slate-50 transition-colors border-r border-slate-200 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]">
+                                        <div className="flex items-center gap-2">
                                             {/* Avatar */}
-                                            <div className="relative">
+                                            <div className="relative shrink-0">
                                                 <img 
                                                     src={user.photo || "/user.png"} 
                                                     alt={user.name} 
-                                                    className="w-9 h-9 rounded-full object-cover border border-slate-200 shadow-sm"
+                                                    className="w-7 h-7 rounded-full object-cover border border-slate-200 shadow-sm"
                                                     onError={(e) => { e.target.src = "https://ui-avatars.com/api/?name=" + user.name + "&background=random"; }} 
                                                 />
-                                                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"></span>
+                                                <span className="absolute bottom-0 right-0 w-2 h-2 bg-green-500 border border-white rounded-full"></span>
                                             </div>
-                                            <span className="font-semibold text-slate-700 text-sm">{user.name}</span>
+                                            <span className="font-semibold text-slate-700 truncate max-w-[120px]" title={user.name}>{user.name}</span>
                                         </div>
                                     </td>
 
-                                    {/* DATE CELLS */}
+                                    {/* DATE CELLS - Compact */}
                                     {Array.from({ length: daysInMonth }, (_, i) => {
                                         const date = `${year}-${String(month).padStart(2, "0")}-${String(i + 1).padStart(2, "0")}`;
                                         const status = user.attendance[date];
@@ -181,18 +180,18 @@ const AttendanceTablePage = () => {
                                         if (status === "Present") totalPresent++;
 
                                         return (
-                                            <td key={i} className="px-1 py-3 text-center border-r border-slate-50">
+                                            <td key={i} className="py-1 text-center border-r border-slate-50">
                                                 <div className="flex justify-center items-center h-full">
                                                     {status === "Present" ? (
-                                                        <div className="w-6 h-6 rounded-md bg-green-100 text-green-600 flex items-center justify-center shadow-sm" title="Present">
-                                                            <FaCheck size={10} />
+                                                        <div className="w-5 h-5 rounded bg-green-100 text-green-600 flex items-center justify-center" title="Present">
+                                                            <FaCheck size={8} />
                                                         </div>
                                                     ) : status === "Leave" ? (
-                                                        <div className="w-6 h-6 rounded-md bg-yellow-100 text-yellow-600 flex items-center justify-center shadow-sm" title="Leave">
-                                                            <FaClock size={10} />
+                                                        <div className="w-5 h-5 rounded bg-yellow-100 text-yellow-600 flex items-center justify-center" title="Leave">
+                                                            <FaClock size={8} />
                                                         </div>
                                                     ) : (
-                                                        <div className="w-1.5 h-1.5 rounded-full bg-slate-200" title="Absent"></div>
+                                                        <div className="w-1 h-1 rounded-full bg-slate-200" title="Absent"></div>
                                                     )}
                                                 </div>
                                             </td>
@@ -200,7 +199,7 @@ const AttendanceTablePage = () => {
                                     })}
 
                                     {/* TOTAL CELL */}
-                                    <td className="px-6 py-3 text-center font-bold text-indigo-600 bg-indigo-50/30 border-l border-indigo-100 group-hover:bg-indigo-100/30 transition-colors">
+                                    <td className="px-2 py-1.5 text-center font-bold text-indigo-600 bg-indigo-50/30 border-l border-indigo-100 group-hover:bg-indigo-100/30 transition-colors">
                                         {totalPresent}
                                     </td>
                                 </tr>
@@ -213,15 +212,15 @@ const AttendanceTablePage = () => {
       </div>
 
       {/* FOOTER LEGEND */}
-      <div className="mt-6 flex flex-wrap justify-center sm:justify-start gap-6 text-xs font-medium text-slate-500">
-        <div className="flex items-center gap-2">
-            <span className="w-5 h-5 rounded-md bg-green-100 text-green-600 flex items-center justify-center"><FaCheck size={10}/></span> Present
+      <div className="mt-4 flex flex-wrap justify-center sm:justify-start gap-4 text-[10px] font-bold uppercase tracking-wide text-slate-400">
+        <div className="flex items-center gap-1.5">
+            <span className="w-4 h-4 rounded bg-green-100 text-green-600 flex items-center justify-center"><FaCheck size={8}/></span> Present
         </div>
-        <div className="flex items-center gap-2">
-            <span className="w-5 h-5 rounded-md bg-yellow-100 text-yellow-600 flex items-center justify-center"><FaClock size={10}/></span> Leave
+        <div className="flex items-center gap-1.5">
+            <span className="w-4 h-4 rounded bg-yellow-100 text-yellow-600 flex items-center justify-center"><FaClock size={8}/></span> Leave
         </div>
-        <div className="flex items-center gap-2">
-            <span className="w-5 h-5 rounded-md flex items-center justify-center"><div className="w-1.5 h-1.5 bg-slate-300 rounded-full"></div></span> Absent
+        <div className="flex items-center gap-1.5">
+            <span className="w-4 h-4 rounded flex items-center justify-center"><div className="w-1 h-1 bg-slate-300 rounded-full"></div></span> Absent
         </div>
       </div>
 
