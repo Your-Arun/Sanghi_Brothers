@@ -18,6 +18,28 @@ import {
   FaUserTag
 } from "react-icons/fa";
 
+// ✅ FIX: Moved InputGroup OUTSIDE the main component
+const InputGroup = ({ label, name, value, onChange, type = "text", icon, placeholder, required }) => (
+  <div className="w-full">
+      <label className="block text-sm font-semibold text-gray-700 mb-1">
+          {label} {required && <span className="text-red-500">*</span>}
+      </label>
+      <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+              {icon}
+          </div>
+          <input
+              type={type}
+              name={name}
+              value={value} // ✅ Passed via props
+              onChange={onChange} // ✅ Passed via props
+              placeholder={placeholder}
+              className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-sm"
+          />
+      </div>
+  </div>
+);
+
 const CreateUserPage = () => {
   const navigate = useNavigate();
 
@@ -27,7 +49,7 @@ const CreateUserPage = () => {
     username: "",
     email: "",
     phone: "",
-    password: "", // Will be set to phone on save
+    password: "", 
     department: "",
     address: "",
     aadhaar: "",
@@ -45,7 +67,7 @@ const CreateUserPage = () => {
     const file = e.target.files[0];
     if (file) {
       setNewUser((prev) => ({ ...prev, photo: file }));
-      setPhotoPreview(URL.createObjectURL(file)); // Show preview
+      setPhotoPreview(URL.createObjectURL(file)); 
     }
   };
 
@@ -53,7 +75,6 @@ const CreateUserPage = () => {
     const { name, value } = e.target;
     let finalValue = value;
 
-    // Specific logic for Aadhaar (Numbers only, max 12)
     if (name === "aadhaar") {
       finalValue = value.replace(/\D/g, "").slice(0, 12);
     }
@@ -90,28 +111,6 @@ const CreateUserPage = () => {
         setLoading(false);
     }
   };
-
-  // Helper for Input Fields
-  const InputGroup = ({ label, name, type = "text", icon, placeholder, required }) => (
-    <div className="w-full">
-        <label className="block text-sm font-semibold text-gray-700 mb-1">
-            {label} {required && <span className="text-red-500">*</span>}
-        </label>
-        <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                {icon}
-            </div>
-            <input
-                type={type}
-                name={name}
-                value={newUser[name]}
-                onChange={handleInputChange}
-                placeholder={placeholder}
-                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-sm"
-            />
-        </div>
-    </div>
-  );
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans pb-20">
@@ -184,6 +183,8 @@ const CreateUserPage = () => {
                     <InputGroup 
                         label="Full Name" 
                         name="name" 
+                        value={newUser.name}
+                        onChange={handleInputChange}
                         icon={<FaUser />} 
                         placeholder="e.g. John Doe" 
                         required 
@@ -192,6 +193,8 @@ const CreateUserPage = () => {
                     <InputGroup 
                         label="Username" 
                         name="username" 
+                        value={newUser.username}
+                        onChange={handleInputChange}
                         icon={<FaUserTag />} 
                         placeholder="e.g. john.doe" 
                     />
@@ -199,6 +202,8 @@ const CreateUserPage = () => {
                     <InputGroup 
                         label="Email Address" 
                         name="email" 
+                        value={newUser.email}
+                        onChange={handleInputChange}
                         type="email" 
                         icon={<FaEnvelope />} 
                         placeholder="e.g. john@company.com" 
@@ -208,6 +213,8 @@ const CreateUserPage = () => {
                     <InputGroup 
                         label="Phone Number" 
                         name="phone" 
+                        value={newUser.phone}
+                        onChange={handleInputChange}
                         type="tel" 
                         icon={<FaPhone />} 
                         placeholder="e.g. 9876543210" 
@@ -246,6 +253,8 @@ const CreateUserPage = () => {
                     <InputGroup 
                         label="Designation" 
                         name="designation" 
+                        value={newUser.designation}
+                        onChange={handleInputChange}
                         icon={<FaBriefcase />} 
                         placeholder="e.g. Senior Accountant" 
                     />
@@ -253,6 +262,8 @@ const CreateUserPage = () => {
                     <InputGroup 
                         label="Joining Date" 
                         name="joiningDate" 
+                        value={newUser.joiningDate}
+                        onChange={handleInputChange}
                         type="date" 
                         icon={<FaCalendarAlt />} 
                     />
@@ -260,13 +271,15 @@ const CreateUserPage = () => {
                     <InputGroup 
                         label="Salary ( Monthly )" 
                         name="salary" 
+                        value={newUser.salary}
+                        onChange={handleInputChange}
                         type="number"
                         icon={<FaMoneyBillWave />} 
                         placeholder="e.g. 25000" 
                     />
                 </div>
 
-                {/* 3. Additional Info (Full Width on Mobile, spanning on Desktop) */}
+                {/* 3. Additional Info */}
                 <div className="md:col-span-2 space-y-5 pt-4">
                     <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-4">Additional Information</h3>
                     
@@ -274,6 +287,8 @@ const CreateUserPage = () => {
                         <InputGroup 
                             label="Aadhaar Number" 
                             name="aadhaar" 
+                            value={newUser.aadhaar}
+                            onChange={handleInputChange}
                             icon={<FaIdCard />} 
                             placeholder="12-digit Aadhaar number" 
                         />
