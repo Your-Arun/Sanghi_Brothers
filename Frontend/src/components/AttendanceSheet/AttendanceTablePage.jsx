@@ -142,8 +142,8 @@ const AttendanceTablePage = () => {
                     <thead>
                         <tr className="bg-gray-100 text-gray-600 uppercase text-xs tracking-wider">
                             {/* Sticky Name Header */}
-                            <th className="px-4 py-3 text-left font-bold border-b border-r border-gray-200 sticky left-0 bg-gray-100 z-10 shadow-sm min-w-[150px]">
-                                Employee Name
+                            <th className="px-4 py-3 text-left font-bold border-b border-r border-gray-200 sticky left-0 bg-gray-100 z-10 shadow-sm min-w-[200px]">
+                                Employee
                             </th>
                             
                             {/* Date Headers */}
@@ -165,9 +165,22 @@ const AttendanceTablePage = () => {
 
                             return (
                                 <tr key={idx} className="hover:bg-gray-50 transition-colors">
-                                    {/* Sticky Name Column */}
-                                    <td className="px-4 py-3 text-gray-800 font-medium border-r border-gray-200 sticky left-0 bg-white z-10 whitespace-nowrap shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] group-hover:bg-gray-50">
-                                        {user.name}
+                                    
+                                    {/* ✅ Sticky Photo + Name Column */}
+                                    <td className="px-4 py-2 border-r border-gray-200 sticky left-0 bg-white z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                                        <div className="flex items-center gap-3">
+                                            {/* Photo Circle */}
+                                            <img 
+                                                src={user.photo || "/user.png"} // Update path if needed
+                                                alt={user.name} 
+                                                className="w-9 h-9 rounded-full object-cover border border-gray-300 shadow-sm"
+                                                onError={(e) => { e.target.src = "/user.png"; }} // Fallback if image fails
+                                            />
+                                            {/* Name Text */}
+                                            <span className="font-semibold text-gray-800 whitespace-nowrap">
+                                                {user.name}
+                                            </span>
+                                        </div>
                                     </td>
 
                                     {/* Date Columns */}
