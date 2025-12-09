@@ -126,7 +126,7 @@ const AttendanceTablePage = () => {
       </div>
 
       {/* --- TABLE SECTION --- */}
-      <div className="bg-gray-300 rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-gray-600 rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
             {loading ? (
                 <div className="text-center py-20 flex flex-col items-center text-gray-500">
