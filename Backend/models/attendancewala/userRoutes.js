@@ -4,6 +4,30 @@ const User = require("../user");
 const Attendance = require("../attendancewala/Attendance");
 const bcrypt = require("bcryptjs");
 
+// 1️⃣ Cloudinary aur Multer Imports
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const multer = require("multer");
+require("dotenv").config(); // Environment variables ke liye
+
+// 2️⃣ Cloudinary Configuration (Apne credentials .env file me rakhein ya yahan direct dalein)
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME, // Ya direct string likhein
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+});
+// 3️⃣ Multer Storage Setup (Direct Cloudinary pe upload ke liye)
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "employee_photos", // Cloudinary me folder ka naam
+    allowed_formats: ["jpg", "png", "jpeg"], // Allowed file types
+  },
+});
+
+const upload = multer({ storage: storage });
+
+
 // ✅ Users with attendance (monthly filter)
 router.get("/users/attendance", async (req, res) => {
   try {
@@ -38,19 +62,28 @@ router.get("/users/attendance", async (req, res) => {
 });
 
 
-
-
-
-router.post("/users", async (req, res) => {
+router.post("/users", upload.single("photo"), async (req, res) => {
   try {
+    console.log("Body:", req.body);
+    console.log("File:", req.file); // Yahan Cloudinary ka data aayega
+
     const { password, ...rest } = req.body;
 
-    // ✅ Hash the password before saving
+    // Password validation
+    if (!password) {
+      return res.status(400).json({ error: "Password is required" });
+    }
+
+    // Password Hash karein
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Agar image upload hui hai to uska Cloudinary URL lein, warna empty string
+    const photoUrl = req.file ? req.file.path : ""; 
 
     const newUser = new User({
       ...rest,
       password: hashedPassword,
+      photo: photoUrl, // Cloudinary URL database me save hoga
     });
 
     await newUser.save();
@@ -60,6 +93,7 @@ router.post("/users", async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 });
+
 
 router.post("/mark-attendance", async (req, res) => {
   try {
