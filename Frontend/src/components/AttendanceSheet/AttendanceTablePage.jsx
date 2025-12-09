@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axiosInstance from "../Dashboard/axiosInstance";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import { 
   FaCalendarAlt, 
   FaSyncAlt, 
@@ -10,7 +12,8 @@ import {
   FaTimes, 
   FaClock, 
   FaUserTie,
-  FaFilter
+  FaFilter,
+  FaDownload // Import Download Icon
 } from "react-icons/fa";
 
 const AttendanceTablePage = () => {
@@ -50,6 +53,81 @@ const AttendanceTablePage = () => {
   };
 
   const sortedData = sortAttendanceData(attendanceData);
+
+  // --- PDF DOWNLOAD FUNCTION ---
+  const downloadPDF = () => {
+    const doc = new jsPDF({ orientation: "landscape" }); // Landscape mode for wide table
+
+    // Title
+    const monthName = new Date(year, month - 1).toLocaleString("default", { month: "long" });
+    doc.text(`Attendance Sheet - ${monthName} ${year}`, 14, 15);
+
+    // Columns Definition
+    const tableColumn = [
+      "Employee", 
+      ...Array.from({ length: daysInMonth }, (_, i) => String(i + 1)), 
+      "Total"
+    ];
+
+    // Rows Data Generation
+    const tableRows = sortedData.map((user) => {
+      let totalPresent = 0;
+      
+      const dailyStatus = Array.from({ length: daysInMonth }, (_, i) => {
+        const date = `${year}-${String(month).padStart(2, "0")}-${String(i + 1).padStart(2, "0")}`;
+        const status = user.attendance[date];
+
+        if (status === "Present") {
+          totalPresent++;
+          return "P";
+        } else if (status === "Leave") {
+          return "L";
+        } else {
+          return ""; // Empty for Absent
+        }
+      });
+
+      return [user.name, ...dailyStatus, totalPresent];
+    });
+
+    // Generate Table
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 20,
+      styles: {
+        fontSize: 6, // Small font to fit 31 days
+        cellPadding: 1,
+        halign: 'center',
+        valign: 'middle',
+      },
+      headStyles: {
+        fillColor: [79, 70, 229], // Indigo color header
+        textColor: 255,
+        fontStyle: 'bold',
+      },
+      columnStyles: {
+        0: { halign: 'left', fontStyle: 'bold', cellWidth: 30 }, // Name column wider
+        [daysInMonth + 1]: { fontStyle: 'bold', fillColor: [240, 240, 250] } // Total column
+      },
+      // Logic to color cells based on P/L
+      didParseCell: function(data) {
+        if (data.section === 'body' && data.column.index > 0 && data.column.index <= daysInMonth) {
+          if (data.cell.raw === 'P') {
+            data.cell.styles.fillColor = [220, 252, 231]; // Light Green
+            data.cell.styles.textColor = [22, 163, 74];   // Dark Green Text
+          } else if (data.cell.raw === 'L') {
+            data.cell.styles.fillColor = [254, 249, 195]; // Light Yellow
+            data.cell.styles.textColor = [202, 138, 4];   // Dark Yellow Text
+          } else {
+             data.cell.styles.textColor = [200, 200, 200]; // Light Gray for absent
+          }
+        }
+      }
+    });
+
+    doc.save(`Attendance_${monthName}_${year}.pdf`);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans p-4 sm:p-6 text-slate-800">
@@ -102,10 +180,19 @@ const AttendanceTablePage = () => {
           {/* Refresh */}
           <button
             onClick={fetchMonthlyAttendance}
-            className="p-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded transition-all shadow-sm active:scale-95"
+            className="p-1.5 bg-gray-100 hover:bg-gray-200 text-slate-600 rounded transition-all shadow-sm active:scale-95"
             title="Refresh Data"
           >
             <FaSyncAlt className={loading ? "animate-spin" : ""} size={12} />
+          </button>
+
+          {/* ✅ Download PDF Button */}
+          <button
+            onClick={downloadPDF}
+            className="flex items-center gap-2 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded transition-all shadow-md active:scale-95"
+            title="Download PDF"
+          >
+            <FaDownload size={10} /> PDF
           </button>
         </div>
       </div>
@@ -124,24 +211,17 @@ const AttendanceTablePage = () => {
                     <p className="text-sm font-medium">No records found.</p>
                 </div>
             ) : (
-                /* 'min-w-max' ensures table takes full width required, enabling scroll */
                 <table className="w-full min-w-max border-collapse">
                     <thead>
                         <tr className="bg-slate-50 text-slate-500 uppercase text-[10px] font-bold tracking-wider border-b border-slate-200">
-                            
-                            {/* STICKY COLUMN: Employee Name */}
                             <th className="px-3 py-2 text-left sticky left-0 z-20 bg-slate-50 border-r border-slate-200 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)] min-w-[180px]">
                                 Employee
                             </th>
-                            
-                            {/* DATE COLUMNS - Compact Width */}
                             {Array.from({ length: daysInMonth }, (_, i) => (
                                 <th key={i} className="py-2 text-center min-w-[28px] border-r border-slate-100 last:border-none">
                                     {i + 1}
                                 </th>
                             ))}
-                            
-                            {/* TOTAL COLUMN */}
                             <th className="px-2 py-2 text-center bg-indigo-50 text-indigo-700 border-l border-indigo-100 min-w-[60px]">
                                 Total
                             </th>
@@ -155,10 +235,8 @@ const AttendanceTablePage = () => {
                             return (
                                 <tr key={idx} className="group hover:bg-slate-50/80 transition-colors duration-100 text-xs">
                                     
-                                    {/* STICKY NAME CELL */}
                                     <td className="px-3 py-1.5 sticky left-0 z-10 bg-white group-hover:bg-slate-50 transition-colors border-r border-slate-200 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)]">
                                         <div className="flex items-center gap-2">
-                                            {/* Avatar */}
                                             <div className="relative shrink-0">
                                                 <img 
                                                     src={user.photo || "/user.png"} 
@@ -166,13 +244,11 @@ const AttendanceTablePage = () => {
                                                     className="w-7 h-7 rounded-full object-cover border border-slate-200 shadow-sm"
                                                     onError={(e) => { e.target.src = "https://ui-avatars.com/api/?name=" + user.name + "&background=random"; }} 
                                                 />
-                                                <span className="absolute bottom-0 right-0 w-2 h-2 bg-green-500 border border-white rounded-full"></span>
                                             </div>
                                             <span className="font-semibold text-slate-700 truncate max-w-[120px]" title={user.name}>{user.name}</span>
                                         </div>
                                     </td>
 
-                                    {/* DATE CELLS - Compact */}
                                     {Array.from({ length: daysInMonth }, (_, i) => {
                                         const date = `${year}-${String(month).padStart(2, "0")}-${String(i + 1).padStart(2, "0")}`;
                                         const status = user.attendance[date];
@@ -198,7 +274,6 @@ const AttendanceTablePage = () => {
                                         );
                                     })}
 
-                                    {/* TOTAL CELL */}
                                     <td className="px-2 py-1.5 text-center font-bold text-indigo-600 bg-indigo-50/30 border-l border-indigo-100 group-hover:bg-indigo-100/30 transition-colors">
                                         {totalPresent}
                                     </td>
