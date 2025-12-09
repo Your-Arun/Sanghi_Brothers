@@ -138,7 +138,7 @@ const AttendanceTablePage = () => {
                     <p className="text-lg">No records found for this month.</p>
                 </div>
             ) : (
-                <table className="w-full border-collapse text-sm">
+                <table className="w-full bg-gray-600 border-collapse text-sm">
                     <thead>
                         <tr className="bg-gray-100 text-gray-600 uppercase text-xs tracking-wider">
                             {/* Sticky Name Header */}
