@@ -142,7 +142,7 @@ const AttendanceTablePage = () => {
                     <thead>
                         <tr className="bg-gray-100 text-gray-600 uppercase text-xs tracking-wider">
                             {/* Sticky Name Header */}
-                            <th className="px-4 font-black py-3 text-left font-bold border-b border-r border-gray-200 sticky left-0 bg-gray-100 z-10 shadow-sm min-w-[150px]">
+                            <th className="px-4 py-3 text-black font-bold text-left font-bold border-b border-r border-gray-200 sticky left-0 bg-gray-100 z-10 shadow-sm min-w-[150px]">
                                 Employees
                             </th>
                             
