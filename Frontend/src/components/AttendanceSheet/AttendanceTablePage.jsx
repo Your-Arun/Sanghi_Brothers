@@ -125,85 +125,104 @@ const AttendanceTablePage = () => {
         </div>
       </div>
 
-      {/* --- TABLE SECTION --- */}
-      <div className="bg-gray-600 rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto">
-            {loading ? (
-                <div className="text-center py-20 flex flex-col items-center text-gray-500">
-                    <FaSyncAlt className="animate-spin text-3xl mb-3 text-indigo-400" />
-                    Loading attendance records...
-                </div>
-            ) : attendanceData.length === 0 ? (
-                <div className="text-center py-20 text-gray-400 bg-gray-50">
-                    <p className="text-lg">No records found for this month.</p>
-                </div>
-            ) : (
-                <table className="w-full bg-gray-600 border-collapse text-sm">
-                    <thead>
-                        <tr className="bg-gray-100 text-gray-600 uppercase text-xs tracking-wider">
-                            {/* Sticky Name Header */}
-                            <th className="px-4 py-3text-center text-black font-bold text-left font-bold border-b border-r border-gray-200 sticky left-0 bg-gray-100 z-10 shadow-sm min-w-[150px]">
-                                Employees
-                            </th>
-                            
-                            {/* Date Headers */}
-                            {Array.from({ length: daysInMonth }, (_, i) => (
-                                <th key={i} className="px-1 py-3 text-center font-semibold border-b border-gray-200 min-w-[36px]">
-                                    {i + 1}
-                                </th>
-                            ))}
-                            
-                            {/* Total Header */}
-                            <th className="px-4 py-3 text-center font-bold border-b border-l border-gray-200 bg-indigo-50 text-indigo-700 min-w-[80px]">
-                                Total
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100">
-                        {sortedData.map((user, idx) => {
-                            let totalPresent = 0;
-
-                            return (
-                                <tr key={idx} className="hover:bg-gray-50 transition-colors">
-                                    {/* Sticky Name Column */}
-                                    <td className="px-4 py-3 text-gray-800 font-medium border-r border-gray-200 sticky left-0 bg-white z-10 whitespace-nowrap shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] group-hover:bg-gray-50">
-                                        {user.name}
-                                    </td>
-
-                                    {/* Date Columns */}
-                                    {Array.from({ length: daysInMonth }, (_, i) => {
-                                        const date = `${year}-${String(month).padStart(2, "0")}-${String(i + 1).padStart(2, "0")}`;
-                                        const status = user.attendance[date];
-                                        
-                                        if (status === "Present") totalPresent++;
-
-                                        return (
-                                            <td key={i} className="px-1 py-2 text-center border-gray-100">
-                                                <div className="flex justify-center">
-                                                    {status === "Present" ? (
-                                                        <FaCheckCircle className="text-green-500" title="Present" />
-                                                    ) : status === "Leave" ? (
-                                                        <FaExclamationCircle className="text-yellow-500" title="Leave" />
-                                                    ) : (
-                                                        <div className="w-1.5 h-1.5 rounded-full bg-gray-200" title="Absent/No Data"></div>
-                                                    )}
-                                                </div>
-                                            </td>
-                                        );
-                                    })}
-
-                                    {/* Total Count Column */}
-                                    <td className="px-4 py-3 text-center font-bold text-indigo-700 bg-indigo-50 border-l border-indigo-100">
-                                        {totalPresent}
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
-            )}
-        </div>
+    {/* --- TABLE SECTION --- */}
+<div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+  
+  {/* Wrapper for scrolling */}
+  <div className="overflow-x-auto pb-2 custom-scrollbar">
+    
+    {loading ? (
+      <div className="text-center py-20 flex flex-col items-center text-gray-500">
+        <FaSyncAlt className="animate-spin text-3xl mb-3 text-indigo-500" />
+        <span className="text-sm font-medium">Loading attendance records...</span>
       </div>
+    ) : attendanceData.length === 0 ? (
+      <div className="text-center py-20 text-gray-400 bg-gray-50">
+        <p className="text-lg font-medium">No records found for this month.</p>
+      </div>
+    ) : (
+      /* min-w-max forces the table to be wide enough, enabling scroll */
+      <table className="w-full min-w-max border-collapse text-sm text-left">
+        <thead>
+          <tr className="bg-gray-50 text-gray-600 uppercase text-xs tracking-wider font-semibold border-b border-gray-200">
+            
+            {/* Sticky Name Header */}
+            <th className="px-6 py-4 sticky left-0 z-20 bg-gray-50 border-r border-gray-200 shadow-[4px_0_10px_-4px_rgba(0,0,0,0.1)] min-w-[200px]">
+              Employee
+            </th>
+
+            {/* Date Headers */}
+            {Array.from({ length: daysInMonth }, (_, i) => (
+              <th key={i} className="px-2 py-4 text-center min-w-[40px] border-r border-gray-100 last:border-r-0">
+                {i + 1}
+              </th>
+            ))}
+
+            {/* Total Header */}
+            <th className="px-6 py-4 text-center bg-indigo-50 text-indigo-700 border-l border-gray-200 min-w-[100px]">
+              Total
+            </th>
+          </tr>
+        </thead>
+
+        <tbody className="divide-y divide-gray-100">
+          {sortedData.map((user, idx) => {
+            let totalPresent = 0;
+
+            return (
+              <tr 
+                key={idx} 
+                className="group hover:bg-blue-50/50 transition-colors duration-200"
+              >
+                {/* Sticky Name Column */}
+                <td className="px-6 py-3 font-medium text-gray-800 border-r border-gray-200 sticky left-0 z-10 bg-white group-hover:bg-blue-50/50 transition-colors duration-200 shadow-[4px_0_10px_-4px_rgba(0,0,0,0.1)] whitespace-nowrap">
+                  <div className="flex items-center gap-3">
+                    {/* User Avatar Circle */}
+                    <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-xs font-bold uppercase overflow-hidden">
+                       {user.photo ? (
+                         <img src={user.photo} alt={user.name} className="w-full h-full object-cover" />
+                       ) : (
+                         user.name.charAt(0)
+                       )}
+                    </div>
+                    <span>{user.name}</span>
+                  </div>
+                </td>
+
+                {/* Date Columns */}
+                {Array.from({ length: daysInMonth }, (_, i) => {
+                  const date = `${year}-${String(month).padStart(2, "0")}-${String(i + 1).padStart(2, "0")}`;
+                  const status = user.attendance[date];
+
+                  if (status === "Present") totalPresent++;
+
+                  return (
+                    <td key={i} className="px-1 py-3 text-center border-r border-gray-50 last:border-r-0">
+                      <div className="flex justify-center items-center h-full">
+                        {status === "Present" ? (
+                          <FaCheckCircle className="text-green-500 text-lg drop-shadow-sm" title="Present" />
+                        ) : status === "Leave" ? (
+                          <FaExclamationCircle className="text-yellow-500 text-lg drop-shadow-sm" title="Leave" />
+                        ) : (
+                          <div className="w-1.5 h-1.5 rounded-full bg-gray-200" title="Absent/No Data"></div>
+                        )}
+                      </div>
+                    </td>
+                  );
+                })}
+
+                {/* Total Count Column */}
+                <td className="px-6 py-3 text-center font-bold text-indigo-700 bg-indigo-50/30 border-l border-gray-200 group-hover:bg-indigo-100/50 transition-colors">
+                  {totalPresent}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    )}
+  </div>
+</div>
     </div>
   );
 };
