@@ -6,10 +6,10 @@ import {
   FaCalendarAlt, 
   FaSyncAlt, 
   FaSortAmountDown, 
-  FaCheck, 
-  FaTimes, 
-  FaExclamation,
-  FaUserTie
+  FaCheckCircle, 
+  FaTimesCircle, 
+  FaExclamationCircle,
+  FaUserClock
 } from "react-icons/fa";
 
 const AttendanceTablePage = () => {
@@ -41,175 +41,169 @@ const AttendanceTablePage = () => {
     fetchMonthlyAttendance();
   }, [selectedDate]);
 
-  // Sorting Logic
-  const sortedData = [...attendanceData].sort((a, b) => {
-    if (sortOption === "a-z") return a.name.localeCompare(b.name);
-    if (sortOption === "z-a") return b.name.localeCompare(a.name);
-    return 0; // Default
-  });
+  const sortAttendanceData = (data) => {
+    if (sortOption === "a-z") {
+      return [...data].sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortOption === "z-a") {
+      return [...data].sort((a, b) => b.name.localeCompare(a.name));
+    } else if (sortOption === "recent") {
+      return [...data].sort((a, b) => (b._id > a._id ? 1 : -1));
+    }
+    return data;
+  };
+
+  const sortedData = sortAttendanceData(attendanceData);
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans p-4 sm:p-8">
+    <div className="min-h-screen bg-gray-50 font-sans p-4 sm:p-6">
       
-      {/* --- HEADER & CONTROLS --- */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
-        
-        <div>
-          <h1 className="text-2xl font-extrabold text-gray-800 flex items-center gap-2">
-            <FaUserTie className="text-indigo-600" /> 
-            Attendance Overview
-          </h1>
-          <p className="text-sm text-gray-500 mt-1">
-            {new Date(year, month - 1).toLocaleString("default", { month: "long" })} {year}
-          </p>
+      {/* --- HEADER & TOOLBAR --- */}
+      <div className="mb-6 space-y-4">
+        <div className="flex items-center gap-3">
+            <div className="p-3 bg-indigo-100 rounded-lg text-indigo-600">
+                <FaUserClock size={24} />
+            </div>
+            <div>
+                <h1 className="text-2xl font-bold text-gray-800">Monthly Logs</h1>
+                <p className="text-sm text-gray-500">
+                    Viewing data for {new Date(year, month - 1).toLocaleString("default", { month: "long" })} {year}
+                </p>
+            </div>
         </div>
 
-        <div className="flex flex-wrap gap-3 w-full lg:w-auto">
-          {/* Date Picker */}
-          <div className="relative flex-1 lg:flex-none">
+        {/* Toolbar Card */}
+        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
+          
+          {/* Left: Date Picker */}
+          <div className="relative w-full md:w-auto z-20">
             <FaCalendarAlt className="absolute left-3 top-3 text-gray-400 pointer-events-none" />
             <DatePicker
               selected={selectedDate}
               onChange={(date) => setSelectedDate(date)}
               dateFormat="MMMM yyyy"
               showMonthYearPicker
-              className="w-full lg:w-48 pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 font-medium text-gray-700 cursor-pointer"
+              className="w-full md:w-48 pl-10 pr-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer font-medium text-gray-700"
             />
           </div>
 
-          {/* Sort Dropdown */}
-          <div className="relative flex-1 lg:flex-none">
-            <FaSortAmountDown className="absolute left-3 top-3 text-gray-400 pointer-events-none" />
-            <select
-              value={sortOption}
-              onChange={(e) => setSortOption(e.target.value)}
-              className="w-full lg:w-40 pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 text-sm appearance-none cursor-pointer"
-            >
-              <option value="a-z">Name (A-Z)</option>
-              <option value="z-a">Name (Z-A)</option>
-            </select>
-          </div>
+          {/* Right: Actions */}
+          <div className="flex w-full md:w-auto gap-3">
+            <div className="relative w-full md:w-40">
+                <FaSortAmountDown className="absolute left-3 top-3 text-gray-400 pointer-events-none" />
+                <select
+                    value={sortOption}
+                    onChange={(e) => setSortOption(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm appearance-none cursor-pointer"
+                >
+                    <option value="a-z">Name (A-Z)</option>
+                    <option value="z-a">Name (Z-A)</option>
+                    <option value="recent">Recent</option>
+                </select>
+            </div>
 
-          {/* Refresh Button */}
-          <button
-            onClick={fetchMonthlyAttendance}
-            className="px-4 py-2.5 bg-indigo-600 text-white rounded-xl shadow-md hover:bg-indigo-700 transition flex items-center gap-2"
-          >
-            <FaSyncAlt className={loading ? "animate-spin" : ""} />
-          </button>
+            <button
+                onClick={fetchMonthlyAttendance}
+                className="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition shadow-md whitespace-nowrap"
+            >
+                <FaSyncAlt className={loading ? "animate-spin" : ""} /> 
+                <span className="hidden sm:inline">Refresh</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Legend */}
+        <div className="flex flex-wrap gap-4 text-xs font-medium text-gray-600 bg-white px-4 py-2 rounded-lg border border-gray-200 w-fit">
+          <div className="flex items-center gap-1.5">
+            <FaCheckCircle className="text-green-500 text-sm" /> Present
+          </div>
+          <div className="flex items-center gap-1.5">
+            <FaExclamationCircle className="text-yellow-500 text-sm" /> Leave
+          </div>
+          <div className="flex items-center gap-1.5">
+            <FaTimesCircle className="text-red-400 text-sm" /> Absent
+          </div>
         </div>
       </div>
 
-      {/* --- CONTENT GRID (No Horizontal Scroll) --- */}
-      {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 text-gray-500">
-           <FaSyncAlt className="animate-spin text-3xl mb-3 text-indigo-400" />
-           <p>Loading attendance data...</p>
-        </div>
-      ) : attendanceData.length === 0 ? (
-        <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-300">
-           <p className="text-gray-400 text-lg">No records found for this month.</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {sortedData.map((user) => {
-            // Calculate stats for this user
-            let presentCount = 0;
-            let leaveCount = 0;
-            let absentCount = 0;
-
-            const daysArray = Array.from({ length: daysInMonth }, (_, i) => {
-                const dateKey = `${year}-${String(month).padStart(2, "0")}-${String(i + 1).padStart(2, "0")}`;
-                const status = user.attendance[dateKey];
-                
-                if (status === "Present") presentCount++;
-                else if (status === "Leave") leaveCount++;
-                else absentCount++;
-
-                return { day: i + 1, status };
-            });
-
-            return (
-              <div 
-                key={user._id} 
-                className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 hover:shadow-lg transition-all duration-300 flex flex-col"
-              >
-                {/* User Header */}
-                <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
-                  <div className="flex items-center gap-3">
-                    <img 
-                      src={user.photo || "/user.png"} 
-                      alt={user.name}
-                      onError={(e) => { e.target.src = "/user.png"; }}
-                      className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-md bg-gray-100"
-                    />
-                    <div>
-                      <h3 className="font-bold text-gray-800 text-lg leading-tight">{user.name}</h3>
-                      <span className="text-xs text-gray-500 font-medium bg-gray-100 px-2 py-0.5 rounded">
-                        {user.department || "Employee"}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <span className="block text-2xl font-bold text-indigo-600">{presentCount}</span>
-                    <span className="text-xs text-gray-400 uppercase font-bold tracking-wider">Days Present</span>
-                  </div>
+      {/* --- TABLE SECTION --- */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="overflow-x-auto">
+            {loading ? (
+                <div className="text-center py-20 flex flex-col items-center text-gray-500">
+                    <FaSyncAlt className="animate-spin text-3xl mb-3 text-indigo-400" />
+                    Loading attendance records...
                 </div>
-
-                {/* Calendar Grid */}
-                <div className="grid grid-cols-7 gap-2 mb-4">
-                    {/* Days Header */}
-                    {['S','M','T','W','T','F','S'].map((d, i) => (
-                        <div key={i} className="text-center text-[10px] font-bold text-gray-400">{d}</div>
-                    ))}
-                    
-                    {/* Days Body */}
-                    {daysArray.map(({ day, status }) => {
-                        let bgClass = "bg-gray-100 text-gray-300"; // Absent/Null
-                        let icon = null;
-
-                        if (status === "Present") {
-                            bgClass = "bg-green-100 text-green-600 border border-green-200";
-                            icon = <FaCheck size={8} />;
-                        } else if (status === "Leave") {
-                            bgClass = "bg-yellow-100 text-yellow-600 border border-yellow-200";
-                            icon = <FaExclamation size={8} />;
-                        } else {
-                             // Absent logic
-                             bgClass = "bg-red-50 text-red-300 border border-red-100";
-                             icon = <FaTimes size={8} />;
-                        }
-
-                        return (
-                            <div 
-                                key={day} 
-                                className={`aspect-square rounded-lg flex flex-col items-center justify-center text-xs font-bold transition-all ${bgClass}`}
-                                title={`Day ${day}: ${status || 'Absent'}`}
-                            >
-                                <span>{day}</span>
-                                {status === "Present" && <div className="w-1 h-1 bg-green-500 rounded-full mt-0.5"></div>}
-                            </div>
-                        );
-                    })}
+            ) : attendanceData.length === 0 ? (
+                <div className="text-center py-20 text-gray-400 bg-gray-50">
+                    <p className="text-lg">No records found for this month.</p>
                 </div>
+            ) : (
+                <table className="w-full border-collapse text-sm">
+                    <thead>
+                        <tr className="bg-gray-100 text-gray-600 uppercase text-xs tracking-wider">
+                            {/* Sticky Name Header */}
+                            <th className="px-4 py-3text-center text-black font-bold text-left font-bold border-b border-r border-gray-200 sticky left-0 bg-gray-100 z-10 shadow-sm min-w-[150px]">
+                                Employees
+                            </th>
+                            
+                            {/* Date Headers */}
+                            {Array.from({ length: daysInMonth }, (_, i) => (
+                                <th key={i} className="px-1 py-3 text-center font-semibold border-b border-gray-200 min-w-[36px]">
+                                    {i + 1}
+                                </th>
+                            ))}
+                            
+                            {/* Total Header */}
+                            <th className="px-4 py-3 text-center font-bold border-b border-l border-gray-200 bg-indigo-50 text-indigo-700 min-w-[80px]">
+                                Total
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                        {sortedData.map((user, idx) => {
+                            let totalPresent = 0;
 
-                {/* Footer Stats */}
-                <div className="mt-auto pt-3 border-t border-gray-100 flex justify-between text-xs font-medium text-gray-500">
-                    <div className="flex items-center gap-1">
-                        <div className="w-2 h-2 rounded-full bg-green-500"></div> Present
-                    </div>
-                    <div className="flex items-center gap-1">
-                        <div className="w-2 h-2 rounded-full bg-yellow-500"></div> Leave ({leaveCount})
-                    </div>
-                    <div className="flex items-center gap-1">
-                        <div className="w-2 h-2 rounded-full bg-red-400"></div> Absent
-                    </div>
-                </div>
-              </div>
-            );
-          })}
+                            return (
+                                <tr key={idx} className="hover:bg-gray-50 transition-colors">
+                                    {/* Sticky Name Column */}
+                                    <td className="px-4 py-3 text-gray-800 font-medium border-r border-gray-200 sticky left-0 bg-white z-10 whitespace-nowrap shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] group-hover:bg-gray-50">
+                                        {user.name}
+                                    </td>
+
+                                    {/* Date Columns */}
+                                    {Array.from({ length: daysInMonth }, (_, i) => {
+                                        const date = `${year}-${String(month).padStart(2, "0")}-${String(i + 1).padStart(2, "0")}`;
+                                        const status = user.attendance[date];
+                                        
+                                        if (status === "Present") totalPresent++;
+
+                                        return (
+                                            <td key={i} className="px-1 py-2 text-center border-gray-100">
+                                                <div className="flex justify-center">
+                                                    {status === "Present" ? (
+                                                        <FaCheckCircle className="text-green-500" title="Present" />
+                                                    ) : status === "Leave" ? (
+                                                        <FaExclamationCircle className="text-yellow-500" title="Leave" />
+                                                    ) : (
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-gray-200" title="Absent/No Data"></div>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        );
+                                    })}
+
+                                    {/* Total Count Column */}
+                                    <td className="px-4 py-3 text-center font-bold text-indigo-700 bg-indigo-50 border-l border-indigo-100">
+                                        {totalPresent}
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
