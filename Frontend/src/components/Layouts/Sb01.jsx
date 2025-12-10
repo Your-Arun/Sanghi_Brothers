@@ -5,7 +5,7 @@ import previousImage from "/previous.png";
 import { Link } from "react-router-dom";
 import UserContext from "../Home Page/UserContext"
 import { toast } from 'react-toastify'
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaSave } from "react-icons/fa";
 
 const Sb01 = () => {
   const { user } = useContext(UserContext);
