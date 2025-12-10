@@ -231,36 +231,55 @@ const Sb01 = () => {
     <>
       <div className="items-center justify-center p-6">
         <form onSubmit={handleSave}>
-          <div>
-            <div className="text-center text-4xl p-4">
-              <h1>
-                Fund Position of <span className="text-red-600">Sanghi Brothers</span>{" "}
-              </h1>
-              <h1>Bank position as on
-                <input
-                  type="date"
-                  id="date9"
-                  value={inputs.date9}
-                  onChange={handleDateChange}
-                  className="bg-transparent text-black px-2 py-1 "
-                /> </h1>
-            </div>
-            <div>
-              <div className="flex justify-evenly w-full p-4">
-                <Link to={"/sbbank"}>
-                  <div>
-                    <img src={previousImage} width={50} alt="Back" className="bg-transparent" />
-                  </div>
-                </Link>
+         {/* --- STICKY HEADER --- */}
+<div className="sticky top-0 z-30 bg-white shadow-md border-b border-gray-200 px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+  
+  {/* Left Side: Back Button & Title */}
+  <div className="flex items-center gap-4 w-full md:w-auto">
+    <Link 
+      to="/sbbank" 
+      className="p-2.5 rounded-full hover:bg-gray-100 text-gray-600 transition duration-200"
+    >
+      <FaArrowLeft size={20} />
+    </Link>
+    
+    <div>
+      <h1 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+        Fund Position
+        <span className="hidden sm:inline text-gray-400"></span>
+      </h1>
+      <p className="text-xs text-gray-500 font-medium tracking-wide">
+        Daily Bank Report
+      </p>
+    </div>
+  </div>
 
-                <div>
-                  <button type="submit" className="bg-transparent">
-                    <img src={saveImage} width={50} alt="Save" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+  {/* Right Side: Date Picker & Save Button */}
+  <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+    
+    {/* Styled Date Input */}
+    <div className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-lg border border-gray-200 focus-within:ring-2 focus-within:ring-blue-500 transition-all">
+        <span className="text-xs font-bold text-gray-500 uppercase whitespace-nowrap">As On:</span>
+        <input 
+          type="date" 
+          id="date9" 
+          value={inputs.date9} 
+          onChange={handleDateChange} 
+          className="bg-transparent text-sm font-bold text-gray-800 outline-none cursor-pointer" 
+        />
+    </div>
+
+    {/* Modern Save Button */}
+    <button 
+      type="submit" 
+      className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-blue-700 transition-all shadow-md hover:shadow-lg active:scale-95"
+    >
+      <FaSave size={16} />
+      <span className="hidden sm:inline">Save Report</span>
+    </button>
+  </div>
+
+</div>
           <div className="table-container">
             <table className="">
               <thead>
