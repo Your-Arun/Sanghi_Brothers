@@ -6,14 +6,61 @@ body {
   font-family: serif;
   margin: 0;
   padding: 0;
-  /* overflow-x: hidden; */
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-::-webkit-scrollbar {
-  display: none;
+  /* overflow-x: hidden; */ /* Commented out to prevent cutting off sticky headers */
 }
 
+/* --- 1. GLOBAL INPUT STYLING (Fixed Date & Select) --- */
+input[type="number"],
+input[type="text"],
+input[type="date"],
+input[type="password"],
+input[type="email"],
+select {
+  background-color: #f9f9f9;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 0.375rem; /* Rounded-md */
+  padding: 0.5rem; /* Comfortable padding */
+  transition: all 0.2s ease-in-out;
+  outline: none;
+}
+
+input:focus, select:focus {
+  border-color: #2563eb; /* Blue-600 */
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  background-color: #fff;
+}
+
+/* --- 2. MODERN SCROLLBARS (Replaces display:none) --- */
+/* Works on Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5); /* Gray-400 transparent */
+  border-radius: 20px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(107, 114, 128, 0.8); /* Gray-500 */
+}
+
+/* Specific class for tables that NEED scrolling */
+.custom-scrollbar {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9; /* Thumb Track */
+}
+
+/* --- 3. TABLE CONTAINER (Legacy Support) --- */
 .table-container {
   padding: 2rem;
   background-color: #fff;
@@ -23,26 +70,15 @@ body {
   border: 1px solid #e0e0e0;
   width: 100%;
   max-width: 100%;
-  overflow-x: auto; /* horizontal scroll enable */
+  overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-}
-
-
-/* Sirf horizontal scrollbar hide */
-.table-container::-webkit-scrollbar:horizontal { height: 0; }
-
-/* Vertical ko visible rakhna ho to width set kar do */
-.table-container::-webkit-scrollbar:vertical { width: 8px; }
-.table-container::-webkit-scrollbar-thumb:vertical {
-  background: rgba(0,0,0,.35);
-  border-radius: 4px;
 }
 
 .table-container table {
   border-collapse: collapse;
   width: 100%;
-  min-width: 800px; /* jitni min width chahiye utni */
-  white-space: nowrap; /* prevent wrapping */
+  min-width: 800px;
+  white-space: nowrap;
 }
 
 .table-container th,
@@ -51,193 +87,113 @@ body {
   border: 1px solid #ddd;
   text-align: left;
 }
-.table-container input[type="number"],
-.table-container input[type="text"] {
+
+/* Fix inputs inside tables */
+.table-container input {
   width: 100%;
-  padding: 4px;
+  min-width: 80px; /* Prevent too small inputs */
 }
 
-
-.table-cont2 input[type="number"],
-.table-cont2 input[type="text"]{
-  width: 120px;
-}
-
-.table-cont2 input::-webkit-outer-spin-button,
-.table-cont2 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Prevent table from expanding beyond screen */
+/* --- 4. GENERAL TABLE STYLES --- */
 table {
   width: 100%;
-  min-width: 800px; /* Allow horizontal scroll if needed */
   border-collapse: collapse;
   background-color: #fff;
   border-radius: 0.75rem;
   color: #333;
-  animation: fadeIn 0.8s ease-in-out;
 }
 
 th {
-  background-color: #1b1962;
+  background-color: #1b1962; /* Your Theme Color */
   color: #fff;
   font-weight: bold;
   text-transform: uppercase;
+  padding: 0.75rem;
 }
 
-th, td {
-  padding: .2rem 2rem;
+td {
+  padding: 0.5rem;
   text-align: center;
   border: 1px solid #e0e0e0;
 }
 
-tr:nth-child(even) { background-color: #f2f2f2; }
+/* Zebra Striping */
+tr:nth-child(even) { background-color: #f8fafc; } /* Slate-50 */
 tr:nth-child(odd) { background-color: #ffffff; }
 
-
-input[type="number"],
-input[type="text"] {
-  background-color: #f9f9f9;
-  color: #333;
-  border: 1px solid #ccc;
-  border-radius: 0.25rem;
+/* Hover effect on rows */
+tbody tr:hover {
+  background-color: #eff6ff; /* Blue-50 */
 }
 
-input[type="number"]:focus,
-input[type="text"]:focus {
-  border-color: #4caf50;
-  outline: none;
-}
-
-
-
+/* --- 5. BUTTONS --- */
 button {
   border: none;
   border-radius: 0.5rem;
   padding: 0.625rem 1.25rem;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: transform 0.1s ease, background-color 0.3s ease;
 }
+
+button:active {
+  transform: scale(0.98);
+}
+
 .buttonn {
   background-color: transparent;
   border: none;
   cursor: pointer;
-  padding: 0; /* Important: remove default padding */
+  padding: 0;
   margin-left: 0.5rem;            
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.375rem;
 }
 
-/* Wrapper to hold input and icon */
+/* --- 6. UTILITIES --- */
+/* Password Input Wrapper */
 .passwordinput {
-  @apply w-full flex items-center border border-gray-300 rounded-lg px-3 mb-4 focus-within:ring-2 focus-within:ring-blue-500 bg-white;
+  @apply w-full flex items-center border border-gray-300 rounded-lg px-3 mb-4 focus-within:ring-2 focus-within:ring-blue-500 bg-white transition-all;
 }
 
-/* Password input */
 .passwordinput-field {
-  @apply flex-1 px-4 py-3 text-gray-800 placeholder-gray-500 outline-none bg-transparent;
+  @apply flex-1 px-4 py-3 text-gray-800 placeholder-gray-500 outline-none bg-transparent border-none;
 }
 
-/* Eye toggle button - FIXES shrinking & default styles */
-.buttonn {
-  all: unset; /* remove default button styles (border, padding, etc) */
-  @apply flex items-center justify-center w-10 h-10 cursor-pointer text-gray-600;
-}
-
-/* Eye Icon Styling */
-.icon-eye {
-  @apply text-gray-600;
-}
-@media (max-width: 350px) {
-  .home-heading {
-    font-size: 1.5rem; /* ~24px */
-    line-height: 1.6;
-  }
-
-  .home-subtext {
-    font-size: 0.875rem; /* ~14px */
-    padding: 0 0.5rem;
-    line-height: 1.4;
-  }
-
-  .home-button {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-    width: 100%;
-    margin-bottom: 0.5rem;
-  }
-
-  .home-image {
-    height: 200px !important;
-    clip-path: none !important;
-  }
-}
-
-
-.toggle-btn {
-  background: white;
-  color: #2563eb;
-  padding: 10px;
-  border-radius: 9999px;
-  font-size: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
-  z-index: 9999;
-}
-
-.toggle-btn:hover {
-  transform: scale(1.1);
-}
-
-.sidebar-btn {
-  display: flex;
-  background: transparent;
-  align-items: center;
-  gap: 0.75rem;
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  font-weight: 500;
-  transition: all 0.2s;
-  color: white;
-}
-
-.sidebar-btn:hover {
-  background-color: rgba(59, 130, 246, 0.7);
-}
-
-.sidebar-btn.active {
-  background-color: #1e40af;
-  color: white;
-}
-
-.profile-btn {
-  background-color: white;
-  color: #2563eb;
-  font-weight: 600;
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-}
-
-.profile-btn:hover {
-  background-color: #ebf4ff;
-}
-@layer components {
-  .card-dashboard {
-    @apply text-white p-6 rounded-xl shadow-md flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-all gap-2 text-center;
-  }
-}
-.butoonn{
-  background-color: transparent;
-}
-
-/* React Toastify ka z-index badha do */
+/* Toastify Z-Index Fix */
 .Toastify__toast-container {
   z-index: 99999 !important;
 }
 
+/* Remove number arrows in inputs */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Tailwind Components Layer */
+@layer components {
+  .card-dashboard {
+    @apply text-white p-6 rounded-xl shadow-md flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-all gap-2 text-center relative overflow-hidden;
+  }
+}
+
+/* Mobile Media Queries */
+@media (max-width: 640px) {
+  .table-container {
+    padding: 1rem;
+    margin: 1rem auto;
+  }
+  
+  th, td {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  /* Make date inputs fit better on mobile */
+  input[type="date"] {
+    min-width: 120px; 
+  }
+}
