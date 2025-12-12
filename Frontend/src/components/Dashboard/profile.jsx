@@ -5,10 +5,7 @@ import { toast } from "react-toastify";
 import UserContext from "../Home Page/UserContext";
 import { 
   FaCamera, 
-  FaUser, 
-  FaPhone, 
-  FaEnvelope, 
-  FaBriefcase, 
+  FaPhone,  
   FaUserShield, 
   FaSignOutAlt, 
   FaTimes 
