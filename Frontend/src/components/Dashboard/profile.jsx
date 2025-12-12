@@ -3,7 +3,45 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from "./axiosInstance";
 import { toast } from "react-toastify";
 import UserContext from "../Home Page/UserContext";
-import { FaCamera, FaUser, FaPhone, FaEnvelope, FaBriefcase, FaUserShield, FaSignOutAlt } from "react-icons/fa";
+import { 
+  FaCamera, 
+  FaUser, 
+  FaPhone, 
+  FaEnvelope, 
+  FaBriefcase, 
+  FaUserShield, 
+  FaSignOutAlt, 
+  FaTimes 
+} from "react-icons/fa";
+
+// --- REUSABLE INPUT COMPONENT FOR PERFECT ALIGNMENT ---
+const InputField = ({ label, icon: Icon, value, onChange, type = "text", disabled = false }) => (
+  <div className="w-full">
+    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1.5 ml-1">
+      {label}
+    </label>
+    <div className="relative group">
+      {/* Icon Wrapper: Perfectly Centered */}
+      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <Icon className={`text-sm transition-colors ${disabled ? "text-gray-400" : "text-gray-400 group-focus-within:text-blue-600"}`} />
+      </div>
+      <input
+        type={type}
+        value={value}
+        onChange={onChange}
+        disabled={disabled}
+        className={`
+          w-full pl-10 pr-4 py-2.5 
+          text-sm font-medium rounded-xl border outline-none transition-all duration-200
+          ${disabled 
+            ? "bg-gray-100 border-transparent text-gray-500 cursor-not-allowed" 
+            : "bg-gray-50 border-gray-200 text-gray-800 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+          }
+        `}
+      />
+    </div>
+  </div>
+);
 
 const ProfileModal = ({ closeModal }) => {
   const navigate = useNavigate();
@@ -66,144 +104,122 @@ const ProfileModal = ({ closeModal }) => {
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4 animate-fade-in">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden relative">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden relative flex flex-col max-h-[90vh]">
         
         {/* --- Header Background --- */}
-        <div className="h-24 bg-gradient-to-r from-blue-500 to-indigo-600 relative">
+        <div className="h-28 bg-gradient-to-br from-blue-600 to-indigo-700 relative shrink-0">
             <button
               onClick={closeModal}
-              className="absolute top-3 right-3 text-white/80 hover:text-white bg-black/20 hover:bg-black/40 p-1 rounded-full transition"
+              className="absolute top-4 right-4 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 p-1.5 rounded-full transition-all backdrop-blur-md"
             >
-              ✕
+              <FaTimes />
             </button>
         </div>
 
         {/* --- Profile Photo Section --- */}
-        <div className="flex flex-col items-center -mt-12 px-6">
+        <div className="flex flex-col items-center -mt-14 px-6 shrink-0 relative z-10">
             <div className="relative group">
-                <div className="w-24 h-24 rounded-full border-4 border-white shadow-lg overflow-hidden bg-gray-200">
+                <div className="w-28 h-28 rounded-full border-[5px] border-white shadow-lg overflow-hidden bg-gray-100">
                     <img
                         src={preview || "/user.png"}
                         alt="Profile"
                         className="w-full h-full object-cover"
+                        onError={(e) => { e.target.src = "/user.png"; }}
                     />
                 </div>
-                <label className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full cursor-pointer hover:bg-blue-700 shadow-md transition transform group-hover:scale-110">
+                <label className="absolute bottom-1 right-1 bg-blue-600 text-white p-2.5 rounded-full cursor-pointer hover:bg-blue-700 shadow-md border-2 border-white transition transform active:scale-95 group-hover:scale-110">
                     <FaCamera size={14} />
                     <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
                 </label>
             </div>
-            <h2 className="text-xl font-bold text-gray-800 mt-3">{user.name}</h2>
-            <p className="text-sm text-gray-500 flex items-center gap-1">
-                <FaUserShield className="text-blue-500" /> {user.department || "User"}
-            </p>
+            <div className="text-center mt-3">
+                <h2 className="text-xl font-bold text-gray-900">{user.name}</h2>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold uppercase tracking-wide mt-1">
+                    <FaUserShield size={10} /> {user.department || "User"}
+                </span>
+            </div>
         </div>
 
-        {/* --- Form Section --- */}
-        <form onSubmit={handleProfileSave} className="p-6 space-y-4">
-            
-            {/* Name */}
-            <div>
-                <label className="text-xs font-bold text-gray-500 uppercase mb-1 block">Full Name</label>
-                <div className="relative">
-                    <FaUser className="absolute top-3 left-3 text-gray-400" />
-                    <input
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className="w-full pl-10 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition text-sm font-medium text-gray-800"
+        {/* --- Scrollable Form Section --- */}
+        <div className="p-6 overflow-y-auto custom-scrollbar">
+            <form onSubmit={handleProfileSave} className="space-y-5">
+                
+                <InputField 
+                    label="Full Name" 
+                    icon={FaUser} 
+                    value={name} 
+                    onChange={(e) => setName(e.target.value)} 
+                />
+
+                <InputField 
+                    label="Username" 
+                    icon={FaBriefcase} 
+                    value={username} 
+                    onChange={(e) => setUsername(e.target.value)} 
+                />
+
+                <InputField 
+                    label="Phone Number" 
+                    icon={FaPhone} 
+                    value={phone} 
+                    type="tel"
+                    onChange={(e) => setPhone(e.target.value)} 
+                />
+
+                <div className="grid grid-cols-1 gap-5 pt-2">
+                    <InputField 
+                        label="Email Address" 
+                        icon={FaEnvelope} 
+                        value={user.email} 
+                        disabled={true} 
                     />
                 </div>
-            </div>
 
-            {/* Username */}
-            <div>
-                <label className="text-xs font-bold text-gray-500 uppercase mb-1 block">Username</label>
-                <div className="relative">
-                    <FaBriefcase className="absolute top-3 left-3 text-gray-400" />
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        className="w-full pl-10 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition text-sm font-medium text-gray-800"
-                    />
-                </div>
-            </div>
-
-            {/* Phone */}
-            <div>
-                <label className="text-xs font-bold text-gray-500 uppercase mb-1 block">Phone Number</label>
-                <div className="relative">
-                    <FaPhone className="absolute top-3 left-3 text-gray-400" />
-                    <input
-                        type="tel"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        className="w-full pl-10 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition text-sm font-medium text-gray-800"
-                    />
-                </div>
-            </div>
-
-            {/* Read-Only Info */}
-            <div className="grid grid-cols-2 gap-4">
-                <div>
-                    <label className="text-xs font-bold text-gray-400 uppercase mb-1 block">Role</label>
-                    <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg text-sm text-gray-600 border border-transparent cursor-not-allowed">
-                        <FaUserShield /> {user.department || "N/A"}
-                    </div>
-                </div>
-                <div>
-                    <label className="text-xs font-bold text-gray-400 uppercase mb-1 block">Email</label>
-                    <div className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg text-sm text-gray-600 border border-transparent cursor-not-allowed overflow-hidden">
-                        <FaEnvelope /> <span className="truncate">{user.email}</span>
-                    </div>
-                </div>
-            </div>
-
-            {/* Admin Panel Link */}
-            {user.department === "manager" && (
-                <button
-                    onClick={() => navigate("/admin-panel")}
-                    type="button"
-                    className="w-full py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-lg shadow-md hover:shadow-lg hover:scale-[1.02] transition transform"
-                >
-                    Go to Admin Panel
-                </button>
-            )}
-
-            {/* --- Footer Actions --- */}
-            <div className="pt-4 flex justify-between items-center border-t border-gray-100 mt-2">
-                <button
-                    type="button"
-                    onClick={handleLogout}
-                    className="flex items-center gap-2 text-red-500 font-semibold hover:text-red-700 transition text-sm"
-                >
-                    <FaSignOutAlt /> Logout
-                </button>
-
-                <div className="flex gap-3">
+                {/* Admin Panel Link */}
+                {user.department === "manager" && (
                     <button
+                        onClick={() => navigate("/admin-panel")}
                         type="button"
-                        onClick={closeModal}
-                        className="px-4 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition text-sm"
+                        className="w-full mt-2 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white font-bold rounded-xl shadow-md hover:shadow-lg hover:scale-[1.01] transition-all flex items-center justify-center gap-2"
                     >
-                        Cancel
+                        <FaUserShield /> Access Admin Panel
                     </button>
-                    <button
-                        type="submit"
-                        disabled={!isChanged || loading}
-                        className={`px-6 py-2 rounded-lg font-bold text-sm shadow-md transition-all ${
-                            isChanged 
-                            ? "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg" 
-                            : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                        }`}
-                    >
-                        {loading ? "Saving..." : "Save Changes"}
-                    </button>
-                </div>
-            </div>
+                )}
+            </form>
+        </div>
 
-        </form>
+        {/* --- Sticky Footer --- */}
+        <div className="p-4 border-t border-gray-100 bg-gray-50 flex justify-between items-center shrink-0">
+            <button
+                type="button"
+                onClick={handleLogout}
+                className="flex items-center gap-2 text-red-500 font-semibold hover:text-red-700 hover:bg-red-50 px-4 py-2 rounded-lg transition text-sm"
+            >
+                <FaSignOutAlt /> Logout
+            </button>
+
+            <div className="flex gap-3">
+                <button
+                    type="button"
+                    onClick={closeModal}
+                    className="px-5 py-2.5 text-gray-600 font-bold hover:bg-gray-200 rounded-xl transition text-sm"
+                >
+                    Cancel
+                </button>
+                <button
+                    onClick={handleProfileSave}
+                    disabled={!isChanged || loading}
+                    className={`px-6 py-2.5 rounded-xl font-bold text-sm shadow-md transition-all transform active:scale-95 ${
+                        isChanged 
+                        ? "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg" 
+                        : "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"
+                    }`}
+                >
+                    {loading ? "Saving..." : "Save Changes"}
+                </button>
+            </div>
+        </div>
+
       </div>
     </div>
   );
