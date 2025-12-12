@@ -14,17 +14,16 @@ import {
   FaTimes 
 } from "react-icons/fa";
 
-// ✅ FIXED: Component defined OUTSIDE to prevent focus loss issue
+// ✅ FIXED: Increased padding-left (pl-12) to prevent text overlapping with icon
 const InputField = ({ label, icon: Icon, value, onChange, type = "text", disabled = false }) => (
   <div className="w-full">
     <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1.5 ml-1">
       {label}
     </label>
     <div className="relative group">
-      {/* Icon Wrapper: Perfectly Centered */}
-      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-        {/* Added check: Only render Icon if passed */}
-        {Icon && <Icon className={`text-sm transition-colors ${disabled ? "text-gray-400" : "text-gray-400 group-focus-within:text-blue-600"}`} />}
+      {/* Icon Wrapper: Positioned absolutely to the left */}
+      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+        {Icon && <Icon className={`text-gray-400 text-sm group-focus-within:text-blue-500 transition-colors`} />}
       </div>
       <input
         type={type}
@@ -32,7 +31,7 @@ const InputField = ({ label, icon: Icon, value, onChange, type = "text", disable
         onChange={onChange}
         disabled={disabled}
         className={`
-          w-full pl-10 pr-4 py-2.5 
+          w-full pl-12 pr-4 py-2.5 
           text-sm font-medium rounded-xl border outline-none transition-all duration-200
           ${disabled 
             ? "bg-gray-100 border-transparent text-gray-500 cursor-not-allowed" 
@@ -145,7 +144,6 @@ const ProfileModal = ({ closeModal }) => {
         <div className="p-6 overflow-y-auto custom-scrollbar">
             <form onSubmit={handleProfileSave} className="space-y-5">
                 
-                {/* ✅ Added Icons to all inputs */}
                 <InputField 
                     label="Full Name" 
                     icon={FaUser} 
