@@ -146,14 +146,12 @@ const ProfileModal = ({ closeModal }) => {
                 
                 <InputField 
                     label="Full Name" 
-                    icon={FaUser} 
                     value={name} 
                     onChange={(e) => setName(e.target.value)} 
                 />
 
                 <InputField 
                     label="Username" 
-                    icon={FaBriefcase} 
                     value={username} 
                     onChange={(e) => setUsername(e.target.value)} 
                 />
@@ -169,7 +167,6 @@ const ProfileModal = ({ closeModal }) => {
                 <div className="grid grid-cols-1 gap-5 pt-2">
                     <InputField 
                         label="Email Address" 
-                        icon={FaEnvelope} 
                         value={user.email} 
                         disabled={true} 
                     />
