@@ -5,13 +5,16 @@ import { toast } from "react-toastify";
 import UserContext from "../Home Page/UserContext";
 import { 
   FaCamera, 
-  FaPhone,  
+  FaUser, 
+  FaPhone, 
+  FaEnvelope, 
+  FaBriefcase, 
   FaUserShield, 
   FaSignOutAlt, 
   FaTimes 
 } from "react-icons/fa";
 
-// --- REUSABLE INPUT COMPONENT FOR PERFECT ALIGNMENT ---
+// ✅ FIXED: Component defined OUTSIDE to prevent focus loss issue
 const InputField = ({ label, icon: Icon, value, onChange, type = "text", disabled = false }) => (
   <div className="w-full">
     <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1.5 ml-1">
@@ -20,7 +23,8 @@ const InputField = ({ label, icon: Icon, value, onChange, type = "text", disable
     <div className="relative group">
       {/* Icon Wrapper: Perfectly Centered */}
       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-        <Icon className={`text-sm transition-colors ${disabled ? "text-gray-400" : "text-gray-400 group-focus-within:text-blue-600"}`} />
+        {/* Added check: Only render Icon if passed */}
+        {Icon && <Icon className={`text-sm transition-colors ${disabled ? "text-gray-400" : "text-gray-400 group-focus-within:text-blue-600"}`} />}
       </div>
       <input
         type={type}
@@ -141,14 +145,17 @@ const ProfileModal = ({ closeModal }) => {
         <div className="p-6 overflow-y-auto custom-scrollbar">
             <form onSubmit={handleProfileSave} className="space-y-5">
                 
+                {/* ✅ Added Icons to all inputs */}
                 <InputField 
                     label="Full Name" 
+                    icon={FaUser} 
                     value={name} 
                     onChange={(e) => setName(e.target.value)} 
                 />
 
                 <InputField 
                     label="Username" 
+                    icon={FaBriefcase}
                     value={username} 
                     onChange={(e) => setUsername(e.target.value)} 
                 />
@@ -164,6 +171,7 @@ const ProfileModal = ({ closeModal }) => {
                 <div className="grid grid-cols-1 gap-5 pt-2">
                     <InputField 
                         label="Email Address" 
+                        icon={FaEnvelope}
                         value={user.email} 
                         disabled={true} 
                     />
