@@ -14,16 +14,16 @@ import {
   FaTimes 
 } from "react-icons/fa";
 
-// ✅ FIXED: Increased padding-left (pl-12) to prevent text overlapping with icon
+// ✅ FIXED: Increased padding to 'pl-14' (3.5rem) to ensure text never touches the icon
 const InputField = ({ label, icon: Icon, value, onChange, type = "text", disabled = false }) => (
   <div className="w-full">
     <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1.5 ml-1">
       {label}
     </label>
     <div className="relative group">
-      {/* Icon Wrapper: Positioned absolutely to the left */}
-      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-        {Icon && <Icon className={`text-gray-400 text-sm group-focus-within:text-blue-500 transition-colors`} />}
+      {/* Icon Wrapper: Fixed position */}
+      <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none z-10">
+        {Icon && <Icon className={`text-base transition-colors ${disabled ? "text-gray-400" : "text-gray-400 group-focus-within:text-blue-600"}`} />}
       </div>
       <input
         type={type}
@@ -31,7 +31,7 @@ const InputField = ({ label, icon: Icon, value, onChange, type = "text", disable
         onChange={onChange}
         disabled={disabled}
         className={`
-          w-full pl-12 pr-4 py-2.5 
+          w-full pl-14 pr-4 py-3 
           text-sm font-medium rounded-xl border outline-none transition-all duration-200
           ${disabled 
             ? "bg-gray-100 border-transparent text-gray-500 cursor-not-allowed" 
