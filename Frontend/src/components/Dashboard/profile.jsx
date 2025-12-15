@@ -146,7 +146,6 @@ const ProfileModal = ({ closeModal }) => {
                 
                 <InputField 
                     label="Full Name" 
-                    icon={FaUser} 
                     value={name} 
                     onChange={(e) => setName(e.target.value)} 
                 />
