@@ -95,15 +95,7 @@ const Login = ({ embedMode, onClose }) => {
 
   return (
     <div className="w-full relative">
-      {embedMode && onClose && (
-        <div
-          onClick={onClose}
-          className="absolute top-2 right-2 cursor-pointer text-2xl font-bold text-gray-600 hover:text-red-600 z-50"
-        >
-          &times;
-        </div>
-      )}
-
+     
       <form
         className="bg-white bg-opacity-90 backdrop-blur-md p-6 md:p-8 rounded-lg shadow-xl w-full max-w-sm md:max-w-md mx-auto"
         onSubmit={handleSubmit}

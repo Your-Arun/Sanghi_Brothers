@@ -33,5 +33,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "overrides": {
+  "buffer-equal-constant-time": "1.0.1"
+}
 }

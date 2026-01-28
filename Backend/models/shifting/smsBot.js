@@ -43,7 +43,6 @@ function formatAssignmentMessage(date, shift, assignments, caption) {
 // --- SEND LOGIC ---
 async function sendShiftReport(shiftName) {
     try {
-        console.log(`🚀 Starting SMS Process for ${shiftName}...`);
         
         const today = new Date();
         const dateString = today.toISOString().split('T')[0];
@@ -111,8 +110,6 @@ async function restartScheduler() {
     eveningTask = cron.schedule(`${eMin} ${eHour} * * *`, () => {
         sendShiftReport('Evening');
     }, { timezone: "Asia/Kolkata" });
-
-    console.log(`✅ SMS Scheduled: Morning @ ${morningTime}, Evening @ ${eveningTime}`);
 }
 
 module.exports = { restartScheduler, sendShiftReport };

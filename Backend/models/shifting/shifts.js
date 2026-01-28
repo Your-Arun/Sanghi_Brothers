@@ -135,8 +135,6 @@ exports.saveMap = async (req, res) => {
       resource_type: "image"
     });
 
-    console.log("✅ Uploaded to Cloudinary:", uploadResponse.secure_url);
-
     // 3. Database Update (Sirf URL save karenge)
     // findOneAndUpdate ka matlab: Agar date+shift ka map pehle se hai to update karo, nahi to naya banao (upsert).
     const updated = await MapSnapshot.findOneAndUpdate(
@@ -248,7 +246,6 @@ exports.updateSettings = async (req, res) => {
 exports.testSms = async (req, res) => {
   try {
       const { shift } = req.body;
-      console.log(`🚀 Testing SMS for ${shift}...`);
       
       // 👇 Error yahan aa raha hoga agar function undefined hai
       if (typeof sendShiftReport !== 'function') {
