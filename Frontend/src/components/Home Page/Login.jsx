@@ -77,7 +77,6 @@ const Login = ({ switchToSignup }) => {
       <div className="space-y-5">
         <div className="relative group">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
           </div>
           <input
             type="text"
@@ -91,7 +90,6 @@ const Login = ({ switchToSignup }) => {
 
         <div className="relative group">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <Lock className="h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
           </div>
           <input
             type={showPassword ? "text" : "password"}

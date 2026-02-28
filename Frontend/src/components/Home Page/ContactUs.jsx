@@ -79,7 +79,6 @@ const ContactUs = () => {
               <div className="relative group">
                 {/* 100% height container (inset-y-0) flex items-center to perfectly center icon */}
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-gray-400 group-focus-within:text-yellow-500 transition-colors" />
                 </div>
                 <input
                   type="text"
@@ -95,7 +94,6 @@ const ContactUs = () => {
               {/* EMAIL INPUT */}
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-yellow-500 transition-colors" />
                 </div>
                 <input
                   type="email"
