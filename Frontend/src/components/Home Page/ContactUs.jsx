@@ -11,7 +11,7 @@ const ContactUs = () => {
     message: "",
   });
 
-  const [error, setError] = useState(null);
+  const[error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const validateInput = (data) => {
@@ -66,6 +66,7 @@ const ContactUs = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen font-sans selection:bg-yellow-200">
+      {/* HEADER SECTION */}
       <div className="bg-gray-900 text-white py-12 sm:py-16 px-4 sm:px-6 text-center">
         <div className="max-w-3xl mx-auto">
           <span className="text-yellow-500 font-bold tracking-widest uppercase text-xs sm:text-sm">
@@ -82,6 +83,8 @@ const ContactUs = () => {
 
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 -mt-8 sm:-mt-10 pb-14 sm:pb-20">
         <div className="flex flex-col lg:flex-row gap-6 sm:gap-8">
+          
+          {/* FORM SECTION */}
           <div className="w-full lg:w-1/2 bg-white p-5 sm:p-8 md:p-10 rounded-2xl shadow-xl border border-gray-100 z-10">
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Send us a Message</h2>
             <p className="text-gray-500 mb-6 sm:mb-8 text-sm">
@@ -95,43 +98,43 @@ const ContactUs = () => {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+              
+              {/* NAME INPUT (Icon alignment fixed here) */}
               <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-gray-400 group-focus-within:text-yellow-500 transition-colors" />
-                </div>
+                <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-yellow-500 transition-colors pointer-events-none" />
                 <input
                   type="text"
                   name="name"
                   placeholder="Your Name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3.5 sm:py-4 bg-gray-50 border border-transparent rounded-xl focus:bg-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none transition-all font-medium text-gray-900 placeholder-gray-400"
+                  className="w-full pl-12 pr-4 py-3.5 sm:py-4 bg-gray-50 border border-gray-100 rounded-xl focus:bg-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none transition-all font-medium text-gray-900 placeholder-gray-400"
                   required
                 />
               </div>
 
+              {/* EMAIL INPUT (Icon alignment fixed here) */}
               <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-yellow-500 transition-colors" />
-                </div>
+                <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-yellow-500 transition-colors pointer-events-none" />
                 <input
                   type="email"
                   name="email"
                   placeholder="Email Address"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3.5 sm:py-4 bg-gray-50 border border-transparent rounded-xl focus:bg-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none transition-all font-medium text-gray-900 placeholder-gray-400"
+                  className="w-full pl-12 pr-4 py-3.5 sm:py-4 bg-gray-50 border border-gray-100 rounded-xl focus:bg-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none transition-all font-medium text-gray-900 placeholder-gray-400"
                   required
                 />
               </div>
 
+              {/* MESSAGE TEXTAREA */}
               <div>
                 <textarea
                   name="message"
                   placeholder="How can we help you?"
                   value={formData.message}
                   onChange={handleChange}
-                  className="w-full p-4 bg-gray-50 border border-transparent rounded-xl focus:bg-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none transition-all font-medium text-gray-900 placeholder-gray-400 min-h-[130px] sm:min-h-[150px] resize-none"
+                  className="w-full p-4 bg-gray-50 border border-gray-100 rounded-xl focus:bg-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none transition-all font-medium text-gray-900 placeholder-gray-400 min-h-[130px] sm:min-h-[150px] resize-none"
                   rows="4"
                   required
                 />
@@ -159,6 +162,7 @@ const ContactUs = () => {
             </form>
           </div>
 
+          {/* MAP & LOCATION SECTION */}
           <div className="w-full lg:w-1/2 flex flex-col gap-5 sm:gap-6 z-10">
             <div className="bg-gray-900 p-2 rounded-2xl shadow-xl h-[280px] sm:h-[360px] lg:h-full lg:min-h-[400px] relative group">
               <div className="absolute inset-0 bg-yellow-500 rounded-2xl transform translate-x-2 translate-y-2 group-hover:translate-x-3 group-hover:translate-y-3 transition-transform -z-10" />
@@ -185,6 +189,7 @@ const ContactUs = () => {
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>

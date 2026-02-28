@@ -1,23 +1,21 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import UserContext from "./UserContext";
 import axiosInstance from "../Dashboard/axiosInstance";
 import { toast } from "react-toastify";
 import { GoogleLogin } from "@react-oauth/google";
 import jwt_decode from "jwt-decode";
 
-const Login = ({ embedMode, onClose }) => {
+const Login = ({ switchToSignup }) => {
   const { setUser } = useContext(UserContext);
   const [identifier, setIdentifier] = useState("");
-  const [password, setPassword] = useState("");
+  const[password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const[loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const sessionKey =
-    sessionStorage.getItem("activeSession") ||
-    `userSession_${Math.random().toString(36).substring(2, 11)}`;
+  const sessionKey = sessionStorage.getItem("activeSession") || `userSession_${Math.random().toString(36).substring(2, 11)}`;
   sessionStorage.setItem("activeSession", sessionKey);
 
   useEffect(() => {
@@ -38,27 +36,16 @@ const Login = ({ embedMode, onClose }) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const { data } = await axiosInstance.post("/login", {
-        identifier,
-        password,
-      });
-
+      const { data } = await axiosInstance.post("/login", { identifier, password });
       sessionStorage.setItem(sessionKey, JSON.stringify(data.user));
       sessionStorage.setItem("authToken", data.token);
       setUser(data.user);
-      toast.success("Login Successful");
+      toast.success("Welcome back!");
 
-      if (data.user.department === "admin") {
-        navigate("/admin-panel");
-      } else {
-        navigate(
-          data.user.department === "staff" ? "/staff-dashboard" : "/dashboard"
-        );
-      }
+      if (data.user.department === "admin") navigate("/admin-panel");
+      else navigate(data.user.department === "staff" ? "/staff-dashboard" : "/dashboard");
     } catch (err) {
-      toast.error(
-        err.response?.data?.message || "Invalid credentials, please try again."
-      );
+      toast.error(err.response?.data?.message || "Invalid credentials.");
     } finally {
       setLoading(false);
     }
@@ -67,54 +54,46 @@ const Login = ({ embedMode, onClose }) => {
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
       const decoded = jwt_decode(credentialResponse.credential);
-      const { data } = await axiosInstance.post("/google-login", {
-        email: decoded.email,
-      });
-
+      const { data } = await axiosInstance.post("/google-login", { email: decoded.email });
       sessionStorage.setItem(sessionKey, JSON.stringify(data.user));
       sessionStorage.setItem("authToken", data.token);
       setUser(data.user);
       toast.success("Google Login Successful");
 
-      if (data.user.department === "admin") {
-        navigate("/admin-panel");
-      } else {
-        navigate(
-          data.user.department === "staff" ? "/staff-dashboard" : "/dashboard"
-        );
-      }
+      if (data.user.department === "admin") navigate("/admin-panel");
+      else navigate(data.user.department === "staff" ? "/staff-dashboard" : "/dashboard");
     } catch (err) {
-      toast.error(
-        err.response?.data?.message ||
-          "Google Login failed or User not registered."
-      );
+      toast.error(err.response?.data?.message || "User not registered.");
     }
   };
 
   return (
-    <div className="w-full relative">
-      <form
-        className="bg-white/90 backdrop-blur-md p-4 sm:p-8 rounded-lg shadow-xl w-full max-w-md mx-auto"
-        onSubmit={handleSubmit}
-      >
-        <h2 className="text-3xl sm:text-4xl font-bold mb-5 sm:mb-6 text-center text-blue-600">
-          Login
-        </h2>
+    <form className="w-full flex flex-col" onSubmit={handleSubmit}>
+      {/* App-Style Left Aligned Header */}
+      <div className="mb-8">
+        <h2 className="text-3xl font-extrabold text-gray-900">Welcome Back 👋</h2>
+        <p className="text-gray-500 mt-2 text-sm font-medium">Enter your details to securely sign in.</p>
+      </div>
 
-        <input
-          type="text"
-          placeholder="Email or Phone"
-          className="w-full px-3 py-2.5 sm:py-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm sm:text-base"
-          value={identifier}
-          onChange={(e) => setIdentifier(e.target.value)}
-          required
-        />
+      <div className="space-y-5">
+        <div className="relative group">
+          <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+          <input
+            type="text"
+            placeholder="Email or Phone Number"
+            className="w-full pl-12 pr-4 py-4 bg-gray-50/80 border border-gray-200 rounded-2xl focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none transition-all text-[15px] font-medium text-gray-900"
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
+            required
+          />
+        </div>
 
-        <div className="relative mb-4">
+        <div className="relative group">
+          <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Password"
-            className="w-full px-3 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none text-sm sm:text-base"
+            className="w-full pl-12 pr-12 py-4 bg-gray-50/80 border border-gray-200 rounded-2xl focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none transition-all text-[15px] font-medium text-gray-900"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -122,36 +101,45 @@ const Login = ({ embedMode, onClose }) => {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-600 cursor-pointer bg-transparent p-0"
-            aria-label={showPassword ? "Hide password" : "Show password"}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-500"
           >
-            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
           </button>
         </div>
+      </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2.5 sm:py-3 rounded-lg hover:bg-blue-700 transition duration-200 disabled:opacity-50"
-          disabled={loading}
-        >
-          {loading ? "Logging in..." : "Login"}
+      <div className="flex justify-end mt-4 mb-8">
+        <button type="button" onClick={() => navigate("/forgot-password")} className="text-sm font-bold text-orange-600 hover:text-orange-500">
+          Forgot Password?
         </button>
+      </div>
 
-        <p className="mt-2 text-center text-gray-600 text-sm sm:text-base">
-          Forgot your password?{" "}
-          <Link to="/forgot-password" className="text-blue-500 hover:underline">
-            Reset it here
-          </Link>
-        </p>
+      <button
+        type="submit"
+        className="w-full bg-orange-500 text-white py-4 rounded-2xl shadow-lg shadow-orange-500/30 hover:bg-orange-600 hover:shadow-orange-500/50 transition-all font-bold text-[15px] tracking-wide disabled:opacity-70"
+        disabled={loading}
+      >
+        {loading ? "Signing in..." : "Sign In"}
+      </button>
 
-        <div className="mt-4 flex justify-center overflow-x-auto">
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={() => toast.error("Google Login Failed")}
-          />
-        </div>
-      </form>
-    </div>
+      <div className="flex items-center my-6">
+        <div className="flex-1 border-t border-gray-200"></div>
+        <p className="px-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Or login with</p>
+        <div className="flex-1 border-t border-gray-200"></div>
+      </div>
+
+      {/* Google Button Full Width */}
+      <div className="flex justify-center w-full overflow-hidden rounded-2xl [&>div]:w-full">
+        <GoogleLogin onSuccess={handleGoogleSuccess} onError={() => toast.error("Google Login Failed")} />
+      </div>
+
+      <p className="mt-8 text-center text-[15px] text-gray-600 font-medium">
+        Don't have an account?{" "}
+        <button type="button" onClick={switchToSignup} className="font-bold text-orange-600 hover:text-orange-500 transition-colors">
+          Sign up
+        </button>
+      </p>
+    </form>
   );
 };
 

@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { GoogleLogin } from "@react-oauth/google";
 import jwt_decode from "jwt-decode";
+import { User, Mail, Phone, Lock, Eye, EyeOff, KeyRound, Briefcase, CheckCircle2 } from "lucide-react";
 
-const Signup = ({ embedMode, onClose, switchToLogin }) => {
+const Signup = ({ switchToLogin }) => {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -13,9 +14,9 @@ const Signup = ({ embedMode, onClose, switchToLogin }) => {
   const [password, setPassword] = useState("");
   const [department, setDepartment] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [inviteCode, setInviteCode] = useState("");
+  const[inviteCode, setInviteCode] = useState("");
   const [type, setType] = useState("");
-  const [isValidInviteCode, setIsValidInviteCode] = useState(false);
+  const[isValidInviteCode, setIsValidInviteCode] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -23,20 +24,14 @@ const Signup = ({ embedMode, onClose, switchToLogin }) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axiosInstance.post("/verify-invite", {
-        invitecode: inviteCode,
-      });
-
+      const response = await axiosInstance.post("/verify-invite", { invitecode: inviteCode });
       if (response.data) {
         setIsValidInviteCode(response.data.valid);
         setType(response.data.type);
-        if (response.data.type === "staff") {
-          setDepartment("staff");
-        }
-      } else {
-        toast.error("Invalid invitation code");
-      }
-    } catch {
+        if (response.data.type === "staff") setDepartment("staff");
+        toast.success("Invite code verified!");
+      } else toast.error("Invalid invitation code");
+    } catch (err) {
       toast.error("Error verifying invitation code");
     } finally {
       setLoading(false);
@@ -50,43 +45,23 @@ const Signup = ({ embedMode, onClose, switchToLogin }) => {
       setEmail(decoded.email || "");
       setUsername(decoded.email?.split("@")[0] || "");
       setPhone("");
-      toast.success("Google Authentication successful, please complete signup!");
-    } catch {
+      toast.success("Google Auth successful, complete details.");
+    } catch (err) {
       toast.error("Google authentication failed");
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!isValidInviteCode) {
-      toast.error("Please verify your invitation code first");
-      return;
-    }
-
+    if (!isValidInviteCode) return toast.error("Verify invite code first");
     setLoading(true);
-
     try {
-      const response = await axiosInstance.post("/signup", {
-        name,
-        username,
-        email,
-        phone,
-        password,
-        department,
-      });
-
-      if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
-      }
-
-      toast.success(response.data.message || "User registered successfully");
-
-      if (switchToLogin) {
-        switchToLogin();
-      } else {
-        navigate("/login");
-      }
+      const response = await axiosInstance.post("/signup", { name, username, email, phone, password, department });
+      if (response.data.token) localStorage.setItem("token", response.data.token);
+      toast.success(response.data.message || "Account created successfully");
+      
+      if (switchToLogin) switchToLogin();
+      else navigate("/login");
     } catch (err) {
       toast.error(err.response?.data?.message || "Signup failed");
     } finally {
@@ -95,136 +70,117 @@ const Signup = ({ embedMode, onClose, switchToLogin }) => {
   };
 
   return (
-    <div className="w-full relative">
-      {onClose && (
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute top-2 right-2 cursor-pointer text-lg font-bold text-gray-600 hover:text-red-600 z-50 h-8 w-8 rounded-full"
-          aria-label="Close"
-        >
-          &times;
-        </button>
-      )}
+    <form className="w-full flex flex-col" onSubmit={isValidInviteCode ? handleSubmit : handleInviteCodeVerification}>
+      
+      {/* App-Style Header */}
+      <div className="mb-8">
+        <h2 className="text-3xl font-extrabold text-gray-900">Create Account ✨</h2>
+        <p className="text-gray-500 mt-2 text-sm font-medium">Join us today to manage your workflow.</p>
+      </div>
 
-      <form
-        className="bg-white/90 backdrop-blur-md p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-md mx-auto"
-        onSubmit={isValidInviteCode ? handleSubmit : handleInviteCodeVerification}
-      >
-        <h2 className="text-2xl sm:text-3xl font-bold text-center text-blue-600 mb-4">
-          Signup
-        </h2>
-
-        {!isValidInviteCode ? (
-          <>
+      {!isValidInviteCode ? (
+        <div className="space-y-6 animate-fade-in">
+          <div className="relative group">
+            <KeyRound className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
             <input
               type="text"
               placeholder="Enter Invitation Code"
-              className="w-full px-3 py-2.5 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none text-sm"
+              className="w-full pl-12 pr-4 py-4 bg-gray-50/80 border border-gray-200 rounded-2xl focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none transition-all text-[15px] font-medium text-gray-900"
               value={inviteCode}
               onChange={(e) => setInviteCode(e.target.value)}
               required
             />
-            <button
-              type="submit"
-              className="w-full bg-blue-600 text-white py-2.5 rounded-md hover:bg-blue-700 transition duration-200 text-sm"
-              disabled={loading}
-            >
-              {loading ? "Verifying..." : "Verify Invitation Code"}
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-gray-900 text-white py-4 rounded-2xl hover:bg-gray-800 hover:shadow-lg transition-all font-bold text-[15px] tracking-wide disabled:opacity-70"
+            disabled={loading}
+          >
+            {loading ? "Verifying..." : "Verify Code"}
+          </button>
+        </div>
+      ) : (
+        <div className="space-y-4 animate-fade-in">
+          {/* Verified Badge */}
+          <div className="bg-green-50 border border-green-200 rounded-2xl p-4 mb-4 flex items-center gap-3">
+            <CheckCircle2 className="h-6 w-6 text-green-500" />
+            <div>
+              <p className="text-xs font-bold text-green-600 uppercase tracking-wider">Verified Access</p>
+              <p className="text-sm font-semibold text-green-900 capitalize">Role: {type}</p>
+            </div>
+          </div>
+
+          <div className="flex justify-center w-full overflow-hidden rounded-2xl [&>div]:w-full">
+            <GoogleLogin onSuccess={handleGoogleSuccess} onError={() => toast.error("Google Login Failed")} />
+          </div>
+
+          <div className="flex items-center my-4">
+            <div className="flex-1 border-t border-gray-200"></div>
+            <p className="px-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Or register</p>
+            <div className="flex-1 border-t border-gray-200"></div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="relative group">
+              <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+              <input type="text" placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} required
+                className="w-full pl-12 pr-4 py-3.5 bg-gray-50/80 border border-gray-200 rounded-xl focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-[14px] font-medium text-gray-900" />
+            </div>
+            <div className="relative group">
+              <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+              <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required
+                className="w-full pl-12 pr-4 py-3.5 bg-gray-50/80 border border-gray-200 rounded-xl focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-[14px] font-medium text-gray-900" />
+            </div>
+          </div>
+
+          <div className="relative group">
+            <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+            <input type="email" placeholder="Email Address" value={email} onChange={(e) => setEmail(e.target.value)} required
+              className="w-full pl-12 pr-4 py-3.5 bg-gray-50/80 border border-gray-200 rounded-xl focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-[14px] font-medium text-gray-900" />
+          </div>
+
+          <div className="relative group">
+            <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+            <input type="tel" placeholder="Phone Number" value={phone} onChange={(e) => setPhone(e.target.value)} required
+              className="w-full pl-12 pr-4 py-3.5 bg-gray-50/80 border border-gray-200 rounded-xl focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-[14px] font-medium text-gray-900" />
+          </div>
+
+          <div className="relative group">
+            <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+            <input type={showPassword ? "text" : "password"} placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required
+              className="w-full pl-12 pr-12 py-3.5 bg-gray-50/80 border border-gray-200 rounded-xl focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-[14px] font-medium text-gray-900" />
+            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-500">
+              {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
             </button>
-          </>
-        ) : (
-          <>
-            <h1 className="text-sm sm:text-base font-semibold text-green-600 text-center mb-3">
-              Welcome as <span className="uppercase text-red-600">{type}</span>
-            </h1>
+          </div>
 
-            <div className="mb-3 flex justify-center overflow-x-auto">
-              <GoogleLogin
-                onSuccess={handleGoogleSuccess}
-                onError={() => toast.error("Google Login Failed")}
-              />
-            </div>
-
-            <input
-              type="text"
-              placeholder="Full Name"
-              className="w-full px-3 py-2.5 mb-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none text-sm"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-
-            <input
-              type="text"
-              placeholder="Username"
-              className="w-full px-3 py-2.5 mb-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none text-sm"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-
-            <input
-              type="email"
-              placeholder="Email"
-              className="w-full px-3 py-2.5 mb-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none text-sm"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-
-            <input
-              type="tel"
-              placeholder="Phone"
-              className="w-full px-3 py-2.5 mb-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none text-sm"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              required
-            />
-
-            <div className="relative mb-3">
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none text-sm"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <button
-                type="button"
-                className="absolute top-1/2 right-3 cursor-pointer -translate-y-1/2 text-gray-600 text-xs bg-transparent p-0"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? "Hide" : "Show"}
-              </button>
-            </div>
-
-            {type !== "staff" && (
-              <select
-                className="w-full p-2.5 mb-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none text-sm"
-                value={department}
-                onChange={(e) => setDepartment(e.target.value)}
-                required
-              >
-                <option value="">Select Department</option>
-                <option value="manager">MANAGER</option>
-                <option value="accounts/finance">ACCOUNTS/FINANCE</option>
-                <option value="backoffice">BACK OFFICE</option>
+          {type !== "staff" && (
+            <div className="relative group">
+              <Briefcase className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-orange-500 z-10" />
+              <select value={department} onChange={(e) => setDepartment(e.target.value)} required
+                className="w-full pl-12 pr-4 py-3.5 bg-gray-50/80 border border-gray-200 rounded-xl focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-[14px] font-medium text-gray-900 appearance-none cursor-pointer">
+                <option value="" disabled>Select Department</option>
+                <option value="manager">Manager</option>
+                <option value="accounts/finance">Accounts / Finance</option>
+                <option value="backoffice">Back Office</option>
               </select>
-            )}
+            </div>
+          )}
 
-            <button
-              type="submit"
-              className="w-full bg-green-500 text-white py-2.5 rounded-md hover:bg-green-600 transition duration-200 text-sm"
-              disabled={loading}
-            >
-              {loading ? "Signing up..." : "Signup"}
-            </button>
-          </>
-        )}
-      </form>
-    </div>
+          <button type="submit" disabled={loading}
+            className="w-full mt-2 bg-green-500 text-white py-4 rounded-2xl shadow-lg shadow-green-500/30 hover:bg-green-600 hover:shadow-green-500/50 transition-all font-bold text-[15px] tracking-wide disabled:opacity-70">
+            {loading ? "Creating Account..." : "Create Account"}
+          </button>
+        </div>
+      )}
+
+      <p className="mt-8 text-center text-[15px] text-gray-600 font-medium">
+        Already have an account?{" "}
+        <button type="button" onClick={switchToLogin} className="font-bold text-orange-600 hover:text-orange-500 transition-colors">
+          Sign In
+        </button>
+      </p>
+    </form>
   );
 };
 
