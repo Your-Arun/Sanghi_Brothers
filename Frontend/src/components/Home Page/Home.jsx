@@ -20,8 +20,6 @@ const Home = () => {
         className={`relative flex flex-col lg:flex-row min-h-screen
         ${authMode ? "hidden lg:flex" : "flex"}`}
       >
-
-        {/* LEFT CONTENT */}
         <div className="w-full lg:w-1/2 flex flex-col justify-center px-6 sm:px-12 md:px-20 py-16 lg:py-0 bg-white z-10">
           <div className="max-w-xl mx-auto lg:mx-0 text-center lg:text-left">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 mb-6">
@@ -51,7 +49,6 @@ const Home = () => {
           </div>
         </div>
 
-        {/* RIGHT IMAGE */}
         <div className="relative w-full lg:w-1/2 h-[500px] lg:h-auto overflow-hidden">
           <div
             className="absolute inset-0 bg-cover bg-center"
@@ -74,7 +71,8 @@ const Home = () => {
                 {authMode === "login" ? (
                   <Login embedMode onClose={handleClose} />
                 ) : (
-                  <Signup embedMode onClose={handleClose} />
+                  // ✅ Passing switchToLogin prop here
+                  <Signup embedMode onClose={handleClose} switchToLogin={() => setAuthMode("login")} />
                 )}
               </div>
             </div>
@@ -96,7 +94,8 @@ const Home = () => {
             {authMode === "login" ? (
               <Login embedMode onClose={handleClose} />
             ) : (
-              <Signup embedMode onClose={handleClose} />
+              // ✅ Passing switchToLogin prop here as well
+              <Signup embedMode onClose={handleClose} switchToLogin={() => setAuthMode("login")} />
             )}
           </div>
         </div>

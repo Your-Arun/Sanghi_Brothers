@@ -2,24 +2,23 @@ import React, { useState } from "react";
 import axiosInstance from "../Dashboard/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { GoogleLogin } from "@react-oauth/google"; // ✅ Google Auth library
-import jwt_decode from "jwt-decode"; // ✅ Decode JWT to extract user info
+import { GoogleLogin } from "@react-oauth/google"; 
+import jwt_decode from "jwt-decode"; 
 
-const Signup = ({ embedMode, onClose }) => {
+const Signup = ({ embedMode, onClose, switchToLogin }) => { // ✅ Added switchToLogin prop
   const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
+  const[username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const[phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [department, setDepartment] = useState("");
+  const[department, setDepartment] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [inviteCode, setInviteCode] = useState("");
   const [type, setType] = useState("");
   const [isValidInviteCode, setIsValidInviteCode] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const[loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ Invitation Code Verification
   const handleInviteCodeVerification = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -44,7 +43,6 @@ const Signup = ({ embedMode, onClose }) => {
     }
   };
 
-  // ✅ Google Auth Success Handler
   const handleGoogleSuccess = (credentialResponse) => {
     try {
       const decoded = jwt_decode(credentialResponse.credential);
@@ -58,7 +56,6 @@ const Signup = ({ embedMode, onClose }) => {
     }
   };
 
-  // ✅ Signup Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -84,7 +81,14 @@ const Signup = ({ embedMode, onClose }) => {
       }
 
       toast.success(response.data.message || "User registered successfully");
-      navigate("/");
+      
+      // ✅ Redirecting to Login after successful Signup
+      if (switchToLogin) {
+        switchToLogin();
+      } else {
+        navigate("/login"); 
+      }
+      
     } catch (err) {
       toast.error(err.response?.data?.message || "Signup failed");
     } finally {
@@ -94,7 +98,6 @@ const Signup = ({ embedMode, onClose }) => {
 
   return (
     <div className="w-full relative">
-      {/* Close Button */}
       {onClose && (
         <div
           onClick={onClose}
@@ -114,7 +117,6 @@ const Signup = ({ embedMode, onClose }) => {
 
         {!isValidInviteCode ? (
           <>
-            {/* Invitation Code Field */}
             <input
               type="text"
               placeholder="Enter Invitation Code"
@@ -138,7 +140,6 @@ const Signup = ({ embedMode, onClose }) => {
               <span className="uppercase text-red-600">{type}❗</span>
             </h1>
 
-            {/* ✅ Google Auth Button */}
             <div className="mb-3 flex justify-center">
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
@@ -146,7 +147,6 @@ const Signup = ({ embedMode, onClose }) => {
               />
             </div>
 
-            {/* Normal Form Fields */}
             <input
               type="text"
               placeholder="Full Name"
