@@ -1,91 +1,88 @@
-import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
 
 const Navbar = () => {
-    const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-    const menuItems = ['home', 'about', 'services', 'contacts'];
+  const menuItems = ["home", "about", "services", "contacts"];
 
-    const toggleMenu = () => setMenuOpen(!menuOpen);
-    const closeMenu = () => setMenuOpen(false);
+  const toggleMenu = () => setMenuOpen((prev) => !prev);
+  const closeMenu = () => setMenuOpen(false);
 
-    return (
-        <nav className="bg-gray-900 shadow-xl sticky top-0 z-50 border-b border-gray-800">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-20">
-                    
-                    {/* Logo Section */}
-                    <div className="flex-shrink-0 cursor-pointer">
-                        <NavLink to="/" className="flex items-center gap-2 group">
-                            <span className="text-4xl group-hover:scale-110 transition-transform duration-300">⛽</span>
-                            <span className="font-extrabold text-2xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 font-serif">
-                                SANGHI BROTHERS
-                            </span>
-                        </NavLink>
-                    </div>
+  return (
+    <nav className="bg-gray-900 shadow-xl sticky top-0 z-50 border-b border-gray-800">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 sm:h-20">
+          <div className="flex-shrink-0 cursor-pointer min-w-0">
+            <NavLink to="/" className="flex items-center gap-2 group" onClick={closeMenu}>
+              <span className="text-2xl sm:text-3xl group-hover:scale-110 transition-transform duration-300">
+                SB
+              </span>
+              <span className="font-extrabold text-base sm:text-xl md:text-2xl tracking-wide sm:tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 font-serif truncate">
+                Sanghi Brothers
+              </span>
+            </NavLink>
+          </div>
 
-                    {/* Desktop Menu */}
-                    <div className="hidden md:block">
-                        <ul className="flex space-x-8 items-center">
-                            {menuItems.map(item => (
-                                <li key={item}>
-                                    <NavLink
-                                        to={`/${item === 'home' ? '' : item}`}
-                                        className={({ isActive }) =>
-                                            `text-sm font-bold uppercase tracking-widest px-3 py-2 rounded-md transition-all duration-300 
-                                            ${isActive 
-                                                ? 'text-yellow-400 bg-gray-800 shadow-inner' 
-                                                : 'text-gray-300 hover:text-white hover:bg-gray-800 hover:scale-105'
-                                            }`
-                                        }
-                                    >
-                                        {item}
-                                    </NavLink>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+          <div className="hidden md:block">
+            <ul className="flex space-x-6 items-center">
+              {menuItems.map((item) => (
+                <li key={item}>
+                  <NavLink
+                    to={`/${item === "home" ? "" : item}`}
+                    className={({ isActive }) =>
+                      `text-sm font-bold uppercase tracking-widest px-3 py-2 rounded-md transition-all duration-300 ${
+                        isActive
+                          ? "text-yellow-400 bg-gray-800 shadow-inner"
+                          : "text-gray-300 hover:text-white hover:bg-gray-800"
+                      }`
+                    }
+                  >
+                    {item}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-                    {/* Mobile Menu Toggle Button */}
-                    <div className="md:hidden flex items-center">
-                        <button
-                            onClick={toggleMenu}
-                            className="text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-yellow-500 p-2 rounded-md"
-                            aria-label="Toggle menu"
-                        >
-                            {menuOpen ? <FiX size={28} /> : <FiMenu size={28} />}
-                        </button>
-                    </div>
-                </div>
-            </div>
+          <div className="md:hidden flex items-center">
+            <button
+              onClick={toggleMenu}
+              className="text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-yellow-500 p-2 rounded-md"
+              aria-label="Toggle menu"
+            >
+              {menuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+            </button>
+          </div>
+        </div>
+      </div>
 
-            {/* Mobile Menu Dropdown */}
-            {menuOpen && (
-                <div className="md:hidden bg-gray-900 border-t border-gray-800 absolute w-full left-0 shadow-2xl animate-fade-in-down">
-                    <ul className="px-4 pt-2 pb-6 space-y-2">
-                        {menuItems.map(item => (
-                            <li key={item}>
-                                <NavLink
-                                    to={`/${item === 'home' ? '' : item}`}
-                                    onClick={closeMenu}
-                                    className={({ isActive }) =>
-                                        `block text-center text-base font-semibold uppercase tracking-wide py-3 rounded-lg transition-colors duration-200
-                                        ${isActive 
-                                            ? 'bg-yellow-500 text-black shadow-lg' 
-                                            : 'text-gray-300 hover:bg-gray-800 hover:text-white'
-                                        }`
-                                    }
-                                >
-                                    {item}
-                                </NavLink>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
-        </nav>
-    );
+      {menuOpen && (
+        <div className="md:hidden bg-gray-900 border-t border-gray-800 absolute w-full left-0 shadow-2xl max-h-[calc(100vh-4rem)] overflow-y-auto">
+          <ul className="px-3 pt-2 pb-5 space-y-2">
+            {menuItems.map((item) => (
+              <li key={item}>
+                <NavLink
+                  to={`/${item === "home" ? "" : item}`}
+                  onClick={closeMenu}
+                  className={({ isActive }) =>
+                    `block text-center text-sm font-semibold uppercase tracking-wide py-3 rounded-lg transition-colors duration-200 ${
+                      isActive
+                        ? "bg-yellow-500 text-black shadow-lg"
+                        : "text-gray-300 hover:bg-gray-800 hover:text-white"
+                    }`
+                  }
+                >
+                  {item}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </nav>
+  );
 };
 
 export default Navbar;

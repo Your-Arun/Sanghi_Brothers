@@ -50,88 +50,79 @@ const AboutUs = () => {
       subtitle: "Political & Social Impact",
       image: "/1.jpg",
       description:
-        "Shri N K Sanghi won the Lok Sabha elections in 1967 & 1971. His social impact is still remembered by his people, marking a blend of business success and public service.",
+        "Shri N K Sanghi won the Lok Sabha elections in 1967 and 1971. His social impact is still remembered by his people, marking a blend of business success and public service.",
     },
   ];
 
   return (
     <div className="bg-white font-sans selection:bg-yellow-200">
-      
-      {/* --- HERO / HEADER --- */}
-      <div className="bg-gray-50 py-16 px-6 text-center">
+      <div className="bg-gray-50 py-12 sm:py-16 px-4 sm:px-6 text-center">
         <div className="max-w-3xl mx-auto">
-          <span className="text-yellow-600 font-bold tracking-widest uppercase text-sm">
+          <span className="text-yellow-600 font-bold tracking-widest uppercase text-xs sm:text-sm">
             Our Story
           </span>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mt-3 mb-5 sm:mb-6">
             About Sanghi Brothers
           </h1>
-          <div className="h-1.5 w-24 bg-yellow-500 mx-auto rounded-full mb-6"></div>
-          <p className="text-lg text-gray-600 leading-relaxed">
-            A legacy of trust, leadership, and service that spans generations. 
+          <div className="h-1.5 w-20 sm:w-24 bg-yellow-500 mx-auto rounded-full mb-5 sm:mb-6" />
+          <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
+            A legacy of trust, leadership, and service that spans generations.
             From cinema to fuel, our journey is defined by excellence.
           </p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        
-        {/* --- CORE VALUES (Grid) --- */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-14 sm:mb-24">
           {aboutItems.map((item, i) => (
-            <div 
-              key={i} 
-              className="group bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+            <div
+              key={i}
+              className="group bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
             >
-              <div className="w-16 h-16 flex items-center justify-center bg-yellow-100 text-yellow-600 rounded-xl mb-6 group-hover:bg-yellow-500 group-hover:text-white transition-colors duration-300">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center bg-yellow-100 text-yellow-600 rounded-xl mb-5 sm:mb-6 group-hover:bg-yellow-500 group-hover:text-white transition-colors duration-300">
                 {item.icon}
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
-              <p className="text-gray-600 leading-relaxed">{item.description}</p>
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
+              <p className="text-gray-600 leading-relaxed text-sm sm:text-base">{item.description}</p>
             </div>
           ))}
         </div>
 
-        {/* --- LEGACY SECTION (Zig-Zag) --- */}
-        <div className="space-y-24">
+        <div className="space-y-14 sm:space-y-24">
           {legacyItems.map((item, i) => (
             <div
               key={i}
-              className={`flex flex-col lg:flex-row items-center gap-12 lg:gap-20 ${
+              className={`flex flex-col lg:flex-row items-center gap-8 sm:gap-12 lg:gap-20 ${
                 i % 2 !== 0 ? "lg:flex-row-reverse" : ""
               }`}
             >
-              {/* Image Side */}
               <div className="w-full lg:w-1/2 relative group">
-                {/* Decorative border offset */}
-                <div className="absolute inset-0 border-2 border-yellow-500 rounded-2xl transform translate-x-4 translate-y-4 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-500 hidden sm:block"></div>
-                
+                <div className="absolute inset-0 border-2 border-yellow-500 rounded-2xl transform translate-x-3 translate-y-3 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-500 hidden sm:block" />
+
                 <div className="relative overflow-hidden rounded-2xl shadow-2xl aspect-[4/3] bg-gray-200">
                   <img
                     src={item.image}
                     alt={item.title}
                     className="w-full h-full object-cover transform group-hover:scale-105 transition duration-700"
                   />
-                  <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500"></div>
+                  <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
                 </div>
               </div>
 
-              {/* Text Side */}
               <div className="w-full lg:w-1/2 text-center lg:text-left">
                 <span className="text-yellow-600 font-bold tracking-widest uppercase text-xs mb-2 block">
                   {item.subtitle}
                 </span>
-                <h3 className="text-3xl font-bold text-gray-900 mb-6">
+                <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
                   {item.title}
                 </h3>
-                <p className="text-lg text-gray-600 leading-relaxed">
+                <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
                   {item.description}
                 </p>
               </div>
             </div>
           ))}
         </div>
-
       </div>
     </div>
   );

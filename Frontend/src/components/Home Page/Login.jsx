@@ -34,7 +34,6 @@ const Login = ({ embedMode, onClose }) => {
     fetchUser();
   }, [setUser, sessionKey]);
 
-  // ---------------- NORMAL LOGIN ----------------
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -65,10 +64,9 @@ const Login = ({ embedMode, onClose }) => {
     }
   };
 
-  // ---------------- GOOGLE LOGIN ----------------
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
-      const decoded = jwt_decode(credentialResponse.credential); // email, name, etc.
+      const decoded = jwt_decode(credentialResponse.credential);
       const { data } = await axiosInstance.post("/google-login", {
         email: decoded.email,
       });
@@ -95,20 +93,18 @@ const Login = ({ embedMode, onClose }) => {
 
   return (
     <div className="w-full relative">
-     
       <form
-        className="bg-white bg-opacity-90 backdrop-blur-md p-6 md:p-8 rounded-lg shadow-xl w-full max-w-sm md:max-w-md mx-auto"
+        className="bg-white/90 backdrop-blur-md p-4 sm:p-8 rounded-lg shadow-xl w-full max-w-md mx-auto"
         onSubmit={handleSubmit}
       >
-        <h2 className="text-5xl font-bold mb-6 text-center text-blue-600">
+        <h2 className="text-3xl sm:text-4xl font-bold mb-5 sm:mb-6 text-center text-blue-600">
           Login
         </h2>
 
-        {/* Normal Login */}
         <input
           type="text"
           placeholder="Email or Phone"
-          className="w-full px-3 py-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+          className="w-full px-3 py-2.5 sm:py-3 mb-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm sm:text-base"
           value={identifier}
           onChange={(e) => setIdentifier(e.target.value)}
           required
@@ -118,36 +114,37 @@ const Login = ({ embedMode, onClose }) => {
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Password"
-            className="w-full px-3 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
+            className="w-full px-3 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none text-sm sm:text-base"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <div
+          <button
+            type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600 cursor-pointer"
+            className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-600 cursor-pointer bg-transparent p-0"
+            aria-label={showPassword ? "Hide password" : "Show password"}
           >
-            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-          </div>
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
         </div>
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-200 disabled:opacity-50"
+          className="w-full bg-blue-600 text-white py-2.5 sm:py-3 rounded-lg hover:bg-blue-700 transition duration-200 disabled:opacity-50"
           disabled={loading}
         >
           {loading ? "Logging in..." : "Login"}
         </button>
 
-        <p className="mt-2 text-center text-gray-600">
+        <p className="mt-2 text-center text-gray-600 text-sm sm:text-base">
           Forgot your password?{" "}
           <Link to="/forgot-password" className="text-blue-500 hover:underline">
             Reset it here
           </Link>
         </p>
 
-        {/* Google Login Button */}
-        <div className="mt-4 flex justify-center">
+        <div className="mt-4 flex justify-center overflow-x-auto">
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
             onError={() => toast.error("Google Login Failed")}
