@@ -16,9 +16,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16 sm:h-20">
           <div className="flex-shrink-0 cursor-pointer min-w-0">
             <NavLink to="/" className="flex items-center gap-2 group" onClick={closeMenu}>
-              <span className="text-2xl sm:text-3xl group-hover:scale-110 transition-transform duration-300">
-                SB
-              </span>
+             
               <span className="font-extrabold text-base sm:text-xl md:text-2xl tracking-wide sm:tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 font-serif truncate">
                 Sanghi Brothers
               </span>

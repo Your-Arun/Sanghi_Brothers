@@ -34,9 +34,6 @@ const Home = () => {
       <div className="relative flex flex-col lg:flex-row min-h-screen">
         <div className="w-full lg:w-1/2 flex flex-col justify-center px-6 sm:px-12 md:px-20 py-20 lg:py-0 bg-white z-10">
           <div className="max-w-xl mx-auto lg:mx-0 text-center lg:text-left">
-            <div className="inline-block px-4 py-1.5 rounded-full bg-orange-50 border border-orange-100 text-orange-600 font-semibold text-sm mb-6">
-              🚀 Welcome to the Future
-            </div>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-gray-900 mb-6 leading-tight">
               We are happily saying <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-600">

@@ -9,10 +9,10 @@ import jwt_decode from "jwt-decode";
 
 const Login = ({ switchToSignup }) => {
   const { setUser } = useContext(UserContext);
-  const [identifier, setIdentifier] = useState("");
-  const[password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const[loading, setLoading] = useState(false);
+  const[identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+  const[showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const sessionKey = sessionStorage.getItem("activeSession") || `userSession_${Math.random().toString(36).substring(2, 11)}`;
@@ -69,7 +69,6 @@ const Login = ({ switchToSignup }) => {
 
   return (
     <form className="w-full flex flex-col" onSubmit={handleSubmit}>
-      {/* App-Style Left Aligned Header */}
       <div className="mb-8">
         <h2 className="text-3xl font-extrabold text-gray-900">Welcome Back 👋</h2>
         <p className="text-gray-500 mt-2 text-sm font-medium">Enter your details to securely sign in.</p>
@@ -77,7 +76,9 @@ const Login = ({ switchToSignup }) => {
 
       <div className="space-y-5">
         <div className="relative group">
-          <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+          </div>
           <input
             type="text"
             placeholder="Email or Phone Number"
@@ -89,7 +90,9 @@ const Login = ({ switchToSignup }) => {
         </div>
 
         <div className="relative group">
-          <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <Lock className="h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+          </div>
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Password"
@@ -98,13 +101,15 @@ const Login = ({ switchToSignup }) => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-500"
-          >
-            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-          </button>
+          <div className="absolute inset-y-0 right-0 pr-4 flex items-center">
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="text-gray-400 hover:text-orange-500 focus:outline-none"
+            >
+              {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -128,8 +133,7 @@ const Login = ({ switchToSignup }) => {
         <div className="flex-1 border-t border-gray-200"></div>
       </div>
 
-      {/* Google Button Full Width */}
-      <div className="flex justify-center w-full overflow-hidden rounded-2xl [&>div]:w-full">
+      <div className="flex justify-center w-full overflow-hidden rounded-2xl[&>div]:w-full">
         <GoogleLogin onSuccess={handleGoogleSuccess} onError={() => toast.error("Google Login Failed")} />
       </div>
 

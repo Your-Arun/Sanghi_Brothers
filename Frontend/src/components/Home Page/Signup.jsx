@@ -14,9 +14,9 @@ const Signup = ({ switchToLogin }) => {
   const [password, setPassword] = useState("");
   const [department, setDepartment] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const[inviteCode, setInviteCode] = useState("");
-  const [type, setType] = useState("");
-  const[isValidInviteCode, setIsValidInviteCode] = useState(false);
+  const [inviteCode, setInviteCode] = useState("");
+  const[type, setType] = useState("");
+  const [isValidInviteCode, setIsValidInviteCode] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -71,8 +71,6 @@ const Signup = ({ switchToLogin }) => {
 
   return (
     <form className="w-full flex flex-col" onSubmit={isValidInviteCode ? handleSubmit : handleInviteCodeVerification}>
-      
-      {/* App-Style Header */}
       <div className="mb-8">
         <h2 className="text-3xl font-extrabold text-gray-900">Create Account ✨</h2>
         <p className="text-gray-500 mt-2 text-sm font-medium">Join us today to manage your workflow.</p>
@@ -81,7 +79,9 @@ const Signup = ({ switchToLogin }) => {
       {!isValidInviteCode ? (
         <div className="space-y-6 animate-fade-in">
           <div className="relative group">
-            <KeyRound className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <KeyRound className="h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+            </div>
             <input
               type="text"
               placeholder="Enter Invitation Code"
@@ -101,7 +101,6 @@ const Signup = ({ switchToLogin }) => {
         </div>
       ) : (
         <div className="space-y-4 animate-fade-in">
-          {/* Verified Badge */}
           <div className="bg-green-50 border border-green-200 rounded-2xl p-4 mb-4 flex items-center gap-3">
             <CheckCircle2 className="h-6 w-6 text-green-500" />
             <div>
@@ -122,41 +121,55 @@ const Signup = ({ switchToLogin }) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="relative group">
-              <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <User className="h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+              </div>
               <input type="text" placeholder="Full Name" value={name} onChange={(e) => setName(e.target.value)} required
                 className="w-full pl-12 pr-4 py-3.5 bg-gray-50/80 border border-gray-200 rounded-xl focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-[14px] font-medium text-gray-900" />
             </div>
             <div className="relative group">
-              <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <User className="h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+              </div>
               <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required
                 className="w-full pl-12 pr-4 py-3.5 bg-gray-50/80 border border-gray-200 rounded-xl focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-[14px] font-medium text-gray-900" />
             </div>
           </div>
 
           <div className="relative group">
-            <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+            </div>
             <input type="email" placeholder="Email Address" value={email} onChange={(e) => setEmail(e.target.value)} required
               className="w-full pl-12 pr-4 py-3.5 bg-gray-50/80 border border-gray-200 rounded-xl focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-[14px] font-medium text-gray-900" />
           </div>
 
           <div className="relative group">
-            <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <Phone className="h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+            </div>
             <input type="tel" placeholder="Phone Number" value={phone} onChange={(e) => setPhone(e.target.value)} required
               className="w-full pl-12 pr-4 py-3.5 bg-gray-50/80 border border-gray-200 rounded-xl focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-[14px] font-medium text-gray-900" />
           </div>
 
           <div className="relative group">
-            <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <Lock className="h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+            </div>
             <input type={showPassword ? "text" : "password"} placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required
               className="w-full pl-12 pr-12 py-3.5 bg-gray-50/80 border border-gray-200 rounded-xl focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-[14px] font-medium text-gray-900" />
-            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-orange-500">
-              {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-            </button>
+            <div className="absolute inset-y-0 right-0 pr-4 flex items-center">
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-gray-400 hover:text-orange-500 focus:outline-none">
+                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+              </button>
+            </div>
           </div>
 
           {type !== "staff" && (
             <div className="relative group">
-              <Briefcase className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-orange-500 z-10" />
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                <Briefcase className="h-5 w-5 text-gray-400 group-focus-within:text-orange-500" />
+              </div>
               <select value={department} onChange={(e) => setDepartment(e.target.value)} required
                 className="w-full pl-12 pr-4 py-3.5 bg-gray-50/80 border border-gray-200 rounded-xl focus:bg-white focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-[14px] font-medium text-gray-900 appearance-none cursor-pointer">
                 <option value="" disabled>Select Department</option>
