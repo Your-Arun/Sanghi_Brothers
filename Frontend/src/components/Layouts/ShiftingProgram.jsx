@@ -384,7 +384,6 @@ const ShiftManagementSystem = () => {
         width: "100%",
         height: "auto",
         boxShadow: "none",
-        border: "none",
         margin: "0",
         padding: "40px 20px",
         overflow: "visible",
