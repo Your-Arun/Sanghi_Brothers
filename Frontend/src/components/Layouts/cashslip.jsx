@@ -119,28 +119,48 @@ const CashSlip = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Basic Validations
         if(!cashSlip.shift) return toast.warn("Please select shift");
         if(!cashSlip.rate) return toast.warn("Please enter Rate (₹/Ltr)");
         if(!cashSlip.nozzleNo) return toast.warn("Please enter Nozzle No");
+        if(!cashSlip.openingReading || !cashSlip.closingReading) return toast.warn("Please enter Meter Readings");
         
         try {
+            // FIX: Saare empty strings ("") ko '0' number me convert kar rahe hain
             const cashdata = { 
                 ...cashSlip, 
-                netSalesLtr,
-                expectedAmount,
-                total: totalAmount,
-                shortageExcess
+                testing: Number(cashSlip.testing) || 0,
+                pending: Number(cashSlip.pending) || 0,
+                uFill: Number(cashSlip.uFill) || 0,
+                iciciSlip: Number(cashSlip.iciciSlip) || 0,
+                sbiSlip: Number(cashSlip.sbiSlip) || 0,
+                paytm: Number(cashSlip.paytm) || 0,
+                expenses: Number(cashSlip.expenses) || 0,
+                openingReading: Number(cashSlip.openingReading) || 0,
+                closingReading: Number(cashSlip.closingReading) || 0,
+                salesInLtr: Number(cashSlip.salesInLtr) || 0,
+                rate: Number(cashSlip.rate) || 0,
+                netSalesLtr: Number(netSalesLtr) || 0,
+                expectedAmount: Number(expectedAmount) || 0,
+                total: Number(totalAmount) || 0,
+                shortageExcess: Number(shortageExcess) || 0
             };
-            await axiosInstance.post("/Cashslip", cashdata);
+
+            const response = await axiosInstance.post("/Cashslip", cashdata);
+            
             toast.success("Slip Saved Successfully!");
             fetchCashSlipByDate(selectedDate);
-            setCashSlip(initialCashSlipState); // Reset form
+            setCashSlip(initialCashSlipState); // Form wapas reset karega
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
         } catch (error) { 
-            toast.error("Error saving slip!"); 
+            // Ab agar error aayega toh exact karan console aur toast dono me dikhega
+            console.error("Backend Error:", error.response?.data);
+            toast.error(error.response?.data?.message || "Error saving slip!"); 
         }
     };
-
+    
     const handleDelete = (id) => {
         if(window.confirm("Delete this slip?")) {
             axiosInstance.delete(`/Cashslip/${id}`).then(() => {
