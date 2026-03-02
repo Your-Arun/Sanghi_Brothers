@@ -78,7 +78,6 @@ const Login = ({ switchToSignup }) => {
       <div className="space-y-4">
         <div className="relative group">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
           </div>
           {/* Reduced Padding from py-4 to py-3.5 */}
           <input
@@ -93,7 +92,6 @@ const Login = ({ switchToSignup }) => {
 
         <div className="relative group">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <Lock className="h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
           </div>
           {/* Reduced Padding from py-4 to py-3.5 */}
           <input
@@ -136,7 +134,7 @@ const Login = ({ switchToSignup }) => {
         <div className="flex-1 border-t border-gray-200"></div>
       </div>
 
-      <div className="flex justify-center w-full overflow-hidden rounded-2xl [&>div]:w-full">
+      <div className="flex justify-center w-full overflow-hidden items-center rounded-2xl [&>div]:w-full">
         <GoogleLogin onSuccess={handleGoogleSuccess} onError={() => toast.error("Google Login Failed")} />
       </div>
 
