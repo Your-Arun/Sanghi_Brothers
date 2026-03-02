@@ -16,17 +16,18 @@ const Home = () => {
     setTimeout(() => {
       setAuthMode(null);
       setIsAnimating(false);
-    }, 300); // 300ms for smooth slide-down
+    }, 300);
   };
-
-  // Prevent background scrolling when modal is open
-  useEffect(() => {
-    if (authMode) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-  }, [authMode]);
+ useEffect(() => {
+  if (authMode) {
+    document.body.style.overflow = "hidden"; 
+  } else {
+    document.body.style.overflow = "auto"; 
+  }
+  return () => {
+    document.body.style.overflow = "auto";
+  };
+}, [authMode]);
 
   return (
     <div className="bg-gray-50 font-sans selection:bg-orange-200">
