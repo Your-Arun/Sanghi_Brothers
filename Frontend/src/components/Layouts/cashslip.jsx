@@ -5,7 +5,7 @@ import UserContext from "../Home Page/UserContext";
 import { useNavigate } from 'react-router-dom';
 import { 
   FaArrowLeft, FaGasPump, FaMoneyBillWave, 
-  FaCreditCard, FaTrash, FaHistory, FaCheckCircle, FaTint, FaRupeeSign
+  FaCreditCard, FaTrash, FaHistory, FaCheckCircle, FaTint
 } from "react-icons/fa";
 
 const CashSlip = () => {
@@ -17,10 +17,10 @@ const CashSlip = () => {
         shift: "",
         name: user?.username || "",
         nozzleNo: "",
-        rate: "", // Added Rate to calculate amount from Liters
+        rate: "", 
         openingReading: "",
         closingReading: "",
-        salesInLtr: "",
+        salesInLtr: "", // Gross Liters
         testing: "",
         pending: "",
         cashDetails: { 500: "", 200: "", 100: "", 50: "", 20: "", 10: "" },
@@ -29,20 +29,19 @@ const CashSlip = () => {
         sbiSlip: "",
         paytm: "",
         expenses: "",
-        total: "",
     };
 
     const[fecthcashSlip, setFecthcashSlip] = useState([]);
     const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split("T")[0]);
-    const[cashSlip, setCashSlip] = useState(initialCashSlipState);
+    const [cashSlip, setCashSlip] = useState(initialCashSlipState);
     
-    // New Computed States
-    const[netSalesLtr, setNetSalesLtr] = useState(0);
+    // Derived States
+    const [netSalesLtr, setNetSalesLtr] = useState(0);
     const [expectedAmount, setExpectedAmount] = useState(0);
-    const [totalAmount, setTotalAmount] = useState(0);
+    const [totalAmount, setTotalAmount] = useState(0); // Cash + Digital + Exp
     const[shortageExcess, setShortageExcess] = useState(0);
 
-    const shifts =["First Shift", "Second Shift"];
+    const shifts = ["First Shift", "Second Shift"];
 
     // 1. Fetch History By Date
     const fetchCashSlipByDate = async (date) => {
@@ -52,32 +51,28 @@ const CashSlip = () => {
         } catch (error) { setFecthcashSlip([]); }
     };
 
-    useEffect(() => { fetchCashSlipByDate(selectedDate); }, [selectedDate]);
+    useEffect(() => { fetchCashSlipByDate(selectedDate); },[selectedDate]);
 
-    // 2. Auto Fetch Opening Reading based on Nozzle No
+    // 2. Auto-fetch Opening Reading when Nozzle No changes
     useEffect(() => {
         const fetchOpeningReading = async () => {
-            // Check if user has entered Nozzle No
-            if (cashSlip.nozzleNo && cashSlip.nozzleNo.length > 0) {
+            if (cashSlip.nozzleNo && cashSlip.nozzleNo.trim() !== "") {
                 try {
-                    // NOTE: Create this endpoint in your Node/Express Backend
-                    // Example: router.get('/last-reading', ...) which returns the last entry of this nozzle
                     const response = await axiosInstance.get(`/Cashslip/last-reading?nozzleNo=${cashSlip.nozzleNo}`);
-                    if (response.data && response.data.closingReading) {
+                    if (response.data && response.data.closingReading !== undefined) {
                         setCashSlip(prev => ({ ...prev, openingReading: response.data.closingReading }));
-                        toast.success("Opening Reading Fetched!");
+                        toast.success(`Opening Reading Fetched: ${response.data.closingReading}`);
                     }
                 } catch (error) {
-                    console.log("No previous reading found for this nozzle");
+                    console.log("No previous reading found for this nozzle.");
                 }
             }
         };
-        // Adding a slight delay (debounce) so it doesn't call API on every single keystroke
-        const delayTimer = setTimeout(fetchOpeningReading, 800);
+        const delayTimer = setTimeout(fetchOpeningReading, 800); // 800ms debounce
         return () => clearTimeout(delayTimer);
-    }, [cashSlip.nozzleNo]);
+    },[cashSlip.nozzleNo]);
 
-    // 3. Auto Calculate Liters & Amounts
+    // 3. Auto-Calculate Net Liters & Expected Amount
     useEffect(() => {
         const opening = Number(cashSlip.openingReading) || 0;
         const closing = Number(cashSlip.closingReading) || 0;
@@ -85,32 +80,29 @@ const CashSlip = () => {
         const pending = Number(cashSlip.pending) || 0;
         const rate = Number(cashSlip.rate) || 0;
 
-        // Auto calculate Total Sales in Ltr (Closing - Opening)
         const grossSales = closing > opening ? (closing - opening) : 0;
-        
-        // Auto calculate Net Sales in Ltr (Gross - Testing - Pending)
         const netLtr = grossSales - testing - pending;
-        
-        // Calculate Expected Cash based on Net Liters and Rate
-        const expectedCash = netLtr * rate;
+        const actualNetLtr = netLtr > 0 ? netLtr : 0;
+        const expectedCash = actualNetLtr * rate;
 
         setCashSlip(prev => ({ ...prev, salesInLtr: grossSales.toFixed(2) }));
-        setNetSalesLtr(netLtr > 0 ? netLtr : 0);
+        setNetSalesLtr(actualNetLtr);
         setExpectedAmount(expectedCash);
 
     },[cashSlip.openingReading, cashSlip.closingReading, cashSlip.testing, cashSlip.pending, cashSlip.rate]);
 
-    // 4. Calculate Total Entered Cash/Digital
+    // 4. Calculate Total (Cash + Digital + Exp) & Shortage/Excess
     useEffect(() => {
         const cashTotal = Object.entries(cashSlip.cashDetails).reduce(
             (acc, [denom, count]) => acc + (Number(denom) * Number(count || 0)), 0
         );
-        const total = cashTotal + Number(cashSlip.uFill || 0) + Number(cashSlip.iciciSlip || 0) + 
-                      Number(cashSlip.sbiSlip || 0) + Number(cashSlip.paytm || 0) + Number(cashSlip.expenses || 0);
+        const digitalExpTotal = Number(cashSlip.uFill || 0) + Number(cashSlip.iciciSlip || 0) + 
+                                Number(cashSlip.sbiSlip || 0) + Number(cashSlip.paytm || 0) + 
+                                Number(cashSlip.expenses || 0);
+
+        const total = cashTotal + digitalExpTotal;
         
         setTotalAmount(total);
-        
-        // Shortage or Excess = Total Entered - Expected Amount
         setShortageExcess(total - expectedAmount);
     },[cashSlip.cashDetails, cashSlip.uFill, cashSlip.iciciSlip, cashSlip.sbiSlip, cashSlip.paytm, cashSlip.expenses, expectedAmount]);
 
@@ -121,14 +113,16 @@ const CashSlip = () => {
         const value = e.target.value;
         setCashSlip(prev => ({
             ...prev,
-            cashDetails: { ...prev.cashDetails,[denomination]: value }
+            cashDetails: { ...prev.cashDetails, [denomination]: value }
         }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if(!cashSlip.shift) return toast.warn("Please select shift");
-        if(!cashSlip.rate) return toast.warn("Please enter Fuel Rate");
+        if(!cashSlip.rate) return toast.warn("Please enter Rate (₹/Ltr)");
+        if(!cashSlip.nozzleNo) return toast.warn("Please enter Nozzle No");
+        
         try {
             const cashdata = { 
                 ...cashSlip, 
@@ -138,11 +132,13 @@ const CashSlip = () => {
                 shortageExcess
             };
             await axiosInstance.post("/Cashslip", cashdata);
-            toast.success("Slip Saved!");
+            toast.success("Slip Saved Successfully!");
             fetchCashSlipByDate(selectedDate);
-            setCashSlip(initialCashSlipState); // Reset form after save
+            setCashSlip(initialCashSlipState); // Reset form
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        } catch (error) { toast.error("Error saving slip"); }
+        } catch (error) { 
+            toast.error("Error saving slip!"); 
+        }
     };
 
     const handleDelete = (id) => {
@@ -230,7 +226,7 @@ const CashSlip = () => {
                         {/* HIGHLIGHTED NET LITERS BOX */}
                         <div className="mt-4 bg-blue-50 p-4 rounded-xl border border-blue-100 flex justify-between items-center">
                             <div>
-                                <p className="text-[10px] font-bold text-blue-500 uppercase flex items-center gap-1"><FaTint/> Gross Ltr: {cashSlip.salesInLtr || 0}</p>
+                                <p className="text-[10px] font-bold text-blue-500 uppercase flex items-center gap-1"><FaTint/> Gross: {cashSlip.salesInLtr || 0} Ltr</p>
                                 <p className="text-[11px] font-black text-slate-600 mt-1 uppercase">Actual Net Liters</p>
                             </div>
                             <div className="text-right">
@@ -266,7 +262,7 @@ const CashSlip = () => {
                             {["uFill", "iciciSlip", "sbiSlip", "paytm", "expenses"].map(f => (
                                 <div key={f}>
                                     <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">{f}</label>
-                                    <input type="number" value={cashSlip[f]} onChange={(e) => setCashSlip(p => ({...p, [f]: e.target.value}))} inputMode="decimal" className="w-full bg-slate-50 p-2.5 rounded-xl border-none font-bold" placeholder="0" />
+                                    <input type="number" value={cashSlip[f]} onChange={(e) => setCashSlip(p => ({...p,[f]: e.target.value}))} inputMode="decimal" className="w-full bg-slate-50 p-2.5 rounded-xl border-none font-bold text-purple-700" placeholder="0" />
                                 </div>
                             ))}
                         </div>
@@ -280,14 +276,14 @@ const CashSlip = () => {
                         </div>
                         <div className="space-y-3">
                             {fecthcashSlip.map((item) => (
-                                <div key={item._id} className="bg-white p-3 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center group">
+                                <div key={item._id} className="bg-white p-3 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center">
                                     <div>
                                         <p className="font-bold text-sm">{item.name} <span className="text-[10px] text-slate-400 font-normal">({item.shift})</span></p>
                                         <p className="text-xs font-black text-blue-600">₹{item.total?.toLocaleString()}</p>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <span className="text-[10px] bg-slate-100 px-2 py-1 rounded text-slate-500 font-bold uppercase">{item.nozzleNo}</span>
-                                        {user.department === "manager" && (
+                                        <span className="text-[10px] bg-slate-100 px-2 py-1 rounded text-slate-500 font-bold uppercase">Nozzle: {item.nozzleNo}</span>
+                                        {user?.department === "manager" && (
                                             <button type="button" onClick={() => handleDelete(item._id)} className="p-2 text-red-400"><FaTrash size={14}/></button>
                                         )}
                                     </div>
@@ -301,7 +297,7 @@ const CashSlip = () => {
                 <div className="fixed bottom-0 left-0 right-0 bg-slate-900 text-white p-4 pb-6 rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.2)] z-50">
                     <div className="max-w-md mx-auto grid grid-cols-3 gap-2 px-2 text-center items-center">
                         
-                        {/* Expected Amount (Net Ltr * Rate) */}
+                        {/* Expected Amount */}
                         <div className="bg-slate-800 p-2 rounded-xl">
                             <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Expected</p>
                             <p className="text-sm font-black">₹{expectedAmount.toLocaleString(undefined, {maximumFractionDigits: 0})}</p>
@@ -319,8 +315,9 @@ const CashSlip = () => {
 
                         {/* Total Entered Amount */}
                         <div className="bg-slate-800 p-2 rounded-xl">
-                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Entered</p>
+                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Actual Total</p>
                             <p className="text-sm font-black text-green-400">₹{totalAmount.toLocaleString(undefined, {maximumFractionDigits: 0})}</p>
+                            <p className="text-[7px] text-slate-400 mt-1 uppercase">Cash + Digital</p>
                         </div>
                         
                     </div>

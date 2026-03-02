@@ -14,17 +14,14 @@ router.post("/Cashslip", async (req, res) => {
     }
 });
 
-// ➤ Get Cash Slips by Date (Fixed)
+// ➤ Get Cash Slips by Date
 router.get("/Cashslip", async (req, res) => {
     try {
-        const { date } = req.query; // Get date from query params
+        const { date } = req.query;
         let filter = {};
-
-        if (date) {
-            filter.date = date; // Filter by date if provided
-        }
-
-        const slips = await CashSlip.find(filter);
+        if (date) { filter.date = date; }
+        
+        const slips = await CashSlip.find(filter).sort({ createdAt: -1 });
         res.status(200).json(slips);
     } catch (error) {
         console.error("❌ Error Fetching Cash Slips:", error);
@@ -32,21 +29,7 @@ router.get("/Cashslip", async (req, res) => {
     }
 });
 
-// ➤ Get a Single Cash Slip by ID
-router.get("/Cashslip/:id", async (req, res) => {
-    try {
-        const slip = await CashSlip.findById(req.params.id);
-        if (!slip) {
-            return res.status(404).json({ message: "❌ Cash slip not found!" });
-        }
-        res.status(200).json(slip);
-    } catch (error) {
-        console.error("❌ Error Fetching Cash Slip:", error);
-        res.status(500).json({ message: "❌ Failed to fetch cash slip!", error: error.message });
-    }
-});
-
-
+// ➤ Get Last Closing Reading by Nozzle No (MUST BE BEFORE /:id ROUTE)
 router.get("/Cashslip/last-reading", async (req, res) => {
     try {
         const { nozzleNo } = req.query;
@@ -54,11 +37,11 @@ router.get("/Cashslip/last-reading", async (req, res) => {
             return res.status(400).json({ message: "Nozzle No is required" });
         }
 
-        // Is nozzle ki sabse latest entry dhundo (descending order by createdAt)
+        // Find the most recent slip for this nozzle
         const lastSlip = await CashSlip.findOne({ nozzleNo }).sort({ createdAt: -1 });
 
         if (lastSlip) {
-            // Sirf pichli closing reading return karo jo ab opening ban jayegi
+            // Return closing reading of the last shift
             res.status(200).json({ closingReading: lastSlip.closingReading });
         } else {
             res.status(404).json({ message: "No previous record found" });
@@ -69,17 +52,25 @@ router.get("/Cashslip/last-reading", async (req, res) => {
     }
 });
 
-// ➤ Update a Cash Slip by ID (Fixed `new: true`)
+// ➤ Get a Single Cash Slip by ID
+router.get("/Cashslip/:id", async (req, res) => {
+    try {
+        const slip = await CashSlip.findById(req.params.id);
+        if (!slip) { return res.status(404).json({ message: "❌ Cash slip not found!" }); }
+        res.status(200).json(slip);
+    } catch (error) {
+        console.error("❌ Error Fetching Cash Slip:", error);
+        res.status(500).json({ message: "❌ Failed to fetch cash slip!", error: error.message });
+    }
+});
+
+// ➤ Update a Cash Slip by ID
 router.put("/Cashslip/:id", async (req, res) => {
     try {
         const id = req.params.id;
-        const updatedSlip = await CashSlip.findByIdAndUpdate(id, req.body, {
-            new: true, // ✅ Corrected `true` instead of `tru`
-        });
+        const updatedSlip = await CashSlip.findByIdAndUpdate(id, req.body, { new: true });
 
-        if (!updatedSlip) {
-            return res.status(404).json({ message: "❌ Cash slip not found!" });
-        }
+        if (!updatedSlip) { return res.status(404).json({ message: "❌ Cash slip not found!" }); }
         res.status(200).json({ message: "✅ Cash slip updated successfully!", data: updatedSlip });
     } catch (error) {
         console.error("❌ Error Updating Cash Slip:", error);
@@ -87,24 +78,17 @@ router.put("/Cashslip/:id", async (req, res) => {
     }
 });
 
+// ➤ Delete a Cash Slip by ID
 router.delete('/Cashslip/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const deletedSlip = await CashSlip.findByIdAndDelete(id);
-        if (!deletedSlip) {
-            return res.status(404).json({ message: "❌ Cash slip not found!" });
-        }
+        if (!deletedSlip) { return res.status(404).json({ message: "❌ Cash slip not found!" }); }
         res.status(200).json({ message: "✅ Cash slip deleted successfully!" });
     } catch (error) {
         console.error("❌ Error Deleting Cash Slip:", error);
-        res.status(500).json({
-            message: "❌ Failed to delete cash slip!", error
-                : error.message
-        });
+        res.status(500).json({ message: "❌ Failed to delete cash slip!", error: error.message });
     }
-
-})
-
-
+});
 
 module.exports = router;

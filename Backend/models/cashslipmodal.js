@@ -6,9 +6,16 @@ const cashSlipSchema = new mongoose.Schema(
     shift: { type: String, required: true },
     name: { type: String, required: true },
     nozzleNo: { type: String, required: true },
+    
+    // Naye fields for calculations
+    rate: { type: Number, required: true },
+    netSalesLtr: { type: Number, required: true },
+    expectedAmount: { type: Number, required: true },
+    shortageExcess: { type: Number, required: true },
+    
     openingReading: { type: Number, required: true },
     closingReading: { type: Number, required: true },
-    salesInLtr: { type: Number, required: true },
+    salesInLtr: { type: Number, required: true }, // Gross Ltr
     testing: { type: Number, required: true },
     pending: { type: Number, required: true },
     cashDetails: { type: Object, required: true },
@@ -17,11 +24,7 @@ const cashSlipSchema = new mongoose.Schema(
     sbiSlip: { type: Number, required: true },
     paytm: { type: Number, required: true },
     expenses: { type: Number, required: true },
-    total: { type: Number, required: true },
-    rate: { type: Number, required: true },
-    netSalesLtr: { type: Number, required: true },
-    expectedAmount: { type: Number, required: true },
-    shortageExcess: { type: Number, required: true },
+    total: { type: Number, required: true }, // Grand Total (Cash + Digital + Exp)
   },
   { timestamps: true }
 );
