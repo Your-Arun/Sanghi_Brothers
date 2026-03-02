@@ -216,13 +216,13 @@ const UpdateDashboard = () => {
     ];
 
     const quickActions =[
-        { label: "Shifting", icon: <FaExchangeAlt />, color: "bg-orange-500", path: "/shifting" },
-        { label: "Lekha Jokha", icon: <FaFileInvoiceDollar />, color: "bg-indigo-500", path: "/lekhajokha" },
-        { label: "Upload File", icon: <FaCloudUploadAlt />, color: "bg-blue-600", path: "/exceluploader" },
-        { label: "Meter Close", icon: <FaLock />, color: "bg-purple-600", path: "/createmeterclose" },
         { label: "Cash Slip", icon: <FaMoneyBillWave />, color: "bg-teal-600", path: "/Cashslip" },
-        { label: "Attendance", icon: <FaUserClock />, color: "bg-green-600", path: "/attendance-sheet" },
+        { label: "Lekha Jokha", icon: <FaFileInvoiceDollar />, color: "bg-indigo-500", path: "/lekhajokha" },
         { label: "Daily Sales", icon: <FaWallet />, color: "bg-rose-600", path: "/allsalepaytm" },
+        { label: "Attendance", icon: <FaUserClock />, color: "bg-green-600", path: "/attendance-sheet" },
+        { label: "Meter Close", icon: <FaLock />, color: "bg-purple-600", path: "/createmeterclose" },
+        { label: "Shifting", icon: <FaExchangeAlt />, color: "bg-orange-500", path: "/shifting" },
+        { label: "Upload File", icon: <FaCloudUploadAlt />, color: "bg-blue-600", path: "/exceluploader" },
     ];
 
     return (
