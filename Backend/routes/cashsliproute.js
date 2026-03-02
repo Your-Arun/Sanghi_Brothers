@@ -46,6 +46,29 @@ router.get("/Cashslip/:id", async (req, res) => {
     }
 });
 
+
+router.get("/Cashslip/last-reading", async (req, res) => {
+    try {
+        const { nozzleNo } = req.query;
+        if (!nozzleNo) {
+            return res.status(400).json({ message: "Nozzle No is required" });
+        }
+
+        // Is nozzle ki sabse latest entry dhundo (descending order by createdAt)
+        const lastSlip = await CashSlip.findOne({ nozzleNo }).sort({ createdAt: -1 });
+
+        if (lastSlip) {
+            // Sirf pichli closing reading return karo jo ab opening ban jayegi
+            res.status(200).json({ closingReading: lastSlip.closingReading });
+        } else {
+            res.status(404).json({ message: "No previous record found" });
+        }
+    } catch (error) {
+        console.error("❌ Error Fetching Last Reading:", error);
+        res.status(500).json({ message: "❌ Failed to fetch reading", error: error.message });
+    }
+});
+
 // ➤ Update a Cash Slip by ID (Fixed `new: true`)
 router.put("/Cashslip/:id", async (req, res) => {
     try {

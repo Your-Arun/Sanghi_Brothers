@@ -18,6 +18,10 @@ const cashSlipSchema = new mongoose.Schema(
     paytm: { type: Number, required: true },
     expenses: { type: Number, required: true },
     total: { type: Number, required: true },
+    rate: { type: Number, required: true },
+    netSalesLtr: { type: Number, required: true },
+    expectedAmount: { type: Number, required: true },
+    shortageExcess: { type: Number, required: true },
   },
   { timestamps: true }
 );
