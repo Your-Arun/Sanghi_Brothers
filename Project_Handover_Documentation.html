@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sanghi Brothers - Handover Documentation</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --bg-card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #06b6d4;
+      --primary-glow: rgba(6, 182, 212, 0.15);
+      --secondary: #6366f1;
+      --secondary-glow: rgba(99, 102, 241, 0.15);
+      --accent: #f43f5e;
+      --sidebar-width: 280px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      scrollbar-width: thin;
+      scrollbar-color: var(--primary) var(--bg-dark);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-dark);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary);
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+    }
+
+    /* Ambient Background Glows */
+    .glow-container {
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: -1;
+      overflow: hidden;
+    }
+    .glow-1 {
+      position: absolute;
+      top: -10%;
+      left: -10%;
+      width: 50vw;
+      height: 50vw;
+      background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+      filter: blur(80px);
+    }
+    .glow-2 {
+      position: absolute;
+      bottom: -10%;
+      right: -10%;
+      width: 60vw;
+      height: 60vw;
+      background: radial-gradient(circle, var(--secondary-glow) 0%, transparent 70%);
+      filter: blur(100px);
+    }
+
+    /* Sidebar Layout */
+    aside {
+      width: var(--sidebar-width);
+      background-color: rgba(15, 23, 42, 0.9);
+      border-right: 1px solid var(--bg-card-border);
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      padding: 2rem 1.5rem;
+      border-bottom: 1px solid var(--bg-card-border);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px var(--primary-glow);
+    }
+
+    .brand-logo svg {
+      width: 22px;
+      height: 22px;
+      fill: #fff;
+    }
+
+    .brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(to right, #ffffff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      list-style: none;
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+
+    .nav-item button {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      color: var(--text-muted);
+      text-align: left;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: var(--transition);
+    }
+
+    .nav-item button:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+    }
+
+    .nav-item.active button {
+      background: linear-gradient(135deg, var(--primary-glow), rgba(99, 102, 241, 0.08));
+      border-left: 3px solid var(--primary);
+      color: var(--primary);
+      font-weight: 600;
+      padding-left: 0.9rem; /* adjusts for border offset */
+    }
+
+    .nav-item button svg {
+      width: 18px;
+      height: 18px;
+      transition: var(--transition);
+    }
+
+    .nav-item.active button svg {
+      stroke: var(--primary);
+    }
+
+    /* Main Content Area */
+    main {
+      margin-left: var(--sidebar-width);
+      flex-grow: 1;
+      padding: 3rem 4rem;
+      max-width: 1200px;
+      width: calc(100% - var(--sidebar-width));
+    }
+
+    /* Sections styling */
+    .doc-section {
+      display: none;
+      animation: fadeIn 0.4s ease-out forwards;
+    }
+
+    .doc-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Typography styling */
+    h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.75rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(to right, #ffffff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -1px;
+    }
+
+    .subtitle {
+      color: var(--primary);
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 700;
+      margin-bottom: 2rem;
+    }
+
+    h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-top: 2rem;
+      margin-bottom: 1.25rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    p {
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      font-size: 1.05rem;
+    }
+
+    /* Cards */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-card-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: var(--transition);
+      backdrop-filter: blur(8px);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(6, 182, 212, 0.3);
+      box-shadow: 0 10px 30px -10px rgba(6, 182, 212, 0.15);
+    }
+
+    .card-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-title svg {
+      color: var(--primary);
+    }
+
+    .card-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-primary {
+      background-color: var(--primary-glow);
+      color: var(--primary);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+
+    .badge-secondary {
+      background-color: var(--secondary-glow);
+      color: var(--secondary);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+
+    /* Env Table */
+    .table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(8px);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      background-color: rgba(15, 23, 42, 0.5);
+      padding: 1rem 1.25rem;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      color: #fff;
+      font-size: 0.95rem;
+      border-bottom: 1px solid var(--bg-card-border);
+    }
+
+    td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      color: var(--text-main);
+      background-color: rgba(255, 255, 255, 0.01);
+    }
+
+    /* Code Blocks */
+    .code-container {
+      position: relative;
+      margin: 1.5rem 0;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--bg-card-border);
+      background-color: #050b14;
+    }
+
+    .code-header {
+      background-color: rgba(15, 23, 42, 0.7);
+      padding: 0.5rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--bg-card-border);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    pre {
+      padding: 1.25rem;
+      overflow-x: auto;
+      margin: 0;
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      color: #38bdf8;
+      line-height: 1.6;
+    }
+
+    .copy-btn {
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-muted);
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      transition: var(--transition);
+    }
+
+    .copy-btn:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Custom visual structure for system flow */
+    .arch-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      align-items: center;
+      padding: 2rem;
+      background: var(--bg-card);
+      border: 1px solid var(--bg-card-border);
+      border-radius: 20px;
+      margin: 2rem 0;
+    }
+
+    .arch-row {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    .arch-node {
+      padding: 1.25rem 2rem;
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9));
+      border: 1px solid var(--bg-card-border);
+      border-radius: 14px;
+      text-align: center;
+      min-width: 200px;
+      position: relative;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+
+    .arch-node.client {
+      border-top: 4px solid var(--primary);
+    }
+
+    .arch-node.server {
+      border-top: 4px solid var(--secondary);
+    }
+
+    .arch-node.db {
+      border-top: 4px solid #10b981;
+    }
+
+    .arch-node h4 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.4rem;
+    }
+
+    .arch-node span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .arch-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+
+    .arch-integrations {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .int-card {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--bg-card-border);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .int-card h5 {
+      color: #fff;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .int-card p {
+      font-size: 0.75rem;
+      margin: 0;
+    }
+
+    /* Alerts */
+    .alert {
+      background: rgba(99, 102, 241, 0.1);
+      border-left: 4px solid var(--secondary);
+      padding: 1.25rem;
+      border-radius: 0 12px 12px 0;
+      margin-bottom: 2rem;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .alert svg {
+      color: var(--secondary);
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+    }
+
+    .alert-content h4 {
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      margin-bottom: 0.25rem;
+      font-size: 1rem;
+    }
+
+    .alert-content p {
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    /* Responsiveness */
+    @media (max-width: 968px) {
+      aside {
+        transform: translateX(-100%);
+      }
+      aside.open {
+        transform: translateX(0);
+      }
+      main {
+        margin-left: 0;
+        width: 100%;
+        padding: 2rem;
+      }
+      .mobile-toggle {
+        display: flex !important;
+      }
+    }
+
+    .mobile-toggle {
+      display: none;
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 200;
+      background: var(--primary);
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+    }
+
+    .mobile-toggle svg {
+      width: 24px;
+      height: 24px;
+      fill: #fff;
+      stroke: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="glow-container">
+    <div class="glow-1"></div>
+    <div class="glow-2"></div>
+  </div>
+
+  <button class="mobile-toggle" onclick="toggleSidebar()">
+    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </button>
+
+  <!-- Sidebar -->
+  <aside id="sidebar">
+    <div class="brand">
+      <div class="brand-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 2v20c0 .5.5 1 1 1h16c.5 0 1-.5 1-1V2c0-.5-.5-1-1-1H4c-.5 0-1 .5-1 1Z"></path>
+          <path d="M12 18h.01"></path>
+          <path d="M8 6h8"></path>
+          <path d="M8 10h8"></path>
+          <path d="M8 14h8"></path>
+        </svg>
+      </div>
+      <div>
+        <h3 class="brand-title">Sanghi Brothers</h3>
+        <span style="font-size:0.75rem; color:var(--primary); font-weight:600; text-transform:uppercase;">Handover Docs</span>
+      </div>
+    </div>
+    
+    <ul class="nav-links">
+      <li class="nav-item active" onclick="switchTab(this, 'overview')">
+        <button>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          Overview
+        </button>
+      </li>
+      <li class="nav-item" onclick="switchTab(this, 'architecture')">
+        <button>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+          Architecture
+        </button>
+      </li>
+      <li class="nav-item" onclick="switchTab(this, 'config')">
+        <button>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></svg>
+          Environment Keys
+        </button>
+      </li>
+      <li class="nav-item" onclick="switchTab(this, 'models')">
+        <button>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path></svg>
+          Data Models
+        </button>
+      </li>
+      <li class="nav-item" onclick="switchTab(this, 'smsbot')">
+        <button>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+          SMS Bot & Scheduler
+        </button>
+      </li>
+      <li class="nav-item" onclick="switchTab(this, 'setup')">
+        <button>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+          Local Run & Setup
+        </button>
+      </li>
+      <li class="nav-item" onclick="switchTab(this, 'deployment')">
+        <button>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><line x1="12" y1="11" x2="12" y2="17"></line><line x1="9" y1="14" x2="15" y2="14"></line></svg>
+          Deployment Guide
+        </button>
+      </li>
+    </ul>
+    
+    <div style="padding: 1.5rem; border-top: 1px solid var(--bg-card-border);">
+      <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom: 0.5rem;">Current Status:</div>
+      <a href="https://sanghibros.vercel.app/" target="_blank" style="text-decoration:none; display:flex; align-items:center; gap:0.5rem; color:#10b981; font-weight:600; font-size:0.85rem;">
+        <span style="width:8px; height:8px; background-color:#10b981; border-radius:50%; display:inline-block; animation: pulse 1.5s infinite;"></span>
+        Live App Online
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main>
+    
+    <!-- Tab 1: Overview -->
+    <section id="overview" class="doc-section active">
+      <h1>Sanghi Brothers</h1>
+      <div class="subtitle">System Overview & Management App</div>
+      
+      <div class="alert">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+        <div class="alert-content">
+          <h4>Technical Handover Documentation</h4>
+          <p>This interactive manual is designed for the technical engineering team taking over the maintenance and deployment of the Sanghi Brothers petrol station suite.</p>
+        </div>
+      </div>
+
+      <p>The <strong>Sanghi Brothers Petrol Pump Management System</strong> is a full-stack, enterprise-grade management portal designed to streamline day-to-day operations at fuel stations. It automates nozzle readings, shift logs, cashier sheets, employee attendance tracking, accounts ledgers (Lekhajokha), sales, and scheduling. It also features automatic SMS reports to staff using Twilio services.</p>
+
+      <h2>Key Features Summary</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            Attendance & Shifts
+          </div>
+          <div class="card-desc">Tracks employee attendance details (Present, WFH, Leave, Absent) and maps staff shift duty rosters automatically with live updates.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            Daily Pump Sheets
+          </div>
+          <div class="card-desc">Automates daily nozzle sales logging, density checks, opening/closing meter indices, and generates instant reports.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            Financial Ledger
+          </div>
+          <div class="card-desc">Lekhajokha double-entry bookkeeping ledger, bank monthly inflows/outflows records, SB01 and SB03 transaction trackers.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            SMS Broadcasts
+          </div>
+          <div class="card-desc">Integrates node-cron with Twilio SMS api to broadcast formatted nozzle rosters to employees' mobile phones in real-time.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 2: Architecture -->
+    <section id="architecture" class="doc-section">
+      <h1>System Architecture</h1>
+      <div class="subtitle">Data flow and integration design</div>
+
+      <p>The system is built on a modular Client-Server paradigm. The Frontend acts as a Single Page Application (SPA) communicating with the Backend REST API Server asynchronously using standard HTTP verbs via Axios.</p>
+
+      <div class="arch-container">
+        <h4 style="color:#fff; font-family:'Outfit', sans-serif;">High-Level System Topology</h4>
+        <div class="arch-row">
+          <div class="arch-node client">
+            <h4>Frontend client</h4>
+            <span>React / Vite / Tailwind</span><br>
+            <span class="badge badge-primary" style="margin-top:0.5rem;">Vercel</span>
+          </div>
+          <div class="arch-arrow">⇅</div>
+          <div class="arch-node server">
+            <h4>REST API Server</h4>
+            <span>Express / NodeJS / Session</span><br>
+            <span class="badge badge-secondary" style="margin-top:0.5rem;">CORS Protected</span>
+          </div>
+          <div class="arch-arrow">⇅</div>
+          <div class="arch-node db">
+            <h4>Database Cluster</h4>
+            <span>MongoDB Atlas</span><br>
+            <span style="color:#10b981; font-weight:600; font-size:0.75rem;">Mongoose ODM</span>
+          </div>
+        </div>
+
+        <div style="width: 100%; border-top: 1px solid var(--bg-card-border); margin: 1rem 0;"></div>
+
+        <h4 style="color:var(--text-muted); font-family:'Outfit', sans-serif; font-size:0.95rem; margin-bottom:0.75rem;">Cloud Integrations</h4>
+        <div class="arch-integrations">
+          <div class="int-card">
+            <h5>Twilio API</h5>
+            <p class="card-desc" style="font-size:0.75rem;">Dispatches shift rosters via SMS to registered numbers.</p>
+          </div>
+          <div class="int-card">
+            <h5>Nodemailer</h5>
+            <p class="card-desc" style="font-size:0.75rem;">Sends security reset OTP codes via Gmail SMTP.</p>
+          </div>
+          <div class="int-card">
+            <h5>Cloudinary</h5>
+            <p class="card-desc" style="font-size:0.75rem;">Saves profiles avatars and mastersheet document uploads.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 3: Config -->
+    <section id="config" class="doc-section">
+      <h1>Environment Settings</h1>
+      <div class="subtitle">System Configurations (.env keys)</div>
+      
+      <p>Configure a <code>.env</code> file in the <code>Backend/</code> root directory. These keys enable secure connection handles with database clusters and third-party APIs.</p>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 30%">Key</th>
+              <th style="width: 35%">Purpose</th>
+              <th style="width: 35%">Example Format</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>MONGODB_URI</strong></td>
+              <td>MongoDB database connection url.</td>
+              <td><code>mongodb+srv://user:pass@cluster...</code></td>
+            </tr>
+            <tr>
+              <td><strong>JWT_SECRET</strong></td>
+              <td>Secret salt used to sign API authorization keys.</td>
+              <td><code>strong_alphanumeric_secret_key</code></td>
+            </tr>
+            <tr>
+              <td><strong>SESSION_SECRET</strong></td>
+              <td>Session serialization encrypter.</td>
+              <td><code>your_session_secret_pass</code></td>
+            </tr>
+            <tr>
+              <td><strong>EMAIL_USER</strong></td>
+              <td>Nodemailer Gmail SMTP account for OTP emails.</td>
+              <td><code>example@gmail.com</code></td>
+            </tr>
+            <tr>
+              <td><strong>EMAIL_PASS</strong></td>
+              <td>Gmail App password (not account password).</td>
+              <td><code>abcd efgh ijkl mnop</code></td>
+            </tr>
+            <tr>
+              <td><strong>VALID_INVITATION_CODES</strong></td>
+              <td>Invitation codes required for Member signup.</td>
+              <td><code>SANGHI@2025,XYZ123</code></td>
+            </tr>
+            <tr>
+              <td><strong>VALID_INVITATION_CODES_FOR_STAFF</strong></td>
+              <td>Invitation codes required for Staff signup.</td>
+              <td><code>ABCD2025,STAFF2025</code></td>
+            </tr>
+            <tr>
+              <td><strong>CLOUD_NAME</strong></td>
+              <td>Cloudinary bucket cloud handle.</td>
+              <td><code>dvgzuzzsn</code></td>
+            </tr>
+            <tr>
+              <td><strong>TWILIO_SID</strong></td>
+              <td>Twilio account unique Identifier.</td>
+              <td><code>AC993d1ec041f1121...</code></td>
+            </tr>
+            <tr>
+              <td><strong>TWILIO_AUTH_TOKEN</strong></td>
+              <td>Twilio secure API access token.</td>
+              <td><code>225c7a14bcb7d...</code></td>
+            </tr>
+            <tr>
+              <td><strong>TWILIO_PHONE_NUMBER</strong></td>
+              <td>Configured virtual SMS number.</td>
+              <td><code>+14784124261</code></td>
+            </tr>
+            <tr>
+              <td><strong>GMAIL</strong> & <strong>PASSWORD</strong></td>
+              <td>Fallback Credentials for Admin login.</td>
+              <td><code>admin@gmail.com</code> / <code>Admin@123</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Tab 4: Models -->
+    <section id="models" class="doc-section">
+      <h1>Data Models</h1>
+      <div class="subtitle">Database Schemas (Mongoose ODM)</div>
+
+      <p>All collections are managed via Mongoose schemas inside the <code>Backend/models/</code> directory.</p>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-title">User Schema</div>
+          <p class="card-desc" style="font-size:0.85rem; margin-bottom:0.5rem;"><code>models/user.js</code></p>
+          <div class="card-desc">Stores registered profiles containing username, email, phone, hashed password, and authorization departments. Access levels are strictly checked against the <code>department</code> field.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Attendance Schema</div>
+          <p class="card-desc" style="font-size:0.85rem; margin-bottom:0.5rem;"><code>models/attendancewala/Attendance.js</code></p>
+          <div class="card-desc">Stores user check-in data with unique compound keys. Fields: <code>userId</code>, <code>date</code>, and <code>status</code> (Present, Absent, Leave, Holiday, WFH).</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Shift Snapshot</div>
+          <p class="card-desc" style="font-size:0.85rem; margin-bottom:0.5rem;"><code>models/shifting/MapSnapshot.js</code></p>
+          <div class="card-desc">Contains specific nozzle assignments (N1 to N6), supervisor details, Air boy, and active shift rosters for any target date. Used by the SMS Broadcast Bot.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Lekha (Bookkeeping)</div>
+          <p class="card-desc" style="font-size:0.85rem; margin-bottom:0.5rem;"><code>models/lekha.js</code></p>
+          <div class="card-desc">Transactions logs for petrol pump accounts bookkeeping. Keeps record of item dates, narration details, vouchers, and credit/debit balances.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 5: SMS Bot -->
+    <section id="smsbot" class="doc-section">
+      <h1>SMS Scheduler Bot</h1>
+      <div class="subtitle">Automated Twilio Shift Roster Notifications</div>
+
+      <p>The scheduler script at <code>Backend/models/shifting/smsBot.js</code> coordinates the auto-dispatch of pump duty lists to workers daily via SMS.</p>
+
+      <h2>Roster Message Template Format</h2>
+      <div class="code-container">
+        <div class="code-header">
+          <span>SMS Text Template</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code>⛽ *PUMP DUTY LIST*
+📅 2026-07-08 (Morning)
+
+👮 Supervisor: Amit Kumar
+⛽ Nozzle 1: Suresh Singh
+⛽ Nozzle 2: Ramesh Yadav
+⛽ Nozzle 3: Empty
+⛽ Nozzle 4: Empty
+🪝 Nozzle 5: Empty
+🪝 Nozzle 6: Empty
+👷 Extra: Anil Prasad
+💨 Air Boy: Empty
+
+🚫 Absent: Mahesh Sharma
+
+📝 Note: Please report on time.</code></pre>
+      </div>
+
+      <h2>Scheduling Logic</h2>
+      <ul>
+        <li style="margin-bottom: 0.75rem; color: var(--text-muted); line-height: 1.6;"><strong>Dynamic Cron Settings:</strong> <code>restartScheduler()</code> queries the Settings model inside MongoDB to fetch customized shift times (default 05:00 and 14:00) and constructs the cron schedules dynamically.</li>
+        <li style="margin-bottom: 0.75rem; color: var(--text-muted); line-height: 1.6;"><strong>Timezone Alignment:</strong> Cron threads operate strictly inside the <code>Asia/Kolkata</code> timezone.</li>
+        <li style="margin-bottom: 0.75rem; color: var(--text-muted); line-height: 1.6;"><strong>Trigger Hooks:</strong> The bot is instantiated inside <code>server.js</code> upon startup. Any updates to scheduling configs trigger a hot restart of the bot jobs.</li>
+      </ul>
+    </section>
+
+    <!-- Tab 6: Setup -->
+    <section id="setup" class="doc-section">
+      <h1>Local Run & Setup</h1>
+      <div class="subtitle">Run instructions for local development</div>
+
+      <h2>1. Running the API Backend</h2>
+      <div class="code-container">
+        <div class="code-header">
+          <span>Terminal (Backend Setup)</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code>cd Backend
+npm install
+# Set up your .env file
+npm run dev</code></pre>
+      </div>
+
+      <h2>2. Running the React Frontend</h2>
+      <div class="code-container">
+        <div class="code-header">
+          <span>Terminal (Frontend Setup)</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code>cd Frontend
+npm install
+npm run dev</code></pre>
+      </div>
+    </section>
+
+    <!-- Tab 7: Deployment -->
+    <section id="deployment" class="doc-section">
+      <h1>Production Deployment</h1>
+      <div class="subtitle">Steps for Vercel and VPS/Cloud hosting</div>
+
+      <h2>Frontend Hosting (Vercel)</h2>
+      <p>The frontend React application is optimized for Vercel deployment. It contains a <code>vercel.json</code> file at the root to rewrite SPA route paths cleanly, preventing router breakdowns when pages are reloaded.</p>
+
+      <div class="code-container">
+        <div class="code-header">
+          <span>vercel.json</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code>{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
+  ]
+}</code></pre>
+      </div>
+
+      <h2>Backend API Hosting</h2>
+      <p>To deploy the server to production platforms (such as Render, Railway, or VPS instances):</p>
+      <ul>
+        <li style="margin-bottom:0.75rem; color:var(--text-muted); line-height:1.6;">Set the target deployment directory context to <code>Backend/</code>.</li>
+        <li style="margin-bottom:0.75rem; color:var(--text-muted); line-height:1.6;">Setup the build / startup trigger hook: <code>npm run start</code> (calls <code>node server.js</code>).</li>
+        <li style="margin-bottom:0.75rem; color:var(--text-muted); line-height:1.6;">Add all the keys listed in the <strong>Environment Settings</strong> tab to the hosting provider environment dashboard panel.</li>
+        <li style="margin-bottom:0.75rem; color:var(--text-muted); line-height:1.6;">Set the client CORS domains lists inside <code>Backend/server.js</code> to accept requests from your production web app URL.</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <script>
+    // Tab switching engine
+    function switchTab(clickedTab, targetId) {
+      // Remove active states from navigation
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      // Add active state to clicked navigation item
+      clickedTab.classList.add('active');
+
+      // Hide all documentation sections
+      document.querySelectorAll('.doc-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      // Show targeted document section
+      document.getElementById(targetId).classList.add('active');
+      
+      // Auto close sidebar on mobile views
+      if (window.innerWidth <= 968) {
+        document.getElementById('sidebar').classList.remove('open');
+      }
+      
+      // Scroll to top of window
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Toggle sidebar visibility on mobile
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('open');
+    }
+
+    // Clipboard Copy Helper
+    function copyCode(btnElement) {
+      const codeBlock = btnElement.parentElement.nextElementSibling.querySelector('code');
+      const textToCopy = codeBlock.textContent;
+
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalText = btnElement.textContent;
+        btnElement.textContent = 'Copied! ✓';
+        btnElement.style.borderColor = '#10b981';
+        btnElement.style.color = '#10b981';
+        
+        setTimeout(() => {
+          btnElement.textContent = originalText;
+          btnElement.style.borderColor = '';
+          btnElement.style.color = '';
+        }, 2000);
+      }).catch(err => {
+        console.error('Error copying to clipboard: ', err);
+      });
+    }
+  </script>
+</body>
+</html>
