@@ -98,8 +98,8 @@ Make sure you have [Node.js (v18+)](https://nodejs.org/) and a running instance 
    EMAIL_PASS=your_gmail_app_password
 
    # Invitation Codes (for authorization)
-   VALID_INVITATION_CODES=SANGHI@2025,XYZ123456
-   VALID_INVITATION_CODES_FOR_STAFF=ABCD2025,STAFF2025
+   VALID_INVITATION_CODES=your_member_invitation_codes
+   VALID_INVITATION_CODES_FOR_STAFF=your_staff_invitation_codes
 
    # Cloudinary Media Storage
    CLOUD_NAME=your_cloudinary_cloud_name
