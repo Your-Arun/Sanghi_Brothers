@@ -115,8 +115,8 @@ The automated shift scheduler is located at [smsBot.js](file:///e:/Products/Proj
   - **Accounts / Finance:** Comprehensive financial ledger inputs, Lekhajokha, bank flow reports (SB01, SB03 summaries).
   - **Staff:** Restricted dashboard displays, self attendance summaries, shift assignments lookup.
 * **Registration Invitation Codes:** Users can only register if they provide a valid invitation code configured in the environment:
-  - `VALID_INVITATION_CODES` for members/managers.
-  - `VALID_INVITATION_CODES_FOR_STAFF` for field workers/staff.
+  - **Member/Manager/Backoffice Codes:** `SANGHI@2025`, `XYZ123456`, `COMPANY2025` (set in `VALID_INVITATION_CODES` env variable)
+  - **Field Workers/Staff Codes:** `ABCD2025`, `STAFF2025` (set in `VALID_INVITATION_CODES_FOR_STAFF` env variable)
 
 ---
 
